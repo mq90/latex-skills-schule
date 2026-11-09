@@ -1,0 +1,373 @@
+\input{header.tex}
+\input{newcommands.tex}
+
+
+\newcommand{\schulname}{Gymnasium Musterhausen}
+\newcommand{\betrag}[1]{|#1|}
+\newcommand{\bruch}[2]{\frac{#1}{#2}}
+\newcommand{\gruss}[1][Viele Gruesse]{\textbf{#1,}\\ Martin Quandt}
+
+%Einstellung der Codeumgebung für \hologo{LaTeX}-Code-Beispiele
+\lstdefinestyle{latex}{%
+  	language=TeX,%
+  	frame=single,%
+  	backgroundcolor=\color{yellow!20},%
+  	rulecolor=\color{lightgray!40},%
+  	breaklines=true,%
+  	basicstyle=\scriptsize\ttfamily,%
+  	keywordstyle=\bfseries\color{purple!40!black},%
+  	commentstyle=\itshape\color{green!40!black},%
+  	identifierstyle=\color{blue},%
+	stringstyle=\color{black},%
+	captionpos=b,%
+	%numbers=left,%
+	%numberstyle=\tiny\color{gray!90!black},%
+	%numbersep=5pt,%
+	tabsize=2,%
+	showspaces=false,%
+	showstringspaces=false,%
+  	showtabs=false,%
+	deletekeywords={document},%
+	morekeywords={begin}%
+}
+
+
+% Einfache Umgebung ohne Parameter
+\newenvironment{wichtig}
+  {\begin{center}\itshape\bfseries}  % Befehle am Anfang
+  {\end{center}}                     % Befehle am Ende
+
+% Umgebung mit einem Parameter
+\newenvironment{notiz}[1]
+  {\noindent\textbf{#1:}\itshape\indent}
+  {\par}
+
+
+
+%Farbfelder fuer Merksaetze
+\newtcolorbox{alert}{%
+  colback=red!5!white,%
+  colframe=red!75!black,%
+  fonttitle=\bfseries,%
+  title=Merke:,%
+  enhanced,%
+  breakable,%
+}
+
+
+\title{Erste Schritte mit eigenen Befehlen und Umgebungen in \hologo{LaTeX}}
+\author{Martin Quandt}
+\date{13. Mai 2025}
+\pagestyle{plain}
+\begin{document}
+
+\maketitle
+
+
+%%%% KAPITEL 1  %%%%
+\section{Einführung}
+
+Eine der Stärken von \hologo{LaTeX} ist die Möglichkeit, es an die eigenen Bedürfnisse anzupassen. Mit selbst definierten Befehlen und Umgebungen können Sie wiederholte Formatierungen vereinfachen, komplexe Strukturen in einfache Befehle formulieren und Ihr Dokument konsistenter gestalten. Dieses Nachschlagewerk zeigt, wie Sie eigene Befehle und Umgebungen definieren können und gibt praktische Beispiele für den Schulalltag.
+
+
+
+%%%% KAPITEL 2  %%%%
+\section{Eigene Befehle definieren}
+
+
+
+%%%%  UNTERKAPITEL 2.1  %%%%
+\subsection{Grundlagen von \texttt{\textbackslash newcommand}}
+
+Mit \texttt{\textbackslash newcommand} definieren Sie eigene Befehle:
+
+\begin{lstlisting}[style=latex]
+% Einfacher Befehl ohne Parameter
+\newcommand{\schulname}{Gymnasium Musterhausen}
+
+% Befehl mit einem Parameter
+\newcommand{\betrag}[1]{|#1|}
+
+% Befehl mit zwei Parametern
+\newcommand{\bruch}[2]{\frac{#1}{#2}}
+\end{lstlisting}
+
+
+
+%%%%  UNTERKAPITEL 2.2  %%%%
+\subsection{Syntax von \texttt{\textbackslash newcommand}}
+
+Die allgemeine Syntax lautet:
+
+\begin{lstlisting}[style=latex]
+\newcommand{\befehlsname}[anzahl_parameter][standardwert]{definition}
+\end{lstlisting}
+
+\begin{itemize}
+    \item \texttt{\textbackslash befehlsname}: Name des neuen Befehls (mit \texttt{\textbackslash})
+    \item \texttt{[anzahl\_parameter]}: Anzahl der erwarteten Parameter (optional, max. 9)
+    \item \texttt{[standardwert]}: Standardwert für ersten Parameter (optional)
+    \item \texttt{definition}: Definition, was der Befehl ausführen soll
+\end{itemize}
+
+
+
+%%%%  KAPITEL 3  %%%%
+\section{Eigene Umgebungen definieren}
+
+
+
+%%%%  UNTERKAPITEL 3.1  %%%%
+\subsection{Grundlagen von \texttt{\textbackslash newenvironment}}
+
+Mit \texttt{\textbackslash newenvironment} definieren Sie eigene Umgebungen:
+
+\begin{lstlisting}[style=latex]
+% Einfache Umgebung ohne Parameter
+\newenvironment{wichtig}
+  {\begin{center}\itshape\bfseries}  % Befehle am Anfang
+  {\end{center}}                     % Befehle am Ende
+
+% Umgebung mit einem Parameter
+\newenvironment{notiz}[1]
+  {\noindent\textbf{#1:}\itshape\indent}
+  {\par}
+\end{lstlisting}
+Ein Aufruf wie
+\begin{lstlisting}[style=latex]
+\begin{wichtig}
+	Dies ist ein wichtiger Text, der zentriert, kursiv und fett erscheint.
+\end{wichtig}
+
+\begin{notiz}{Hinweis}
+	Dies ist ein Hinweis, der kursiv mit fetter Ueberschrift erscheint.
+\end{notiz}
+\end{lstlisting}
+ergibt dann:
+\begin{ausgabe}
+\begin{wichtig}
+Dies ist ein wichtiger Text, der zentriert, kursiv und fett erscheint.
+\end{wichtig}
+
+\begin{notiz}{Hinweis}
+Dies ist ein Hinweis, der kursiv mit fetter Überschrift erscheint.
+\end{notiz}
+\end{ausgabe}
+
+
+
+%%%%  UNTERKAPPITEL 3.2  %%%%
+\subsection{Syntax von \texttt{\textbackslash newenvironment}}
+
+Die allgemeine Syntax lautet:
+
+\begin{lstlisting}[style=latex]
+\newenvironment{umgebungsname}[anzahl_parameter][standardwert]
+  {beginn_definitionen}
+  {ende_definitionen}
+\end{lstlisting}
+
+\begin{itemize}
+    \item \texttt{umgebungsname}: Name der neuen Umgebung (ohne \textbackslash)
+    \item \texttt{[anzahl\_parameter]}: Anzahl der erwarteten Parameter (optional)
+    \item \texttt{[standardwert]}: Standardwert für ersten Parameter (optional)
+    \item \texttt{beginn\_definitionen}: Befehle, die am Anfang ausgeführt werden
+    \item \texttt{ende\_definitionen}: Befehle, die am Ende ausgeführt werden
+\end{itemize}
+
+\newpage
+
+
+%%%% KAPITEL 4  %%%%
+\section{Praktische Beispiele für den Schulalltag}
+
+
+
+%%%%  UNTERKAPITEL 4.1  %%%%
+\subsection{Mathematische Kürzel}
+
+Mathematische Befehle helfen, komplexe mathematische Ausdrücke zu vereinfachen:
+
+\begin{lstlisting}[style=latex]
+% Zahlenbereiche
+\newcommand{\N}{\mathbb{N}} % Natuerliche Zahlen
+\newcommand{\Z}{\mathbb{Z}} % Ganze Zahlen
+\newcommand{\Q}{\mathbb{Q}} % Rationale Zahlen
+\newcommand{\R}{\mathbb{R}} % Reelle Zahlen
+\newcommand{\C}{\mathbb{C}} % Komplexe Zahlen
+% Abkuerzungen fuer Analysis
+\newcommand{\limn}{\underset{n\longrightarrow \infty}{\lim}} % Grenzwert n gegen Unendlich
+\newcommand{\dx}{\text{\;d}x} % dx Operator fuer Integrale
+% Abkuerzungen fuer Vektoren
+\newcommand{\vektor}[3]{\begin{pmatrix} #1 \\ #2 \\ #3 \end{pmatrix}} % dreidimensionaler Vektor
+\end{lstlisting}
+
+\begin{ausgabe}
+Mathematische Mengen: $\N$, $\Z$, $\Q$, $\R$, $\C$
+
+Grenzwert: $\limn a_n = a$
+
+Integral: $\int f(x) \dx = F(x) + C$
+
+Vektor: $\vektor{1}{2}{3}$
+\end{ausgabe}
+
+
+
+%%%%  UNTERKAPITEL 4.2  %%%%
+\subsection{Verschiedene hilfreiche Kürzel}
+
+Hilfreiche Kürzel können Arbeitsblätter und Aufgaben ansprechender gestalten:
+
+\begin{lstlisting}[style=latex]
+% Automatisch erstellte Luecke wie die Laenge des Textes
+\newcommand{\luecke}[1]{\hspace{0,1cm}\underline{\hspace{0,25cm}\hphantom{#1}\hspace{0,25cm}}\hspace{0,1cm}}
+% Fett-kursive Schrift fuer neu eingefuehrte Begriffe
+\newcommand{\fk}[1]{\textbf{\textit{#1}}}
+% Farbige Formeln fuer Loesungen
+\newcommand{\frot}[1]{\text{\textcolor{red}{$#1$}}} % rote Formel fuer Loesungen
+\end{lstlisting}
+
+\begin{ausgabe}
+Ergänze: \luecke{Pythagoras}
+
+Heute lernen wir den Begriff \fk{Funktion} kennen.
+
+Die Lösung ist $\frot{x = 5}$, somit ist $\fblau{f(x) = 25}$.
+\end{ausgabe}
+
+
+
+%%%%  UNTERKAPITEL 4.3  %%%%
+\subsection{Kopfzeilen für Leistungsüberprüfungen}
+
+Mit dem Paket \texttt{fancyhdr} können Sie einheitliche Kopfzeilen für verschiedene Arten von Prüfungen definieren:
+
+\begin{lstlisting}[style=latex]
+% Definition Kopfzeile fuer Klassenarbeit mit \ka{Klasse}{Thema}
+\newcommand{\ka}[2]{%
+  \pagestyle{fancy}
+  \fancyhead[L]{%
+  \begin{tabular}[b]{l}
+    \\Name:\\Punkte:\\Note:
+  \end{tabular} 
+  }
+  \fancyhead[R]{%
+  \begin{tabular}[b]{r}
+    \\Klassenarbeit\\Klasse #1\\ \today
+  \end{tabular} 
+  }
+  \fancyhead[C]{%
+  \textbf{\large{#2}}\\
+  }
+  \fancyfoot[C]{}
+  \renewcommand{\headrulewidth}{1pt}
+  \fancyheadoffset{1cm}
+}
+\end{lstlisting}
+
+\begin{ausgabe}
+Verwendung im Dokument:
+
+\verb|\ka{10a}{Quadratische Funktionen}|
+
+
+(Erzeugt eine formatierte Kopfzeile mit Prüfungsart, Klasse, Thema und Feldern für Name, Punkte und Note)
+\end{ausgabe}
+
+
+
+%%%%  UNTERKAPITEL 4.4  %%%%
+\subsection{Farbfelder für Hervorhebungen}
+
+Mit dem Paket \texttt{tcolorbox} können Sie ansprechende farbige Boxen für wichtige Inhalte erstellen:
+
+\begin{lstlisting}[style=latex]
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable} % Fuer Boxen, die ueber Seitenumbrueche gehen
+\end{lstlisting}
+
+Somit können verschiedene Farbfelder je nach Wunsch gestaltet werden und durch folgenden Aufruf im Dokument verwenden.
+
+\begin{lstlisting}[style=latex]
+%Beispiel fuer eine Loesungsbox
+\begin{tcolorbox}[title=Loesung:, colback=gray!5!white, colframe=gray!75!black]
+	$a^2 + b^2 = c^2$\\
+	Nach Umstellung erhalten wir: $c = \sqrt{a^2 + b^2}$
+\end{tcolorbox}
+%Beispiel fuer Merksaetze
+\begin{tcolorbox}[title=Merke:, colback=red!5!white, colframe=red!75!black]
+	Eine quadratische Funktion hat die Form $f(x) = ax^2 + bx + c$ mit $a \neq 0$.
+\end{tcolorbox}
+\end{lstlisting}
+
+\begin{ausgabe}
+%Beispiel fuer eine Loesungsbox
+\begin{tcolorbox}[title=Lösung:, colback=gray!5!white, colframe=gray!75!black]
+	$a^2 + b^2 = c^2$\\
+	Nach Umstellung erhalten wir: $c = \sqrt{a^2 + b^2}$
+\end{tcolorbox}
+%Beispiel fuer Merksaetze
+\begin{tcolorbox}[title=Merke:, colback=red!5!white, colframe=red!75!black]
+	Eine quadratische Funktion hat die Form $f(x) = ax^2 + bx + c$ mit $a \neq 0$.
+\end{tcolorbox}
+\end{ausgabe}
+
+Es können auch Farbfelder vordefiniert werden. 
+
+\begin{lstlisting}[style=latex]
+%Farbfeld fuer Merksaetze
+\newtcolorbox{Merke}{%
+  colback=red!5!white,%
+  colframe=red!75!black,%
+  fonttitle=\bfseries,%
+  title=Merke:,%
+  enhanced,%
+  breakable,%
+}
+%Farbfeld fuer Loesungen mit abgesetzter Titelbox
+\newtcolorbox{solution}{%
+  lower separated=false,%
+  colback=gray!5!white,%
+  colframe=gray!75!black,%
+  fonttitle=\bfseries,%
+  title=Loesung:,%
+  enhanced,%
+  breakable,%
+  attach boxed title to top left={xshift=0.5cm,yshift=-2mm}%
+}
+\end{lstlisting}
+
+Somit können diese vordefinierten Farbfelder durch einen entsprechenden Umgebungsaufruf verwendet werden:
+
+\begin{lstlisting}[style=latex]
+\begin{Merke}
+	Eine quadratische Funktion hat die Form $f(x) = ax^2 + bx + c$ mit $a \neq 0$.
+\end{Merke}
+\begin{solution}
+	$a^2 + b^2 = c^2$\\
+	Nach Umstellung erhalten wir: $c = \sqrt{a^2 + b^2}$
+\end{solution}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\begin{alert}
+		Eine quadratische Funktion hat die Form $f(x) = ax^2 + bx + c$ mit $a \neq 0$.
+	\end{alert}
+	\begin{solution}
+		$a^2 + b^2 = c^2$\\
+	Nach Umstellung erhalten wir: $c = \sqrt{a^2 + b^2}$
+	\end{solution}
+\end{ausgabe}
+
+
+%%%%  KAPITEl 5  %%%%
+\section{Tipps für die Erstellung eigener Befehle und Umgebungen}
+
+Bei der Erstellung eigener Befehle und Umgebungen in \hologo{LaTeX} sollten einige grundlegende Prinzipien beachtet werden, um die Effizienz und Wartbarkeit zu optimieren. Aussagekräftige Namen sind dabei von zentraler Bedeutung – wählen Sie stets sinnvolle, beschreibende Bezeichnungen für Ihre Befehle und Umgebungen, die deren Funktion klar widerspiegeln und auch nach längerer Zeit noch verständlich sind. Für eine strukturierte Organisation empfiehlt es sich, häufig verwendete Definitionen in eine separate \texttt{.tex}-Datei auszulagern und diese mit dem Befehl \texttt{\textbackslash input\{dateiname.tex\}} einzubinden, was die Übersichtlichkeit erhöht und die Wiederverwendbarkeit in verschiedenen Dokumenten erleichtert. Eine sorgfältige Dokumentation durch aussagekräftige Kommentare zu Ihren Befehlen ist unerlässlich, damit Sie und möglicherweise auch andere Anwender später nachvollziehen können, wofür die einzelnen Definitionen gedacht waren und wie sie korrekt anzuwenden sind. Um problematische Wechselwirkungen zu vermeiden, sollten Sie Namenskonflikte mit bereits in \hologo{LaTeX} existierenden Befehlen umgehen, es sei denn, Sie beabsichtigen bewusst, diese zu überschreiben – in diesem Fall ist besondere Vorsicht geboten, da unerwartete Nebeneffekte auftreten können. Bei der Entwicklung komplexer Befehle empfiehlt sich eine systematische Fehlersuche durch gründliches Testen und schrittweisen Aufbau, wodurch potenzielle Probleme frühzeitig erkannt und behoben werden können.
+
+\section{Zusammenfassung}
+
+Die Möglichkeit, eigene Befehle und Umgebungen zu definieren, gehört zu den herausragenden Stärken von \hologo{LaTeX} und kann den Arbeitsaufwand bei der Dokumenterstellung erheblich reduzieren. Besonders für Lehrkräfte im MINT-Bereich, die regelmäßig ähnliche Dokumente mit wiederkehrenden Elementen erstellen, lohnt es sich, Zeit in die Entwicklung maßgeschneiderter Befehle zu investieren. Das \hologo{LaTeX}-System bietet hierfür verschiedene leistungsstarke Mechanismen: Mit \texttt{\textbackslash newcommand} lassen sich eigene Befehle erstellen, die komplexe Formatierungen oder häufig verwendete Ausdrücke zusammenfassen. Für Anpassungen bereits existierender Befehle steht \texttt{\textbackslash renewcommand} zur Verfügung, während \texttt{\textbackslash newenvironment} die Definition eigener Umgebungen mit spezifischem Anfangs- und Endverhalten ermöglicht. Diese Werkzeuge finden im Schulalltag vielfältige praktische Anwendungen – von mathematischen Abkürzungen über standardisierte Kopfzeilen für Prüfungen bis hin zu speziellen Formatierungsboxen für Merksätze oder Multiple-Choice-Fragen. Eine durchdacht konzipierte Sammlung eigener Befehle und Umgebungen führt nicht nur zu konsistenteren und professioneller wirkenden \hologo{LaTeX}-Dokumenten, sondern resultiert auch in erheblicher Zeitersparnis bei der Erstellung neuer Unterrichtsmaterialien. Zudem wird die Wartbarkeit verbessert, da Änderungen am Design oder Layout zentral vorgenommen werden können und sich automatisch auf alle Dokumente auswirken, die diese benutzerdefinierten Elemente verwenden.
+
+\end{document}

@@ -1,0 +1,223 @@
+\documentclass[12pt,a4paper]{article}
+
+% Benötigte Pakete für diese Handreichung
+\usepackage[utf8]{inputenc}        % UTF-8 als Zeichenkodierung
+\usepackage[T1]{fontenc}           % Westeuropäische Schriftkodierung
+\usepackage[ngerman]{babel}        % Deutsche Übersetzung und Silbentrennung
+\usepackage{lmodern}               % Moderne Schriftarten
+\usepackage{geometry}              % Ermöglicht die Anpassung der Seitengeometrie
+\usepackage{listings}              % Für die Darstellung von Quellcode
+\usepackage{xcolor}                % Für farbigen Text/Hintergrund
+\usepackage{hologo}
+
+% Seitenformat einstellen
+\geometry{a4paper, top=20mm, left=25mm, right=25mm, bottom=20mm}
+
+% Zeilenabstand festlegen
+\usepackage{setspace}
+\onehalfspacing
+
+% Einrückung am Absatzanfang deaktivieren
+\parindent=0pt
+
+%Einstellung der Codeumgebung für LaTeX-Code-Beispiele
+\lstdefinestyle{latex}{%
+  	language=TeX,%
+  	frame=single,%
+  	backgroundcolor=\color{yellow!20},%
+  	rulecolor=\color{lightgray!40},%
+  	breaklines=true,%
+  	basicstyle=\scriptsize\ttfamily,%
+  	keywordstyle=\bfseries\color{purple!40!black},%
+  	commentstyle=\itshape\color{green!40!black},%
+  	identifierstyle=\color{blue},%
+	stringstyle=\color{black},%
+	captionpos=b,%
+	%numbers=left,%
+	%numberstyle=\tiny\color{gray!90!black},%
+	%numbersep=5pt,%
+	tabsize=2,%
+	showspaces=false,%
+	showstringspaces=false,%
+  	showtabs=false,%
+	deletekeywords={document},%
+	morekeywords={begin}%
+}
+
+\title{Erste Schritte mit \hologo{LaTeX}: Die Präambel}
+\author{Martin Quandt}
+\date{13. Mai 2025}
+\pagestyle{plain}
+
+\begin{document}
+
+\maketitle
+
+\section{Einführung}
+
+Dieses Nachschlagewerk erläutert die Grundstruktur einer \hologo{LaTeX}-Datei mit Fokus auf die Präambel. Die Präambel ist der Teil am Anfang jedes \hologo{LaTeX}-Dokuments, der alle Einstellungen und Paketladebefehle enthält und vor dem eigentlichen Dokumentinhalt steht. Eine gute Präambel ist die Basis für ein professionell gestaltetes Dokument.
+
+\section{Die Struktur einer \hologo{LaTeX}-Datei}
+
+Jede \hologo{LaTeX}-Datei folgt dem gleichen grundlegenden Aufbau:
+
+\begin{lstlisting}[style=latex]
+% 1. Die Dokumentklasse wird festgelegt
+\documentclass[Optionen]{Klassenname}
+
+% 2. Pakete werden eingebunden und Einstellungen vorgenommen (= die Praeambel)
+\usepackage{...}
+...
+weitere Einstellungen...
+
+% 3. Der eigentliche Inhalt wird in die document-Umgebung geschrieben
+\begin{document}
+    Hier steht der eigentliche Inhalt des Dokuments.
+\end{document}
+\end{lstlisting}
+
+Der Bereich von der Festlegung der Dokumentklasse bis zum Beginn der \texttt{document}-Umgebung wird als \textbf{Präambel} bezeichnet. Sie enthält alle Konfigurationen, die für das gesamte Dokument gelten sollen.
+
+\section{Die Dokumentklasse}
+
+Die Dokumentklasse legt das grundlegende Layout und die verfügbaren Strukturelemente fest. Sie wird mit dem Befehl \texttt{\textbackslash documentclass} am Anfang des Dokuments definiert.
+
+\begin{lstlisting}[style=latex]
+\documentclass[12pt,a4paper]{article}
+\end{lstlisting}
+
+\subsection{Wichtige Dokumentklassen}
+
+\begin{itemize}
+    \item \texttt{article}: Für kürzere Dokumente ohne Kapiteleinteilung (z.B. Aufsätze, Arbeitsblätter)
+    \item \texttt{report}: Für längere Dokumente mit Kapiteln (z.B. Semesterberichte)
+    \item \texttt{book}: Für Bücher mit Kapiteln und Teilen
+    \item \texttt{beamer}: Für Präsentationen
+    \item \texttt{letter}: Für Briefe
+    \item \texttt{scrartcl}, \texttt{scrreprt}, \texttt{scrbook}: KOMA-Script-Klassen, die auf deutsche Typografie optimiert sind
+\end{itemize}
+
+\subsection{Optionen für Dokumentklassen}
+
+Die Optionen werden in eckigen Klammern angegeben und können verschiedene Aspekte des Layouts steuern:
+
+\begin{itemize}
+    \item Schriftgröße: \texttt{10pt}, \texttt{11pt}, \texttt{12pt}
+    \item Papierformat: \texttt{a4paper}, \texttt{letterpaper}
+    \item Layout: \texttt{oneside}, \texttt{twoside}
+    \item Spalten: \texttt{onecolumn}, \texttt{twocolumn}
+    \item Titelseite: \texttt{titlepage}, \texttt{notitlepage}
+    \item Andere: \texttt{draft}, \texttt{final}, \texttt{landscape}, ...
+\end{itemize}
+
+\section{Pakete einbinden}
+
+Pakete erweitern die Funktionalität von \hologo{LaTeX}. Sie werden mit dem Befehl \texttt{\textbackslash usepackage} in die Präambel eingebunden.
+
+\begin{lstlisting}[style=latex]
+\usepackage[Optionen]{Paketname}
+\end{lstlisting}
+
+\subsection{Grundlegende Pakete}
+
+\begin{lstlisting}[style=latex]
+% Zeichenkodierung und Sprachunterstuetzung
+\usepackage[utf8]{inputenc}       % UTF-8 als Zeichenkodierung
+\usepackage[T1]{fontenc}          % Westeuropaeische Schriftkodierung
+\usepackage[ngerman]{babel}       % Deutsche Uebersetzung und Silbentrennung
+\usepackage{lmodern}              % Moderne Schriftarten
+
+% Seitenlayout
+\usepackage{geometry}             % Seitengeometrie einstellen
+\geometry{a4paper, top=20mm, left=25mm, right=25mm, bottom=20mm}
+
+% Abstand und Absatzformatierung
+\usepackage{setspace}            % Zeilenabstand einstellen
+\onehalfspacing                  % 1,5-facher Zeilenabstand
+\parindent=0pt                   % Keine Einrueckung am Absatzanfang
+\parskip=6pt                     % Abstand zwischen Absaetzen
+\end{lstlisting}
+
+\section{Formatierungen in der Präambel}
+
+In der Präambel können zahlreiche Einstellungen vorgenommen werden, die das gesamte Dokument betreffen.
+
+\subsection{Seitengeometrie}
+
+Mit dem \texttt{geometry}-Paket lässt sich das Seitenlayout einstellen:
+
+\begin{lstlisting}[style=latex]
+\usepackage{geometry}
+\geometry{
+    a4paper,                % Papierformat A4
+    top=20mm,               % Oberer Rand
+    bottom=20mm,            % Unterer Rand
+    left=25mm,              % Linker Rand
+    right=25mm,             % Rechter Rand
+    includehead=true,       % Kopfzeile im Seitenbereich beruecksichtigen
+    includefoot=true,       % Fusszeile im Seitenbereich beruecksichtigen
+    headheight=14pt,        % Hoehe der Kopfzeile
+    headsep=10mm            % Abstand zwischen Kopfzeile und Text
+}
+\end{lstlisting}
+
+\section{Beispiel einer einfachen Präambel}
+
+\begin{lstlisting}[style=latex]
+\documentclass[12pt,a4paper]{article}
+
+% Grundlegende Pakete
+\usepackage[utf8]{inputenc}       % UTF-8 als Zeichenkodierung
+\usepackage[T1]{fontenc}          % Westeuropaeische Schriftkodierung
+\usepackage[ngerman]{babel}       % Deutsche Uebersetzung und Silbentrennung
+\usepackage{lmodern}              % Moderne Schriftarten
+
+% Seitenlayout
+\usepackage{geometry}
+\geometry{a4paper, top=20mm, left=25mm, right=25mm, bottom=20mm}
+
+% Abstaende
+\usepackage{setspace}
+\onehalfspacing                   % 1,5-facher Zeilenabstand
+\parindent=0pt                    % Keine Einrueckung am Absatzanfang
+\parskip=6pt                      % Abstand zwischen Absaetzen
+
+\begin{document}
+% Hier beginnt der eigentliche Inhalt des Dokuments
+\end{document}
+\end{lstlisting}
+
+\section{Tipps für eine gute Präambel}
+
+Bei der Erstellung einer LaTeX-Präambel sind einige bewährte Praktiken besonders hilfreich, um die Qualität und Wartbarkeit der Dokumente zu verbessern. Ein grundlegender Tipp ist, die Präambel ausführlich zu kommentieren, sodass später leicht nachvollzogen werden kann, welche Einstellung welchem Zweck dient. Dies erleichtert nicht nur die eigene Arbeit, sondern macht die Dokumente auch für andere Nutzer zugänglicher. Zu beachten ist auch, dass nur tatsächlich benötigte Pakete eingebunden werden sollten, da eine übermäßige Anzahl an Paketen zu unerwünschten Konflikten führen kann, die oft schwierig zu diagnostizieren sind.
+
+Eine effiziente Arbeitsweise unterstützt das Anlegen einer Vorlage mit einer persönlichen Standard-Präambel. Diese kann als Ausgangspunkt für neue Dokumente dienen und spart erheblich Zeit bei wiederkehrenden Aufgaben. Wichtig ist dabei die Beachtung der Ladereihenfolge der Pakete, da manche Pakete spezifische Abhängigkeiten haben und vor anderen geladen werden müssen, um korrekt zu funktionieren. Eine besonders praktische Methode für fortgeschrittene Nutzer ist das Auslagern häufig verwendeter Formatierungen in eine externe Header-Datei, die dann mit dem Befehl \texttt{\textbackslash input\{header.tex\}} in verschiedene Dokumente eingebunden werden kann.
+
+
+\section{Ausführliche Präambel-Vorlagen}
+
+In folgendem Beispiel wird eine fertige Präambel zur Verfügung gestellt. Diese kann in einer Datei namens \texttt{header.tex} gespeichert und mit \texttt{\textbackslash input{header.tex}} in Dokumente eingebunden werden.
+
+\begin{lstlisting}[style=latex]
+% Mit \input{header.tex} kann dieser Header in anderen Dokumenten eingebunden werden
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{lmodern}
+\usepackage{geometry}
+\geometry{a4paper, top=20mm, left=25mm, right=25mm, bottom=20mm}
+\usepackage{setspace}
+\onehalfspacing
+\parindent=0pt
+\parskip=6pt
+
+% Weitere Pakete je nach Bedarf hinzufuegen
+\end{lstlisting}
+
+\section{Zusammenfassung}
+
+Die Präambel bildet das zentrale Element jedes \hologo{LaTeX}-Dokuments und bestimmt entscheidend dessen visuelles und strukturelles Erscheinungsbild. Ein durchdachter Aufbau der Präambel zeichnet sich durch mehrere Qualitätsmerkmale aus: Sie wählt die für den jeweiligen Dokumenttyp am besten geeignete Dokumentklasse aus, die den grundlegenden Rahmen für alle weiteren Formatierungen bildet. Darüber hinaus werden nur die tatsächlich erforderlichen Pakete eingebunden, wodurch Konflikte vermieden und die Kompilierungsgeschwindigkeit optimiert wird.
+
+Eine gelungene Präambel enthält zudem sinnvolle Grundeinstellungen, die an die spezifischen Bedürfnisse des Dokuments angepasst sind, wie etwa Seitenränder, Zeilenabstände oder Schriftarten. Besonders wertvoll für die langfristige Nutzung und Wartung ist eine gute Kommentierung, die Zweck und Funktion der einzelnen Einstellungen erläutert und so auch nach längerer Zeit eine schnelle Orientierung ermöglicht. Mit einer solchen durchdachten Präambel als Fundament steht der Erstellung professioneller und ansprechender Dokumente nichts mehr im Wege, die sowohl funktional als auch ästhetisch überzeugen. In den folgenden Handreichungen werden weiterführende Aspekte wie die Erstellung von Grafiken mit Ti\textit{k}Z und andere spezialisierte Pakete behandelt, die auf diesem Grundwissen aufbauen.
+
+\end{document}

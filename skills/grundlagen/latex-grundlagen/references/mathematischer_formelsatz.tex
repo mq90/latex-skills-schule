@@ -1,0 +1,942 @@
+\documentclass[12pt,a4paper]{article}
+
+% Benötigte Pakete für diese Handreichung
+\usepackage[utf8]{inputenc}        % UTF-8 als Zeichenkodierung
+\usepackage[T1]{fontenc}           % Westeuropaeische Schriftkodierung
+\usepackage[ngerman]{babel}        % Deutsche Uebersetzung und Silbentrennung
+\usepackage{lmodern}               % Moderne Schriftarten
+\usepackage{geometry}              % Ermoeglicht die Anpassung der Seitengeometrie
+\usepackage{listings}              % Fuer die Darstellung von Quellcode
+\usepackage{xcolor}                % Fuer farbigen Text/Hintergrund
+\usepackage{amsmath}               % Erweiterter mathematischer Formelsatz
+\usepackage{amssymb}               % Zusätzliche mathematische Symbole
+\usepackage{mathrsfs}              % Schreibschrift-Symbole
+\usepackage{mathtools}             % Ergänzungen zu amsmath
+\usepackage{tcolorbox}             % Für schöne Boxen um die Beispiele
+\usepackage{array}                 % Für verbesserte Tabellen
+\usepackage{booktabs}              % Für professionelle Tabellen
+\usepackage{hologo}
+
+% Seitenformat einstellen
+\geometry{a4paper, top=20mm, left=25mm, right=25mm, bottom=20mm}
+
+% Zeilenabstand festlegen
+\usepackage{setspace}
+\onehalfspacing
+
+% Einrückung am Absatzanfang deaktivieren
+\parindent=0pt
+
+%Einstellung der Codeumgebung für \hologo{LaTeX}-Code-Beispiele
+\lstdefinestyle{latex}{%
+  	language=TeX,%
+  	frame=single,%
+  	backgroundcolor=\color{yellow!20},%
+  	rulecolor=\color{lightgray!40},%
+  	breaklines=true,%
+  	basicstyle=\scriptsize\ttfamily,%
+  	keywordstyle=\bfseries\color{purple!40!black},%
+  	commentstyle=\itshape\color{green!40!black},%
+  	identifierstyle=\color{blue},%
+	stringstyle=\color{black},%
+	captionpos=b,%
+	tabsize=2,%
+	showspaces=false,%
+	showstringspaces=false,%
+  	showtabs=false,%
+	deletekeywords={document},%
+	morekeywords={begin}%
+}
+
+% Definition einer Box für Beispielausgaben
+\newtcolorbox{ausgabe}{
+    colback=blue!5,
+    colframe=blue!50!black,
+    title=Ausgabe,
+    fonttitle=\bfseries
+}
+
+\title{Erste Schritte mit mathematischem Formelsatz in \hologo{LaTeX}}
+\author{Martin Quandt}
+\date{13. Mai 2025}
+\pagestyle{plain}
+\begin{document}
+
+\maketitle
+
+
+
+%%%%  KAPITEL 1  %%%%
+\section{Einführung}
+
+Eine der größten Stärken von \hologo{LaTeX} ist der professionelle mathematische Formelsatz. Im Gegensatz zu anderen Textsystemen, in denen Formeln mühsam mit speziellen Editoren oder durch Drag\&Drop erstellt werden müssen, bietet \hologo{LaTeX} eine intuitive und effiziente Methode, komplexe mathematische Ausdrücke zu setzen. Dieses Nachschlagewerk stellt die Grundlagen des mathematischen Formelsatzes vor und gibt zahlreiche Beispiele für die Verwendung im MINT-Unterricht.
+
+
+
+%%%%  KAPITEL 2  %%%%
+\section{Mathematische Umgebungen}
+
+In \hologo{LaTeX} gibt es verschiedene Umgebungen für mathematische Formeln:
+
+\begin{lstlisting}[style=latex]
+% Inline-Mathematik (im Fliesstext)
+Dies ist eine Formel $f(x) = x^2$ im Fliesstext.
+% Abgesetzte Formel ohne Nummerierung
+\begin{equation*}
+  f(x) = x^2 + 2x + 1
+\end{equation*}
+% Abgesetzte Mathematik mit automatischer Nummerierung
+\begin{equation}
+  f(x) = x^2 + 2x + 1
+\end{equation}
+% Mehrere Gleichungen mit Ausrichtung (amsmath)
+\begin{align}
+  f(x) &= x^2 + 2x + 1 \\
+  &= (x+1)^2
+\end{align}
+% Mehrere Gleichungen ohne Nummerierung (amsmath)
+\begin{align*}
+  f(x) &= x^2 + 2x + 1 \\
+  &= (x+1)^2
+\end{align*}
+\end{lstlisting}
+
+\begin{ausgabe}
+Dies ist eine Formel $f(x) = x^2$ im Fließtext.
+
+\begin{equation*}
+  f(x) = x^2 + 2x + 1
+\end{equation*}
+
+\begin{equation}
+  f(x) = x^2 + 2x + 1
+\end{equation}
+
+\begin{align}
+  f(x) &= x^2 + 2x + 1 \\
+  &= (x+1)^2
+\end{align}
+
+\begin{align*}
+  f(x) &= x^2 + 2x + 1 \\
+  &= (x+1)^2
+\end{align*}
+\end{ausgabe}
+
+
+
+%%%%  KAPITEL 3  %%%%
+\section{Grundlegende mathematische Symbole}
+
+
+
+%%%% UNTERKAPITEL 3.1  %%%%
+\subsection{Elementare Operatoren}
+
+\begin{lstlisting}[style=latex]
+$a + b$          % Addition
+$a - b$          % Subtraktion
+$a \cdot b$      % Punktprodukt
+$a \times b$     % Kreuzprodukt
+$a / b$          % Division mit Schraegstrich
+$\frac{a}{b}$    % Division mit Bruchstrich
+$a^b$            % Potenz
+$\sqrt{a}$       % Quadratwurzel
+$\sqrt[n]{a}$    % n-te Wurzel
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{tabular}{l c l}
+	$a + b$ & & Addition\\
+	$a - b$ & & Subtraktion\\
+	$a \cdot b$ & & Punktprodukt\\
+	$a \times b$ & & Kreuzprodukt\\
+	$a / b$ & & Division mit Schrägstrich\\
+	$\frac{a}{b}$ & & Division mit Bruchstrich\\
+	$a^b$ & & Potenz\\
+	$\sqrt{a}$ & & Quadratwurzel\\
+	$\sqrt[n]{a}$ & & $n$-te Wurzel
+\end{tabular}
+\end{ausgabe}
+
+
+
+%%%%  UNTERKAPITEL 3.2  %%%%
+\subsection{Vergleichsoperatoren}
+
+\begin{lstlisting}[style=latex]
+$a = b$          % Gleich
+$a \neq b$       % Ungleich
+$a < b$          % Kleiner als
+$a > b$          % Groesser als
+$a \leq b$       % Kleiner oder gleich
+$a \geq b$       % Groesser oder gleich
+$a \approx b$    % Ungefaehr gleich
+$a \sim b$       % Aehnlich
+$a \cong b$      % Kongruent
+$a \equiv b$     % Identisch
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{tabular}{l c l c l c l}
+	$a = b$ & & Gleich & \hspace{2cm} & $a \geq b$ & & Größer oder gleich\\
+	$a \neq b$ & & Ungleich & & $a \approx b$ & & Ungefähr gleich\\
+	$a < b$ & & Kleiner als & & $a \sim b$ & & Ähnlich\\
+	$a > b$ & & Größer als & & $a \cong b$ & & Kongruent\\
+	$a \leq b$ & & Kleiner oder gleich & & $a \equiv b$ & & Identisch
+\end{tabular}
+\end{ausgabe}
+
+
+
+%%%%  UNTERKAPITEL 3.3  %%%%
+\subsection{Mengenoperatoren}
+
+\begin{lstlisting}[style=latex]
+$A \cup B$       % Vereinigung
+$A \cap B$       % Schnitt
+$A \setminus B$  % Differenz
+$A \subset B$    % Echte Teilmenge
+$A \subseteq B$  % Teilmenge
+$A \supset B$    % Echte Obermenge
+$A \supseteq B$  % Obermenge
+$x \in A$        % Element von
+$x \notin A$     % Kein Element von
+$\emptyset$      % Leere Menge
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{tabular}{l c l c l c l}
+	$A \cup B$ & & Vereinigung & \hspace{2cm} & $A \supset B$ & & Echte Obermenge\\
+	$A \cap B$ & &  Schnitt & & $A \supseteq B$ & & Obermenge\\
+	$A \setminus B$ & & Differenz & & $x \in A$ & & Element von\\
+	$A \subset B$ & & Echte Teilmenge & & $x \notin A$ & & Kein Element von\\
+	$A \subseteq B$ & & Teilmenge & & $\emptyset$ & & Leere Menge
+\end{tabular}
+\end{ausgabe}
+
+
+
+%%%%  UNTERKAPITEL 3.4  %%%%
+\subsection{Logische Operatoren}
+
+\begin{lstlisting}[style=latex]
+$\neg p$         					% Negation (nicht)
+$p \wedge q$     					% Konjunktion (und)
+$p \vee q$      				 	% Disjunktion (oder)
+$p \Rightarrow q$ 				% Implikation (wenn ... dann)
+$p \Leftrightarrow q$ 		% Aequivalenz (genau dann, wenn)
+$\forall x$      					% Allquantor (fuer alle)
+$\exists x$      					% Existenzquantor (es existiert)
+$\therefore$     					% Folglich
+$\because$       					% Weil
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{tabular}{l c l c l c l}
+	$\neg p$ & & Negation (nicht) & & $\forall x$ & & Allquantor (für alle)\\
+	$p \wedge q$ & & Konjunktion (und) & & $\exists x$ & & Existenzquantor (es existiert)\\
+	$p \vee q$ & & Disjunktion (oder) & & $\therefore$ & & Folglich\\
+	$p \Rightarrow q$ & & Implikation (wenn ... dann) & & $\because$ & & Weil\\
+	$p \Leftrightarrow q$ & & Äquivalenz (genau dann, wenn)
+\end{tabular}
+\end{ausgabe}
+
+
+
+%%%%  KAPITEL 4  %%%%
+\section{Wichtige mathematische Strukturen}
+
+
+
+%%%% UNTERKAPITEL 4.1  %%%%
+\subsection{Indizes und Exponenten}
+
+\begin{lstlisting}[style=latex]
+$x^2$            % Quadrat
+$x^n$            % Potenz
+$x_i$            % Index
+$x_{i,j}$        % Mehrfacher Index
+$x^2_i$          % Kombination
+$x_i^2$          % Alternative Schreibweise
+$x_i^{j+k}$      % Komplexer Exponent
+${x_i}^j$        % Gruppierung
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{tabular}{l c l c l c l}
+	$x^2$ & & Quadrat & \hspace{1cm} & $x^2_i$ & & Kombination\\
+	$x^n$ & & Potenz & & $x_i^2$ & & Alternative Schreibweise\\
+	$x_i$ & & Index & & $x_i^{j+k}$ & & Komplexer Exponent\\
+	$x_{i,j}$ & & Mehrfacher Index & & ${x_i}^j$ & & Gruppierung
+\end{tabular}
+\end{ausgabe}
+
+
+
+%%%%  UNTERKAPITEL 4.2  %%%%
+\subsection{Brüche und Binomialkoeffizienten}
+
+\begin{lstlisting}[style=latex]
+$\frac{a}{b}$   				 	% Bruch
+$\dfrac{a}{b}$   					% Grosser Bruch (auch im Fliesstext)
+$\tfrac{a}{b}$   					% Kleiner Bruch
+$\binom{n}{k}$   					% Binomialkoeffizient
+$\dbinom{n}{k}$  					% Grosser Binomialkoeffizient
+$\tbinom{n}{k}$  					% Kleiner Binomialkoeffizient
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{tabular}{l c l c l c l}
+	\vspace{0.25cm}
+	$\frac{a}{b}$ & & Bruch & & $\binom{n}{k}$ & & Binomialkoeffizient\\
+	\vspace{0.25cm}
+	$\dfrac{a}{b}$ & & Großer Bruch (auch im Fließtext) & & $\dbinom{n}{k}$ & & Großer Binomialkoeffizient\\
+	$\tfrac{a}{b}$ & & Kleiner Bruch & & $\tbinom{n}{k}$ & & Kleiner Binomialkoeffizient
+\end{tabular}
+\end{ausgabe}
+
+
+
+%%%%  UNTERKAPITEL 4.3  %%%%
+\subsection{Klammern und Begrenzungen}
+
+\begin{lstlisting}[style=latex]
+$(a+b)$          													% Runde Klammern
+$[a+b]$          													% Eckige Klammern			
+$\{a+b\}$        													% Geschweifte Klammern
+$\langle a+b \rangle$ 										% Spitze Klammern
+$|a+b|$          													% Betragsstriche
+$\|a+b\|$        													% Doppelte Betragsstriche (Norm)
+$\lfloor a+b \rfloor$ 										% Abrunden (Gaussklammer)
+$\lceil a+b \rceil$ 											% Aufrunden (Aufrundungsklammer)
+% Automatisch angepasste Groesse
+$\left( \frac{a}{b} \right)$ 							% Grosse Klammern
+$\left\lvert \frac{a}{b} \right\rvert$ 		% Grosse Betragsstriche
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{tabular}{l c l c l c l}
+	$(a+b)$ & & Runde Klammern & & $\|a+b\|$ & & Norm\\
+	$[a+b]$ & & Eckige Klammern & & $\lfloor a+b \rfloor$ & & Abrunden (Gaußklammer)\\
+	$\{a+b\}$ & & Geschweifte Klammern & & $\lceil a+b \rceil$ & & Aufrunden (Gaußklammer)\\
+	$\langle a+b \rangle$ & & Spitze Klammern & & $\left( \frac{a}{b} \right)$ & & Große Klammern\\
+	$|a+b|$ & & Betragsstriche & & $\left\lvert \frac{a}{b} \right\rvert$ & & Große Betragsstriche
+\end{tabular}
+\end{ausgabe}
+
+
+
+%%%%  KAPITEL 5  %%%%
+\section{Summen, Produkte und Integrale}
+
+
+
+%%%%  UNTERKAPITEL 5.1  %%%%
+\subsection{Summen und Produkte}
+
+\begin{lstlisting}[style=latex]
+$\sum_{i=1}^{n} i$           		% Summe
+$\prod_{i=1}^{n} i$           	% Produkt
+$\sum\limits_{i=1}^{n} i$     	% Summe mit Grenzen immer unterhalb/oberhalb
+$\sum\nolimits_{i=1}^{n} i$   	% Summe mit Grenzen immer seitlich
+% Im Displaymodus werden die Grenzen automatisch unterhalb/oberhalb gesetzt
+\begin{equation*}
+  \sum_{i=1}^{n} i = \frac{n(n+1)}{2}
+\end{equation*}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{tabular}{l c l c l c l}
+$\sum_{i=1}^{n} i$ & & Summe & \hspace{1cm } & $\sum\limits_{i=1}^{n} i$ & & Grenzen immer unterhalb/oberhalb\\
+$\prod_{i=1}^{n} i$ & &  Produkt & & $\sum\nolimits_{i=1}^{n} i$ & & Grenzen immer seitlich
+\end{tabular}
+\begin{equation*}
+  \sum_{i=1}^{n} i = \frac{n(n+1)}{2}
+\end{equation*}
+\end{ausgabe}
+
+
+
+%%%%  UNTERKAPITEL 5.2  %%%%
+\subsection{Integrale und Ableitungen}
+
+\begin{lstlisting}[style=latex]
+$\int f(x) \, dx$          			 			% Unbestimmtes Integral
+$\int_a^b f(x) \, dx$       					% Bestimmtes Integral
+$\oint f(x) \, dx$          					% Geschlossenes Integral
+$\iint f(x,y) \, dx \, dy$  					% Doppelintegral
+$\iiint f(x,y,z) \, dx \, dy \, dz$ 	% Dreifachintegral
+$\frac{d}{dx} f(x)$         					% Ableitung
+$\frac{d^2}{dx^2} f(x)$     					% Zweite Ableitung
+$\frac{\partial f}{\partial x}$ 			% Partielle Ableitung
+$\nabla f$                  					% Gradient
+$\dot{x}$                   					% Zeitableitung (Newton-Notation)
+$\ddot{x}$                 						% Zweite Zeitableitung
+$f'(x)$             									% Ableitung (Lagrange-Notation)
+% Im Displaymodus werden die Grenzen automatisch unterhalb/oberhalb gesetzt
+\begin{equation*}
+  \int_{-\infty}^{\infty} f(x) \, dx
+\end{equation*}        					
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{tabular}{l l l l}
+	$\int f(x) \, dx$ & Unbestimmtes Integral & $\frac{d}{dx} f(x)$ & Ableitung\\
+	$\int_a^b f(x) \, dx$ & Bestimmtes Integral & $\frac{d^2}{dx^2} f(x)$ & Zweite Ableitung\\
+	$\oint f(x) \, dx$ & Geschlossenes Integral & $\frac{\partial f}{\partial x}$ & Partielle Ableitung\\
+	$\iint f(x,y) \, dx \, dy$ & Doppelintegral & $\nabla f$ & Gradient\\
+	$\iiint f(x,y,z) \, dx \, dy \, dz$ & Dreifachintegral & $\dot{x}$ & Zeitableitung (Newton)\\
+	$f'(x)$ & Ableitung (Lagrange) & $\ddot{x}$ & Zweite Zeitableitung
+\end{tabular}
+\begin{equation*}
+  \int_{-\infty}^{\infty} f(x) \, dx
+\end{equation*} 
+\end{ausgabe}
+
+
+
+%%%%  UNTERKAPITEL 5.3  %%%%
+\subsection{Grenzwerte}
+
+\begin{lstlisting}[style=latex]
+$\lim_{x \to \infty} f(x)$   		% Grenzwert
+$\lim_{x \to 0^+} f(x)$      		% Rechtsseitiger Grenzwert
+$\lim_{x \to 0^-} f(x)$      		% Linksseitiger Grenzwert
+$\limsup_{n \to \infty} a_n$ 		% Limes superior
+$\liminf_{n \to \infty} a_n$ 		% Limes inferior
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{tabular}{l c l}
+	$\lim_{x \to \infty} f(x)$ & & Grenzwert\\
+	$\lim_{x \to 0^+} f(x)$ & & Rechtsseitiger Grenzwert\\
+	$\lim_{x \to 0^-} f(x)$ & & Linksseitiger Grenzwert\\
+	$\limsup_{n \to \infty} a_n$ & & Limes superior\\
+	$\liminf_{n \to \infty} a_n$ & & Limes inferior
+\end{tabular}
+\end{ausgabe}
+
+
+
+%%%% KAPITEL 6  %%%%
+\section{Matrizen und Vektoren}
+
+
+
+%%%%  UNTERKAPITEL 6.1  %%%%
+\subsection{Vektoren und Pfeile}
+
+\begin{lstlisting}[style=latex]
+$\vec{a}$                   % Vektor (Pfeil)
+$\overrightarrow{AB}$       % Vektor von A nach B
+$\mathbf{a}$                % Vektor (fettgedruckt)
+$\underline{a}$             % Unterstrichener Vektor
+$\widehat{a}$               % Einheitsvektor (mit Dach)
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{tabular}{l c l}
+	$\vec{a}$ & & Vektor (Pfeil)\\
+	$\overrightarrow{AB}$ & & Vektor von A nach B\\
+	$\mathbf{a}$ & & Vektor (fettgedruckt)\\
+	$\underline{a}$ & & Unterstrichener Vektor\\
+	$\widehat{a}$ & & Einheitsvektor (mit Dach)
+\end{tabular}
+\end{ausgabe}
+
+
+
+%%%%  UNTERKAPITEL 6.2  %%%%
+\subsection{Matrizen}
+
+\begin{lstlisting}[style=latex]
+% Matrix ohne Klammern
+\begin{matrix}
+  a & b \\
+  c & d
+\end{matrix}
+% Matrix mit runden Klammern
+\begin{pmatrix}
+  a & b \\
+  c & d
+\end{pmatrix}
+% Matrix mit eckigen Klammern
+\begin{bmatrix}
+  a & b \\
+  c & d
+\end{bmatrix}
+% Matrix mit geschweiften Klammern
+\begin{Bmatrix}
+  a & b \\
+  c & d
+\end{Bmatrix}
+% Matrix mit senkrechten Strichen
+\begin{vmatrix}
+  a & b \\
+  c & d
+\end{vmatrix}
+% Matrix mit doppelten senkrechten Strichen
+\begin{Vmatrix}
+  a & b \\
+  c & d
+\end{Vmatrix}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{tabular}{c c l}
+	\vspace{0.1cm}
+	$\begin{matrix}
+	  a & b \\
+	  c & d
+	\end{matrix}$ & & Matrix ohne Klammern\\
+	\vspace{0.1cm}
+	$\begin{pmatrix}
+	  a & b \\
+	  c & d
+	\end{pmatrix}$ & & Matrix mit runden Klammern\\
+	\vspace{0.1cm}
+	$\begin{bmatrix}
+	  a & b \\
+	  c & d
+	\end{bmatrix}$ & & Matrix mit eckigen Klammern\\
+	\vspace{0.1cm}
+	$\begin{Bmatrix}
+	  a & b \\
+	  c & d
+	\end{Bmatrix}$ & & Matrix mit geschweiften Klammern\\
+	\vspace{0.1cm}
+	$\begin{vmatrix}
+	  a & b \\
+	  c & d
+	\end{vmatrix}$ & & Matrix mit senkrechten Strichen (Determinante)\\
+	$\begin{Vmatrix}
+	  a & b \\
+	  c & d
+	\end{Vmatrix}$ & & Matrix mit doppelten senkrechten Strichen (Norm)\\
+\end{tabular}
+\end{ausgabe}
+
+
+
+%%%% UNTERKAPITEL 6.3
+\subsection{Erweiterte Matrizen}
+
+\begin{lstlisting}[style=latex]
+% Grosse Matrix mit Auslassungspunkten
+\begin{pmatrix}
+  a_{11} & a_{12} & \cdots & a_{1n} \\
+  a_{21} & a_{22} & \cdots & a_{2n} \\
+  \vdots & \vdots & \ddots & \vdots \\
+  a_{m1} & a_{m2} & \cdots & a_{mn}
+\end{pmatrix}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}$\begin{pmatrix}
+  a_{11} & a_{12} & \cdots & a_{1n} \\
+  a_{21} & a_{22} & \cdots & a_{2n} \\
+  \vdots & \vdots & \ddots & \vdots \\
+  a_{m1} & a_{m2} & \cdots & a_{mn}
+\end{pmatrix}$\end{center}
+\end{ausgabe}
+
+
+
+%%%% KAPITEL 7  %%%%
+\section{Fallunterscheidungen und mehrzeilige Gleichungen}
+
+
+
+%%%% UNTERKAPITEL 7.1
+\subsection{Fallunterscheidungen mit \texttt{cases}}
+
+\begin{lstlisting}[style=latex]
+% Betragsfunktion
+\begin{equation*}
+|x| = 
+\begin{cases}
+  x, & \text{wenn } x \geq 0 \\
+  -x, & \text{wenn } x < 0
+\end{cases}
+\end{equation*}
+% Signum-Funktion
+\begin{equation*}
+\operatorname{sgn}(x) = 
+\begin{cases}
+  1, & \text{falls } x > 0 \\
+  0, & \text{falls } x = 0 \\
+  -1, & \text{falls } x < 0
+\end{cases}
+\end{equation*}
+\end{lstlisting}
+
+\begin{ausgabe}
+Betragsfunktion:
+\begin{equation*}
+\hspace{0.9cm} |x| = 
+\begin{cases}
+  x, & \text{wenn } x \geq 0 \\
+  -x, & \text{wenn } x < 0
+\end{cases}
+\end{equation*}
+
+Signum-Funktion:
+\begin{equation*}
+\operatorname{sgn}(x) = 
+\begin{cases}
+  1, & \text{falls } x > 0 \\
+  0, & \text{falls } x = 0 \\
+  -1, & \text{falls } x < 0
+\end{cases}
+\end{equation*}
+\end{ausgabe}
+
+
+
+%%%% UNTERKAPITEL 7.2  %%%%
+\subsection{Ausgerichtete Gleichungen}
+
+\begin{lstlisting}[style=latex]
+% Mehrere Gleichungen mit align
+\begin{align}
+  (x+1)^2 &= (x+1)(x+1) \\
+  &= x^2 + x + x + 1 \\
+  &= x^2 + 2x + 1
+\end{align}
+% Mehrere Gleichungen mit align ohne Nummerierung
+\begin{align*}
+  (x+1)^2 &= (x+1)(x+1) \\
+  &= x^2 + x + x + 1 \\
+  &= x^2 + 2x + 1
+\end{align*}
+\end{lstlisting}
+
+\begin{ausgabe}
+Mehrere Gleichungen mit der \texttt{align}-Umgebung (mit Nummerierung):
+\begin{align}
+  (x+1)^2 &= (x+1)(x+1) \\
+  &= x^2 + x + x + 1 \\
+  &= x^2 + 2x + 1
+\end{align}
+Mehrere Gleichungen mit der \texttt{align*}-Umgebung (ohne Nummerierung):
+\begin{align*}
+  (x+1)^2 &= (x+1)(x+1) \\
+  &= x^2 + x + x + 1 \\
+  &= x^2 + 2x + 1
+\end{align*}
+\end{ausgabe}
+
+\section{Griechische Buchstaben}
+
+Griechische Buchstaben werden in der Mathematik häufig verwendet und sind in \hologo{LaTeX} einfach einzufügen.
+
+\begin{lstlisting}[style=latex]
+% Kleinbuchstaben
+$\alpha$, $\beta$, $\gamma$, $\delta$, $\epsilon$, $\varepsilon$, 
+$\zeta$, $\eta$, $\theta$, $\vartheta$, $\iota$, $\kappa$, 
+$\lambda$, $\mu$, $\nu$, $\xi$, $o$, $\pi$, $\varpi$, 
+$\rho$, $\varrho$, $\sigma$, $\varsigma$, $\tau$, $\upsilon$, 
+$\phi$, $\varphi$, $\chi$, $\psi$, $\omega$
+
+% Grossbuchstaben
+$\Gamma$, $\Delta$, $\Theta$, $\Lambda$, $\Xi$, $\Pi$, 
+$\Sigma$, $\Upsilon$, $\Phi$, $\Psi$, $\Omega$
+\end{lstlisting}
+
+\begin{ausgabe}
+Kleinbuchstaben:
+
+$\alpha$, $\beta$, $\gamma$, $\delta$, $\epsilon$, $\varepsilon$, 
+$\zeta$, $\eta$, $\theta$, $\vartheta$, $\iota$, $\kappa$, 
+$\lambda$, $\mu$, $\nu$, $\xi$, $o$, $\pi$, $\varpi$, 
+$\rho$, $\varrho$, $\sigma$, $\varsigma$, $\tau$, $\upsilon$, 
+$\phi$, $\varphi$, $\chi$, $\psi$, $\omega$
+
+Großbuchstaben:
+
+$\Gamma$, $\Delta$, $\Theta$, $\Lambda$, $\Xi$, $\Pi$, 
+$\Sigma$, $\Upsilon$, $\Phi$, $\Psi$, $\Omega$
+\end{ausgabe}
+
+\section{Akzente und Dekorationen}
+
+\begin{lstlisting}[style=latex]
+$\hat{a}$        													% Hut
+$\check{a}$      													% Haekchen
+$\tilde{a}$      													% Tilde
+$\acute{a}$      													% Akut-Akzent
+$\grave{a}$      													% Gravis-Akzent
+$\dot{a}$        													% Punkt darueber
+$\ddot{a}$      					 								% Zwei Punkte darueber
+$\breve{a}$      													% Breve
+$\bar{a}$        													% Ueberstrich
+$\vec{a}$        													% Vektorpfeil
+$\widehat{abc}$  													% Hut ueber mehreren Buchstaben
+$\overline{abc}$ 													% Ueberstrich ueber mehreren Buchstaben
+$\underline{abc}$ 												% Unterstrich
+$\overbrace{abc}$ 												% Geschweifte Klammer oben
+$\underbrace{abc}$ 												% Geschweifte Klammer unten
+$\overbrace{abc}^{\text{Anmerkung}}$ 			% Mit Anmerkung oben
+$\underbrace{abc}_{\text{Anmerkung}}$ 		% Mit Anmerkung unten
+$\boxed{a+b=c}$  													% In einer Box
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{tabular}{l l c l}
+	$\hat{a}$ & Zirkumflex & $\vec{a}$ & Vektorpfeil\\
+	$\check{a}$ & Hatschek & $\widehat{abc}$ & Hut über mehreren Buchstaben\\
+	$\tilde{a}$ & Tilde & $\overline{abc}$ & Überstrich über mehreren Buchstaben\\
+	$\acute{a}$ & Akut-Akzent & $\underline{abc}$ & Unterstrich\\
+	$\grave{a}$ & Gravis-Akzent & $\overbrace{abc}$ & Geschweifte Klammer oben\\
+	$\dot{a}$ & Punkt darüber & $\underbrace{abc}$ & Geschweifte Klammer unten\\
+	$\ddot{a}$ & Zwei Punkte darüber & $\overbrace{abc}^{\text{Anmerkung}}$ & Mit Anmerkung oben\\
+	$\breve{a}$ & Breve & $\underbrace{abc}_{\text{Anmerkung}}$ & Mit Anmerkung unten\\
+	$\bar{a}$ & Überstrich & $\boxed{a+b=c}$ & In einer Box
+\end{tabular}
+\end{ausgabe}
+
+
+
+%%%% KAPITEL 10  %%%%
+\section{Spezielle Funktionen und Symbole}
+
+
+
+%%%% UNTERKAPITEL 10.1  %%%%
+\subsection{Operatoren und Funktionen}
+
+\begin{lstlisting}[style=latex]
+$\sin x$         					%Sinus-Funktion
+$\cos x$         					%Kosinus-Funktion
+$\tan x$         					%Tangens-Funktion
+$\cot x$         					%Kotangens-Funktion
+$\sec x$         					%Sekans-Funktion
+$\csc x$         					%Kosekans-Funktion
+$\sinh x$        					%Sinus hyperbolicus
+$\cosh x$        					%Kosinus hyperbolicus
+$\tanh x$        					%Tangens hyperbolicus
+$\arcsin x$      					%Arkussinus-Funktion
+$\arccos x$      					%Arkuskosinus-Funktion
+$\arctan x$      					%Arkustangens-Funktion
+$\ln x$          					%Natuerlicher Logarithmus
+$\log x$         					%Logarithmus
+$\log_{10} x$    					%Logarithmus zur Basis 10
+$\lg x$          					%Logarithmus zur Basis 10 (Kurzform)
+$\exp x$         					%Exponentialfunktion
+
+% Eigene Funktionsoperatoren definieren
+\operatorname{arg} z  		%Argument einer komplexen Zahl
+\operatorname{sgn} x 	 		%Signumfunktion
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{tabular}{l l c l l}
+	$\sin x$ & Sinus-Funktion & & $\arcsin x$ & Arkussinus-Funktion\\
+	$\cos x$ & Kosinus-Funktion & & $\arccos x$ & Arkuskosinus-Funktion\\
+	$\tan x$ & Tangens-Funktion & & $\arctan x$ & Arkustangens-Funktion\\
+	$\cot x$ & Kotangens-Funktion & & $\ln x$ & Natürlicher Logarithmus\\
+	$\sec x$ & Sekans-Funktion & & $\log x$  & Logarithmus\\
+	$\csc x$ & Kosekans-Funktion & & $\lg x$ & Logarithmus zur Basis 10\\
+	$\sinh x$ & Sinus hyperbolicus & & $\exp x$ & Exponentialfunktion\\
+	$\cosh x$ & Kosinus hyperbolicus & & $\operatorname{arg} z$ & Argument einer komplexen Zahl\\
+	$\tanh x$ & Tangens hyperbolicus & & $\operatorname{sgn} x$ & Signumfunktion
+\end{tabular}
+\end{ausgabe}
+
+
+
+%%%%  UNTERKAPITEL 10.2  %%%%
+\subsection{Pfeile und Symbole}
+
+\begin{lstlisting}[style=latex]
+$\rightarrow$    			% Pfeil nach rechts
+$\leftarrow$     			% Pfeil nach links
+$\uparrow$       			% Pfeil nach oben
+$\downarrow$     			% Pfeil nach unten
+$\Rightarrow$    			% Doppelpfeil nach rechts
+$\Leftarrow$     			% Doppelpfeil nach links
+$\Uparrow$       			% Doppelpfeil nach oben
+$\Downarrow$     			% Doppelpfeil nach unten
+$\leftrightarrow$ 		% Pfeil nach links und rechts
+$\Leftrightarrow$ 		% Doppelpfeil nach links und rechts
+$\mapsto$        			% Abbildungspfeil
+$\infty$         			% Unendlich
+$\partial$      			% Partielles Differential
+$\nabla$         			% Nabla-Operator
+$\hbar$          			% h-quer (Planck-Konstante)
+$\mathbb{N}$     			% Doppelt gestrichenes N (natuerliche Zahlen)
+$\mathbb{Z}$     			% Doppelt gestrichenes Z (ganze Zahlen)
+$\mathbb{Q}$     			% Doppelt gestrichenes Q (rationale Zahlen)
+$\mathbb{R}$     			% Doppelt gestrichenes R (reelle Zahlen)
+$\mathbb{C}$     			% Doppelt gestrichenes C (komplexe Zahlen)
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{tabular}{l l c l l}
+	$\rightarrow$ & Pfeil nach rechts & & $\infty$ & Unendlich\\
+	$\leftarrow$ & Pfeil nach links & & $\partial$ & Partielles Differential\\
+	$\uparrow$ & Pfeil nach oben & & $\nabla$ & Nabla-Operator\\
+	$\downarrow$ & Pfeil nach unten & & $\hbar$ & Planck-Konstante\\
+	$\Rightarrow$ & Doppelpfeil nach rechts & & $\mathbb{N}$ & natürliche Zahlen\\
+	$\Leftarrow$ & Doppelpfeil nach links & & $\mathbb{Z}$ & ganze Zahlen\\
+	$\Uparrow$ & Doppelpfeil nach oben & & $\mathbb{Q}$ & rationale Zahlen\\
+	$\Downarrow$ & Doppelpfeil nach unten & & $\mathbb{R}$ & reelle Zahlen\\
+	$\leftrightarrow$ & Pfeil nach links und rechts & & $\mathbb{C}$ & komplexe Zahlen\\
+	$\Leftrightarrow$ & Doppelpfeil nach links und rechts & & $\mapsto$ & Abbildungspfeil
+\end{tabular}
+\end{ausgabe}
+
+
+
+%%%% KAPITEL 11  %%%%
+\section{Praktische Anwendungsbeispiele für den MINT-Unterricht}
+
+
+
+%%%% UNTERKAPITEL 11.1  %%%%
+\subsection{Quadratische Formel}
+
+\begin{lstlisting}[style=latex]
+\begin{align*}
+  ax^2 + bx + c &= 0\\
+  x &= \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
+\end{align*}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{align*}
+  ax^2 + bx + c &= 0\\
+  x &= \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
+\end{align*}
+\end{ausgabe}
+
+
+
+%%%% UNTERKAPITEL 11.2  %%%%
+\subsection{Binomische Formeln}
+
+\begin{lstlisting}[style=latex]
+\begin{align*}
+  (a+b)^2 &= a^2 + 2ab + b^2\\
+  (a-b)^2 &= a^2 - 2ab + b^2\\
+  (a+b)(a-b) &= a^2 - b^2
+\end{align*}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{align*}
+  (a+b)^2 &= a^2 + 2ab + b^2\\
+  (a-b)^2 &= a^2 - 2ab + b^2\\
+  (a+b)(a-b) &= a^2 - b^2
+\end{align*}
+\end{ausgabe}
+
+
+
+%%%% UNTERKAPITEL 11.3  %%%%
+\subsection{Trigonometrische Gleichungen}
+
+\begin{lstlisting}[style=latex]
+\begin{align*}
+  \sin^2 \alpha + \cos^2 \alpha &= 1\\
+  \sin(\alpha + \beta) &= \sin \alpha \cos \beta + \cos \alpha \sin \beta\\
+  \cos(\alpha + \beta) &= \cos \alpha \cos \beta - \sin \alpha \sin \beta
+\end{align*}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{align*}
+  \sin^2 \alpha + \cos^2 \alpha &= 1\\
+  \sin(\alpha + \beta) &= \sin \alpha \cos \beta + \cos \alpha \sin \beta\\
+  \cos(\alpha + \beta) &= \cos \alpha \cos \beta - \sin \alpha \sin \beta
+\end{align*}
+\end{ausgabe}
+
+
+
+%%%% UNTERKAPITEL 11.4  %%%%
+\subsection{Matrixmultiplikation}
+
+\begin{lstlisting}[style=latex]
+\begin{align*}
+  \mathbf{A} \cdot \mathbf{B} &= \mathbf{C}\\
+  \begin{pmatrix}
+    a_{11} & a_{12}\\
+    a_{21} & a_{22}
+  \end{pmatrix}
+  \begin{pmatrix}
+    b_{11} & b_{12}\\
+    b_{21} & b_{22}
+  \end{pmatrix} &=
+  \begin{pmatrix}
+    a_{11}b_{11} + a_{12}b_{21} & a_{11}b_{12} + a_{12}b_{22}\\
+    a_{21}b_{11} + a_{22}b_{21} & a_{21}b_{12} + a_{22}b_{22}
+  \end{pmatrix}
+\end{align*}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{align*}
+  \mathbf{A} \cdot \mathbf{B} &= \mathbf{C}\\
+  \begin{pmatrix}
+    a_{11} & a_{12}\\
+    a_{21} & a_{22}
+  \end{pmatrix}
+  \begin{pmatrix}
+    b_{11} & b_{12}\\
+    b_{21} & b_{22}
+  \end{pmatrix} &=
+  \begin{pmatrix}
+    a_{11}b_{11} + a_{12}b_{21} & a_{11}b_{12} + a_{12}b_{22}\\
+    a_{21}b_{11} + a_{22}b_{21} & a_{21}b_{12} + a_{22}b_{22}
+  \end{pmatrix}
+\end{align*}
+\end{ausgabe}
+
+
+
+%%%% UNTERKAPITEL 11.5  %%%%
+\subsection{Partielle Differentialgleichung}
+
+\begin{lstlisting}[style=latex]
+\begin{align*}
+  \frac{\partial^2 u}{\partial t^2} &= c^2 \nabla^2 u\\
+  &= c^2 \left( \frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2} + \frac{\partial^2 u}{\partial z^2} \right)
+\end{align*}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{align*}
+  \frac{\partial^2 u}{\partial t^2} &= c^2 \nabla^2 u\\
+  &= c^2 \left( \frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2} + \frac{\partial^2 u}{\partial z^2} \right)
+\end{align*}
+\end{ausgabe}
+
+
+
+%%%%  KAPITEL 12  %%%%
+\section{Tipps für einen guten Formelsatz}
+
+Beim Erstellen mathematischer Formeln in \hologo{LaTeX} sind einige Praktiken besonders hilfreich, um die Lesbarkeit und Qualität des Formelsatzes zu verbessern. Für längere Formeln im Fließtext empfiehlt sich die Verwendung von \texttt{\textbackslash dfrac} anstelle von \texttt{\textbackslash frac}, da dies die Lesbarkeit erheblich steigert, indem Brüche in einer besser erkennbaren Größe dargestellt werden. Bei abgesetzten Gleichungen sollte das \texttt{\&}-Zeichen konsequent genutzt werden, um Gleichheitszeichen präzise untereinander auszurichten, was die logische Struktur mathematischer Herleitungen visuell unterstützt.
+
+Innerhalb von Formeln ist es ratsam, den Befehl \texttt{\textbackslash text\{...\}} für textuelle Elemente zu verwenden, damit diese in normaler Schrift und nicht in der für mathematische Symbole typischen kursiven Darstellung erscheinen. Dies erhöht die Klarheit besonders bei Bedingungen oder Erklärungen. Für Fallunterscheidungen bietet sich die \texttt{cases}-Umgebung an, die eine übersichtliche und professionelle Darstellung verschiedener Definitionsbereiche ermöglicht.
+
+Ein oft übersehenes Detail ist der Abstand zwischen Zahlen und Einheiten - hier hilft \texttt{\textbackslash,}, um einen angemessenen Zwischenraum einzufügen, beispielsweise bei \texttt{\$5 \textbackslash, \textbackslash text\{kg\}\$}. Bei komplexen Formeln mit verschachtelten Klammern erleichtern die Befehle \texttt{\textbackslash left(} und \texttt{\textbackslash right)} die Arbeit erheblich, da sie die Klammergröße automatisch an den Inhalt anpassen und somit ein harmonisches Schriftbild gewährleisten.
+
+Für Erläuterungen zwischen mehreren zusammenhängenden Gleichungen ist \texttt{\textbackslash intertext\{...\}} in der \texttt{align}-Umgebung besonders nützlich, da dieser Befehl Text einfügt, ohne die präzise Ausrichtung der mathematischen Ausdrücke zu beeinträchtigen. Schließlich können mit \texttt{\textbackslash tag\{...\}} individuelle Gleichungsnummern oder Bezeichnungen vergeben werden, was besonders bei späteren Referenzierungen oder in wissenschaftlichen Kontexten von Vorteil ist.
+
+
+
+%%%%  KAPITEL 13  %%%%
+\section{Zusammenfassung}
+
+Der mathematische Formelsatz gehört zu den herausragenden Stärken von \hologo{LaTeX} und bietet eine Fülle an Möglichkeiten für die Erstellung professioneller Unterrichtsmaterialien im MINT-Bereich. Dieses Nachschlagewerk stellt die wichtigsten Befehle und Umgebungen vor, die für einen gelungenen mathematischen Formelsatz unerlässlich sind. Die präsentierten Beispiele können als Ausgangspunkt für eigene Dokumente dienen und flexibel an spezifische Anforderungen angepasst werden.
+
+Im MINT-Unterricht zeigen sich die Vorteile des \hologo{LaTeX}-Formelsatzes besonders deutlich: Das professionelle Erscheinungsbild aller Formeln vermittelt mathematische Inhalte auf ansprechende Weise und fördert die Motivation der Lernenden. Die konsistente Darstellung über das gesamte Dokument hinweg schafft einen Wiedererkennungswert und unterstützt das Verständnis komplexer Zusammenhänge. Trotz der anfänglichen Lernkurve ermöglicht \hologo{LaTeX} eine erstaunlich einfache Eingabe auch komplexer mathematischer Ausdrücke, sobald die grundlegenden Befehle verinnerlicht wurden.
+
+Ein weiterer bedeutender Vorteil ist die perfekte Integration der Formeln mit dem übrigen Text, was ein harmonisches Gesamtbild erzeugt und die Lesbarkeit fördert. Besonders wertvoll für den MINT-Unterricht ist zudem die problemlose Einbindung mathematischer Ausdrücke in TikZ-Grafiken, wodurch komplexe Sachverhalte visuell und formal präzise dargestellt werden können.
+
+Mit zunehmender Übung und Erfahrung wird der Umgang mit dem mathematischen Formelsatz in \hologo{LaTeX} zunehmend intuitiver und effizienter. Die in dieser Handreichung behandelten Grundlagen schaffen eine solide Basis für die Erstellung verschiedenster Unterrichtsmaterialien wie Arbeitsblätter, Klausuren, Skripte oder Präsentationen im MINT-Bereich und tragen so zu einer qualitativ hochwertigen Vermittlung mathematisch-naturwissenschaftlicher Inhalte bei.
+
+\end{document}

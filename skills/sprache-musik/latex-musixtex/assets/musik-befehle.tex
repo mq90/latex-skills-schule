@@ -1,0 +1,193 @@
+%----------------------------------------------------------------------------------------------------%
+%%%%%%%%%%%                                 MUSIK-BEFEHLE                                     %%%%%%%%%%%
+%----------------------------------------------------------------------------------------------------%
+% Optionale Ergänzung zur universalen newcommands.tex – nur für Musik-Dokumente.
+% Einbinden NACH newcommands.tex:   \input{musik-befehle.tex}
+% Getrennt gehalten, weil Musik-Dokumente zusätzlich musixtex brauchen (definiert \cup um)
+% und die Tonnamen (\cis, \fis, ...) sonst leicht mit Mathe-Befehlen kollidieren.
+% Quelle: https://github.com/mq90/latex-skills-schule  (CC BY 4.0, Martin Quandt)
+
+%----------------------------------------------------------------------------------------------------%
+%%%%%%%%%%%                              Musiktheoretische Abkürzungen                           %%%%%%%%%%
+%----------------------------------------------------------------------------------------------------%
+
+% Intervallbezeichnungen
+\newcommand{\prim}{\text{Prime}}
+\newcommand{\sek}{\text{Sekunde}}
+\newcommand{\terz}{\text{Terz}}
+\newcommand{\quart}{\text{Quarte}}
+\newcommand{\quint}{\text{Quinte}}
+\newcommand{\sext}{\text{Sexte}}
+\newcommand{\sept}{\text{Septime}}
+\newcommand{\okt}{\text{Oktave}}
+
+% Akkordbezeichnungen
+\newcommand{\dur}{\text{Dur}}
+\newcommand{\moll}{\text{Moll}}
+
+% Tonbezeichnungen (international)
+\newcommand{\cis}{c$\sharp$}
+\newcommand{\des}{d$\flat$}
+\newcommand{\disTon}{d$\sharp$} % nicht \dis – das ist in newcommands.tex der Displaystyle
+\newcommand{\es}{e$\flat$}
+\newcommand{\fis}{f$\sharp$}
+\newcommand{\ges}{g$\flat$}
+\newcommand{\gis}{g$\sharp$}
+\newcommand{\as}{a$\flat$}
+\newcommand{\ais}{a$\sharp$}
+\newcommand{\bb}{b$\flat$}
+\newcommand{\bis}{b$\sharp$}
+
+%----------------------------------------------------------------------------------------------------%
+%%%%%%%%%%%                                Musik-spezifische Umgebungen                         %%%%%%%%%%
+%----------------------------------------------------------------------------------------------------%
+
+% Umgebung für Akkordfolgen
+\newenvironment{akkordfolge}{%
+    \begin{center}
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+    \textbf{Takt} & \textbf{1} & \textbf{2} & \textbf{3} \\
+    \hline
+    \textbf{Akkord} &
+}{%
+    \\
+    \hline
+    \end{tabular}
+    \end{center}
+}
+
+% Umgebung für Tonleitern
+\newenvironment{tonleiter}[1]{%
+    \begin{center}
+    \textbf{#1-Tonleiter}\\
+    \begin{tabular}{|c|c|c|c|c|c|c|c|}
+    \hline
+    \textbf{Stufe} & I & II & III & IV & V & VI & VII \\
+    \hline
+    \textbf{Ton} &
+}{%
+    \\
+    \hline
+    \end{tabular}
+    \end{center}
+}
+
+%----------------------------------------------------------------------------------------------------%
+%%%%%%%%%%%                               MusiXTeX-spezifische Kürzel                           %%%%%%%%%%
+%----------------------------------------------------------------------------------------------------%
+
+% Notenwerte als Text
+\newcommand{\ganze}{\textit{ganze Note}}
+\newcommand{\halbe}{\textit{halbe Note}}
+\newcommand{\viertel}{\textit{Viertelnote}}
+\newcommand{\achtel}{\textit{Achtelnote}}
+\newcommand{\sechzehntel}{\textit{Sechzehntelnote}}
+
+% Pausenwerte als Text
+\newcommand{\ganzpause}{\textit{ganze Pause}}
+\newcommand{\halbpause}{\textit{halbe Pause}}
+\newcommand{\viertelpause}{\textit{Viertelpause}}
+\newcommand{\achtelpause}{\textit{Achtelpause}}
+\newcommand{\sechzehntelpause}{\textit{Sechzehntelpause}}
+
+% Häufige Taktarten
+\newcommand{\viervierteltakt}{\ensuremath{\frac{4}{4}}\text{-Takt}}
+\newcommand{\dreivierteltakt}{\ensuremath{\frac{3}{4}}\text{-Takt}}
+\newcommand{\zweivierteltakt}{\ensuremath{\frac{2}{4}}\text{-Takt}}
+\newcommand{\sechsachteltakt}{\ensuremath{\frac{6}{8}}\text{-Takt}}
+
+%----------------------------------------------------------------------------------------------------%
+%%%%%%%%%%%                                   Colorboxes für Musik                                %%%%%%%%%%
+%----------------------------------------------------------------------------------------------------%
+
+% Colorbox für Musiktheorie-Merksätze
+\newtcolorbox{musiktheorie}{%
+    lower separated=false,%
+    colback=green!5!white,%
+    colframe=green!75!black,%
+    fonttitle=\bfseries,%
+    title=Musiktheorie:,%
+    enhanced,%
+    breakable,%
+    attach boxed title to top left={xshift=0.5cm,yshift=-2mm}%
+}
+
+% Colorbox für Übungen
+\newtcolorbox{uebung}{%
+    lower separated=false,%
+    colback=orange!5!white,%
+    colframe=orange!75!black,%
+    fonttitle=\bfseries,%
+    title=Übung:,%
+    enhanced,%
+    breakable,%
+    attach boxed title to top left={xshift=0.5cm,yshift=-2mm}%
+}
+
+% Colorbox für Repertoire-Hinweise
+\newtcolorbox{repertoire}{%
+    lower separated=false,%
+    colback=purple!5!white,%
+    colframe=purple!75!black,%
+    fonttitle=\bfseries,%
+    title=Repertoire-Tipp:,%
+    enhanced,%
+    breakable,%
+    attach boxed title to top left={xshift=0.5cm,yshift=-2mm}%
+}
+
+%----------------------------------------------------------------------------------------------------%
+%%%%%%%%%%%                              Spezielle Musik-Befehle                                %%%%%%%%%%
+%----------------------------------------------------------------------------------------------------%
+
+% Befehl für Liedtitel mit Komponist
+\newcommand{\liedtitel}[2]{%
+    \begin{center}
+    \Large\textbf{#1}\\
+    \normalsize\textit{#2}
+    \end{center}
+    \vspace{0.5cm}
+}
+
+% Befehl für Tempo-Angaben
+\newcommand{\tempo}[1]{%
+    \textit{#1}
+}
+
+% Befehl für Tonart-Angaben
+\newcommand{\tonart}[1]{%
+    \textbf{Tonart:} #1
+}
+
+% Befehl für Taktart-Angaben
+\newcommand{\taktart}[1]{%
+    \textbf{Taktart:} #1
+}
+
+%----------------------------------------------------------------------------------------------------%
+%%%%%%%%%%%                              Aufgaben-Umgebungen für Musik                          %%%%%%%%%%
+%----------------------------------------------------------------------------------------------------%
+
+% Umgebung für Gehörbildungs-Aufgaben
+\newenvironment{gehoerbildung}[1]{%
+    \begin{tcolorbox}[colback=blue!5!white,colframe=blue!50!black,title=Gehörbildung: #1]
+}{%
+    \end{tcolorbox}
+}
+
+% Umgebung für Rhythmus-Übungen
+\newenvironment{rhythmus}[1]{%
+    \begin{tcolorbox}[colback=red!5!white,colframe=red!50!black,title=Rhythmus-Übung: #1]
+}{%
+    \end{tcolorbox}
+}
+
+% Umgebung für Harmonielehre-Aufgaben
+\newenvironment{harmonielehre}[1]{%
+    \begin{tcolorbox}[colback=yellow!5!white,colframe=yellow!50!black,title=Harmonielehre: #1]
+}{%
+    \end{tcolorbox}
+}
+
+%----------------------------------------------------------------------------------------------------%

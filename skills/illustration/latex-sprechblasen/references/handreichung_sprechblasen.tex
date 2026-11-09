@@ -1,0 +1,264 @@
+\input{header.tex}
+\input{newcommands.tex}
+
+\title{Sprechblasen mit Ti\textit{k}Z in \hologo{LaTeX}}
+\author{Handreichung (Ergänzung) für MINT-Lehrkräfte}
+\date{21. Dezember 2025}
+\pagestyle{plain}
+
+
+% \lehrerblase und \schuelerblase stehen in der universalen newcommands.tex
+
+\begin{document}
+\maketitle
+
+Mit der Ti\textit{k}Z-Bibliothek \texttt{shapes.callouts} lassen sich klassische Comic-Sprechblasen (engl. \emph{callouts}) erzeugen: eine (meist abgerundete) Form mit einem \emph{Pointer} bzw. \emph{Tail} (deutsch z.\,B. \emph{Zeiger} oder \emph{Sprechblasen-Zipfel}), der auf eine Stelle zeigt.
+
+\vspace{0.3cm}
+\noindent\textbf{Ziel dieser Handreichung:} Sie erstellen Schritt für Schritt Sprechblasen im Stil „abgerundetes Rechteck“ mit Zipfel links (Lehrer) bzw. rechts (Schüler) und lernen, den Zipfel gezielt zu positionieren.
+
+%%%%%  KAPITEL 1  %%%%
+\section{Bibliothek einbinden und Grundidee}
+
+Für Callouts benötigen Sie Ti\textit{k}Z und die Bibliothek \texttt{shapes.callouts}:
+
+\begin{lstlisting}[style=latex]
+\usepackage{tikz}
+\usetikzlibrary{shapes.callouts}
+\end{lstlisting}
+
+Eine Sprechblase ist in Ti\textit{k}Z typischerweise ein \texttt{node} mit einer Callout-Form, z.\,B. \texttt{rectangle callout} oder \texttt{ellipse callout}. Der Zipfel wird über den Schlüssel \texttt{callout relative pointer=\{(dx,dy)\}} gesetzt.
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+  \node[rectangle callout, draw, callout relative pointer={(8mm,-6mm)}] {Text};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tikzpicture}
+  \node[rectangle callout, draw] {Text};
+\end{tikzpicture}
+\end{center}
+\end{ausgabe}
+
+\noindent\textbf{Merksatz:} \texttt{callout relative pointer} verschiebt den Zipfel relativ zur \emph{Mitte} der Blase: \\
+\(\;\;\)positives \(x\): nach rechts, negatives \(x\): nach links; positives \(y\): nach oben, negatives \(y\): nach unten.
+
+%%%%%  KAPITEL 2  %%%%
+\section{„Echte“ Comic-Optik: abgerundetes Rechteck}
+
+Für eine typische Sprechblase im Unterrichtsmaterial ist \texttt{rectangle callout} in Kombination mit \texttt{rounded corners} sehr praktikabel:
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+  \node[
+    rectangle callout,
+    rounded corners=6pt,
+    draw,
+    thick,
+    fill=blue!6,
+    align=left,
+    inner sep=3.5mm,
+    callout relative pointer={(-12mm,-7mm)}
+  ] {Lehrer: Guten Morgen!};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tikzpicture}
+  \node[rectangle callout,rounded corners=6pt,draw,thick,fill=blue!6,align=left,inner sep=3.5mm,callout relative pointer={(-12mm,-7mm)}] {Lehrer: Guten Morgen!};
+\end{tikzpicture}
+\end{center}
+\end{ausgabe}
+
+\noindent Hier erzeugt \texttt{rounded corners=6pt} die weichen Ecken, \texttt{fill=blue!6} eine leichte Füllung und \texttt{inner sep} den Innenabstand.
+
+%%%%%  KAPITEL 3  %%%%
+\section{Zipfel gezielt setzen: links vs. rechts}
+
+In der Praxis möchten Sie den Zipfel oft \emph{spiegeln}: Lehrer links, Schüler rechts. Dazu ändern Sie nur das Vorzeichen der \(x\)-Komponente.
+
+\subsection*{Lehrerblase (Zipfel links)}
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+  \node[rectangle callout, rounded corners=6pt, draw, thick,
+        fill=blue!6, inner sep=3.5mm, align=left,
+        callout relative pointer={(-13mm,-7mm)},
+        text width=0.7\linewidth]
+  {\textbf{Einstieg:} Wer kennt Geheimschriften aus der Kindheit?};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tikzpicture}
+  \node[rectangle callout, rounded corners=6pt, draw, thick,
+        fill=blue!6, inner sep=3.5mm, align=left,
+        callout relative pointer={(-13mm,-7mm)},
+        text width=0.7\linewidth]
+  {\textbf{Einstieg:} Wer kennt Geheimschriften aus der Kindheit?};
+\end{tikzpicture}
+\end{center}
+\end{ausgabe}
+
+\subsection*{Schülerblase (Zipfel rechts)}
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+  \node[rectangle callout, rounded corners=6pt, draw, thick,
+        fill=green!6, inner sep=3.5mm, align=left,
+        callout relative pointer={(13mm,-7mm)},
+        text width=0.55\linewidth]
+  {ROT13, Zahlen statt Buchstaben, \dots};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tikzpicture}
+  \node[rectangle callout, rounded corners=6pt, draw, thick,
+        fill=green!6, inner sep=3.5mm, align=left,
+        callout relative pointer={(13mm,-7mm)},
+        text width=0.55\linewidth]
+  {ROT13, Zahlen statt Buchstaben, \dots};
+\end{tikzpicture}
+\end{center}
+\end{ausgabe}
+
+\noindent\textbf{Praxis-Tipp:} Wenn der Zipfel „zu steil“ wirkt, verringern Sie \(|dy|\) (z.\,B. \(-5mm\)). Wenn er zu kurz ist, erhöhen Sie \(|dx|\) (z.\,B. \(16mm\)).
+
+%%%%%  KAPITEL 4  %%%%
+\section{Relative vs. absolute Pointer-Koordinaten}
+
+Ti\textit{k}Z kennt zwei gebräuchliche Methoden, den Zipfel zu setzen:
+
+\subsection*{1) Relativ (empfohlen fürs Layout)}
+\begin{lstlisting}[style=latex]
+callout relative pointer={(dx,dy)}
+\end{lstlisting}
+Diese Variante ist robust, weil sie unabhängig davon ist, wo die Blase im Dokument steht.
+
+\subsection*{2) Absolut (zeigt auf eine konkrete Stelle)}
+\begin{lstlisting}[style=latex]
+callout absolute pointer={(x,y)}
+\end{lstlisting}
+
+Im nächsten Beispiel zeigt die Blase auf einen Punkt (z.\,B. ein Objekt im Bild):
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+  \fill (0,0) circle (2pt); % Zielpunkt
+  \node[rectangle callout, rounded corners=6pt, draw,
+        callout absolute pointer={(0,0)},
+        fill=yellow!20] at (3,1) {Das ist der Punkt.};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tikzpicture}
+  \fill (0,0) circle (2pt); % Zielpunkt
+  \node[rectangle callout, rounded corners=6pt, draw,
+        callout absolute pointer={(0,0)},
+        fill=yellow!20] at (3,1) {Das ist der Punkt.};
+\end{tikzpicture}
+\end{center}
+\end{ausgabe}
+
+%%%%%  KAPITEL 5  %%%%
+\section{Feintuning: Breite, Rundung und Kürzen des Zipfels}
+
+Die wichtigsten Stellschrauben für die Optik sind:
+
+\begin{itemize}
+  \item \texttt{callout pointer width=<Länge>}: Breite des Zipfels an der Ansatzstelle
+  \item \texttt{callout pointer arc=<Zahl>}: Rundung der Zipfel-Kanten (comic-iger)
+  \item \texttt{callout pointer shorten=<Länge>}: kürzt den Zipfel (z.\,B. wenn er zu lang wirkt)
+\end{itemize}
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+  \node[rectangle callout, rounded corners=8pt, draw, thick,
+        fill=orange!15,
+        callout relative pointer={(14mm,-6mm)},
+        callout pointer width=10mm,
+        callout pointer arc=18,
+        callout pointer shorten=1mm]
+  {Weicher Zipfel.};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tikzpicture}
+  \node[rectangle callout, rounded corners=8pt, draw, thick,
+        fill=orange!15,
+        callout relative pointer={(14mm,-6mm)},
+        callout pointer width=10mm,
+        callout pointer arc=18,
+        callout pointer shorten=1mm]
+  {Weicher Zipfel.};
+\end{tikzpicture}
+\end{center}
+\end{ausgabe}
+
+%%%%%  KAPITEL 6  %%%%
+\section{Komfort: Lehrer-/Schüler-Befehle zum Wiederverwenden}
+
+Damit Sie in Ihren Stundenplanungen schnell arbeiten können, definieren Sie zwei Makros. Diese übernehmen das Styling und setzen den Zipfel automatisch links bzw. rechts.
+
+\begin{lstlisting}[style=latex]
+\newcommand{\lehrerblase}[2][]{%
+  \tikz[baseline=(B.base)]{
+    \node[
+      rectangle callout,
+      rounded corners=6pt,
+      callout relative pointer={(-13mm,-7mm)},
+      draw, thick,
+      fill=blue!6,
+      align=left,
+      inner sep=3.5mm,
+      #1
+    ] (B) {#2};
+  }%
+}
+
+\newcommand{\schuelerblase}[2][]{%
+  \tikz[baseline=(B.base)]{
+    \node[
+      rectangle callout,
+      rounded corners=6pt,
+      callout relative pointer={(13mm,-7mm)},
+      draw, thick,
+      fill=green!6,
+      align=left,
+      inner sep=3.5mm,
+      #1
+    ] (B) {#2};
+  }%
+}
+\end{lstlisting}
+
+\noindent Verwendung im Dokument:
+
+\begin{lstlisting}[style=latex]
+\lehrerblase[text width=0.82\linewidth]{\textbf{Impuls:} Was passiert bei einer Verschiebung um 3?}
+
+\vspace{5mm}
+
+\hfill\schuelerblase[text width=0.62\linewidth]{Man ersetzt jeden Buchstaben durch den dritten danach.}
+\end{lstlisting}
+
+\begin{ausgabe}
+\lehrerblase[text width=0.82\linewidth]{\textbf{Impuls:} Was passiert bei einer Verschiebung um 3?}
+
+\vspace{5mm}
+
+\hfill\schuelerblase[text width=0.62\linewidth]{Man ersetzt jeden Buchstaben durch den dritten danach.}
+\end{ausgabe}
+
+\noindent\textbf{Hinweis zur Praxis:} Callout-Nodes eignen sich besonders gut für kurze bis mittlere Notizen. Wenn Sie sehr lange Texte in einer „Blase“ über Seiten umbrechen möchten, ist eine alternative Konstruktion (z.\,B. mit \texttt{tcolorbox} + eigener Zipfel-Zeichnung) sinnvoll.
+
+\end{document}

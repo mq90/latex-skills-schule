@@ -1,0 +1,610 @@
+%----------------------------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------%
+%%%% %%%%%%                                     NEWCOMMANDS                                         %%%%%%%%%%%%
+%----------------------------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------%
+%
+% Universale newcommands.tex – alle eigenen Befehle, Farben, Boxen, Kopfzeilen, TikZ- und Listing-Stile.
+% Neue Befehle werden HIER ergänzt (nicht im Dokument) und unten protokolliert.
+% Quelle: https://github.com/mq90/latex-skills-schule  (CC BY 4.0, Martin Quandt)
+%
+% Änderungsprotokoll
+% 2026-11-09  zusammengeführt aus allen Handreichungen: \TikZ, Box »ausgabe«, Stile für
+%             Programmablaufpläne (input, operation, condition, output) und UML (umlclass, inherit,
+%             compose, aggregate, associate, depend); Listing-Stil »latex« wieder wie in den
+%             Handreichungen ohne Zeilennummern, nummerierte Variante als »latexnummeriert«;
+%             Umlaute und · € ° → ≤ ≥ ≠ – — „ “ … × ² ³ π in allen Listings erlaubt (\lstset literate); \lehrerblase, \schuelerblase; PAP-Stile mit align=center (Zeilenumbruch mit \\);
+%             \ipa{...} für Lautschrift; \koordinatensystem[Schritt]{xmin}{xmax}{ymin}{ymax};
+%             TikZ-Stile punkt, punktoffen, baumdiagramm, wkeit
+%
+
+
+
+
+
+
+
+
+%----------------------------------------------------------------------------------------------------%
+%%%%%%%%%%%                                   Mathematische Kürzel                                       %%%%%%%%%%
+%----------------------------------------------------------------------------------------------------%
+
+
+%vereinfachte Schreibweise für den Displaystyle
+\newcommand{\dis}[1]{\displaystyle{#1}}
+
+
+%Zahlenbereiche
+\newcommand{\N}{\mathbb{N}} %natürliche Zahlen
+\newcommand{\Z}{\mathbb{Z}} %ganze Zahlen
+\newcommand{\Q}{\mathbb{Q}} %rationale Zahlen
+\newcommand{\R}{\mathbb{R}} %reelle Zahlen
+\newcommand{\C}{\mathbb{C}} %komplexe Zahlen
+\newcommand{\cP}{\mathcal{P}} %Potenzmenge
+
+
+%Abkürzungen für Analysis
+\newcommand{\eps}{\varepsilon} %Kürzel für Epsilon
+\newcommand{\limn}{\underset{n\longrightarrow \infty}{\lim}} %Grenzwert für n gegen Unendlich
+\newcommand{\limh}{\underset{h\longrightarrow 0}{\lim}} %Grenzwert für h gegen Null
+\newcommand{\limxto}[1]{\underset{x\longrightarrow #1}{\lim}} %beliebiger funktionaler Grenzwert x gegen ....
+\newcommand{\dx}{\text{\;d} x} %dx Operator für Integrale
+\renewcommand{\d}[1]{\text{\;d}#1} %Operator für beliebige Integrationsvariable
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert} %\norm{...} für die Normdarstellung ||...||
+
+
+%Abkürzungen für Analytische Geometrie
+\newcommand{\vektor}[3]{\begin{tiny}\begin{pmatrix} \text{\begin{scriptsize}$#1$\end{scriptsize}}\\ \text{\begin{scriptsize}$#2$\end{scriptsize}}\\ \text{\begin{scriptsize}$#3$\end{scriptsize}}\end{pmatrix}\end{tiny}} %dreidimensionaler Vektor
+\newcommand{\punktvektor}[2]{\begin{tiny}\begin{pmatrix} \text{\begin{scriptsize}$#1$\end{scriptsize}}\\ \text{\begin{scriptsize}$#2$\end{scriptsize}}\end{pmatrix}\end{tiny}} %zweidimensionaler Vektor
+
+
+%Abkürzungen für Stochastik
+\newcommand{\E}{\mathbb{E}} %Erwartungswert
+\newcommand{\V}{\mathbb{V}} %Varianz
+
+
+%Umgebung für gegeben und gesucht
+\newcommand{\gegges}[2]{%
+	\begin{multicols}{2}
+		\begin{enumerate}
+			\item[geg:] #1
+			\item[ges:] #2
+		\end{enumerate}
+	\end{multicols}
+}
+%----------------------------------------------------------------------------------------------------%
+
+
+
+
+
+
+
+
+
+%----------------------------------------------------------------------------------------------------%
+%%%%%%%%%%%%                             Verschiedene  hilfreiche Kürzel                                %%%%%%%%%
+%----------------------------------------------------------------------------------------------------%
+
+
+%römische Darstellung einer Zahl \uproman{2021} ergibt MMXXI
+\newcommand{\uproman}[1]{\uppercase\expandafter{\romannumeral#1}}
+
+
+%Automatisch erstellte Lücke wie die Länge des Textes mit \luecke{<Text>}
+\newcommand{\luecke}[1]{\hspace{0,1cm}\underline{\hspace{0,25cm}\hphantom{#1}\hspace{0,25cm}}\hspace{0,1cm}}
+
+
+%fett-kursive Schrift für neu eingeführte Begriffe
+\newcommand{\fk}[1]{\textbf{\textit{#1}}}
+
+
+%Schwierigkeitsstufen für Aufgaben mit \leicht , \mittel , \schwer
+\newcommand{\leicht}{\smash{\raisebox{-1pt}{{\color{black}\rule{4pt}{8pt}}\,{\color{lightgray}\rule{4pt}{8pt}}\,{\color{lightgray}\rule{4pt}{8pt}}}}\,}
+\newcommand{\mittel}{\smash{\raisebox{-1pt}{{\color{black}\rule{4pt}{8pt}}\,{\color{black}\rule{4pt}{8pt}}\,{\color{lightgray}\rule{4pt}{8pt}}}}\,}
+\newcommand{\schwer}{\smash{\raisebox{-1pt}{{\color{black}\rule{4pt}{8pt}}\,{\color{black}\rule{4pt}{8pt}}\,{\color{black}\rule{4pt}{8pt}}}}\,}
+%----------------------------------------------------------------------------------------------------%
+
+
+
+
+
+
+
+
+
+
+%----------------------------------------------------------------------------------------------------%
+%%%%%%%                                            Verschiedene Farben                                                      %%%%%%%
+%----------------------------------------------------------------------------------------------------%
+
+
+%Formeln in herkömmlichen Farben schreiben
+\newcommand{\frot}[1]{\text{\textcolor{red}{$#1$}}} % rote Formel für Lösungen
+\newcommand{\fgruen}[1]{\text{\textcolor{green}{$#1$}}} % grüne Formel für Lösungen
+\newcommand{\fblau}[1]{\text{\textcolor{blue}{$#1$}}} % blaue Formel für Lösungen
+\newcommand{\fmagenta}[1]{\text{\textcolor{magenta}{$#1$}}} % magenta-farbige Formel für Lösungen
+\newcommand{\forange}[1]{\text{\textcolor{orange}{$#1$}}} % orangene Formel für Lösungen
+\newcommand{\fcyan}[1]{\text{\textcolor{cyan}{$#1$}}} % cyan-farbige Formel für Lösungen
+\newcommand{\folive}[1]{\text{\textcolor{olive}{$#1$}}} % olive-farbige Formel für Lösungen
+
+
+%Custom made colors
+\definecolor{plum}{rgb}{0.36078, 0.20784, 0.4}
+\definecolor{chameleon}{rgb}{0.30588, 0.60392, 0.023529}
+\definecolor{cornflower}{rgb}{0.12549, 0.29020, 0.52941}
+\definecolor{scarlet}{rgb}{0.8, 0, 0}
+\definecolor{brick}{rgb}{0.64314, 0, 0}
+\definecolor{sunrise}{rgb}{0.80784, 0.36078, 0}
+\definecolor{lightblue}{rgb}{0.15,0.35,0.75}
+\definecolor{carolina}{rgb}{153, 186, 221}
+%----------------------------------------------------------------------------------------------------%
+
+
+
+
+
+
+
+
+
+%----------------------------------------------------------------------------------------------------%
+%%%%%%%%                            Kopfzeilen für Leistungsüberprüfungen                              %%%%%%%%%
+%----------------------------------------------------------------------------------------------------%
+
+
+%Definition Kopfzeile für Leistungskontrolle mit \lk{Klasse}{Thema}
+\newcommand{\lk}[2]{%
+	\pagestyle{fancy}
+	\fancyhead[L]{%
+	\begin{tabular}[b]{l}
+		\\Name:\\Punkte:\\Note:
+	\end{tabular} 
+	}
+	\fancyhead[R]{%
+	\begin{tabular}[b]{r}
+		\\Leistungskontrolle\\Klasse #1\\ \today
+	\end{tabular} 
+	}
+	\fancyhead[C]{%
+	\textbf{\large{#2}}\\
+	}
+	\fancyfoot[C]{}
+	\renewcommand{\headrulewidth}{1pt}
+	\fancyheadoffset{1cm}
+}
+
+
+%Definition Kopfzeile für Klassenarbeit mit \ka{Klasse}{Thema}
+\newcommand{\ka}[2]{%
+	\pagestyle{fancy}
+	\fancyhead[L]{%
+	\begin{tabular}[b]{l}
+		\\Name:\\Punkte:\\Note:
+	\end{tabular} 
+	}
+	\fancyhead[R]{%
+	\begin{tabular}[b]{r}
+		\\Klassenarbeit\\Klasse #1\\ \today
+	\end{tabular} 
+	}
+	\fancyhead[C]{%
+	\textbf{\large{#2}}\\
+	}
+	\fancyfoot[C]{}
+	\renewcommand{\headrulewidth}{1pt}
+	\fancyheadoffset{1cm}
+}
+
+
+%Definition Kopfzeile für Klausur mit \kl{Klasse}{Thema}
+\newcommand{\kl}[2]{%
+	\pagestyle{fancy}
+	\fancyhead[L]{%
+	\begin{tabular}[b]{l}
+		\\Name:\\Punkte:\\Note:
+	\end{tabular} 
+	}
+	\fancyhead[R]{%
+	\begin{tabular}[b]{r}
+		\\Klausur\\Klasse #1\\ \today
+	\end{tabular} 
+	}
+	\fancyhead[C]{%
+	\textbf{\large{#2}}\\
+	}
+	\fancyfoot[C]{}
+	\renewcommand{\headrulewidth}{1pt}
+	\fancyheadoffset{1cm}
+}
+
+
+%Entfernt den Header für Leistungskontrollen, Klassenarbeiten oder Klausuren
+\newcommand{\clearfancyheader}{%
+	\fancyhf{}
+	\renewcommand{\headrulewidth}{0pt}
+	\renewcommand{\headheight}{0pt}
+}
+
+
+%Definition Kopfzeile für Tägliche Übungen mit \tu{Klasse}{Thema}
+\newcommand{\tu}[2]{%
+	\pagestyle{fancy}
+	\fancyhead[L]{%
+	\begin{tabular}[b]{l}
+		\\Name:\\Punkte:\\Note:
+	\end{tabular} 
+	}
+	\fancyhead[R]{%
+	\begin{tabular}[b]{r}
+		\\Tägliche Übung\\Klasse #1\\ \today
+	\end{tabular} 
+	}
+	\fancyhead[C]{%
+	\textbf{\large{#2}}\\
+	}
+	\fancyfoot[C]{}
+	\renewcommand{\headrulewidth}{1pt}
+	\fancyheadoffset{1cm}
+}
+%----------------------------------------------------------------------------------------------------%
+
+
+
+
+
+
+
+
+%----------------------------------------------------------------------------------------------------%
+%%%%%%%%%                                     Colorboxes für Hervorhebungen                              %%%%%%%%%
+%----------------------------------------------------------------------------------------------------%
+
+
+ %Colorboxes für Lösungen mit \begin{solution}<Text>\end{solution}
+\newtcolorbox{solution}{%
+        	lower separated=false,%
+	colback=gray!5!white,%
+	colframe=gray!75!black,%
+        	fonttitle=\bfseries,%
+	title=Lösung:,%
+      	enhanced,%
+	breakable,%
+        	attach boxed title to top left={xshift=0.5cm,yshift=-2mm}%
+}
+
+
+%Colorboxes für das chronologische Vorgehen 
+\newtcolorbox{todo}{%
+        	lower separated=false,%
+	colback=yellow!5!white,%
+	colframe=orange!75!black,%
+        	enhanced,%
+	breakable%
+}
+
+
+%Colorboxes für Merksätze
+\newtcolorbox{merke}{%
+        	lower separated=false,%
+	colback=red!5!white,%
+	colframe=red!75!black,%
+        	fonttitle=\bfseries,%
+	title=Merke:,%
+      	enhanced,%
+	breakable,%
+        	attach boxed title to top left={xshift=0.5cm,yshift=-2mm}%
+}
+
+
+%Colorbox2 für Merksätze 
+\newtcolorbox{merke2}{%
+        	lower separated=false,%
+        	colback=red!40,%
+       	title=Merke,%
+       	colframe=black,%
+        	fonttitle=\bfseries,%
+        	colbacktitle=red,%
+        	coltitle=black,%
+        	enhanced,%
+        	breakable,%
+        	attach boxed title to top left={xshift=0.5cm,yshift=-2mm},%
+        	title=Merke:%
+}
+%----------------------------------------------------------------------------------------------------%
+
+
+
+
+
+
+
+
+
+
+%----------------------------------------------------------------------------------------------------%
+%%%%%%%%%%%%%                                         MC-Fragen                                    %%%%%%%%%%%%%
+%----------------------------------------------------------------------------------------------------%
+
+%Definition des Kästchens zum ankreuzen
+\newcommand{\casket}{\LARGE{$\square$}}
+
+
+%Umgebung für horizontale MC-Fragen
+\newenvironment{mcquestionh}[1]{%
+	#1%
+	\begin{center}\begin{tabular}{>{\centering\arraybackslash}p{2.5cm}  >{\centering\arraybackslash}p{2.5cm} >{\centering\arraybackslash}p{2.5cm} >{\centering\arraybackslash}p{2.5cm} >{\centering\arraybackslash}p{2.5cm}}
+	\casket & \casket & \casket & \casket & \casket\medskip\\
+	}
+	%hier wird die fehlende Tabellenzeile angegeben. Aufruf erfolgt durch:
+	%\begin{mcquestionh}{<Frage>}
+	%   	\answerh{<Antwort>} & \answerh{<Antwort>} & \answerh{<Antwort>} & \answerh{<Antwort>} & \answerh{<Antwort>}
+	%\end{mcquestionh}
+	{
+	\\
+	\end{tabular}\end{center}
+}
+
+
+%Antwort für horizontale MC-Fragen mit \answerh{<Antwort>}
+\newcommand{\answerh}[1]{%
+	\parbox{2.5cm}{\centering{#1}}
+}
+
+
+%Umgebung für vertikale MC-Fragen
+\newenvironment{mcquestionv}[1]{%
+    	#1%
+    	\begin{enumerate}[\raisebox{-3pt}{\casket}]
+    	}
+    	%hier wird das fehlende \item angegeben werden. Aufruf erfolgt durch:
+    	%\begin{mcquestionv}{<Frage>}
+    	%   	\answerv{<Antwort>}
+    	%  	\answerv{<Antwort>}
+    	%   	\answerv{<Antwort>}
+    	%   	\answerv{<Antwort>}
+    	%   	\answerv{<Antwort>}
+    	%\end{mcquestionv}
+    	{
+    	\end{enumerate}
+}
+
+
+%Antwort für vertikale MC-Frage mit \answerv{<Antwort>}
+\newcommand{\answerv}[1]{%
+	\item \hspace{0.1cm} #1
+}
+%----------------------------------------------------------------------------------------------------%
+
+
+
+
+
+
+
+
+
+%----------------------------------------------------------------------------------------------------%
+%%%%%%%%%%%                                          Tikz Settings                                          %%%%%%%%%%%%
+%----------------------------------------------------------------------------------------------------%
+
+
+%Koordinatensystem im Standardstil der Mathe-Arbeitsblätter (Gitter gray!30, Achsen -latex, Beschriftung \tiny)
+%\koordinatensystem[Schritt]{xmin}{xmax}{ymin}{ymax};
+%             TikZ-Stile punkt, punktoffen, baumdiagramm, wkeit – ganze Zahlen, Bereich muss 0 enthalten,
+%Striche und Zahlen bei allen Vielfachen von Schritt (Standard 2). Innerhalb von tikzpicture[scale=0.42] verwenden.
+\newcommand{\koordinatensystem}[5][2]{%
+	\foreach \kosyx in {#2,...,#3} \draw[gray!30, thin] (\kosyx,#4) -- (\kosyx,#5);
+	\foreach \kosyy in {#4,...,#5} \draw[gray!30, thin] (#2,\kosyy) -- (#3,\kosyy);
+	\draw[-latex, thick] ({#2-0.3},0) -- ({#3+0.5},0) node[right] {$x$};
+	\draw[-latex, thick] (0,{#4-0.3}) -- (0,{#5+0.5}) node[above] {$y$};
+	\foreach \kosyx in {#2,...,#3} {%
+		\pgfmathtruncatemacro{\kosyrest}{mod(abs(\kosyx),#1)}%
+		\ifnum\kosyrest=0 \ifnum\kosyx=0 \else
+			\draw (\kosyx,0.1) -- (\kosyx,-0.1) node[below, font=\tiny] {$\kosyx$};
+		\fi\fi}
+	\foreach \kosyy in {#4,...,#5} {%
+		\pgfmathtruncatemacro{\kosyrest}{mod(abs(\kosyy),#1)}%
+		\ifnum\kosyrest=0 \ifnum\kosyy=0 \else
+			\draw (0.1,\kosyy) -- (-0.1,\kosyy) node[left, font=\tiny] {$\kosyy$};
+		\fi\fi}
+}
+
+
+%optionale Eigenschaft für ein  Tikzpicture, damit dieses bündig am oberen Rand einer enumerate-Auflistung steht (benötigt tikzlibrary calc!!!)
+\tikzset{
+  topline/.style={baseline={([yshift=#1]current bounding box.north)}},
+  topline/.default=-\ht\strutbox
+}
+
+
+%Punkte in Graphen und Figuren: \node[punkt, label=above:{$P$}] at (2,3) {}; (offen: punktoffen)
+%Als Knoten, damit die Größe nicht mit scale=0.42 mitschrumpft (circle (3pt) würde mitskaliert)
+\tikzset{
+  punkt/.style={circle, fill, inner sep=0pt, minimum size=4pt},
+  punktoffen/.style={circle, draw, fill=white, inner sep=0pt, minimum size=4pt}
+}
+
+
+%Baumdiagramme (Stochastik) von links nach rechts: \begin{tikzpicture}[baumdiagramm] \node[punkt]{} child{...}
+%Wahrscheinlichkeiten an den Ästen: edge from parent node[wkeit, above] {$0{,}6$} (oberer Ast above, unterer below)
+\tikzset{
+  baumdiagramm/.style={grow'=right, sloped, level distance=2.6cm,
+    level 1/.style={sibling distance=3cm}, level 2/.style={sibling distance=1.5cm},
+    level 3/.style={sibling distance=0.75cm}, edge from parent/.style={draw, thin}},
+  wkeit/.style={font=\scriptsize, inner sep=2pt}
+}
+%----------------------------------------------------------------------------------------------------%
+
+
+
+
+
+
+
+
+
+%----------------------------------------------------------------------------------------------------%
+%%%%%%%%%%%                                     Handreichungen                                        %%%%%%%%%%%
+%----------------------------------------------------------------------------------------------------%
+
+
+%Schriftzug TikZ im Fließtext (Leerzeichen danach ist eingebaut)
+\newcommand{\TikZ}{Ti\textit{k}Z }
+
+
+%Box für die Ausgabe unter einem Code-Beispiel: erst lstlisting[style=latex], darunter \begin{ausgabe} ... \end{ausgabe}
+\newtcolorbox{ausgabe}{%
+	colback=blue!5,%
+	colframe=blue!50!black,%
+	title=Ausgabe,%
+	fonttitle=\bfseries%
+}
+%----------------------------------------------------------------------------------------------------%
+
+
+
+
+
+
+
+
+
+%----------------------------------------------------------------------------------------------------%
+%%%%%%%%%%%                                        Lautschrift                                         %%%%%%%%%%%
+%----------------------------------------------------------------------------------------------------%
+
+
+%Lautschrift in eckigen Klammern mit \ipa{"a:b@nt} – schaltet das babel-Kürzel " vorher aus (sonst wird "a zu ä)
+\makeatletter
+\newcommand{\ipa}{\begingroup\shorthandoff{"}\ipa@aux}
+\newcommand{\ipa@aux}[1]{[\textipa{#1}]\endgroup}
+\makeatother
+%----------------------------------------------------------------------------------------------------%
+
+
+
+
+
+
+
+
+
+%----------------------------------------------------------------------------------------------------%
+%%%%%%%%%%%                                       Sprechblasen                                         %%%%%%%%%%%
+%----------------------------------------------------------------------------------------------------%
+
+
+%Sprechblase mit Zipfel links unten (Lehrkraft) mit \lehrerblase[TikZ-Optionen]{Text} (benötigt shapes.callouts)
+\newcommand{\lehrerblase}[2][]{%
+  \tikz[baseline=(B.base)]{%
+    \node[rectangle callout, rounded corners=6pt, callout relative pointer={(-13mm,-7mm)},
+      draw, thick, fill=blue!6, align=left, inner sep=3.5mm, #1] (B) {#2};}%
+}
+
+
+%Sprechblase mit Zipfel rechts unten (Schülerin/Schüler) mit \schuelerblase[TikZ-Optionen]{Text}
+\newcommand{\schuelerblase}[2][]{%
+  \tikz[baseline=(B.base)]{%
+    \node[rectangle callout, rounded corners=6pt, callout relative pointer={(13mm,-7mm)},
+      draw, thick, fill=green!6, align=left, inner sep=3.5mm, #1] (B) {#2};}%
+}
+%----------------------------------------------------------------------------------------------------%
+
+
+
+
+
+
+
+
+
+%----------------------------------------------------------------------------------------------------%
+%%%%%%%%%%%                            TikZ-Stile für Programmablaufpläne                            %%%%%%%%%%%
+%----------------------------------------------------------------------------------------------------%
+
+
+%Ein-/Ausgabe als Parallelogramm, Operation als Rechteck, Verzweigung als Raute (benötigt shapes.geometric)
+%align=center, damit \\ im Knotentext eine neue Zeile ergibt (ohne align wird \\ stillschweigend verschluckt)
+\tikzstyle{input}=[trapezium, trapezium left angle=60, trapezium right angle=120, fill=green!20, draw=green, align=center]
+\tikzstyle{operation}=[rectangle, fill=orange!20, draw=orange, align=center]
+\tikzstyle{condition}=[diamond, fill=magenta!20, draw=magenta, align=center]
+\tikzstyle{output}=[trapezium, trapezium left angle=60, trapezium right angle=120, fill=red!20, draw=red, align=center]
+%----------------------------------------------------------------------------------------------------%
+
+
+
+
+
+
+
+
+
+%----------------------------------------------------------------------------------------------------%
+%%%%%%%%%%%                            TikZ-Stile für UML-Klassendiagramme                           %%%%%%%%%%%
+%----------------------------------------------------------------------------------------------------%
+
+
+%Klasse mit drei Teilen: Name, Attribute, Methoden (benötigt shapes.multipart)
+\tikzstyle{umlclass} = [rectangle split, rectangle split parts=3, rectangle split part align={center,left,left}, draw, thick, text width=4cm, minimum height=2cm]
+
+
+%Beziehungen (benötigt arrows.meta)
+\tikzstyle{inherit} = [-{Triangle[open]}, thick]	%Vererbung
+\tikzstyle{compose} = [-{Diamond}, thick]	%Komposition
+\tikzstyle{aggregate} = [-{Diamond[open]}, thick]	%Aggregation
+\tikzstyle{associate} = [-, thick]	%Assoziation
+\tikzstyle{depend} = [-, thick, dashed]	%Abhängigkeit
+%----------------------------------------------------------------------------------------------------%
+
+
+
+
+
+
+
+
+%----------------------------------------------------------------------------------------------------%
+%%%%%%%%%%%                                         Listing Settings                                       %%%%%%%%%%%%
+%----------------------------------------------------------------------------------------------------%
+
+
+%Umlaute und häufige Sonderzeichen in ALLEN Listings (Python, Java, ...), sonst Fehler »Invalid UTF-8 byte sequence«
+\lstset{literate=%
+	{ä}{{\"a}}1 {ö}{{\"o}}1 {ü}{{\"u}}1 {Ä}{{\"A}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1 {ß}{{\ss}}1%
+	{·}{{$\cdot$}}1 {€}{{\euro}}1 {°}{{\degree}}1 {→}{{$\rightarrow$}}2 {≤}{{$\leq$}}1 {≥}{{$\geq$}}1 {≠}{{$\neq$}}1%
+	{–}{{--}}1 {—}{{---}}1 {„}{{\glqq}}1 {“}{{\grqq}}1 {…}{{\dots}}3 {×}{{$\times$}}1 {²}{{$^2$}}1 {³}{{$^3$}}1 {π}{{$\pi$}}1%
+}
+
+
+%Einstellung der Codeumgebung für LaTeX-Code-Beispiele (Stil der Handreichungen: ohne Zeilennummern)
+%Verwendung: \begin{lstlisting}[style=latex] ... \end{lstlisting}, darunter \begin{ausgabe} ... \end{ausgabe}
+\lstdefinestyle{latex}{%
+  	language=TeX,%
+  	frame=single,%
+  	backgroundcolor=\color{yellow!20},%
+  	rulecolor=\color{lightgray!40},%
+  	breaklines=true,%
+  	basicstyle=\scriptsize\ttfamily,%
+  	keywordstyle=\bfseries\color{purple!40!black},%
+  	commentstyle=\itshape\color{green!40!black},%
+  	identifierstyle=\color{blue},%
+	stringstyle=\color{black},%
+	captionpos=b,%
+	tabsize=2,%
+	showspaces=false,%
+	showstringspaces=false,%
+  	showtabs=false,%
+	deletekeywords={document},%
+	morekeywords={begin}%
+}
+
+
+%Variante mit Zeilennummern: \begin{lstlisting}[style=latexnummeriert]
+\lstdefinestyle{latexnummeriert}{%
+	style=latex,%
+	numbers=left,%
+	numberstyle=\tiny\color{gray!90!black},%
+  	numbersep=-5pt%
+}
+%----------------------------------------------------------------------------------------------------%

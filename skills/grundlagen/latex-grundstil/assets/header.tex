@@ -1,0 +1,146 @@
+%----------------------------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------%
+%%%%%%%%%%%                                              HEADER                                                %%%%%%%%%%%
+%----------------------------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------%
+%
+% Universale header.tex – gilt für Arbeitsblätter, Leistungskontrollen, Handreichungen, Nachschlagewerke.
+% Neue Pakete und TikZ-Bibliotheken werden HIER ergänzt (nicht im Dokument) und unten protokolliert.
+% Quelle: https://github.com/mq90/latex-skills-schule  (CC BY 4.0, Martin Quandt)
+%
+% Änderungsprotokoll
+% 2026-11-09  zusammengeführt aus allen Handreichungs-Headern: TikZ-Bibliotheken fit, shapes.multipart,
+%             arrows.meta, shapes.callouts, circuits.logic.US, circuits.logic.IEC; Pakete array, booktabs,
+%             longtable; xskak, chessboard, sudoku, tikzpeople, tipa (safe); MusiXTeX als auskommentierte
+%             Option (definiert \cup als Achtelnote um – bricht $A \cup B$)
+%
+
+
+
+
+
+
+%----------------------------------------------------------------------------------------------------%
+%%%%%%%%%%%%%                            Gestaltung des Dokuments                                %%%%%%%%%%
+%----------------------------------------------------------------------------------------------------%
+
+
+
+%Definition der Dokumentenklasse
+\documentclass[12pt]{article} %book, article, report, standalone
+
+
+
+%Pakete für eine saubere Kodierung
+\usepackage[utf8]{inputenc} %UTF-8 als Zeichenkodierung  ... ABER nicht immer notwendig, je nach Compiler
+\usepackage[T1]{fontenc} %Verwendet westeuropäische Schriftkodierung
+\usepackage[ngerman]{babel} %Ermöglicht deutsche Übersetzung und Silbentrennung
+\usepackage{lmodern} %Verwendet moderne Schriftarten
+
+
+
+%Pakete für die Gestaltung des Dokuments
+\usepackage{geometry} %Ermöglicht die Ausrichtung des Blattes mit \geometry{...}
+\geometry{a4paper, top=15mm, left=15mm, right=20mm, bottom=15mm, headsep=10mm, footskip=10mm} %gewählte Ausrichtung des Blattes
+\pagestyle{empty} %Art der Seitennummerierung, z.B.: empty , plain
+\usepackage{fancyhdr} %Ermöglicht die Gestaltung einer Kopfzeile für LK's oder KA's 
+\usepackage{lscape} %Ermöglicht eventuelles Querformat des Blattes mit \begin{landscape} ... \end{landscape}
+\usepackage{pdfpages} %Ermöglicht einbinden PDF-Dokumente bzw. einzelene Seiten mit \includepdf[pages={1,3,5}]{Dateiname} bzw. pages=-
+\usepackage[german]{layout} %Ermöglicht es mit den Befehl \layout sich die Default-Layout beschreiben zu lassen (Bild vom Layout)
+%----------------------------------------------------------------------------------------------------%
+
+
+
+
+
+
+
+
+%----------------------------------------------------------------------------------------------------%
+%%%%%%%%%%%%                                        Packages                                                  %%%%%%%%%%%
+%----------------------------------------------------------------------------------------------------%
+
+
+
+%Pakete für die Strukturierung des Dokuments
+\usepackage[shortlabels]{enumitem} %Ermöglicht die Nummerierung selbst festzulegen mit \begin{enumerate}[Art der Nummerierung] ...   \end{enumerate}
+\parindent=0px %Setzt die Absatzeinrückung auf 0 Pixel und ernfernt damit unnötige Leerzeichen vor dem ersten Wort eines neuen Abschnitts
+\usepackage{setspace} %Ermöglicht verschiedene Funktion zur Abstandsregelung, z.B.: \hspace{2.5cm} ; \onehalfspacing
+\onehalfspacing %Setzt den Zeilenabstand auf 1,5
+\usepackage[style=german]{csquotes}%Ermöglicht den deutschen Zitierstil darstellen zu lassen mt \enquote{Zitat}
+\usepackage[breaklinks=true,%Zeilenumbruch der Verlinkung ist bündig
+			colorlinks=true,%Links können farbig sein
+			linkcolor=blue,%Linkfarbe wird auf blau gesetzt
+			urlcolor=darkgray,%Farb der URL wird auf dunkelgrau gesetzt
+			plainpages=false,%
+			hyperfootnotes=false,%
+			pdfpagelabels=false%
+		]{hyperref} %Ermöglicht die Verlinkung innerhalb des Dokuments 
+\usepackage{multicol} %Ermöglicht gleichgroße Aufteilung des Dokuments in n Spalten mit \begin{multicols}{n} ... \end{multicols}
+\usepackage{xcolor,colortbl} %Ermöglicht Zeilen, Spalten und Zellen einer Tabelle zu färben
+\usepackage{caption} %Ermöglicht die Bezeichnung und Strukturierung von Abbildungen oder Quellcode
+\usepackage{fancybox} % Ermöglicht die Umrandung einzelner Abschnitte
+\usepackage[most]{tcolorbox} %Ermöglicht die Nutzung von Colorboxen für Merksätze, Lösungen, Definitionen, usw mit \newtcolorbox
+\tcbuselibrary{breakable} %Aufteilen der Colorboxen, welche über mehrere Seiten gehen
+\usepackage{ifthen} % Ermöglicht \ifthenelse Befehle
+\allowdisplaybreaks %Erlaubt Seitenumbrüche innerhalb von align-Umgebung
+
+
+
+%Nützliche Pakete für Symbole und mathematischen Formelsatz
+\usepackage{amsmath, amssymb, mathrsfs, amsfonts, amsthm, dsfont} %sämtliche Pakete für mathematische Zeichen, Symbole und Formelsatz
+\usepackage{units} %Ermöglicht die Angabe von Einheiten mit \unit[Wert]{Einheit}
+\usepackage{gensymb} %Ermöglicht Nutzung von \degree für das macro des Grad-Symbols °
+\usepackage[official]{eurosym} %Ermöglicht die Nutzung von \euro{}
+\usepackage{pifont} %Ermöglicht die Nutzung verschiedener Fonts, z.B.: \ding{42} , \ding{52} , \ding{56}
+\usepackage{tikzsymbols} %Ermöglicht die Nutzung von u.a. Smileys und anderen Symbolen, z.B.: \Winkey , \Smiley[1.5]
+
+
+
+%Pakete zur Darstellung von Grafiken
+\usepackage{tikz} %\begin{tikzpicture} .... \end{tikzpicture}
+\usepackage{pgf, pgfplots} %Ermöglicht 2D und 3D Plof-Funktion
+\pgfplotsset{compat=1.17}
+\usetikzlibrary{arrows,%Pfeile
+			calc,%Rechnen in Koordinaten, z.B. mit ($(1,2)+5*(0,1)$) auf Punkt (1,7) kommen
+			angles, plotmarks, quotes, babel, intersections, shapes.geometric, decorations.pathreplacing, automata, positioning, shadows, patterns, patterns.meta,%
+			fit,%Rahmen um mehrere Knoten (UML, Automaten)
+			shapes.multipart,%geteilte Knoten (UML-Klassen)
+			arrows.meta,%moderne Pfeilspitzen, z.B. -{Triangle[open]}
+			shapes.callouts,%Sprechblasen
+			circuits.logic.US, circuits.logic.IEC%Logikgatter (digitale Schaltungen)
+			} %nützliche Bibliotheken für TikZ
+\usepackage{animate} %animierte Darstellungen
+\usepackage{graphicx} %\includegraphics[width=..px,height=..px]{Dateiname}
+\usepackage{multirow} %Zellen über mehrere Zeilen mit \multirow{n}{*}{Text}
+\usepackage{array} %erweiterte Spaltentypen, z.B. >{\centering\arraybackslash}p{2cm}
+\usepackage{booktabs} %schöne Tabellenlinien \toprule, \midrule, \bottomrule
+\usepackage{longtable} %Tabellen über mehrere Seiten
+
+
+
+%gelegentlich hilfreiche Zusatzpakete
+\usepackage{hologo} %\hologo{LaTeX}
+\usepackage{suetterl} %Sütterlin als Schriftart mit \mathfrak{Text}
+\usepackage{qrcode} %Einbindung eines QR-Codes 
+\usepackage{url} %Einbindung eines URL-Links
+\usepackage{ccicons} %Creative Commons Symbole
+\usepackage{listings} %\begin{lstlisting} ... \end{lstlisting}
+\usepackage{struktex} %Struktogrammdarstellung
+\usepackage{ulem} %Unterstreichung mit \uline{} ggf. mit \hfill im Inneren für Unterstrich bis zum Ende der Zeile
+\usepackage{xskak} %Schach: Partien und Züge mit \newchessgame, \mainline{1. e4 e5} (lädt skak)
+\usepackage{chessboard} %Schachbretter mit \chessboard[setfen=...]
+\usepackage{sudoku} %Sudoku-Gitter mit \begin{sudoku} |5|3| | ... |. \end{sudoku}
+\usepackage{tikzpeople} %Personen-Figuren als TikZ-Knoten, z.B. \node[alice, minimum size=2cm]{};
+\usepackage[safe]{tipa} %Lautschrift mit \textipa{...}; [safe], weil tipa sonst \; \: \! \* \s umdefiniert (bricht z.B. \(\;\)) – Langformen siehe latex-lautschrift
+%\usepackage{musixtex} %Notensatz – NUR für Musik-Dokumente einkommentieren: definiert u.a. \cup als Note um (bricht $A \cup B$)
+%\usepackage[list=true, font=large, labelfont=bf, labelformat=brace, position=top]{subcaption}
+
+
+
+%abgeänderte Befehle
+\renewcommand{\arraystretch}{1.25} %
+%\renewcommand{\familydefault}{\sfdefault} %serifenlose Schriftart
+\renewcommand{\lstlistingname}{Quellcode} %Umbenennung
+\renewcommand{\lstlistlistingname}{Quellcodeverzeichnis} %Umbenennung
+%----------------------------------------------------------------------------------------------------%

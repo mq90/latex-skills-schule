@@ -1,0 +1,158 @@
+\input{header.tex}
+\input{newcommands.tex}
+
+
+\title{Notensätze mit MusiX\TeX{} erstellen}
+\author{Fortbildungsmaterial für MINT-Lehrkräfte}
+\date{13. Mai 2025}
+\pagestyle{plain}
+\usepackage{musixtex} % nur in Musik-Dokumenten: definiert \cup als Note um
+
+\begin{document}
+
+\maketitle
+
+MusiX\TeX{} ist ein hochentwickeltes Paket für professionellen Notensatz in \LaTeX{}. Es ermöglicht Musiklehrkräften, rechtlich unbedenklich eigene Noten zu setzen, ohne auf urheberrechtlich geschützte Vorlagen angewiesen zu sein. Der Name MusiX\TeX{} steht für \glqq{}Music eXtended \TeX{}\grqq{} und unterstreicht die Erweiterung der \TeX{}-Funktionalität um musikalische Notation. Diese Handreichung führt Sie systematisch in die Grundlagen des Notensatzes mit MusiX\TeX{} ein und zeigt, wie Sie komplette Musikstücke für Ihren Unterricht erstellen können.
+
+%%%%%  KAPITEL 1  %%%%
+\section{Grundlagen und Paketeinbindung}
+
+Um MusiX\TeX{} zu verwenden, müssen Sie zunächst die notwendigen Pakete einbinden und die Grundstruktur verstehen:
+
+\begin{lstlisting}[style=latex]
+\usepackage{musixtex}
+\end{lstlisting}
+
+Die zentrale Umgebung für Musiknotation ist die \texttt{music}-Umgebung, in der alle musikalischen Elemente definiert werden:
+
+\begin{lstlisting}[style=latex]
+\begin{music}
+    % Alle Notationen hier
+\end{music}
+\end{lstlisting}
+
+Jedes MusiX\TeX{}-Dokument folgt einem strukturierten Aufbau. Zunächst werden die Instrumente und deren Eigenschaften definiert, dann folgt der eigentliche Notensatz zwischen \texttt{\textbackslash startextract} und \texttt{\textbackslash endextract}:
+
+\begin{lstlisting}[style=latex]
+\begin{music}
+	\startextract
+		... Hier stehen die Noten
+	\endextract
+	\startpiece
+		... Hier stehen die Noten
+	\endpiece
+\end{music}
+\end{lstlisting}
+	\begin{music}
+		\startextract
+			
+		\endextract
+		\startpiece
+			
+		\endpiece
+	\end{music}
+\begin{ausgabe}
+	
+\end{ausgabe}
+
+\begin{lstlisting}[style=latex]
+\begin{music}
+\startextract
+\Notes\wh{c}\en                        % Ganze Note c
+\Notes\hu{d}\hu{e}\en                  % Zwei halbe Noten d und e
+\Notes\qu{f}\qu{g}\qu{h}\qu{}\en      % Vier Viertelnoten
+\Notes\qu{g}\qu{f}\hu{e}\en            % Gemischte Notenwerte
+\endextract
+\end{music}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{music}
+\startextract
+\Notes\wh{c}\en                        % Ganze Note c
+\Notes\hu{d}\hu{e}\en                  % Zwei halbe Noten d und e
+\Notes\qu{f}\qu{g}\qu{h}\qu{}\en      % Vier Viertelnoten
+\Notes\qu{g}\qu{f}\hu{e}\en            % Gemischte Notenwerte
+\endextract
+\end{music}
+\end{ausgabe}
+
+Die wichtigsten Parameter sind \texttt{\textbackslash instrumentnumber}, das die Anzahl der Instrumente festlegt, \texttt{\textbackslash setname}, das den Namen eines Instruments definiert, \texttt{\textbackslash setstaffs}, das die Anzahl der Notensysteme pro Instrument bestimmt, und \texttt{\textbackslash generalmeter}, das die Taktart für alle Instrumente setzt.
+
+%%%%%  KAPITEL 2  %%%%
+\section{Grundlegende Notenwerte und einfache Melodien}
+
+MusiX\TeX{} verwendet spezielle Befehle für verschiedene Notenwerte. Die Grundnotenwerte werden mit prägnanten Abkürzungen dargestellt:
+
+\begin{lstlisting}[style=latex]
+\begin{music}
+\parindent10mm
+\instrumentnumber{1}
+\setstaffs1{1}
+\generalmeter{\meterfrac44}
+\startextract
+\Notes\wh{c}\en                 			% Ganze Note c (wh=whole note)
+\Notes\hu{d}\en                 			% Halbe Note d nach oben (hu=half note up)
+\Notes\hl{e}\en                  			% Halbe Note e nach unten (hl=half note low)
+\Notes\qu{f}\en      				% Viertelnote f, Hals nach oben (qu=quarter note up)
+\Notes\ql{g}\en      				% Viertelnote g, Hals nach unten (ql=quarter note low)
+\Notes\qa{a}\en							% Viertelnote a, Hals automatisch (qa=quarter note automatic)
+\bar
+\Notes\cu{c}\cu{d}\cu{e}\cu{f}\cu{g}\cu{a}\cu{b}\cu{c}\en  % Acht Achtelnoten
+\endextract
+\end{music}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{music}
+\parindent10mm
+\instrumentnumber{1}
+\setstaffs1{1}
+\generalmeter{\meterfrac44}
+\startextract
+\Notes\wh{c}\en                      % Ganze Note c (wh=whole note)
+\Notes\hu{d}\en                  % Halbe Note d nach oben (hu=half note up)
+\Notes\hl{e}\en                  % Halbe Note e nach unten (hl=half note low)
+\Notes\qu{f}\en      % Viertelnote f, Hals nach oben (qu=quarter note up)
+\Notes\ql{g}\en      % Viertelnote g, Hals nach unten (ql=quarter note low)
+\Notes\qa{a}\en      % Viertelnote a, Hals automatisch (qa=quarter note automatic)
+\bar
+\Notes\cu{c}\cu{d}\cu{e}\cu{f}\cu{g}\cu{a}\cu{b}\cu{c}\en  % Acht Achtelnoten
+\endextract
+\end{music}
+\end{ausgabe}
+
+Die Notenwerte folgen einem logischen System: \texttt{\textbackslash wh} steht für \textit{whole} (ganze Note), \texttt{\textbackslash hu} für \textit{half} (halbe Note), \texttt{\textbackslash qu} für \textit{quarter} (Viertelnote) und \texttt{\textbackslash cu} für \textit{croche} (französisch für Achtelnote). Der Befehl \texttt{\textbackslash en} beendet eine Notengruppe, während \texttt{\textbackslash bar} einen Taktstrich setzt.
+
+Oktaven werden durch verschiedene Notationsformen dargestellt. Die Grundoktave verwendet Kleinbuchstaben, tiefere Oktaven Großbuchstaben und höhere Oktaven Apostrophe:
+
+\begin{lstlisting}[style=latex]
+\begin{music}
+\parindent10mm
+\instrumentnumber{1}
+\setstaffs1{1}
+\generalmeter{\meterfrac44}
+\startextract
+\Notes\qu{C}\qu{c}\qu{'c}\qu{''c}\en  % Verschiedene Oktaven
+\bar
+\Notes\qu{D}\qu{d}\qu{'d}\qu{''d}\en  % D in verschiedenen Oktaven
+\endextract
+\end{music}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{music}
+\parindent10mm
+\instrumentnumber{1}
+\setstaffs1{1}
+\generalmeter{\meterfrac44}
+\startextract
+\Notes\qu{C}\qu{c}\qu{'c}\qu{''c}\en  % Verschiedene Oktaven
+\bar
+\Notes\qu{D}\qu{d}\qu{'d}\qu{''d}\en  % D in verschiedenen Oktaven
+\endextract
+\end{music}
+\end{center}
+\end{ausgabe}
+\end{document}

@@ -1,0 +1,296 @@
+\input{header.tex}
+\input{newcommands.tex}
+
+
+\title{Programmablaufpläne mit Ti\textit{k}Z erstellen}
+\author{Fortbildungsmaterial für MINT-Lehrkräfte}
+\date{13. Mai 2025}
+\pagestyle{plain}
+
+\begin{document}
+
+\maketitle
+
+Programmablaufpläne (auch Flussdiagramme genannt) sind ein grundlegendes Werkzeug in der Informatik, um Algorithmen und Prozesse zu visualisieren. Mit dem Paket Ti\textit{k}Z in \hologo{LaTeX} lassen sich solche Diagramme präzise, einheitlich und flexibel gestalten. Diese Handreichung zeigt, wie Sie mithilfe von Ti\textit{k}Z ansprechende Programmablaufpläne erstellen können, indem Sie vordefinierte Stile nutzen und die Beziehungen zwischen den einzelnen Elementen definieren.
+
+
+
+%%%%  KAPITEL 1  %%%%
+\section{Grundlagen: Das Ti\textit{k}Z-Paket}
+
+Ti\textit{k}Z (Ti\textit{k}Z ist kein Zeichenprogramm) ist ein leistungsstarkes Paket zur Erstellung von Vektorgrafiken in \hologo{LaTeX}. Um Ti\textit{k}Z zu verwenden, müssen Sie zunächst das Paket einbinden und die benötigten Bibliotheken aktivieren. Für die Erstellung von Programmablaufplänen sind besonders die folgenden Bibliotheken relevant:
+
+\begin{lstlisting}[style=latex]
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows, positioning}
+\end{lstlisting}
+
+Das Hauptpaket \texttt{tikz} stellt die Grundfunktionen bereit, während die zusätzlichen Bibliotheken spezifische Funktionalitäten ergänzen. Mit \texttt{shapes.geometric} erhalten Sie Zugriff auf geometrische Formen wie Rauten für Entscheidungen oder Trapeze für Ein- und Ausgabeoperationen. Die \texttt{arrows}-Bibliothek bietet verschiedene Pfeilspitzen und -stile für die Verbindungslinien. Besonders wichtig für Programmablaufpläne ist die \texttt{positioning}-Bibliothek, die eine intuitive relative Positionierung der Knoten ermöglicht. Statt mit absoluten Koordinaten zu arbeiten, können Sie so Elemente mit Angaben wie \glqq{}unterhalb von\grqq{}, \glqq{}rechts von\grqq{} usw. platzieren, was die Erstellung und spätere Anpassung des Diagramms erheblich vereinfacht. Diese Pakete sind bereits in der \texttt{header.tex} enthalten, sollten aber für das Verständnis erwähnt werden, da sie die Grundlage für alle weiteren Schritte bilden.
+
+
+
+%%%%  KAPITEL 2  %%%%
+\section{Eigene Stile für Programmablaufpläne definieren}
+
+Eine der Stärken von Ti\textit{k}Z ist die Möglichkeit, eigene Stile zu definieren, die dann wiederverwendet werden können. Mit dem Befehl \texttt{\textbackslash tikzstyle\{name\}} wird ein neuer Stil mit dem angegebenen Namen definiert, der dann für verschiedene Elemente in Ihren Diagrammen verwendet werden kann.
+
+Schauen wir uns zunächst ein einfaches Beispiel an, wie ein Stil definiert wird:
+
+\begin{lstlisting}[style=latex]
+% Definition eines einfachen Trapez-Stils
+\tikzstyle{meinTrapez}=[
+	trapezium,                	% Formvorgabe
+	fill=blue!10,             	% Fuellfarbe (hellblau)
+	draw=blue,               	 	% Rahmenfarbe (blau)
+	trapezium left angle=70,  	% Winkel des linken Schraegstichs
+	trapezium right angle=110 	% Winkel des rechten Schraegstichs
+]
+\end{lstlisting}
+
+Die eckigen Klammern enthalten alle Eigenschaften des Stils. Dies beginnt typischerweise mit der grundlegenden Form wie \texttt{rectangle}, \texttt{diamond} oder \texttt{trapezium}. Danach folgen Gestaltungsmerkmale wie die Füllfarbe (\texttt{fill=}) und die Rahmenfarbe (\texttt{draw=}). Je nach gewählter Form können zusätzliche Parameter erforderlich sein – beim Trapez beispielsweise die Winkel der schrägen Seiten.
+
+Für Programmablaufpläne benötigen wir verschiedene Knotentypen, die den üblichen Konventionen entsprechen: Eingabeoperationen werden meist als grüne Parallelogramme dargestellt, Verarbeitungsschritte als orangefarbene Rechtecke, Entscheidungen als magentafarbene Rauten und Ausgabeoperationen als rote Parallelogramme. Diese Stile können wir wie folgt definieren:
+
+\begin{lstlisting}[style=latex]
+%Tikzstyles fuer Programmablaufplaene
+%Stil fuer Eingabe
+\tikzstyle{input}=[
+	trapezium,
+	trapezium left angle=60,
+	trapezium right angle=120,
+	fill=green!20,
+	draw=green
+]
+%Stil fuer Verarbeitung
+\tikzstyle{operation}=[
+	rectangle,
+	fill=orange!20,
+	draw=orange,
+]
+%Stil fuer Bearbeitung
+\tikzstyle{condition}=[
+	diamond,
+	fill=magenta!20,
+	draw=magenta,
+]
+Stil fuer Ausgabe
+\tikzstyle{output}=[
+	trapezium,
+	trapezium left angle=60,
+	trapezium right angle=120,
+	fill=red!20,
+	draw=red,
+]
+\end{lstlisting}
+
+Mit diesen vordefinierten Stilen kann nun jeder Knoten im Programmablaufplan dem entsprechenden Typ zugewiesen werden. So entstehen visuell ansprechende und sofort verständliche Diagramme, die den standardisierten Konventionen folgen. Die Verwendung solcher Stile hat den großen Vorteil, dass Sie das Erscheinungsbild aller Elemente eines Typs durch Änderung der Stildefinition zentral anpassen können, ohne jeden einzelnen Knoten im Diagramm modifizieren zu müssen.
+
+
+
+%%%%  KAPITEL 3  %%%%
+\section{Grundlegendes zur Node-Funktion in Ti\textit{k}Z}
+
+Die \texttt{\textbackslash node}-Funktion ist der zentrale Baustein für Programmablaufpläne in Ti\textit{k}Z. Sie definiert einen Knoten mit Position, Inhalt und Stil:
+
+\begin{lstlisting}[style=latex]
+\node[stilname] (knotenname) at (x,y) {Knoteninhalt};
+\end{lstlisting}
+
+Die wichtigsten Elemente sind:
+\begin{itemize}
+    \item \texttt{stilname}: Der zuvor definierte Stil, z.B. \texttt{operation}
+    \item \texttt{(knotenname)}: Ein eindeutiger Name für den Knoten, der später zur Referenzierung dient
+    \item \texttt{at (x,y)}: Die Position des Knotens im Koordinatensystem
+    \item \texttt{\{Knoteninhalt\}}: Der Text, der im Knoten angezeigt wird
+\end{itemize}
+
+
+
+%%%%  UNTERKAPITEL 3.1  %%%%
+\subsection{Knoten in Abhängigkeit voneinander positionieren}
+
+Statt absolute Koordinaten zu verwenden, ist es oft praktischer, Knoten relativ zu anderen zu positionieren:
+
+\begin{lstlisting}[style=latex]
+% Erster Knoten mit absoluter Position
+\node[operation] (start) at (0,0) {Start};
+
+% Zweiter Knoten relativ zum ersten, 2cm unterhalb
+\node[input] (eingabe) [below=2cm of start] {Eingabe};
+\end{lstlisting}
+
+Für diese relative Positionierung benötigen wir die Ti\textit{k}Z-Bibliothek \texttt{positioning}. Die gängigsten Positionierungsangaben sind:
+\begin{itemize}
+    \item \texttt{above}: oberhalb
+    \item \texttt{below}: unterhalb
+    \item \texttt{left}: links
+    \item \texttt{right}: rechts
+    \item Kombinationen wie \texttt{above right}: oberhalb rechts
+\end{itemize}
+
+Der Abstand wird mit \texttt{=2cm} angegeben und \texttt{of knotenname} gibt den Bezugsknoten an.
+
+
+
+%%%%  UNTERKAPITEL 3.2  %%%%
+\subsection{Verbindungspfeile zwischen Knoten}
+
+Um Knoten miteinander zu verbinden, verwendet man die \texttt{\textbackslash draw}-Funktion:
+
+\begin{lstlisting}[style=latex]
+\draw[->] (start) -- (eingabe);
+\end{lstlisting}
+
+Diese Anweisung zeichnet einen Pfeil vom Knoten \texttt{start} zum Knoten \texttt{eingabe}. Der Pfeilstil \texttt{->} gibt an, dass am Ende ein Pfeilkopf gezeichnet wird.
+
+
+
+%%%%  UNTERKAPITEL 3.3  %%%%
+\subsection{Anpassung der Knotenabstände}
+
+Der Parameter \texttt{node distance} legt den Standardabstand zwischen Knoten fest:
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}[node distance=1.5cm] % Engerer Abstand
+	% ...
+\end{tikzpicture}
+\end{lstlisting}
+
+
+
+%%%%  UNTERKAPITEL 3.4  %%%%
+\subsection{Beschriftung von Verbindungspfeilen}
+
+Pfeile können mit der \texttt{node}-Anweisung beschriftet werden:
+
+\begin{lstlisting}[style=latex]
+\draw[->] (knoten1) -- node[above] {Beschriftung} (knoten2);
+\end{lstlisting}
+
+Die Positionsangabe (\texttt{above}, \texttt{below}, \texttt{left}, \texttt{right}) bestimmt, wo die Beschriftung platziert wird.
+
+
+
+%%%%  UNTERKAPITEL 3.5  %%%%
+\subsection{Komplexere Pfade}
+
+Für komplexere Verbindungen können wir Pfade definieren:
+
+\begin{lstlisting}[style=latex]
+% Horizontale und dann vertikale Verbindung
+\draw[->] (knoten1) -| (knoten2);
+
+% Vertikale und dann horizontale Verbindung
+\draw[->] (knoten1) |- (knoten2);
+
+% Verbindung mit Versatz
+\draw[->] (knoten1) -- ++(2,0) |- (knoten2);
+\end{lstlisting}
+
+
+
+%%%%  KAPITEL 4  %%%%
+\section{Ein einfaches Beispiel}
+
+Hier ein vollständiges Beispiel eines einfachen Programmablaufplans:
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}[node distance=2.5cm]
+	% Knoten definieren
+	\node[input] (Eingabe) {Thema der Hausarbeit};
+	\node[operation, below of=Eingabe, node distance=1.5cm] (Operation1) {Schreibprozess};
+	\node[condition, below of=Operation1] (Bedingung1) {mit \hologo{LaTeX}?};
+	\node[output, below of=Bedingung1] (Ausgabe1) {Note: sehr gut};	
+	\node[output, right of=Bedingung1, node distance=5cm] (Ausgabe2) {Note: ausreichend};
+
+	% Pfeile zwischen den Knoten
+	\draw[->] (Eingabe) -- (Operation1);	
+	\draw[->] (Operation1) -- (Bedingung1);	
+	\draw[->] (Bedingung1) -- node[right] {Ja} (Ausgabe1);
+	\draw[->] (Bedingung1) -- node[above] {Nein} (Ausgabe2);
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\begin{center}\begin{tikzpicture}[node distance=2.5cm]
+		% Knoten definieren
+    		\node[input] (Eingabe) {Thema der Hausarbeit};
+		\node[operation, below of=Eingabe, node distance=1.5cm] (Operation1) {Schreibprozess};
+		\node[condition, below of=Operation1] (Bedingung1) {mit \hologo{LaTeX}?};
+		\node[output, below of=Bedingung1] (Ausgabe1) {Note: sehr gut};	
+		\node[output, right of=Bedingung1, node distance=5cm] (Ausgabe2) {Note: ausreichend};
+
+		% Pfeile zwischen den Knoten
+		\draw[->] (Eingabe) -- (Operation1);	
+		\draw[->] (Operation1) -- (Bedingung1);	
+		\draw[->] (Bedingung1) -- node[right] {Ja} (Ausgabe1);
+		\draw[->] (Bedingung1) -- node[above] {Nein} (Ausgabe2);
+	\end{tikzpicture}\end{center}
+\end{ausgabe}
+
+
+\section{Ein komplexeres Beispiel}
+
+Hier ist ein komplexeres Beispiel eines Programmablaufplans für die Berechnung der Fakultät einer Zahl:
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}[node distance=1.5cm]
+	% Knoten definieren
+	\node[operation] (start) {Start};
+	\node[input] (eingabe) [below=of start] {Zahl $n$ einlesen};
+	\node[condition] (check) [below=of eingabe] {$n \geq 0$?};
+	\node[output] (error) [right=2.5cm of check] {Fehler: Negative Zahl};
+	\node[operation] (init) [below=of check] {$fak = 1$\\$i = 1$};
+	\node[condition] (loop) [below=of init] {$i \leq n$?};
+	\node[operation] (calc) [below=of loop] {$fak = fak \cdot i$\\$i = i + 1$};
+	\node[output] (result) [below right=1.5cm and 2cm of loop] {Ergebnis: $fak$};
+	\node[operation] (end) [below=of result] {Ende};
+    
+	% Pfeile zwischen den Knoten
+	\draw[->] (start) -- (eingabe);
+	\draw[->] (eingabe) -- (check);
+	\draw[->] (check) -- node[left] {ja} (init);
+	\draw[->] (check) -- node[above] {nein} (error);
+	\draw[->] (init) -- (loop);
+	\draw[->] (loop) -- node[left] {ja} (calc);
+	\draw[->] (calc) -- ++(-2.5,0) |- (loop);
+	\draw[->] (loop) -- node[above] {nein} (result);
+	\draw[->] (error) |- (end);
+	\draw[->] (result) -- (end);
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}\begin{tikzpicture}[node distance=1.5cm]
+    % Knoten definieren
+    \node[operation] (start) {Start};
+    \node[input] (eingabe) [below=of start] {Zahl $n$ einlesen};
+    \node[condition] (check) [below=of eingabe] {$n \geq 0$?};
+    \node[output] (error) [right=3cm of check] {Fehler: Negative Zahl};
+    \node[operation] (init) [below=of check] {$fak = 1; i = 1$};
+    \node[condition] (loop) [below=of init] {$i \leq n$?};
+    \node[operation] (calc) [below=of loop] {$fak = fak \cdot i ; i = i + 1$};
+    \node[output] (result) [right=1.5cm of loop] {Ergebnis: $fak$};
+    \node[operation] (end) [below=of result] {Ende};
+    
+    % Pfeile zwischen den Knoten
+    \draw[->] (start) -- (eingabe);
+    \draw[->] (eingabe) -- (check);
+    \draw[->] (check) -- node[left] {ja} (init);
+    \draw[->] (check) -- node[above] {nein} (error);
+    \draw[->] (init) -- (loop);
+    \draw[->] (loop) -- node[left] {ja} (calc);
+    \draw[->] (calc) -- ++(-2.5,0) |- (loop);
+    \draw[->] (loop) -- node[above] {nein} (result);
+    \draw[->] (error) |- (end);
+    \draw[->] (result) -- (end);
+\end{tikzpicture}\end{center}
+\end{ausgabe}
+
+
+\section{Zusammenfassung}
+
+Die Erstellung von Programmablaufplänen mit Ti\textit{k}Z bietet zahlreiche Vorteile, insbesondere die präzise Kontrolle über das Erscheinungsbild und die Konsistenz der Diagramme. Mit den in dieser Handreichung vorgestellten Grundtechniken können Sie bereits anspruchsvolle Flussdiagramme gestalten. Die Definition von Stilen für verschiedene Knotentypen mit \texttt{\textbackslash tikzstyle} ermöglicht eine einheitliche Darstellung aller Elemente eines Typs. Die Platzierung von Knoten mit der \texttt{\textbackslash node}-Funktion, sowohl mit absoluten Koordinaten als auch mit relativen Positionsangaben, bietet Flexibilität beim Aufbau des Diagramms. Durch die Erstellung von Verbindungspfeilen zwischen Knoten mit \texttt{\textbackslash draw} und die Gestaltung komplexerer Pfade für Schleifen und Verzweigungen lassen sich auch anspruchsvolle Algorithmen anschaulich visualisieren. Diese Techniken sind zudem nicht auf Programmablaufpläne beschränkt, sondern können auch für andere Diagrammtypen wie Zustandsautomaten oder Netzwerkdiagramme verwendet werden. Für spezifischere Anforderungen bietet Ti\textit{k}Z zahlreiche weitere Möglichkeiten, die Sie nach Bedarf erkunden können, doch die hier vorgestellten Grundlagen bilden ein solides Fundament für die gängigen Anwendungsfälle in der Informatik und Algorithmik.
+
+
+\end{document}

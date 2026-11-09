@@ -1,0 +1,308 @@
+\input{header.tex}
+\input{newcommands.tex}
+
+
+\title{Quellcode mit dem \texttt{listings}-Paket darstellen}
+\author{Fortbildungsmaterial für MINT-Lehrkräfte}
+\date{25. Mai 2025}
+\pagestyle{plain}
+
+\begin{document}
+
+\maketitle
+
+Das \texttt{listings}-Paket ist ein unverzichtbares Werkzeug für MINT-Lehrkräfte, die Quellcode in ihren Unterrichtsmaterialien präsentieren möchten. Es ermöglicht die elegante und professionelle Darstellung von Programmcode verschiedenster Sprachen mit automatischer Syntaxhervorhebung, Zeilennummerierung und flexibler Formatierung. Diese Handreichung zeigt, wie Sie mit wenigen Befehlen ansprechende Code-Darstellungen erstellen und durch eigene Stilvorlagen konsistente Formatierungen für Ihre Materialien entwickeln können.
+
+
+
+%%%% KAPITEL 1  %%%%
+\section{Grundlagen des \texttt{listings}-Pakets}
+
+Das \texttt{listings}-Paket wird in der Präambel Ihres \hologo{LaTeX}-Dokuments eingebunden und bietet sofort einsatzbereite Funktionalität für die Code-Darstellung:
+
+\begin{lstlisting}[style=latex]
+\usepackage{listings}
+\usepackage{xcolor}  % fuer Farbunterstuetzung
+\end{lstlisting}
+
+Wichtig zu wissen ist, dass das \texttt{listings}-Paket nicht für alle existierenden Programmiersprachen vordefinierte Syntaxhervorhebungen mitbringt. Zu den vollständig unterstützten Sprachen gehören unter anderem Python, Java, C/C++, HTML, SQL, PHP, MATLAB, Pascal und \hologo{TeX} (für \hologo{LaTeX}). Für weniger verbreitete oder neuere Sprachen wie CSS, JavaScript, TypeScript oder moderne Frameworks müssen Sie möglicherweise eigene Sprachdefinitionen erstellen oder auf die allgemeine Formatierung ohne spezifische Syntaxhervorhebung zurückgreifen. Eine vollständige Liste der unterstützten Sprachen finden Sie in der Paketdokumentation unter \texttt{texdoc listings}. Falls eine benötigte Sprache nicht verfügbar ist, können Sie mit \texttt{\textbackslash lstdefinelanguage} eigene Definitionen erstellen oder das Code-Beispiel ohne Sprachangabe verwenden, wodurch immerhin die grundlegende Formatierung (Schriftart, Rahmen, etc.) erhalten bleibt.
+
+Der einfachste Weg, Code darzustellen, ist die Verwendung der \texttt{lstlisting}-Umgebung:
+
+\begin{lstlisting}[style=latex, escapeinside={@}{@}]
+@\textbackslash begin\{lstlisting\}[language=Python]@
+def fibonacci(n):
+    if n <= 1:
+        return n
+    return fibonacci(n-1) + fibonacci(n-2)
+
+print(fibonacci(10))
+@\textbackslash end\{lstlisting\}@
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{lstlisting}[language=Python]
+def fibonacci(n):
+    if n <= 1:
+        return n
+    return fibonacci(n-1) + fibonacci(n-2)
+
+print(fibonacci(10))
+\end{lstlisting}
+\end{ausgabe}
+
+Die Angabe der Programmiersprache erfolgt über den Parameter \texttt{language=}, wodurch automatisch die entsprechende Syntaxhervorhebung aktiviert wird. Das Paket erkennt Schlüsselwörter, Kommentare, Strings und andere Sprachelemente und formatiert sie entsprechend.
+
+
+
+%%%%  KAPITEL 2  %%%%
+\section{Eigene Stile definieren}
+
+Die wahre Stärke des \texttt{listings}-Pakets liegt in der Möglichkeit, eigene Stilvorlagen zu erstellen. Mit \texttt{\textbackslash lstdefinestyle} können Sie einmal definierte Formatierungen für alle Code-Beispiele in Ihrem Dokument verwenden.
+
+
+
+%%%%  UNTERKAPITEL 2.1  %%%%
+\subsection{Einen Stil definieren}
+
+Hier ist ein Beispiel für einen benutzerdefinierten Stil, der speziell für \hologo{LaTeX}-Code optimiert ist:
+
+\begin{lstlisting}[style=latex]
+%Einstellung der Codeumgebung fuer LaTeX-Code-Beispiele
+\lstdefinestyle{latex}{%
+	language=TeX,%
+	frame=single,%
+	backgroundcolor=\color{yellow!20},%
+	rulecolor=\color{lightgray!40},%
+	breaklines=true,%
+	basicstyle=\scriptsize\ttfamily,%
+	keywordstyle=\bfseries\color{purple!40!black},%
+	commentstyle=\itshape\color{green!40!black},%
+	identifierstyle=\color{blue},%
+	stringstyle=\color{black},%
+	captionpos=b,%
+	tabsize=2,%
+	showspaces=false,%
+	showstringspaces=false,%
+	showtabs=false,%
+	deletekeywords={document},%
+	morekeywords={begin}%
+}
+\end{lstlisting}
+
+
+
+%%%%  UNTERKAPITEL 2.2  %%%%
+\subsection{Die wichtigsten Stil-Parameter}
+
+Die Anpassungsmöglichkeiten des \texttt{listings}-Pakets sind vielfältig. Hier sind die wichtigsten Parameter erklärt:
+
+\begin{itemize}
+    \item \texttt{language=}: Bestimmt die Programmiersprache für die Syntaxhervorhebung
+    \item \texttt{frame=}: Zeichnet einen Rahmen um den Code (\texttt{single}, \texttt{double}, \texttt{none})
+    \item \texttt{backgroundcolor=}: Setzt die Hintergrundfarbe des Code-Blocks
+    \item \texttt{breaklines=true}: Ermöglicht automatische Zeilenumbrüche bei langen Zeilen
+    \item \texttt{basicstyle=}: Definiert die Grundschriftart und -größe
+    \item \texttt{keywordstyle=}: Formatierung für Schlüsselwörter der Programmiersprache
+    \item \texttt{commentstyle=}: Formatierung für Kommentare
+    \item \texttt{numbers=left/right}: Aktiviert Zeilennummerierung
+    \item \texttt{tabsize=}: Bestimmt die Breite von Tabulatorzeichen
+\end{itemize}
+
+
+
+%%%%  UNTERKAPITEL 2.3  %%%%
+\subsection{Weitere nützliche Stile}
+
+Hier sind Beispiele für spezialisierte Stile für andere Programmiersprachen:
+
+\begin{lstlisting}[style=latex]
+% Stil fuer Python-Code
+\lstdefinestyle{python}{%
+	language=Python,%
+	frame=single,%
+	backgroundcolor=\color{blue!5},%
+	breaklines=true,%
+	basicstyle=\footnotesize\ttfamily,%
+	keywordstyle=\bfseries\color{blue!70!black},%
+	commentstyle=\itshape\color{green!60!black},%
+	stringstyle=\color{red!70!black},%
+	numbers=left,%
+	numberstyle=\tiny\color{gray},%
+	showstringspaces=false%
+}
+\end{lstlisting}
+
+\begin{lstlisting}[style=latex]
+% Stil fuer SQL-Code
+\lstdefinestyle{sql}{%
+language=SQL,%
+frame=single,%
+backgroundcolor=\color{green!5},%
+breaklines=true,%
+basicstyle=\footnotesize\ttfamily,%
+keywordstyle=\bfseries\color{purple!70!black},%
+commentstyle=\itshape\color{gray!70!black},%
+morekeywords={SELECT,FROM,WHERE,INSERT,UPDATE,DELETE},%
+showstringspaces=false%
+}
+\end{lstlisting}
+
+
+
+%%%%  KAPITEL 3  %%%%
+\section{Verschiedene Programmiersprachen}
+
+Das \texttt{listings}-Paket zeigt seine Stärke besonders in der Vielseitigkeit der unterstützten Sprachen. Hier sind Beispiele für verschiedene gängige Programmiersprachen. Beachten Sie, dass in den folgenden Beispielen auf die explizite Darstellung der \texttt{lstlisting}-Umgebung selbst verzichtet wird, um technische Komplikationen zu vermeiden. Die Verwendung erfolgt jeweils durch \texttt{\textbackslash begin\{lstlisting\}[language=Sprache]} und dem entsprechenden \texttt{\textbackslash end\{lstlisting\}}.
+
+
+
+%%%%  UNTERKAPITEL 3.1  %%%%
+\subsection{Java-Code}
+
+Für Java-Programme wird \texttt{language=Java} verwendet:
+
+\begin{lstlisting}[language=Java]
+public class Rechner {
+    public static void main(String[] args) {
+        int a = 15;
+        int b = 25;
+        int summe = a + b;
+        System.out.println("Summe: " + summe);
+    }
+}
+\end{lstlisting}
+
+
+
+%%%%  UNTERKAPITEL 3.2  %%%%
+\subsection{HTML-Code}
+
+Für Webseiten-Markup wird \texttt{language=HTML} verwendet:
+
+\begin{lstlisting}[language=HTML]
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Meine erste Webseite</title>
+</head>
+<body>
+    <h1>Willkommen!</h1>
+    <p>Dies ist ein Beispiel-Paragraph.</p>
+    <ul>
+        <li>Erstes Listenelement</li>
+        <li>Zweites Listenelement</li>
+    </ul>
+</body>
+</html>
+\end{lstlisting}
+
+
+
+%%%%  UNTERKAPITEL 3.3  %%%%
+\subsection{SQL-Code}
+
+Für Datenbankabfragen wird \texttt{language=SQL} verwendet:
+
+\begin{lstlisting}[language=SQL]
+SELECT name, alter, klasse
+FROM schueler
+WHERE alter >= 16
+ORDER BY name ASC;
+
+INSERT INTO schueler (name, alter, klasse)
+VALUES ('Max Mustermann', 17, '11a');
+\end{lstlisting}
+
+
+
+%%%%  UNTERKAPITEL 3.4  %%%%
+\subsection{Python-Code}
+
+Für Python-Skripte wird \texttt{language=Python} verwendet:
+
+\begin{lstlisting}[language=Python]
+def fibonacci(n):
+    if n <= 1:
+        return n
+    return fibonacci(n-1) + fibonacci(n-2)
+
+# Berechnung der ersten 10 Fibonacci-Zahlen
+for i in range(10):
+    print(f"F({i}) = {fibonacci(i)}")
+\end{lstlisting}
+
+
+
+%%%%  UNTERKAPITEL 3.5  %%%%
+\subsection{C-Code}
+
+Für C-Programme wird \texttt{language=C} verwendet:
+
+\begin{lstlisting}[language=C]
+#include <stdio.h>
+
+int main() {
+    int a = 15;
+    int b = 25;
+    int summe = a + b;
+    printf("Summe: %d\n", summe);
+    return 0;
+}
+\end{lstlisting}
+
+
+
+%%%%  KAPITEL 4  %%%%
+\section{Weitere nützliche Funktionen}
+
+
+
+%%%%  UNTERKAPITEL 4.1  %%%%
+\subsection{Code aus Dateien einbinden}
+
+Neben der direkten Eingabe können Sie auch Code aus externen Dateien einbinden. Dies ist besonders praktisch für längere Programme:
+
+Der Befehl \texttt{\textbackslash lstinputlisting[language=Python]\{dateiname.py\}} bindet eine Python-Datei vollständig ein und wendet automatisch die entsprechende Syntaxhervorhebung an.
+
+
+
+%%%%  UNTERKAPITEL 4.2  %%%%
+\subsection{Beschriftungen für Code-Listings}
+
+Code-Listings können wie Abbildungen oder Tabellen mit Überschriften und Referenzen versehen werden:
+
+\begin{lstlisting}[style=latex, escapeinside={@}{@}]
+@\textbackslash begin\{lstlisting\}[language=Java, caption=Einfaches Hello-World-Programm, label=lst:hello, captionpos=b]@
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}
+@\textbackslash end\{lstlisting\}@
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{lstlisting}[language=Java, caption=Einfaches Hello-World-Programm, label=lst:hello, captionpos=b]
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}
+\end{lstlisting}
+\end{ausgabe}
+
+Die Beschriftung wird mit \texttt{caption=Text} hinzugefügt. Mit \texttt{captionpos=b} erscheint sie unterhalb des Code-Blocks, mit \texttt{captionpos=t} oberhalb (Standard). Mit \texttt{label=} können Sie dem Listing eine Referenz zuweisen, auf die Sie später mit \texttt{\textbackslash ref\{labelname\}} verweisen können.
+
+
+
+%%%%  KAPITEL 5  %%%%
+\section{Zusammenfassung}
+
+Das \texttt{listings}-Paket ist ein mächtiges Werkzeug für die professionelle Darstellung von Quellcode in \hologo{LaTeX}-Dokumenten. Mit wenigen Grundbefehlen können Sie Code verschiedenster Programmiersprachen ansprechend formatieren. Die Möglichkeit, eigene Stilvorlagen zu definieren, ermöglicht es, konsistente und an Ihre Bedürfnisse angepasste Code-Darstellungen zu erstellen.
+
+Die wichtigsten Vorteile auf einen Blick: Das Paket unterstützt über 60 Programmiersprachen mit automatischer Syntaxhervorhebung. Durch benutzerdefinierte Stile können Sie einheitliche Formatierungen für alle Ihre Unterrichtsmaterialien schaffen. Erweiterte Funktionen wie Zeilennummerierung, Captions und die Einbindung externer Dateien bieten maximale Flexibilität. Die einfache Integration in bestehende \hologo{LaTeX}-Workflows spart Zeit bei der Dokumenterstellung.
+
+Für spezifische Anpassungen und erweiterte Funktionen empfiehlt sich ein Blick in die umfassende Paketdokumentation, die über \texttt{texdoc listings} auf der Kommandozeile oder online verfügbar ist. Mit den hier vorgestellten Grundlagen sind Sie jedoch bereits bestens gerüstet, um professionelle Code-Darstellungen für Ihren MINT-Unterricht zu erstellen und dabei von der Einfachheit und Flexibilität des \texttt{listings}-Pakets zu profitieren.
+
+\end{document}

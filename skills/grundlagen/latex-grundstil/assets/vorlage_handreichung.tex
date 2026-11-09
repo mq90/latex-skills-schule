@@ -1,0 +1,76 @@
+\input{header.tex}
+\input{newcommands.tex}
+
+
+\title{Thema mit \TikZ erstellen}
+\author{Fortbildungsmaterial für MINT-Lehrkräfte}
+\date{\today}
+\pagestyle{plain}
+\setlength{\parskip}{1.5em} % Abstand zwischen Absätzen (nur Handreichungen)
+
+\begin{document}
+
+\maketitle
+
+Ein einleitender Absatz: Worum geht es, wofür brauchen Lehrkräfte das im
+Unterricht, was zeigt diese Handreichung? Danach folgen die Kapitel vom
+Einfachen zum Komplexen.
+
+
+
+%%%%  KAPITEL 1  %%%%
+\section{Grundlagen und benötigte Bibliotheken}
+
+Welche Pakete und Bibliotheken nötig sind. In der universalen
+\texttt{header.tex} sind sie bereits geladen:
+
+\begin{lstlisting}[style=latex]
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta}
+\end{lstlisting}
+
+
+
+%%%%  KAPITEL 2  %%%%
+\section{Ein erstes Beispiel}
+
+
+
+%%%%  UNTERKAPITEL 2.1  %%%%
+\subsection{Ein Kreis mit Beschriftung}
+
+Kurzer Satz, was das Beispiel zeigt:
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+	% Kreis um den Ursprung
+	\draw[blue, thick] (0,0) circle (1);
+	\node at (0,0) {Mittelpunkt};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\begin{tikzpicture}
+		% Kreis um den Ursprung
+		\draw[blue, thick] (0,0) circle (1);
+		\node at (0,0) {Mittelpunkt};
+	\end{tikzpicture}
+\end{ausgabe}
+
+Erklärung nach der Ausgabe: Was bewirken die Optionen? Was kann man ändern?
+
+
+
+%%%%  KAPITEL 3  %%%%
+\section{Zusammenfassung}
+
+Die wichtigsten Techniken im Überblick:
+
+\begin{itemize}
+	\item erster Punkt
+	\item zweiter Punkt
+\end{itemize}
+
+Ein Schlussabsatz mit dem Nutzen für den Unterricht.
+
+\end{document}

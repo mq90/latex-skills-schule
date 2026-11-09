@@ -1,0 +1,1051 @@
+\documentclass[12pt,a4paper]{article}
+
+% Benötigte Pakete für diese Handreichung
+\usepackage[utf8]{inputenc}        % UTF-8 als Zeichenkodierung
+\usepackage[T1]{fontenc}           % Westeuropäische Schriftkodierung
+\usepackage[ngerman]{babel}        % Deutsche Übersetzung und Silbentrennung
+\usepackage{lmodern}               % Moderne Schriftarten
+\usepackage{geometry}              % Ermöglicht die Anpassung der Seitengeometrie
+\usepackage{listings}              % Für die Darstellung von Quellcode
+\usepackage{xcolor}                % Für farbigen Text/Hintergrund
+\usepackage{array}                 % Erweiterte Funktionen für Tabellen
+\usepackage{booktabs}              % Professionelle Tabellen mit horizontalen Linien
+\usepackage{multirow}              % Für Zellen, die sich über mehrere Zeilen erstrecken
+\usepackage{tabularx}              % Für Tabellen mit automatischer Breitenanpassung
+\usepackage{longtable}             % Für seitenübergreifende Tabellen
+\usepackage{colortbl}              % Für farbige Tabellenzellen
+\usepackage{tcolorbox}             % Für schöne Boxen um die Beispiele
+\usepackage{float}                 % Für bessere Positionierung
+
+\usepackage{pgfplotstable}
+
+% Seitenformat einstellen
+\geometry{a4paper, top=20mm, left=25mm, right=25mm, bottom=20mm}
+
+% Zeilenabstand festlegen
+\usepackage{setspace}
+\onehalfspacing
+
+% Einrückung am Absatzanfang deaktivieren
+\parindent=0pt
+
+%Einstellung der Codeumgebung für LaTeX-Code-Beispiele
+\lstdefinestyle{latex}{%
+  	language=TeX,%
+  	frame=single,%
+  	backgroundcolor=\color{yellow!20},%
+  	rulecolor=\color{lightgray!40},%
+  	breaklines=true,%
+  	basicstyle=\scriptsize\ttfamily,%
+  	keywordstyle=\bfseries\color{purple!40!black},%
+  	commentstyle=\itshape\color{green!40!black},%
+  	identifierstyle=\color{blue},%
+	stringstyle=\color{black},%
+	captionpos=b,%
+	tabsize=2,%
+	showspaces=false,%
+	showstringspaces=false,%
+  	showtabs=false,%
+	deletekeywords={document},%
+	morekeywords={begin}%
+}
+
+% Definition einer Box für Beispielausgaben
+\newtcolorbox{ausgabe}{
+    colback=blue!5,
+    colframe=blue!50!black,
+    title=Ausgabe,
+    fonttitle=\bfseries
+}
+
+\title{Tabellenstruktur und Tabellengestaltung in LaTeX}
+\author{Martin Quandt}
+\date{\today}
+
+\pagestyle{plain}
+\begin{document}
+
+\maketitle
+\section{Einführung}
+
+Tabellen sind ein zentrales Element in vielen wissenschaftlichen und didaktischen Dokumenten, insbesondere im MINT-Bereich. LaTeX bietet leistungsstarke Werkzeuge zur Erstellung professioneller Tabellen, die weit über die Möglichkeiten herkömmlicher Textverarbeitungsprogramme hinausgehen. Diese Handreichung erläutert die Grundlagen der Tabellenerstellung in LaTeX und zeigt fortgeschrittene Techniken zur Gestaltung ansprechender und informativer Tabellen für den Unterricht.
+
+\section{Grundlegende Tabellenstruktur}
+
+\subsection{Die tabular-Umgebung}
+
+Die grundlegende Umgebung zur Erstellung von Tabellen in LaTeX ist die \texttt{tabular}-Umgebung. Sie definiert die Struktur der Tabelle, insbesondere die Anzahl und Ausrichtung der Spalten.
+
+\begin{lstlisting}[style=latex]
+\begin{tabular}{Spaltenformat}
+  Zelleninhalt & Zelleninhalt & Zelleninhalt \\
+  Zelleninhalt & Zelleninhalt & Zelleninhalt \\
+  % weitere Zeilen...
+\end{tabular}
+\end{lstlisting}
+
+Das \texttt{Spaltenformat} definiert die Anzahl der Spalten und ihre Ausrichtung:
+\begin{itemize}
+    \item \texttt{l} – linksbündige Spalte
+    \item \texttt{c} – zentrierte Spalte
+    \item \texttt{r} – rechtsbündige Spalte
+\end{itemize}
+
+\subsection{Einfache Tabellen erstellen}
+
+Hier ist ein Beispiel für eine einfache Tabelle mit drei Spalten:
+
+\begin{lstlisting}[style=latex]
+\begin{tabular}{lcr}
+  Links & Zentriert & Rechts \\
+  Eins & Zwei & Drei \\
+  Vier & Fuenf & Sechs
+\end{tabular}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tabular}{lcr}
+  Links & Zentriert & Rechts \\
+  Eins & Zwei & Drei \\
+  Vier & Fünf & Sechs
+\end{tabular}
+\end{center}
+\end{ausgabe}
+
+\subsection{Linien in Tabellen}
+
+Linien können horizontal und vertikal eingefügt werden:
+
+\begin{itemize}
+    \item Horizontale Linien werden mit \texttt{\textbackslash hline} erstellt.
+    \item Vertikale Linien werden im Spaltenformat mit \texttt{|} angegeben.
+\end{itemize}
+
+\begin{lstlisting}[style=latex]
+\begin{tabular}{|l|c|r|}
+  \hline
+  Links & Zentriert & Rechts \\
+  \hline
+  Eins & Zwei & Drei \\
+  \hline
+  Vier & Fuenf & Sechs \\
+  \hline
+\end{tabular}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tabular}{|l|c|r|}
+  \hline
+  Links & Zentriert & Rechts \\
+  \hline
+  Eins & Zwei & Drei \\
+  \hline
+  Vier & Fünf & Sechs \\
+  \hline
+\end{tabular}
+\end{center}
+\end{ausgabe}
+
+\subsection{Teillinien mit \texttt{cline}}
+
+Mit \texttt{\textbackslash cline\{a-b\}} können horizontale Linien erstellt werden, die nur bestimmte Spalten (von a bis b) überspannen:
+
+\begin{lstlisting}[style=latex]
+\begin{tabular}{|l|c|r|}
+  \hline
+  Links & Zentriert & Rechts \\
+  \hline
+  Eins & Zwei & Drei \\
+  \cline{2-3}
+  Vier & Fuenf & Sechs \\
+  \hline
+\end{tabular}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tabular}{|l|c|r|}
+  \hline
+  Links & Zentriert & Rechts \\
+  \hline
+  Eins & Zwei & Drei \\
+  \cline{2-3}
+  Vier & Fünf & Sechs \\
+  \hline
+\end{tabular}
+\end{center}
+\end{ausgabe}
+
+\section{Professionelle Tabellengestaltung mit booktabs}
+
+Das \texttt{booktabs}-Paket ermöglicht die Erstellung professioneller Tabellen mit optimierten horizontalen Linien. Es folgt typografischen Konventionen und erzeugt ästhetisch ansprechende Tabellen.
+
+\subsection{Grundlegende booktabs-Befehle}
+
+\begin{lstlisting}[style=latex]
+\begin{tabular}{lcr}
+  \toprule
+  Links & Zentriert & Rechts \\
+  \midrule
+  Eins & Zwei & Drei \\
+  Vier & Fuenf & Sechs \\
+  \bottomrule
+\end{tabular}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tabular}{lcr}
+  \toprule
+  Links & Zentriert & Rechts \\
+  \midrule
+  Eins & Zwei & Drei \\
+  Vier & Fünf & Sechs \\
+  \bottomrule
+\end{tabular}
+\end{center}
+\end{ausgabe}
+
+\subsection{Gruppentrennungen mit \texttt{cmidrule} und \texttt{midrule}}
+
+\begin{lstlisting}[style=latex]
+\begin{tabular}{lccc}
+  \toprule
+  & \multicolumn{3}{c}{Bewertungskategorien} \\
+  \cmidrule(lr){2-4}
+  Schueler & Aufgabe 1 & Aufgabe 2 & Gesamt \\
+  \midrule
+  Anna & 15 & 18 & 33 \\
+  Ben & 14 & 16 & 30 \\
+  \midrule
+  Claudia & 18 & 20 & 38 \\
+  David & 17 & 19 & 36 \\
+  \bottomrule
+\end{tabular}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tabular}{lccc}
+  \toprule
+  & \multicolumn{3}{c}{Bewertungskategorien} \\
+  \cmidrule(lr){2-4}
+  Schüler & Aufgabe 1 & Aufgabe 2 & Gesamt \\
+  \midrule
+  Anna & 15 & 18 & 33 \\
+  Ben & 14 & 16 & 30 \\
+  \midrule
+  Claudia & 18 & 20 & 38 \\
+  David & 17 & 19 & 36 \\
+  \bottomrule
+\end{tabular}
+\end{center}
+\end{ausgabe}
+
+\subsection{Vermeidung vertikaler Linien}
+
+Das \texttt{booktabs}-Paket empfiehlt, auf vertikale Linien zu verzichten, da sie die Lesbarkeit der Tabelle beeinträchtigen können. Stattdessen sollte durch geeigneten Abstand und horizontale Linien Struktur erzeugt werden.
+
+\section{Erweiterte Tabellenformatierung}
+
+\subsection{Spalten mit definierter Breite}
+
+Mit der Spaltenspezifikation \texttt{p\{Breite\}} können Spalten mit fester Breite definiert werden, in denen der Text automatisch umgebrochen wird:
+
+\begin{lstlisting}[style=latex]
+\begin{tabular}{|l|p{5cm}|}
+  \hline
+  Thema & Beschreibung \\
+  \hline
+  Dynamik & Dynamik ist die Lehre von der Bewegung von Koerpern unter dem Einfluss von Kraeften. \\
+  \hline
+  Kinematik & Kinematik ist die Lehre von der Bewegung von Koerpern, ohne Beruecksichtigung der Ursachen der Bewegung. \\
+  \hline
+\end{tabular}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tabular}{|l|p{5cm}|}
+  \hline
+  Thema & Beschreibung \\
+  \hline
+  Dynamik & Dynamik ist die Lehre von der Bewegung von Körpern unter dem Einfluss von Kräften. \\
+  \hline
+  Kinematik & Kinematik ist die Lehre von der Bewegung von Körpern, ohne Berücksichtigung der Ursachen der Bewegung. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{ausgabe}
+
+\subsection{Spaltenübergreifende Zellen mit \texttt{multicolumn}}
+
+Mit \texttt{\textbackslash multicolumn\{Anzahl\}\{Format\}\{Inhalt\}} können Zellen erstellt werden, die sich über mehrere Spalten erstrecken:
+
+\begin{lstlisting}[style=latex]
+\begin{tabular}{|l|c|c|c|}
+  \hline
+  \multicolumn{4}{|c|}{Klassenuebersicht} \\
+  \hline
+  Name & Mathematik & Physik & Informatik \\
+  \hline
+  Mueller & 2 & 1 & 2 \\
+  Schmidt & 1 & 2 & 1 \\
+  \hline
+\end{tabular}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+  \hline
+  \multicolumn{4}{|c|}{Klassenübersicht} \\
+  \hline
+  Name & Mathematik & Physik & Informatik \\
+  \hline
+  Müller & 2 & 1 & 2 \\
+  Schmidt & 1 & 2 & 1 \\
+  \hline
+\end{tabular}
+\end{center}
+\end{ausgabe}
+
+\subsection{Zeilenübergreifende Zellen mit \texttt{multirow}}
+
+Mit dem \texttt{multirow}-Paket können Zellen erstellt werden, die sich über mehrere Zeilen erstrecken:
+
+\begin{lstlisting}[style=latex]
+\begin{tabular}{|l|c|c|}
+  \hline
+  \multirow{2}{*}{Name} & \multicolumn{2}{c|}{Faecher} \\
+  \cline{2-3}
+  & Mathematik & Physik \\
+  \hline
+  Mueller & 2 & 1 \\
+  Schmidt & 1 & 2 \\
+  \hline
+\end{tabular}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tabular}{|l|c|c|}
+  \hline
+  \multirow{2}{*}{Name} & \multicolumn{2}{c|}{Fächer} \\
+  \cline{2-3}
+  & Mathematik & Physik \\
+  \hline
+  Müller & 2 & 1 \\
+  Schmidt & 1 & 2 \\
+  \hline
+\end{tabular}
+\end{center}
+\end{ausgabe}
+
+\subsection{Ausrichtung am Dezimalzeichen}
+
+Mit dem \texttt{siunitx}-Paket kann eine Ausrichtung am Dezimalzeichen erreicht werden, was besonders für numerische Daten nützlich ist:
+
+\begin{lstlisting}[style=latex]
+\usepackage{siunitx}
+% ...
+\begin{tabular}{|l|S|}
+  \hline
+  Messung & {Wert in \si{\metre}} \\
+  \hline
+  1 & 10.5 \\
+  2 & 123.45 \\
+  3 & 3.14159 \\
+  \hline
+\end{tabular}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tabular}{|l|r@{.}l|}
+  \hline
+  Messung & \multicolumn{2}{c|}{Wert in m} \\
+  \hline
+  1 & 10&5 \\
+  2 & 123&45 \\
+  3 & 3&14159 \\
+  \hline
+\end{tabular}
+\end{center}
+\end{ausgabe}
+
+\section{Spezielle Tabellenumgebungen}
+
+\subsection{Tabellen mit automatischer Breitenanpassung (\texttt{tabularx})}
+
+Das \texttt{tabularx}-Paket bietet eine Umgebung, bei der die Gesamtbreite der Tabelle festgelegt werden kann und bestimmte Spalten automatisch an die verfügbare Breite angepasst werden:
+
+\begin{lstlisting}[style=latex]
+\begin{tabularx}{\textwidth}{|l|X|}
+  \hline
+  Begriff & Erklaerung \\
+  \hline
+  Vektorrechnung & Die Vektorrechnung ist ein Teilgebiet der Mathematik, das sich mit Vektoren befasst, also gerichteten Groessen, die Betrag und Richtung haben. \\
+  \hline
+  Matrizenrechnung & Die Matrizenrechnung befasst sich mit Matrizen, tabellarisch angeordneten Zahlen, und den Rechenoperationen mit diesen. \\
+  \hline
+\end{tabularx}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tabularx}{\textwidth}{|l|X|}
+  \hline
+  Begriff & Erklärung \\
+  \hline
+  Vektorrechnung & Die Vektorrechnung ist ein Teilgebiet der Mathematik, das sich mit Vektoren befasst, also gerichteten Größen, die Betrag und Richtung haben. \\
+  \hline
+  Matrizenrechnung & Die Matrizenrechnung befasst sich mit Matrizen, tabellarisch angeordneten Zahlen, und den Rechenoperationen mit diesen. \\
+  \hline
+\end{tabularx}
+\end{center}
+\end{ausgabe}
+
+\subsection{Seitenübergreifende Tabellen (\texttt{longtable})}
+
+Das \texttt{longtable}-Paket ermöglicht Tabellen, die über mehrere Seiten hinweg fortgesetzt werden können:
+
+\begin{lstlisting}[style=latex]
+\begin{longtable}{|l|p{10cm}|}
+  \hline
+  \multicolumn{2}{|c|}{Liste der Konstanten in der Physik} \\
+  \hline
+  Symbol & Beschreibung \\
+  \hline
+  \endfirsthead
+  
+  \hline
+  \multicolumn{2}{|c|}{Fortsetzung: Liste der Konstanten} \\
+  \hline
+  Symbol & Beschreibung \\
+  \hline
+  \endhead
+  
+  \hline
+  \multicolumn{2}{|r|}{Fortsetzung auf der naechsten Seite} \\
+  \hline
+  \endfoot
+  
+  \hline
+  \endlastfoot
+  
+  $c$ & Lichtgeschwindigkeit im Vakuum: 299 792 458 m/s \\
+  \hline
+  $h$ & Plancksches Wirkungsquantum: $6,626 070 15 \cdot 10^{-34}$ Js \\
+  \hline
+  $e$ & Elementarladung: $1,602 176 634 \cdot 10^{-19}$ C \\
+  \hline
+  % weitere Eintraege...
+\end{longtable}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\begin{longtable}{|l|p{10cm}|}
+  \hline
+  \multicolumn{2}{|c|}{Liste der Konstanten in der Physik} \\
+  \hline
+  Symbol & Beschreibung \\
+  \hline
+  \endfirsthead
+  
+  \hline
+  \multicolumn{2}{|c|}{Fortsetzung: Liste der Konstanten} \\
+  \hline
+  Symbol & Beschreibung \\
+  \hline
+  \endhead
+  
+  \hline
+  \multicolumn{2}{|r|}{Fortsetzung auf der naechsten Seite} \\
+  \hline
+  \endfoot
+  
+  \hline
+  \endlastfoot
+  
+  $c$ & Lichtgeschwindigkeit im Vakuum: 299 792 458 m/s \\
+  \hline
+  $h$ & Plancksches Wirkungsquantum: $6,626 070 15 \cdot 10^{-34}$ Js \\
+  \hline
+  $e$ & Elementarladung: $1,602 176 634 \cdot 10^{-19}$ C \\
+  \hline
+  % weitere Eintraege...
+\end{longtable}
+\end{ausgabe}
+
+\subsection{Farbige Tabellen mit \texttt{colortbl}}
+
+Das \texttt{colortbl}-Paket ermöglicht die Einfärbung von Tabellenzellen, -zeilen oder -spalten:
+
+\begin{lstlisting}[style=latex]
+\begin{tabular}{|l|>{\columncolor{yellow!20}}c|>{\columncolor{blue!20}}c|}
+  \hline
+  \rowcolor{gray!30}
+  Name & Mathematik & Physik \\
+  \hline
+  Mueller & 2 & 1 \\
+  \rowcolor{green!10}
+  Schmidt & 1 & 2 \\
+  \hline
+\end{tabular}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tabular}{|l|>{\columncolor{yellow!20}}c|>{\columncolor{blue!20}}c|}
+  \hline
+  \rowcolor{gray!30}
+  Name & Mathematik & Physik \\
+  \hline
+  Müller & 2 & 1 \\
+  \rowcolor{green!10}
+  Schmidt & 1 & 2 \\
+  \hline
+\end{tabular}
+\end{center}
+\end{ausgabe}
+
+\section{Praktische Anwendungsbeispiele für den MINT-Unterricht}
+
+\subsection{Periodensystem der Elemente (Ausschnitt)}
+
+\begin{lstlisting}[style=latex]
+\definecolor{alkali}{RGB}{255, 102, 102}
+\definecolor{erdalkali}{RGB}{255, 183, 77}
+\definecolor{uebergang}{RGB}{255, 217, 102}
+\definecolor{halbmetall}{RGB}{153, 204, 255}
+
+\begin{tabular}{|c|c|c|c|c|}
+  \hline
+  \rowcolor{alkali}
+  \textbf{Li} & \multicolumn{4}{c|}{} \\
+  3 & \multicolumn{4}{c|}{} \\
+  6,94 & \multicolumn{4}{c|}{} \\
+  \hline
+  \rowcolor{erdalkali}
+  \textbf{Be} & \multicolumn{4}{c|}{} \\
+  4 & \multicolumn{4}{c|}{} \\
+  9,01 & \multicolumn{4}{c|}{} \\
+  \hline
+  \multicolumn{1}{c}{} &
+  \textbf{Sc} & \textbf{Ti} & \textbf{V} & \textbf{Cr} \\
+  \multicolumn{1}{c}{} & 21 & 22 & 23 & 24 \\
+  \multicolumn{1}{c}{} & 44,96 & 47,87 & 50,94 & 52,00 \\
+  \hline
+  \multicolumn{1}{c}{} & \multicolumn{3}{c}{} &
+  \textbf{Si} \\
+  \multicolumn{1}{c}{} & \multicolumn{3}{c}{} & 14 \\
+  \multicolumn{1}{c}{} & \multicolumn{3}{c}{} & 28,09 \\
+  \hline
+\end{tabular}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\definecolor{alkali}{RGB}{255, 102, 102}
+\definecolor{erdalkali}{RGB}{255, 183, 77}
+\definecolor{uebergang}{RGB}{255, 217, 102}
+\definecolor{halbmetall}{RGB}{153, 204, 255}
+
+\begin{tabular}{|c|c|c|c|c|}
+  \hline
+  \rowcolor{alkali}
+  \textbf{Li} & \multicolumn{4}{c|}{} \\
+  3 & \multicolumn{4}{c|}{} \\
+  6,94 & \multicolumn{4}{c|}{} \\
+  \hline
+  \rowcolor{erdalkali}
+  \textbf{Be} & \multicolumn{4}{c|}{} \\
+  4 & \multicolumn{4}{c|}{} \\
+  9,01 & \multicolumn{4}{c|}{} \\
+  \hline
+  \multicolumn{1}{c}{} & 
+  \textbf{Sc} & \textbf{Ti} & \textbf{V} & \textbf{Cr} \\
+  \multicolumn{1}{c}{} & 21 & 22 & 23 & 24 \\
+  \multicolumn{1}{c}{} & 44,96 & 47,87 & 50,94 & 52,00 \\
+  \hline
+  \multicolumn{1}{c}{} & \multicolumn{3}{c}{} &
+  \textbf{Si} \\
+  \multicolumn{1}{c}{} & \multicolumn{3}{c}{} & 14 \\
+  \multicolumn{1}{c}{} & \multicolumn{3}{c}{} & 28,09 \\
+  \hline
+\end{tabular}
+\end{center}
+\end{ausgabe}
+
+\subsection{Wahrheitstabelle für logische Funktionen}
+
+\begin{lstlisting}[style=latex]
+\begin{tabular}{|c|c||c|c|c|c|}
+  \hline
+  \multicolumn{2}{|c||}{Eingabe} & \multicolumn{4}{c|}{Ausgabe} \\
+  \hline
+  $A$ & $B$ & $A \land B$ & $A \lor B$ & $\neg A$ & $A \oplus B$ \\
+  \hline
+  0 & 0 & 0 & 0 & 1 & 0 \\
+  0 & 1 & 0 & 1 & 1 & 1 \\
+  1 & 0 & 0 & 1 & 0 & 1 \\
+  1 & 1 & 1 & 1 & 0 & 0 \\
+  \hline
+\end{tabular}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tabular}{|c|c||c|c|c|c|}
+  \hline
+  \multicolumn{2}{|c||}{Eingabe} & \multicolumn{4}{c|}{Ausgabe} \\
+  \hline
+  $A$ & $B$ & $A \land B$ & $A \lor B$ & $\neg A$ & $A \oplus B$ \\
+  \hline
+  0 & 0 & 0 & 0 & 1 & 0 \\
+  0 & 1 & 0 & 1 & 1 & 1 \\
+  1 & 0 & 0 & 1 & 0 & 1 \\
+  1 & 1 & 1 & 1 & 0 & 0 \\
+  \hline
+\end{tabular}
+\end{center}
+\end{ausgabe}
+
+\subsection{Messwerte und Berechnungen}
+
+\begin{lstlisting}[style=latex]
+\begin{tabular}{|c|S[table-format=2.2]|S[table-format=2.2]|S[table-format=2.2]|}
+  \hline
+  \textbf{Messung} & \textbf{Spannung (V)} & \textbf{Stromstaerke (A)} & \textbf{Widerstand ($\Omega$)} \\
+  \hline
+  1 & 12.00 & 0.50 & 24.00 \\
+  2 & 9.50 & 0.38 & 25.00 \\
+  3 & 6.00 & 0.25 & 24.00 \\
+  4 & 3.00 & 0.12 & 25.00 \\
+  \hline
+\end{tabular}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tabular}{|c|r@{.}l|r@{.}l|r@{.}l|}
+  \hline
+  \textbf{Messung} & \multicolumn{2}{c|}{\textbf{Spannung (V)}} & \multicolumn{2}{c|}{\textbf{Stromstärke (A)}} & \multicolumn{2}{c|}{\textbf{Widerstand ($\Omega$)}} \\
+  \hline
+  1 & 12&00 & 0&50 & 24&00 \\
+  2 & 9&50 & 0&38 & 25&00 \\
+  3 & 6&00 & 0&25 & 24&00 \\
+  4 & 3&00 & 0&12 & 25&00 \\
+  \hline
+\end{tabular}
+\end{center}
+\end{ausgabe}
+
+\section{Eigene Spaltentypen definieren}
+
+Mit dem \texttt{array}-Paket können eigene Spaltentypen definiert werden, was besonders für konsistente Tabellen nützlich ist:
+
+\begin{lstlisting}[style=latex]
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+
+\begin{tabular}{|L{3cm}|C{3cm}|R{3cm}|}
+  \hline
+  Linksbuendig mit Umbruch & Zentriert mit Umbruch & Rechtsbuendig mit Umbruch \\
+  \hline
+  Dies ist ein langer Text, der automatisch umgebrochen wird. & Dies ist ein langer Text, der automatisch umgebrochen wird. & Dies ist ein langer Text, der automatisch umgebrochen wird. \\
+  \hline
+\end{tabular}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+
+\begin{tabular}{|L{3cm}|C{3cm}|R{3cm}|}
+  \hline
+  Linksbündig mit Umbruch & Zentriert mit Umbruch & Rechtsbündig mit Umbruch \\
+  \hline
+  Dies ist ein langer Text, der automatisch umgebrochen wird. & Dies ist ein langer Text, der automatisch umgebrochen wird. & Dies ist ein langer Text, der automatisch umgebrochen wird. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{ausgabe}
+
+\section{Tabellen mit mathematischen Formeln}
+
+Tabellen können auch komplexe mathematische Formeln enthalten, was besonders für den MINT-Unterricht relevant ist:
+
+\begin{lstlisting}[style=latex]
+\begin{tabular}{|l|c|}
+  \hline
+  \textbf{Formel} & \textbf{Beschreibung} \\
+  \hline
+  $E = mc^2$ & Masse-Energie-Aequivalenz \\
+  \hline
+  $F = G \frac{m_1 \cdot m_2}{r^2}$ & Gravitationsgesetz \\
+  \hline
+  $a^2 + b^2 = c^2$ & Satz des Pythagoras \\
+  \hline
+  $\frac{dy}{dx} = \lim_{h \to 0} \frac{f(x+h) - f(x)}{h}$ & Definition der Ableitung \\
+  \hline
+\end{tabular}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tabular}{|l|c|}
+  \hline
+  \textbf{Formel} & \textbf{Beschreibung} \\
+  \hline
+  $E = mc^2$ & Masse-Energie-Äquivalenz \\
+  \hline
+  $F = G \frac{m_1 \cdot m_2}{r^2}$ & Gravitationsgesetz \\
+  \hline
+  $a^2 + b^2 = c^2$ & Satz des Pythagoras \\
+  \hline
+  $\frac{dy}{dx} = \lim_{h \to 0} \frac{f(x+h) - f(x)}{h}$ & Definition der Ableitung \\
+  \hline
+\end{tabular}
+\end{center}
+\end{ausgabe}
+
+\section{Tipps für bessere Tabellen}
+
+\subsection{Lesbarkeit verbessern}
+
+Bei der Gestaltung übersichtlicher Tabellen ist die Beachtung einiger grundlegender Prinzipien entscheidend für die Lesbarkeit. Horizontale Linien sollten mit Bedacht und sparsam eingesetzt werden, vorzugsweise nur zur klaren Trennung von Informationsgruppen oder zur Hervorhebung von Abschnitten innerhalb der Tabelle. Vertikale Linien hingegen sollten nach Möglichkeit vermieden werden, da sie den Textfluss unterbrechen und das Auge beim schnellen Erfassen der Inhalte behindern können. Ein wichtiges Element für verbesserte Lesbarkeit ist ausreichender Abstand zwischen den Zellen – dies lässt sich in LaTeX elegant durch Anpassung des Zeilenabstands mit dem Befehl \texttt{\textbackslash arraystretch\{1.2\}} realisieren, wodurch die Tabelle luftiger und weniger gedrängt wirkt. Bei Tabellen mit komplexen Daten ist die Verwendung klarer Spaltenköpfe unerlässlich, um die Interpretation der Daten zu erleichtern und Missverständnisse zu vermeiden. Nicht zuletzt trägt die konsistente Ausrichtung von Zahlen erheblich zur Übersichtlichkeit bei – so sollten beispielsweise numerische Werte entweder durchgängig rechtsbündig oder, bei Dezimalzahlen, am Dezimalzeichen ausgerichtet werden, was den Vergleich von Wertgrößen deutlich erleichtert und die professionelle Anmutung der Tabelle unterstreicht.
+
+\begin{lstlisting}[style=latex]
+% Zeilenabstand in Tabellen vergroessern
+\renewcommand{\arraystretch}{1.2}
+
+\begin{tabular}{lrrr}
+  \toprule
+  \textbf{Name} & \textbf{Test 1} & \textbf{Test 2} & \textbf{Durchschnitt} \\
+  \midrule
+  Mueller & 85 & 92 & 88.5 \\
+  Schmidt & 78 & 84 & 81.0 \\
+  Wagner & 90 & 88 & 89.0 \\
+  \bottomrule
+\end{tabular}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+
+\begin{tabular}{lrrr}
+  \toprule
+  \textbf{Name} & \textbf{Test 1} & \textbf{Test 2} & \textbf{Durchschnitt} \\
+  \midrule
+  Müller & 85 & 92 & 88.5 \\
+  Schmidt & 78 & 84 & 81.0 \\
+  Wagner & 90 & 88 & 89.0 \\
+  \bottomrule
+\end{tabular}
+\end{center}
+\end{ausgabe}
+
+\subsection{Tabellen mit Zellausrichtung am Dezimalkomma}
+
+Für eine bessere Darstellung von Zahlenwerten können Spalten am Dezimalkomma ausgerichtet werden:
+
+\begin{lstlisting}[style=latex]
+\begin{tabular}{|l|r@{,}l|}
+  \hline
+  \textbf{Messung} & \multicolumn{2}{c|}{\textbf{Wert}} \\
+  \hline
+  A & 12&345 \\
+  B & 0&67 \\
+  C & 8&9 \\
+  D & 123&4 \\
+  \hline
+\end{tabular}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tabular}{|l|r@{,}l|}
+  \hline
+  \textbf{Messung} & \multicolumn{2}{c|}{\textbf{Wert}} \\
+  \hline
+  A & 12&345 \\
+  B & 0&67 \\
+  C & 8&9 \\
+  D & 123&4 \\
+  \hline
+\end{tabular}
+\end{center}
+\end{ausgabe}
+
+\section{Häufige Fehler und deren Behebung}
+
+\subsection{Ungleichmäßige Spaltenbreite}
+
+Problem: Spalten haben unterschiedliche Breiten, was unästhetisch wirkt.
+
+Lösung: Verwende die Spaltentypen \texttt{p\{\}} oder \texttt{tabularx} mit dem \texttt{X}-Spaltentyp:
+
+\begin{lstlisting}[style=latex]
+\begin{tabularx}{\textwidth}{|l|X|X|X|}
+  \hline
+  Name & Kurze Beschreibung & Laengere Beschreibung & Noch laengere Beschreibung, die deutlich mehr Platz einnimmt \\
+  \hline
+  Elektrizitaet & Strom und Spannung & Physikalische Phaenomene & Studium der Bewegung elektrischer Ladungen und deren Wirkungen \\
+  \hline
+\end{tabularx}
+\end{lstlisting}
+\begin{ausgabe}
+\begin{tabularx}{\textwidth}{|l|X|X|X|}
+  \hline
+  Name & Kurze Beschreibung & Laengere Beschreibung & Noch laengere Beschreibung, die deutlich mehr Platz einnimmt \\
+  \hline
+  Elektrizitaet & Strom und Spannung & Physikalische Phaenomene & Studium der Bewegung elektrischer Ladungen und deren Wirkungen \\
+  \hline
+\end{tabularx}
+\end{ausgabe}
+
+\subsection{Zellinhalte laufen über den Rand}
+
+Problem: Text in Zellen läuft über den Tabellenrand hinaus.
+
+Lösung: Verwende die Spaltenspezifikation \texttt{p\{Breite\}} anstelle von \texttt{l}, \texttt{c} oder \texttt{r}:
+
+\begin{lstlisting}[style=latex]
+\begin{tabular}{|l|p{8cm}|}
+  \hline
+  Begriff & Erklaerung \\
+  \hline
+  Induktion & Die elektromagnetische Induktion beschreibt die Entstehung eines elektrischen Feldes bei zeitlicher Aenderung eines magnetischen Feldes. \\
+  \hline
+\end{tabular}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{tabular}{|l|p{8cm}|}
+  \hline
+  Begriff & Erklaerung \\
+  \hline
+  Induktion & Die elektromagnetische Induktion beschreibt die Entstehung eines elektrischen Feldes bei zeitlicher Aenderung eines magnetischen Feldes. \\
+  \hline
+\end{tabular}
+\end{ausgabe}
+
+\section{Beispieltabellen für verschiedene MINT-Fächer}
+
+\subsection{Mathematik: Funktionsübersicht}
+
+\begin{lstlisting}[style=latex]
+\begin{tabular}{|l|c|c|c|}
+  \hline
+  \textbf{Funktion} & \textbf{Gleichung} & \textbf{Ableitung} & \textbf{Graph} \\
+  \hline
+  Linear & $f(x) = mx + b$ & $f'(x) = m$ & Gerade \\
+  \hline
+  Quadratisch & $f(x) = ax^2 + bx + c$ & $f'(x) = 2ax + b$ & Parabel \\
+  \hline
+  Exponentiell & $f(x) = a \cdot b^x$ & $f'(x) = a \cdot b^x \cdot \ln(b)$ & Exponentialkurve \\
+  \hline
+  Logarithmisch & $f(x) = \log_b(x)$ & $f'(x) = \frac{1}{x \cdot \ln(b)}$ & Logarithmuskurve \\
+  \hline
+  Trigonometrisch & $f(x) = \sin(x)$ & $f'(x) = \cos(x)$ & Sinuskurve \\
+  \hline
+\end{tabular}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+  \hline
+  \textbf{Funktion} & \textbf{Gleichung} & \textbf{Ableitung} & \textbf{Graph} \\
+  \hline
+  Linear & $f(x) = mx + b$ & $f'(x) = m$ & Gerade \\
+  \hline
+  Quadratisch & $f(x) = ax^2 + bx + c$ & $f'(x) = 2ax + b$ & Parabel \\
+  \hline
+  Exponentiell & $f(x) = a \cdot b^x$ & $f'(x) = a \cdot b^x \cdot \ln(b)$ & Exponentialkurve \\
+  \hline
+  Logarithmisch & $f(x) = \log_b(x)$ & $f'(x) = \frac{1}{x \cdot \ln(b)}$ & Logarithmuskurve \\
+  \hline
+  Trigonometrisch & $f(x) = \sin(x)$ & $f'(x) = \cos(x)$ & Sinuskurve \\
+  \hline
+\end{tabular}
+\end{center}
+\end{ausgabe}
+
+\subsection{Informatik: Komplexitätsklassen}
+
+\begin{lstlisting}[style=latex]
+\begin{tabular}{|p{1.8cm}|p{4.5cm}|p{4.5cm}|p{2.5cm}|}
+  \hline
+  \textbf{Klasse} & \textbf{Beschreibung} & \textbf{Beispielalgorithmus} & \textbf{Laufzeit} \\
+  \hline
+  $O(1)$ & Konstante Komplexitaet & Arrayzugriff & Konstant \\
+  \hline
+  $O(\log n)$ & Logarithmische Komplexitaet & Binaere Suche & Logarithmisch \\
+  \hline
+  $O(n)$ & Lineare Komplexitaet & Lineare Suche & Linear \\
+  \hline
+  $O(n \log n)$ & Quasilineare Komplexitaet & Mergesort, Quicksort & Quasilinear \\
+  \hline
+  $O(n^2)$ & Quadratische Komplexitaet & Bubblesort, Selectionsort & Quadratisch \\
+  \hline
+  $O(2^n)$ & Exponentielle Komplexitaet & Traveling Salesman & Exponentiell \\
+  \hline
+\end{tabular}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tabular}{|p{1.8cm}|p{4.5cm}|p{4.5cm}|p{2.5cm}|}
+  \hline
+  \textbf{Klasse} & \textbf{Beschreibung} & \textbf{Beispielalgorithmus} & \textbf{Laufzeit} \\
+  \hline
+  $O(1)$ & Konstante Komplexität & Arrayzugriff & Konstant \\
+  \hline
+  $O(\log n)$ & Logarithmische Komplexität & Binäre Suche & Logarithmisch \\
+  \hline
+  $O(n)$ & Lineare Komplexität & Lineare Suche & Linear \\
+  \hline
+  $O(n \log n)$ & Quasilineare Komplexität & Mergesort, Quicksort & Quasilinear \\
+  \hline
+  $O(n^2)$ & Quadratische Komplexität & Bubblesort, Selectionsort & Quadratisch \\
+  \hline
+  $O(2^n)$ & Exponentielle Komplexität & Traveling Salesman & Exponentiell \\
+  \hline
+\end{tabular}
+\end{center}
+\end{ausgabe}
+
+\subsection{Physik: Bewegungsgleichungen}
+
+\begin{lstlisting}[style=latex]
+\begin{tabular}{|p{4cm}|c|l|}
+  \hline
+  \textbf{Bewegungsart} & \textbf{Gleichung} & \textbf{Parameter} \\
+  \hline
+  Gleichfoermig & $s(t) = v \cdot t + s_0$ & 
+  \begin{tabular}[t]{@{}l@{}}
+    $s(t)$: Weg zur Zeit $t$ \\
+    $v$: konstante Geschwindigkeit \\
+    $s_0$: Anfangsposition
+  \end{tabular} \\
+  \hline
+  Gleichmaessig beschleunigt & $s(t) = \frac{1}{2} a \cdot t^2 + v_0 \cdot t + s_0$ & 
+  \begin{tabular}[t]{@{}l@{}}
+    $a$: konstante Beschleunigung \\
+    $v_0$: Anfangsgeschwindigkeit
+  \end{tabular} \\
+  \hline
+  Kreisbewegung & $s(t) = r \cdot \varphi(t)$ & 
+  \begin{tabular}[t]{@{}l@{}}
+    $r$: Radius \\
+    $\varphi(t)$: Winkel zur Zeit $t$
+  \end{tabular} \\
+  \hline
+  Harmonische Schwingung & $s(t) = A \cdot \sin(\omega t + \varphi_0)$ & 
+  \begin{tabular}[t]{@{}l@{}}
+    $A$: Amplitude \\
+    $\omega$: Kreisfrequenz \\
+    $\varphi_0$: Phasenverschiebung
+  \end{tabular} \\
+  \hline
+\end{tabular}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tabular}{|p{4cm}|c|l|}
+  \hline
+  \textbf{Bewegungsart} & \textbf{Gleichung} & \textbf{Parameter} \\
+  \hline
+  Gleichförmig & $s(t) = v \cdot t + s_0$ & 
+  \begin{tabular}[t]{@{}l@{}}
+    $s(t)$: Weg zur Zeit $t$ \\
+    $v$: konstante Geschwindigkeit \\
+    $s_0$: Anfangsposition
+  \end{tabular} \\
+  \hline
+  Gleichmäßig beschleunigt & $s(t) = \frac{1}{2} a \cdot t^2 + v_0 \cdot t + s_0$ & 
+  \begin{tabular}[t]{@{}l@{}}
+    $a$: konstante Beschleunigung \\
+    $v_0$: Anfangsgeschwindigkeit
+  \end{tabular} \\
+  \hline
+  Kreisbewegung & $s(t) = r \cdot \varphi(t)$ & 
+  \begin{tabular}[t]{@{}l@{}}
+    $r$: Radius \\
+    $\varphi(t)$: Winkel zur Zeit $t$
+  \end{tabular} \\
+  \hline
+  Harmonische Schwingung & $s(t) = A \cdot \sin(\omega t + \varphi_0)$ & 
+  \begin{tabular}[t]{@{}l@{}}
+    $A$: Amplitude \\
+    $\omega$: Kreisfrequenz \\
+    $\varphi_0$: Phasenverschiebung
+  \end{tabular} \\
+  \hline
+\end{tabular}
+\end{center}
+\end{ausgabe}
+
+\subsection{Chemie: Periodensystem-Ausschnitt}
+
+\begin{lstlisting}[style=latex]
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+  \hline
+  \multicolumn{8}{|c|}{\textbf{Auszug aus dem Periodensystem}} \\
+  \hline
+  \textbf{1} & & & & & & & \textbf{18} \\
+  H & & & & & & & He \\
+  1,01 & & & & & & & 4,00 \\
+  \hline
+  \textbf{2} & \textbf{13} & \textbf{14} & \textbf{15} & \textbf{16} & \textbf{17} & & \\
+  Li & B & C & N & O & F & & Ne \\
+  6,94 & 10,81 & 12,01 & 14,01 & 16,00 & 19,00 & & 20,18 \\
+  \hline
+  \textbf{3} & & & & & & & \\
+  Na & & & & & & & Ar \\
+  22,99 & & & & & & & 39,95 \\
+  \hline
+\end{tabular}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+  \hline
+  \multicolumn{8}{|c|}{\textbf{Auszug aus dem Periodensystem}} \\
+  \hline
+  \textbf{1} & & & & & & & \textbf{18} \\
+  H & & & & & & & He \\
+  1,01 & & & & & & & 4,00 \\
+  \hline
+  \textbf{2} & \textbf{13} & \textbf{14} & \textbf{15} & \textbf{16} & \textbf{17} & & \\
+  Li & B & C & N & O & F & & Ne \\
+  6,94 & 10,81 & 12,01 & 14,01 & 16,00 & 19,00 & & 20,18 \\
+  \hline
+  \textbf{3} & & & & & & & \\
+  Na & & & & & & & Ar \\
+  22,99 & & & & & & & 39,95 \\
+  \hline
+\end{tabular}
+\end{center}
+\end{ausgabe}
+
+\section{Zusammenfassung}
+
+Die Erstellung von Tabellen in LaTeX bietet vielfältige Möglichkeiten, um strukturierte Informationen ansprechend und professionell zu präsentieren. Dabei bildet die grundlegende \texttt{tabular}-Umgebung das flexible und vielseitig einsetzbare Fundament für nahezu alle Tabellentypen. Für Anwender, die Wert auf typografisch hochwertige Ergebnisse legen, stellt das \texttt{booktabs}-Paket eine hervorragende Erweiterung dar, die professionell gestaltete Tabellen mit optimierten horizontalen Linien ermöglicht und so den Standards des qualitativ hochwertigen Buchsatzes entspricht.
+
+Darüber hinaus stehen für spezielle Anforderungen verschiedene Pakete zur Verfügung, die den Funktionsumfang von LaTeX-Tabellen gezielt erweitern. Das \texttt{tabularx}-Paket beispielsweise erlaubt die Erstellung von Tabellen mit automatischer Breitenanpassung, wodurch das häufige Problem der Tabellenbreite elegant gelöst wird. Für umfangreiche Datensätze, die nicht auf eine einzelne Seite passen, bietet das \texttt{longtable}-Paket die Möglichkeit, seitenübergreifende Tabellen mit wiederholten Kopf- und Fußzeilen zu erstellen. Komplexe Layouts lassen sich durch die Pakete \texttt{multirow} und \texttt{multicolumn} realisieren, die Zellen ermöglichen, welche sich über mehrere Zeilen oder Spalten erstrecken. Für die visuelle Hervorhebung und verbesserte Lesbarkeit steht das \texttt{colortbl}-Paket zur Verfügung, das das Einfärben von Tabellenzellen erlaubt.
+
+Durch die geschickte Kombination dieser Pakete und Techniken können MINT-Lehrkräfte ansprechende und informative Tabellen für den Unterricht erstellen, die komplexe Daten übersichtlich darstellen und das Verständnis der Lernenden fördern. Für weitere Informationen und Beispiele empfehle ich die offizielle LaTeX-Dokumentation sowie das Buch \textit{The LaTeX Companion} von Frank Mittelbach et al., das detaillierte Einblicke in die fortgeschrittene Tabellengestaltung bietet.
+
+\end{document}

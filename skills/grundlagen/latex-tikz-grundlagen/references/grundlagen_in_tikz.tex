@@ -1,0 +1,828 @@
+\documentclass[12pt,a4paper]{article}
+
+% Benötigte Pakete für diese Handreichung
+\usepackage[utf8]{inputenc}        % UTF-8 als Zeichenkodierung
+\usepackage[T1]{fontenc}           % Westeuropaeische Schriftkodierung
+\usepackage[ngerman]{babel}        % Deutsche Uebersetzung und Silbentrennung
+\usepackage{lmodern}               % Moderne Schriftarten
+\usepackage{geometry}              % Ermoeglicht die Anpassung der Seitengeometrie
+\usepackage{listings}              % Fuer die Darstellung von Quellcode
+\usepackage{xcolor}                % Fuer farbigen Text/Hintergrund
+\usepackage{tikz}                  % Ti\textit{k}Z-Paket laden
+\usepackage{pgfplots}              % Erweiterte Plotfunktionen
+\pgfplotsset{compat=1.17}          % Kompatibilitaetseinstellung
+\usepackage{tcolorbox}             % Für schöne Boxen um die Beispiele
+\usepackage{float}                 % Für bessere Positionierung
+\usepackage{hologo}
+
+% Ti\textit{k}Z-Bibliotheken für die Beispiele
+\usetikzlibrary{arrows.meta}       % Erweiterte Pfeilspitzen
+\usetikzlibrary{shapes}            % Verschiedene Formen für Knoten
+\usetikzlibrary{positioning}       % Positionierung von Knoten
+\usetikzlibrary{calc}              % Rechnen mit Koordinaten
+\usetikzlibrary{angles}      % Für Winkeldarstellungen
+\usetikzlibrary{quotes}      % Für Beschriftungen in Anführungszeichen
+
+%Nützliche Pakete für Symbole und mathematischen Formelsatz
+\usepackage{amsmath, amssymb, mathrsfs, amsfonts, amsthm, dsfont} %sämtliche Pakete für mathematische Zeichen, Symbole und Formelsatz
+
+% Seitenformat einstellen
+\geometry{a4paper, top=20mm, left=25mm, right=25mm, bottom=20mm}
+
+% Zeilenabstand festlegen
+\usepackage{setspace}
+\onehalfspacing
+
+% Einrückung am Absatzanfang deaktivieren
+\parindent=0pt
+
+%Einstellung der Codeumgebung für LaTeX-Code-Beispiele
+\lstdefinestyle{latex}{%
+  	language=TeX,%
+  	frame=single,%
+  	backgroundcolor=\color{yellow!20},%
+  	rulecolor=\color{lightgray!40},%
+  	breaklines=true,%
+  	basicstyle=\scriptsize\ttfamily,%
+  	keywordstyle=\bfseries\color{purple!40!black},%
+  	commentstyle=\itshape\color{green!40!black},%
+  	identifierstyle=\color{blue},%
+	stringstyle=\color{black},%
+	captionpos=b,%
+	%numbers=left,%
+	%numberstyle=\tiny\color{gray!90!black},%
+	%numbersep=5pt,%
+	tabsize=2,%
+	showspaces=false,%
+	showstringspaces=false,%
+  	showtabs=false,%
+	deletekeywords={document},%
+	morekeywords={begin}%
+}
+
+% Definition einer Box für Beispielausgaben
+\newtcolorbox{ausgabe}{
+    colback=blue!5,
+    colframe=blue!50!black,
+    title=Ausgabe,
+    fonttitle=\bfseries
+}
+
+\title{Erste Schritte mit Ti\textit{k}Z: Grundlagen des Grafikpakets}
+\author{Martin Quandt}
+\date{13. Mai 2025}
+\pagestyle{plain}
+\begin{document}
+
+\maketitle
+
+
+
+%%%%  KAPITEL 1  %%%%
+\section{Einführung in Ti\textit{k}Z}
+
+Ti\textit{k}Z ist ein leistungsstarkes Grafikpaket für \hologo{LaTeX}, dessen Name für \glqq{}Ti\textit{k}Z ist kein Zeichenprogramm\grqq{} steht. Es ermöglicht die Erstellung professioneller Grafiken direkt im \hologo{LaTeX}-Dokument. Dieses Nachschlagewerk erläutert die Grundlagen von Ti\textit{k}Z und gibt praktische Beispiele für den Einstieg.
+
+
+
+%%%%  KAPITEL 2  %%%%
+\section{Einbinden von Ti\textit{k}Z}
+
+Ti\textit{k}Z wird in der Präambel eingebunden. Häufig werden zusätzlich Bibliotheken geladen, die spezielle Funktionen bereitstellen.
+
+\begin{lstlisting}[style=latex]
+\usepackage{tikz}                  % Ti\textit{k}Z-Paket laden
+\usepackage{pgfplots}              % Erweiterte Plotfunktionen (optional)
+\pgfplotsset{compat=1.17}          % Kompatibilitaetseinstellung
+
+% Nuetzliche Ti\textit{k}Z-Bibliotheken
+\usetikzlibrary{arrows.meta}       % Erweiterte Pfeilspitzen
+\usetikzlibrary{calc}              % Rechnen mit Koordinaten
+\usetikzlibrary{angles}            % Winkeldarstellung
+\usetikzlibrary{quotes}            % Vereinfachte Beschriftungen
+\usetikzlibrary{shapes}            % Verschiedene Formen fuer Knoten
+\usetikzlibrary{patterns}          % Verschiedene Fuellmuster
+\usetikzlibrary{positioning}       % Verbesserte Positionierung von Knoten
+\usetikzlibrary{intersections}     % Schnittpunkte finden
+\end{lstlisting}
+
+
+
+%%%%  KAPTIEL 3  %%%%
+\section{Grundstruktur einer Ti\textit{k}Z-Grafik}
+
+Jede Ti\textit{k}Z-Grafik wird in einer \texttt{tikzpicture}-Umgebung erstellt. Der Ursprung des Koordinatensystems liegt standardmäßig bei $(0,0)$.
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+    % Hier kommen die Zeichenbefehle
+\end{tikzpicture}
+\end{lstlisting}
+
+
+
+%%%%  KAPITEL 4  %%%%
+\section{Grundlegende Zeichenbefehle}
+
+
+
+%%%% UNTERKAPITEL 4.1  %%%%
+\subsection{Linien und Pfade zeichnen}
+
+Der wichtigste Befehl in Ti\textit{k}Z ist \texttt{\textbackslash draw}, der zum Zeichnen von Linien und Pfaden verwendet wird.
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+    % Einfache Linie von (0,0) nach (2,1)
+    \draw (0,0) -- (2,1);
+    % Mehrere verbundene Linien (Pfad)
+    \draw (3,0) -- (4,1) -- (5,0);
+    % Geschlossener Pfad (Dreieck) mit cycle
+    \draw (6,0) -- (7,1) -- (8,0) -- cycle;
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tikzpicture}
+    % Einfache Linie von (0,0) nach (2,1)
+    \draw (0,0) -- (2,1);
+    % Mehrere verbundene Linien (Pfad)
+    \draw (3,0) -- (4,1) -- (5,0);
+    % Geschlossener Pfad (Dreieck) mit cycle
+    \draw (6,0) -- (7,1) -- (8,0) -- cycle;
+\end{tikzpicture}
+\end{center}
+\end{ausgabe}
+
+
+
+%%%%  UNTERKAPITEL 4.2  %%%%
+\subsection{Linientypen und -stärke}
+
+Ti\textit{k}Z bietet verschiedene Möglichkeiten, das Aussehen von Linien zu verändern.
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+    % Verschiedene Linienstile
+    \draw (0,0) -- (2,0);                         	% Standard-Linie
+    \draw[thick] (0,-0.5) -- (2,-0.5);              % Dicke Linie
+    \draw[thin] (0,-1) -- (2,-1);                   % Duenne Linie
+    \draw[ultra thick] (0,-1.5) -- (2,-1.5);        % Sehr dicke Linie
+    
+    % Verschiedene Linienmuster
+    \draw[dashed] (3,0) -- (5,0);                 	% Gestrichelte Linie
+    \draw[dotted] (3,-0.5) -- (5,-0.5);             % Gepunktete Linie
+    \draw[dash dot] (3,-1) -- (5,-1);               % Strich-Punkt-Linie
+    \draw[dash dot dot] (3,-1.5) -- (5,-1.5);       % Strich-Punkt-Punkt-Linie
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tikzpicture}
+    % Verschiedene Linienstile
+    \draw (0,0) -- (2,0);                         	% Standard-Linie
+    \draw[thick] (0,-0.5) -- (2,-0.5);              % Dicke Linie
+    \draw[thin] (0,-1) -- (2,-1);                   % Duenne Linie
+    \draw[ultra thick] (0,-1.5) -- (2,-1.5);        % Sehr dicke Linie
+    
+    % Verschiedene Linienmuster
+    \draw[dashed] (3,0) -- (5,0);                 	% Gestrichelte Linie
+    \draw[dotted] (3,-0.5) -- (5,-0.5);             % Gepunktete Linie
+    \draw[dash dot] (3,-1) -- (5,-1);               % Strich-Punkt-Linie
+    \draw[dash dot dot] (3,-1.5) -- (5,-1.5);       % Strich-Punkt-Punkt-Linie
+\end{tikzpicture}
+\end{center}
+\end{ausgabe}
+
+
+
+%%%%  UNTERKAPITEL 4.3  %%%%
+\subsection{Flächen zeichnen und füllen}
+
+Mit Ti\textit{k}Z können Flächen gefüllt werden. Wichtig ist, dass die Füllung \textbf{vor} dem Zeichnen der Umrandung definiert wird, damit die Linien nicht mitgefärbt werden.
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+     % Rechteck mit blauer Fuellung und schwarzer Umrandung
+    \draw[fill=blue!20] (0,0) rectangle (2,1);
+    % Kreis mit roter Fuellung
+    \draw[fill=red!30] (4,0.5) circle (0.5);
+    % Dreieck mit gruener Fuellung
+    \draw[fill=green!40] (6,0) -- (7,1) -- (8,0) -- cycle;
+ 
+    % Falsche Reihenfolge (NICHT EMPFOHLEN):
+    % Die Linie wird mitgefaerbt
+    \draw (0,-2) rectangle (2,-1);
+    \fill[yellow!50] (0,-2) rectangle (2,-1);
+    % Richtige Reihenfolge:
+    \fill[yellow!50] (3,-2) rectangle (5,-1);
+    \draw (3,-2) rectangle (5,-1);
+    % Alternative mit einem Befehl:
+    \filldraw[fill=orange!40, draw=black] (6,-2) rectangle (8,-1);
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tikzpicture}
+     % Rechteck mit blauer Fuellung und schwarzer Umrandung
+    \draw[fill=blue!20] (0,0) rectangle (2,1);
+    % Kreis mit roter Fuellung
+    \draw[fill=red!30] (4,0.5) circle (0.5);
+    % Dreieck mit gruener Fuellung
+    \draw[fill=green!40] (6,0) -- (7,1) -- (8,0) -- cycle;
+ 
+    % Falsche Reihenfolge (NICHT EMPFOHLEN):
+    % Die Linie wird mitgefaerbt
+    \draw (0,-2) rectangle (2,-1);
+    \fill[yellow!50] (0,-2) rectangle (2,-1);
+    % Richtige Reihenfolge:
+    \fill[yellow!50] (3,-2) rectangle (5,-1);
+    \draw (3,-2) rectangle (5,-1);
+    % Alternative mit einem Befehl:
+    \filldraw[fill=orange!40, draw=black] (6,-2) rectangle (8,-1);
+\end{tikzpicture}
+\end{center}
+\end{ausgabe}
+
+
+
+%%%%  UNTERKAPITEL 4.4  %%%%
+\subsection{Grundformen}
+
+Ti\textit{k}Z bietet verschiedene Grundformen, die einfach gezeichnet werden können.
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+    % Rechteck: (x1,y1) und (x2,y2) sind gegenueberliegende Ecken
+    \draw (0,0) rectangle (2,1);
+    % Kreis: (x,y) ist der Mittelpunkt, der Radius wird in Klammern angegeben
+    \draw (3,0.5) circle (0.5);
+    % Ellipse: (x,y) ist der Mittelpunkt, die Halbachsen werden in Klammern angegeben
+    \draw (5,0.5) ellipse (0.7 and 0.4);
+    % Bogen: Start- und Endwinkel werden in Grad angegeben
+    \draw (7,0.5) arc (0:270:0.5);
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tikzpicture}
+    % Rechteck: (x1,y1) und (x2,y2) sind gegenueberliegende Ecken
+    \draw (0,0) rectangle (2,1);
+    
+    % Kreis: (x,y) ist der Mittelpunkt, der Radius wird in Klammern angegeben
+    \draw (3,0.5) circle (0.5);
+    
+    % Ellipse: (x,y) ist der Mittelpunkt, die Halbachsen werden in Klammern angegeben
+    \draw (5,0.5) ellipse (0.7 and 0.4);
+    
+    % Bogen: start- und endwinkel werden in Grad angegeben
+    \draw (7,0.5) arc (0:270:0.5);
+\end{tikzpicture}
+\end{center}
+\end{ausgabe}
+
+
+
+%%%%  KAPITEL 5  %%%%
+\section{Die \texttt{node}-Funktion}
+
+Besonders mächtig in Ti\textit{k}Z ist die \texttt{node}-Funktion, die es ermöglicht, Elemente (Text, Symbole, etc.) an bestimmten Positionen zu platzieren. Knoten sind die Grundlage für komplexere Strukturen wie Diagramme oder Graphen.
+
+
+
+%%%%  UNTERKAPITEL 5.1  %%%%
+\subsection{Grundlegende Verwendung von Knoten}
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+    %Einfacher Textknoten an Position (0,0)
+    \node at (0,0) {Textknoten};
+    %Knoten mit Namen 'A' zur spaeteren Referenzierung
+    \node (A) at (5,0) {Knoten A};
+    %Knoten mit Namen 'B'
+    \node (B) at (10,0) {Knoten B};
+    %Verbindung zwischen benannten Knoten
+    \draw (A) -- (B);
+    %Knoten mit Rahmen
+    \node[draw] at (0,-1) {Umrahmter Text};
+    %Knoten mit gefuelltem Hintergrund
+    \node[fill=yellow!20] at (5,-1) {Gefuellter Knoten};
+    %Kombinierte Formatierung
+    \node[draw, fill=blue!10, thick] at (10,-1) {Formatierter Knoten};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tikzpicture}
+    % Einfacher Textknoten an Position (0,0)
+    \node at (0,0) {Textknoten};
+    % Node mit Namen 'A' zur spaeteren Referenzierung
+    \node (A) at (5,0) {Knoten A};
+ 
+    % Node mit Namen 'B'
+    \node (B) at (10,0) {Knoten B};
+    
+    % Verbindung zwischen benannten Nodes
+    \draw (A) -- (B);
+    
+    % Node mit Rahmen
+    \node[draw] at (0,-1) {Umrahmter Text};
+    
+    % Node mit gefuelltem Hintergrund
+    \node[fill=yellow!20] at (5,-1) {Gefuellter Knoten};
+    
+    % Kombinierte Formatierung
+    \node[draw, fill=blue!10, thick] at (10,-1) {Formatierter Knoten};
+\end{tikzpicture}
+\end{center}
+\end{ausgabe}
+
+
+
+%%%% UNTERKAPITEL 5.2  %%%%
+\subsection{Positionierung von Knoten}
+
+Knoten können relativ zueinander positioniert werden, was besonders nützlich für Diagramme ist.
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+    % Zentraler Knoten
+    \node[draw] (zentrum) at (2,2) {Zentrum};
+    % Relative Positionierung (erfordert positioning-Bibliothek)
+    \node[draw] (rechts) [right=of zentrum] {Rechts};
+    \node[draw] (links) [left=of zentrum] {Links};
+    \node[draw] (oben) [above=of zentrum] {Oben};
+    \node[draw] (unten) [below=of zentrum] {Unten};
+    % Verbindungen zwischen Knoten
+    \draw (zentrum) -- (rechts);
+    \draw (zentrum) -- (links);
+    \draw (zentrum) -- (oben);
+    \draw (zentrum) -- (unten);
+    % Positionierung mit festem Abstand
+    \node[draw] (ecke) [below right=1cm and 2cm of zentrum] {Ecke};
+    \draw[dashed] (zentrum) -- (ecke);
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tikzpicture}
+    % Zentraler Knoten
+    \node[draw] (zentrum) at (2,2) {Zentrum};
+    
+    % Relative Positionierung (erfordert positioning-Bibliothek)
+    \node[draw] (rechts) [right=of zentrum] {Rechts};
+    \node[draw] (links) [left=of zentrum] {Links};
+    \node[draw] (oben) [above=of zentrum] {Oben};
+    \node[draw] (unten) [below=of zentrum] {Unten};
+    
+    % Verbindungen zwischen Knoten
+    \draw (zentrum) -- (rechts);
+    \draw (zentrum) -- (links);
+    \draw (zentrum) -- (oben);
+    \draw (zentrum) -- (unten);
+    
+    % Positionierung mit festem Abstand
+    \node[draw] (ecke) [below right=1cm and 2cm of zentrum] {Ecke};
+    \draw[dashed] (zentrum) -- (ecke);
+\end{tikzpicture}
+\end{center}
+\end{ausgabe}
+
+
+
+%%%%  UNTERKAPITEL 5.3  %%%%
+\subsection{Verschiedene Knotenformen}
+
+Mit der \texttt{shapes}-Bibliothek stehen verschiedene Formen für Knoten zur Verfügung.
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}[node distance=2.5cm]
+    % Verschiedene Knotenformen (erfordert shapes-Bibliothek)
+    \node[draw, rectangle, minimum width=2cm] at (0,0) {Rechteck};
+    \node[draw, circle, minimum size=2cm] at (3,0) {Kreis};
+    \node[draw, ellipse, minimum width=2.5cm, minimum height=1.5cm] at (6,0) {Ellipse};
+    \node[draw, diamond, minimum size=2cm] at (0,-3) {Raute};
+    \node[draw, regular polygon, regular polygon sides=5, minimum size=2cm] at (3,-3) {Fuenfeck};
+    \node[draw, star, star points=7, star point ratio=0.6, minimum size=1.5cm] at (6,-3) {Stern};
+    
+    % Abgerundete Ecken und doppelte Linien
+    \node[draw, rectangle, rounded corners, minimum width=2cm] at (0,-6) {Abgerundet};
+    \node[draw, rectangle, double, minimum width=2cm] at (3,-6) {Doppellinie};
+    \node[draw, rectangle, double, rounded corners, minimum width=2cm] at (6,-6) {Kombiniert};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tikzpicture}[node distance=2.5cm]
+    % Verschiedene Node-Formen (erfordert shapes-Bibliothek)
+    \node[draw, rectangle, minimum width=2cm] at (0,0) {Rechteck};
+    \node[draw, circle, minimum size=2cm] at (3,0) {Kreis};
+    \node[draw, ellipse, minimum width=2.5cm, minimum height=1.5cm] at (6,0) {Ellipse};
+    \node[draw, diamond, minimum size=2cm] at (0,-3) {Raute};
+    \node[draw, regular polygon, regular polygon sides=5, minimum size=2cm] at (3,-3) {Fünfeck};
+    \node[draw, star, star points=7, star point ratio=0.6, minimum size=1.5cm] at (6,-3) {Stern};
+    
+    % Abgerundete Ecken und doppelte Linien
+    \node[draw, rectangle, rounded corners, minimum width=2cm] at (0,-6) {Abgerundet};
+    \node[draw, rectangle, double, minimum width=2cm] at (3,-6) {Doppellinie};
+    \node[draw, rectangle, double, rounded corners, minimum width=2cm] at (6,-6) {Kombiniert};
+\end{tikzpicture}
+\end{center}
+\end{ausgabe}
+
+\newpage
+
+
+%%%%  UNTERKAPITEL 5.4  %%%%
+\subsection{Knoten auf Pfaden platzieren}
+
+Knoten können auch direkt auf Pfade gesetzt werden, was für Beschriftungen nützlich ist.
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+    % Pfad mit Beschriftungen
+    \draw (0,0) -- node[above] {oben} node[below] {unten} (3,0);
+    
+    % Pfad mit Beschriftung in der Mitte
+    \draw (4,0) -- node[midway, above] {Mitte} (7,0);
+    
+    % Verschiedene Positionen
+    \draw (8,0) -- node[pos=0.25, above] {25\%} 
+                   node[pos=0.75, above] {75\%} (11,0);
+    
+    % Mehrere verbundene Linien mit Beschriftungen
+    \draw (12,0) -- node[midway, above] {A} (13,1)
+                -- node[rotate=-45,  midway, above] {B} (14,0)
+                -- node[rotate=45, midway, below] {C} (15,1);
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tikzpicture}
+    % Pfad mit Beschriftungen
+    \draw (0,0) -- node[above] {oben} node[below] {unten} (3,0);
+    
+    % Pfad mit Beschriftung in der Mitte
+    \draw (4,0) -- node[midway, above] {Mitte} (7,0);
+    
+    % Verschiedene Positionen
+    \draw (8,0) -- node[pos=0.25, above] {25\%} 
+                   node[pos=0.75, above] {75\%} (11,0);
+    
+    % Mehrere verbundene Linien mit Beschriftungen
+    \draw (12,0) -- node[midway, above] {A} (13,1)
+                -- node[rotate=-45,  midway, above] {B} (14,0)
+                -- node[rotate=45, midway, below] {C} (15,1);
+\end{tikzpicture}
+\end{center}
+\end{ausgabe}
+
+
+
+%%%%  KAPITEL 6  %%%%
+\section{Farben in Ti\textit{k}Z}
+
+Ti\textit{k}Z unterstützt eine Vielzahl von Farben, die mit Prozentangaben gemischt werden können.
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+    % Grundlegende Farben
+    \draw[red, ultra thick] (0,0) -- (1,0);
+    \draw[green, ultra thick] (0,-0.5) -- (1,-0.5);
+    \draw[blue, ultra thick] (0,-1) -- (1,-1);
+    % Farbmischungen mit Prozentangabe
+    \draw[red!50, ultra thick] (2,0) -- (3,0);          		% 50% Rot
+    \draw[blue!30, ultra thick] (2,-0.5) -- (3,-0.5);     		% 30% Blau
+    \draw[green!70, ultra thick] (2,-1) -- (3,-1);        		% 70% Gruen
+    % Mischung von zwei Farben
+    \draw[red!30!blue, ultra thick] (4,0) -- (5,0);     		% 30% Rot, 70% Blau
+    \draw[yellow!50!green, ultra thick] (4,-0.5) -- (5,-0.5); % 50% Gelb, 50% Gruen
+    % Transparenz
+    \fill[red, opacity=0.5] (6,-0.5) circle (0.5);
+    \fill[blue, opacity=0.5] (6.4,-0.5) circle (0.5);
+    % Farbverlauf
+    \shade[left color=blue, right color=yellow] (8,0) rectangle (10,-1);
+    \shade[top color=red, bottom color=green] (11,0) rectangle (13,-1);
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tikzpicture}
+    % Grundlegende Farben
+    \draw[red, ultra thick] (0,0) -- (1,0);
+    \draw[green, ultra thick] (0,-0.5) -- (1,-0.5);
+    \draw[blue, ultra thick] (0,-1) -- (1,-1);
+    
+    % Farbmischungen mit Prozentangabe
+    \draw[red!50, ultra thick] (2,0) -- (3,0);          % 50% Rot
+    \draw[blue!30, ultra thick] (2,-0.5) -- (3,-0.5);     % 30% Blau
+    \draw[green!70, ultra thick] (2,-1) -- (3,-1);        % 70% Gruen
+    
+    % Mischung von zwei Farben
+    \draw[red!30!blue, ultra thick] (4,0) -- (5,0);     % 30% Rot, 70% Blau
+    \draw[yellow!50!green, ultra thick] (4,-0.5) -- (5,-0.5); % 50% Gelb, 50% Gruen
+    
+    % Transparenz mit opacity
+    \fill[red, opacity=0.5] (6,-0.5) circle (0.5);
+    \fill[blue, opacity=0.5] (6.4,-0.5) circle (0.5);
+    
+    % Farbverlauf
+    \shade[left color=blue, right color=yellow] (8,0) rectangle (10,-1);
+    \shade[top color=red, bottom color=green] (11,0) rectangle (13,-1);
+\end{tikzpicture}
+\end{center}
+\end{ausgabe}
+
+
+
+%%%%  KAPITEL 7  %%%%
+\section{Verwendung der \texttt{cycle}-Funktion}
+
+Die \texttt{cycle}-Funktion schließt einen Pfad, indem sie eine Linie vom letzten zum ersten Punkt zieht. Dies ist besonders nützlich für geschlossene Formen und hat Vorteile gegenüber dem manuellen Zurückzeichnen zum Anfangspunkt.
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+    % Ohne cycle - manuelles Zurueckzeichnen zum Anfangspunkt
+    \draw (0,0) -- (1,1) -- (2,0) -- (0,0);
+    % Mit cycle - automatisches Schliessen des Pfades
+    \draw (3,0) -- (4,1) -- (5,0) -- cycle;
+    % Vorteile der cycle-Funktion:
+    % 1. Bei Flaechenfuellung werden manuell geschlossene Pfade manchmal 
+    %    nicht als geschlossen erkannt
+    \draw[fill=red!20] (6,0) -- (7,1) -- (8,0) -- (6,0);  % Kann problematisch sein
+    % 2. Mit cycle ist die Fuellung garantiert korrekt
+    \draw[fill=red!20] (9,0) -- (10,1) -- (11,0) -- cycle;
+    % 3. Bei komplexen Pfaden ist cycle leichter zu warten
+    \draw[fill=blue!20] (12,0) -- (12.5,1) -- (13,0.5) -- (13.5,1) -- (14,0) -- cycle;
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tikzpicture}
+    % Ohne cycle - manuelles Zurueckzeichnen zum Anfangspunkt
+    \draw (0,0) -- (1,1) -- (2,0) -- (0,0);
+    % Mit cycle - automatisches Schliessen des Pfades
+    \draw (3,0) -- (4,1) -- (5,0) -- cycle;
+    % Vorteile der cycle-Funktion:
+    % 1. Bei Flaechenfuellung werden manuell geschlossene Pfade manchmal 
+    %    nicht als geschlossen erkannt
+    \draw[fill=red!20] (6,0) -- (7,1) -- (8,0) -- (6,0);  % Kann problematisch sein
+    % 2. Mit cycle ist die Fuellung garantiert korrekt
+    \draw[fill=red!20] (9,0) -- (10,1) -- (11,0) -- cycle;
+    % 3. Bei komplexen Pfaden ist cycle leichter zu warten
+    \draw[fill=blue!20] (12,0) -- (12.5,1) -- (13,0.5) -- (13.5,1) -- (14,0) -- cycle;
+\end{tikzpicture}
+\end{center}
+\end{ausgabe}
+
+
+
+%%%% KAPITEL 8  %%%%
+\section{Praktische Beispiele}
+
+
+
+%%%% UNTERKAPITEL 8.1  %%%%
+\subsection{Koordinatensystem}
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+    % Achsen zeichnen
+    \draw[->] (-0.5,0) -- (4,0) node[right] {$x$};
+    \draw[->] (0,-0.5) -- (0,4) node[above] {$y$};
+    % Achsenbeschriftung
+    \foreach \x in {1,2,3}{
+        \draw (\x,0.1) -- (\x,-0.1) node[below] {$\x$};
+    }
+    \foreach \y in {1,2,3}{
+        \draw (0.1,\y) -- (-0.1,\y) node[left] {$\y$};
+    }
+    % Gitter (optional)
+    \draw[very thin, color=gray!30] (0,0) grid (3,3);
+    % Beispielpunkt
+    \fill (2,1) circle (0.1) node[above right] {$P(2,1)$};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tikzpicture}
+    % Achsen zeichnen
+    \draw[->] (-0.5,0) -- (4,0) node[right] {$x$};
+    \draw[->] (0,-0.5) -- (0,4) node[above] {$y$};
+    
+    % Achsenbeschriftung
+    \foreach \x in {1,2,3}
+        \draw (\x,0.1) -- (\x,-0.1) node[below] {$\x$};
+    \foreach \y in {1,2,3}
+        \draw (0.1,\y) -- (-0.1,\y) node[left] {$\y$};
+        
+    % Gitter (optional)
+    \draw[very thin, color=gray!30] (0,0) grid (3,3);
+    
+    % Beispielpunkt
+    \fill (2,1) circle (0.1) node[above right] {$P(2,1)$};
+\end{tikzpicture}
+\end{center}
+\end{ausgabe}
+
+
+
+%%%% UNTERKAPITEL 8.2  %%%%
+\subsection{Mathematisches Beispiel: Funktionsgraphen zeichnen}
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+    %Koordinatensystem und Achsenbeschriftung
+    \draw[->] (-3.2,0) -- (3.2,0) node[right] {$x$};
+    \draw[->] (0,-1.2) -- (0,4.2) node[above] {$y$};
+    \foreach \x in {-3,-2,-1,1,2,3}
+        \draw (\x,0.1) -- (\x,-0.1) node[below] {$\x$};
+    \foreach \y in {1,2,3,4}
+        \draw (0.1,\y) -- (-0.1,\y) node[left] {$\y$};
+    %Funktion zeichnen
+    \draw[domain=-2.9:2.9, smooth, variable=\x, blue, thick] plot ({\x}, {\x*\x/2});
+    %Beschriftung
+    \node[right] at (2,2) {$f(x) = \frac{x^2}{2}$};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tikzpicture}
+    % Koordinatensystem
+    \draw[->] (-3.2,0) -- (3.2,0) node[right] {$x$};
+    \draw[->] (0,-1.2) -- (0,4.2) node[above] {$y$};
+    
+    % Achsenbeschriftung
+    \foreach \x in {-3,-2,-1,1,2,3}
+        \draw (\x,0.1) -- (\x,-0.1) node[below] {$\x$};
+    \foreach \y in {1,2,3,4}
+        \draw (0.1,\y) -- (-0.1,\y) node[left] {$\y$};
+    
+    % Parabel zeichnen
+    \draw[domain=-2.9:2.9, smooth, variable=\x, blue, thick] 
+        plot ({\x}, {\x*\x/2});
+    
+    % Beschriftung
+    \node[right] at (2,2) {$f(x) = \frac{x^2}{2}$};
+\end{tikzpicture}
+\end{center}
+\end{ausgabe}
+
+\newpage
+
+%%%% UNTERKAPITEL 8.3  %%%%
+\subsection{Einfaches Flussdiagramm}
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}[
+    % Globale Stileinstellungen
+    block/.style={rectangle, draw, fill=blue!20, rounded corners,
+                  minimum width=3cm, minimum height=1cm},
+    decision/.style={diamond, draw, fill=green!20,
+                    minimum width=3cm, minimum height=1cm},
+    arrow/.style={thick,->,>=stealth}
+]
+    % Knoten definieren
+    \node[block] (start) {Start};
+    \node[block, below=of start] (process) {Prozess};
+    \node[decision, below=of process] (decision) {Entscheidung?};
+    \node[block, below left=of decision] (yes) {Ja};
+    \node[block, below right=of decision] (no) {Nein};
+    \node[block, below=2cm of decision] (end) {Ende};
+    % Verbindungen 
+    \draw[arrow] (start) -- (process);
+    \draw[arrow] (process) -- (decision);
+    \draw[arrow] (decision) -- node[left] {Ja} (yes);
+    \draw[arrow] (decision) -- node[right] {Nein} (no);
+    \draw[arrow] (yes) |- (end);
+    \draw[arrow] (no) |- (end);
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tikzpicture}[scale=0.8,
+    % Globale Stileinstellungen
+    block/.style={rectangle, draw, fill=blue!20, rounded corners,
+                  minimum width=3cm, minimum height=1cm},
+    decision/.style={diamond, draw, fill=green!20,
+                    minimum width=3cm, minimum height=1cm},
+    arrow/.style={thick,->,>=stealth}
+]
+    % Knoten definieren
+    \node[block] (start) {Start};
+    \node[block, below=of start] (process) {Prozess};
+    \node[decision, below=of process] (decision) {Entscheidung?};
+    \node[block, below left=of decision] (yes) {Ja};
+    \node[block, below right=of decision] (no) {Nein};
+    \node[block, below=2cm of decision] (end) {Ende};
+    
+    % Verbindungen 
+    \draw[arrow] (start) -- (process);
+    \draw[arrow] (process) -- (decision);
+    \draw[arrow] (decision) -- node[left] {Ja} (yes);
+    \draw[arrow] (decision) -- node[right] {Nein} (no);
+    \draw[arrow] (yes) |- (end);
+    \draw[arrow] (no) |- (end);
+\end{tikzpicture}
+\end{center}
+\end{ausgabe}
+
+
+\newpage
+
+
+%%%% UNTERKAPITEL 8.4  %%%%
+\subsection{Geometrisches Beispiel: Winkel}
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+    % Dreieck zeichnen
+    \coordinate (A) at (0,0);
+    \coordinate (B) at (4,0);
+    \coordinate (C) at (1,3);
+    \draw (A) -- (B) -- (C) -- cycle;
+    % Punkte beschriften
+    \node[below left] at (A) {$A$};
+    \node[below right] at (B) {$B$};
+    \node[above] at (C) {$C$};
+    % Winkel anzeigen
+    \draw pic[draw, angle radius=0.8cm] {angle=B--A--C};
+    \node at (0.375,0.25) {$\alpha$};
+    \draw pic[draw, angle radius=1cm] {angle=C--B--A};
+    \node at (3.375,0.25) {$\beta$};
+    \draw pic[draw, angle radius=0.8cm] {angle=A--C--B};
+    \node at (1.125,2.5) {$\gamma$};
+    % Hoehe zeichnen
+    \coordinate (H) at (1,0); % Hoehenfusspunkt
+    \draw[dashed] (C) -- (H);
+    \node[below] at (H) {$H$};
+    % Hoehe beschriften
+    \draw[|<->|] (-0.5,0) -- (-0.5,3) node[midway, left] {$h$};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{tikzpicture}
+    % Dreieck zeichnen
+    \coordinate (A) at (0,0);
+    \coordinate (B) at (4,0);
+    \coordinate (C) at (1,3);
+    
+    \draw (A) -- (B) -- (C) -- cycle;
+    
+    % Punkte beschriften
+    \node[below left] at (A) {$A$};
+    \node[below right] at (B) {$B$};
+    \node[above] at (C) {$C$};
+    
+    % Winkel anzeigen
+    \draw pic[draw, angle radius=0.8cm] {angle=B--A--C};
+\node at (0.375,0.25) {$\alpha$};
+
+\draw pic[draw, angle radius=1cm] {angle=C--B--A};
+\node at (3.375,0.25) {$\beta$};
+
+\draw pic[draw, angle radius=0.8cm] {angle=A--C--B};
+\node at (1.125,2.5) {$\gamma$};
+    
+    % Höhe zeichnen
+    \coordinate (H) at (1,0); % Höhenfußpunkt
+    \draw[dashed] (C) -- (H);
+    \node[below] at (H) {$H$};
+    
+    % Höhe beschriften
+    \draw[|<->|] (-0.5,0) -- (-0.5,3) node[midway, left] {$h$};
+\end{tikzpicture}
+\end{center}
+\end{ausgabe}
+
+\section{Tipps für die Arbeit mit Ti\textit{k}Z}
+
+Die Arbeit mit Ti\textit{k}Z kann durch einige praktische Herangehensweisen deutlich erleichtert werden. Es empfiehlt sich, komplexe Grafiken schrittweise aufzubauen und regelmäßig zu testen, um Fehler frühzeitig zu erkennen und zu beheben. Für komplexe Strukturen bietet es sich an, benannte Knoten zu verwenden, da diese das spätere Referenzieren erheblich vereinfachen. Ausführliche Kommentare im Code helfen dabei, den Überblick zu behalten, besonders bei umfangreichen Grafiken.
+
+Für wiederkehrende Elemente sollten eigene Stile definiert werden, um den Code übersichtlich zu halten und Änderungen global vornehmen zu können. Bei komplexeren Berechnungen von Positionen erweist sich die \texttt{calc}-Bibliothek als besonders nützlich. Sie ermöglicht arithmetische Operationen innerhalb von Koordinatenangaben. Für ein genaueres Platzieren kann die \texttt{grid}-Option hilfreich sein, die durch den Befehl \texttt{\textbackslash begin\{tikzpicture\}[help lines]} aktiviert wird und ein Hilfsgitter einblendet.
+
+\section{Zusammenfassung}
+
+Ti\textit{k}Z ist ein mächtiges Werkzeug zur Erstellung von Grafiken in \hologo{LaTeX}, das durch seine Flexibilität und umfangreichen Funktionen überzeugt. Die wichtigsten Grundlagen, die in dieser Handreichung behandelt wurden, umfassen die \texttt{tikzpicture}-Umgebung als Rahmen für jegliche Grafikelemente sowie den \texttt{\textbackslash draw}-Befehl zum Zeichnen von Linien und verschiedenen geometrischen Formen. 
+
+Für das Platzieren von Text und strukturierten Elementen dient der \texttt{\textbackslash node}-Befehl, während die \texttt{cycle}-Funktion das korrekte Schließen von Pfaden gewährleistet. Die Füllung von Flächen erfolgt mittels \texttt{\textbackslash fill} oder \texttt{\textbackslash filldraw}, wobei verschiedene Farben und Linienstile zur individuellen Gestaltung beitragen können.
+
+Mit diesen Grundlagen lassen sich bereits zahlreiche nützliche Grafiken für den MINT-Unterricht erstellen. Die in dieser Handreichung vorgestellten Beispiele können als Ausgangspunkt für eigene Grafiken dienen und flexibel an individuelle Bedürfnisse angepasst werden. 
+
+\end{document}
+    

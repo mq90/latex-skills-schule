@@ -1,0 +1,577 @@
+\input{header.tex}
+\input{newcommands.tex}
+
+
+\title{UML-Klassendiagramme mit Ti\textit{k}Z erstellen}
+\author{Fortbildungsmaterial für MINT-Lehrkräfte}
+\date{25. Mai 2025}
+\pagestyle{plain}
+
+\begin{document}
+
+\maketitle
+
+UML-Klassendiagramme sind ein zentrales Werkzeug in der objektorientierten Programmierung und Softwareentwicklung. Sie visualisieren die Struktur von Klassen, deren Attribute, Methoden und Beziehungen zueinander. Mit Ti\textit{k}Z und benutzerdefinierten Stilen können MINT-Lehrkräfte professionelle UML-Klassendiagramme effizient erstellen. Diese Handreichung zeigt, wie Sie mit eigenen Ti\textit{k}Z-Stilen und -Befehlen wartbare und professionelle UML-Diagramme entwickeln können.
+
+
+
+%%%%  KAPITEL 1  %%%%
+\section{Grundlagen und Stil-Definitionen}
+
+Ti\textit{k}Z ist in jeder \hologo{LaTeX}-Installation verfügbar und bietet durch seine Flexibilität die perfekte Grundlage für die Erstellung professioneller UML-Diagramme. Für effiziente und konsistente Diagrammerstellung definieren wir zunächst eigene Stile, die alle wichtigen UML-Elemente abdecken und eine einheitliche Formatierung gewährleisten.
+
+Für die professionelle Erstellung von UML-Diagrammen benötigen wir neben dem Grundpaket Ti\textit{k}Z einige spezialisierte Bibliotheken, die verschiedene Funktionalitäten bereitstellen:
+
+\begin{lstlisting}[style=latex]
+\usepackage{tikz}
+\usetikzlibrary{positioning, fit, calc, shapes.multipart, arrows.meta}
+\end{lstlisting}
+
+Diese Bibliotheken erfüllen jeweils spezifische Aufgaben: \texttt{positioning} ermöglicht die intuitive relative Positionierung von Elementen mit Befehlen wie \texttt{right=3cm of klassenname}, während \texttt{calc} komplexe Koordinatenberechnungen für präzise Platzierung von Beschriftungen ermöglicht. Die \texttt{shapes.multipart}-Bibliothek stellt das essenzielle \texttt{rectangle split}-Feature zur Verfügung, das unsere UML-Klassen in die drei charakteristischen Bereiche unterteilt. Besonders wichtig ist \texttt{arrows.meta}, da diese Bibliothek moderne Pfeilspitzen wie \texttt{Triangle[open]} für Vererbung und \texttt{Diamond[open]} für Aggregation bereitstellt, die den UML-Standards entsprechen. Die \texttt{fit}-Bibliothek wird für komplexere Layouts benötigt, falls Sie später Diagrammteile gruppieren oder umrahmen möchten.
+
+Der zentrale Baustein unserer UML-Diagramme ist der \texttt{umlclass}-Stil, der das mächtige \texttt{rectangle split}-Feature von Ti\textit{k}Z nutzt. Dieses Feature teilt automatisch ein Rechteck in drei gleichmäßige Bereiche auf, die den klassischen UML-Aufbau mit Klassenname, Attributen und Methoden widerspiegeln. Durch die präzise Kontrolle der Textausrichtung wird der Klassenname zentriert dargestellt, während Attribute und Methoden linksbündig ausgerichtet werden, was der UML-Konvention entspricht.
+
+Besonders praktisch ist die Anpassbarkeit der Klassenbreite über den Parameter \texttt{text width}. Während der Standardwert von 4cm für die meisten Anwendungsfälle ausreicht, können Sie diese Breite individuell anpassen – beispielsweise auf 3cm für kompakte Diagramme oder 6cm für Klassen mit längeren Methodennamen, wie im ersten Beispiel gezeigt. Die Mindesthöhe von 2cm sorgt dafür, dass auch Klassen mit wenigen Inhalten ein ausgewogenes Erscheinungsbild behalten.
+
+Für die verschiedenen UML-Beziehungstypen definieren wir spezialisierte Stile, die den UML-Standards entsprechen. Der \texttt{inherit}-Stil erzeugt Vererbungspfeile mit der charakteristischen dreieckigen Pfeilspitze, während \texttt{compose} und \texttt{aggregate} die unterschiedlichen Kompositions- und Aggregationsbeziehungen mit gefüllten oder leeren Diamanten darstellen. Einfache Assoziationen werden durch den \texttt{associate}-Stil als gerade Linien visualisiert, und Abhängigkeitsbeziehungen erhalten durch den \texttt{depend}-Stil ihre typische gestrichelte Darstellung.
+
+\begin{lstlisting}[style=latex]
+% UML-Klassen-Stil
+\tikzstyle{umlclass} = [
+	rectangle split,
+	rectangle split parts=3,
+	rectangle split part align={center,left,left},
+	draw,
+ 	thick,
+	text width=4cm,
+	minimum height=2cm
+]
+
+% UML-Beziehungsstile
+\tikzstyle{inherit} = [-{Triangle[open]}, thick]		%Vererbung
+\tikzstyle{compose} = [-{Diamond}, thick]    				%Komposition
+\tikzstyle{aggregate} = [-{Diamond[open]}, thick]		%Aggregation
+\tikzstyle{associate} = [-, thick]									%Assoziation
+\tikzstyle{depend} = [-, thick, dashed]							%Abhaengigkeit
+\end{lstlisting}
+
+Diese Stil-Definitionen sollten in der Präambel Ihres Dokuments platziert werden und bilden das Fundament für alle nachfolgenden UML-Diagramme.
+
+
+
+%%%%  KAPITEL 2  %%%%
+\section{Einfache UML-Klasse erstellen}
+
+Mit dem definierten Stil wird die Klassenerstellung deutlich einfacher:
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+	\node[umlclass, text width=6cm] (person) {
+		\textbf{Person}
+		\nodepart{second}
+		- name: String \\
+		- alter: int
+		\nodepart{third}
+		+ getName(): String \\
+		+ setName(name: String): void \\
+		+ getAlter(): int
+	};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\begin{tikzpicture}
+		\node[umlclass, text width=6cm] (person) {
+		    	\textbf{Person}
+		    	\nodepart{second}
+		    	- name: String \\
+		    	- alter: int
+		    	\nodepart{third}
+		    	+ getName(): String \\
+		    	+ setName(name: String): void \\
+		    	+ getAlter(): int
+		};
+	\end{tikzpicture}
+\end{ausgabe}
+
+Die \texttt{\textbackslash nodepart}-Befehle wechseln zwischen den drei Bereichen der Klasse. Innerhalb jedes Bereichs können Sie mit \texttt{\textbackslash\textbackslash} wie gewohnt Zeilenumbrüche einfügen, um mehrere Attribute oder Methoden untereinander aufzulisten.
+
+
+
+%%%%  KAPITEL 3  %%%%
+\section{Beziehungen zwischen Klassen}
+
+UML-Klassendiagramme leben von den Beziehungen zwischen den einzelnen Klassen. Diese Beziehungen visualisieren die Interaktionen zwischen Klassen, einschließlich Vererbung und Komposition. Ti\textit{k}Z bietet durch unsere definierten Stile eine einfache Möglichkeit, alle wichtigen UML-Beziehungstypen professionell darzustellen.
+
+
+
+%%%%  UNTERKAPITEL 3.1  %%%%
+\subsection{Vererbung}
+
+Vererbungsbeziehungen stellen dar, dass eine Klasse die Eigenschaften einer anderen Klasse übernimmt. Wir verwenden dafür den \texttt{inherit}-Stil mit seinem charakteristischen Dreieckspfeil:
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+	\node[umlclass] (fahrzeug) {
+		\textbf{Fahrzeug}
+		\nodepart{second}
+		- marke: String
+		\nodepart{third}
+		+ starten(): void
+	};
+	
+	\node[umlclass, right=3cm of fahrzeug] (auto) {
+		\textbf{Auto}
+		\nodepart{second}
+		- tueren: int
+		\nodepart{third}
+		+ oeffneTuer(): void
+	};
+	
+	\draw[inherit] (auto) -- (fahrzeug);
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\begin{tikzpicture}
+		\node[umlclass] (fahrzeug) {
+		    	\textbf{Fahrzeug}
+		    	\nodepart{second}
+		    	- marke: String
+		    	\nodepart{third}
+		    	+ starten(): void
+		};
+		
+		\node[umlclass, right=3cm of fahrzeug] (auto) {
+		    	\textbf{Auto}
+		    	\nodepart{second}
+		    	- tueren: int
+		    	\nodepart{third}
+		    	+ oeffneTuer(): void
+		};
+		
+		\draw[inherit] (auto) -- (fahrzeug);
+	\end{tikzpicture}
+\end{ausgabe}
+
+
+
+%%%%  UNTERKAPITEL 3.2  %%%%
+\subsection{Assoziation}
+
+Einfache Assoziationen verbinden Klassen mit einer geraden Linie:
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+	\node[umlclass] (kunde) {
+		\textbf{Kunde}
+		\nodepart{second}
+		- name: String
+		\nodepart{third}
+		+ bestellen(): void
+	};
+	\node[umlclass, right=3cm of kunde] (bestellung) {
+		\textbf{Bestellung}
+		\nodepart{second}
+		- datum: Date
+		\nodepart{third}
+		+ bestaetigen(): void
+	};
+	\draw[associate] (kunde) -- (bestellung);
+	\node[above] at ($ (kunde.east)!0.5!(bestellung.west) $) {bestellt};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\begin{tikzpicture}
+		\node[umlclass] (kunde) {
+		    	\textbf{Kunde}
+		    	\nodepart{second}
+		    	- name: String
+		    	\nodepart{third}
+		    	+ bestellen(): void
+		};
+		
+		\node[umlclass, right=3cm of kunde] (bestellung) {
+		    	\textbf{Bestellung}
+		    	\nodepart{second}
+		    	- datum: Date
+		    	\nodepart{third}
+		    	+ bestaetigen(): void
+		};
+		
+		\draw[associate] (kunde) -- (bestellung);
+		\node[above] at ($ (kunde.east)!0.5!(bestellung.west) $) {bestellt};
+	\end{tikzpicture}
+\end{ausgabe}
+
+
+
+%%%%  UNTERKAPITEL 3.3  %%%%
+\subsection{Komposition}
+
+Komposition zeigt eine starke \glqq{}Teil-von\grqq{}-Beziehung mit gefülltem Diamanten:
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+	\node[umlclass] (haus) {
+		\textbf{Haus}
+		\nodepart{second}
+		- adresse: String
+		\nodepart{third}
+		+ bauen(): void
+	};
+	
+	\node[umlclass, right=3cm of haus] (raum) {
+		\textbf{Raum}
+		\nodepart{second}
+		- groesse: double
+		\nodepart{third}
+		+ einrichten(): void
+	};
+	
+	\draw[compose] (haus) -- (raum);
+	\node[above] at ($ (haus.east)!0.5!(raum.west) $) {1..*};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\begin{tikzpicture}
+		\node[umlclass] (haus) {
+		    	\textbf{Haus}
+		    	\nodepart{second}
+		    	- adresse: String
+		    	\nodepart{third}
+		    	+ bauen(): void
+		};
+		
+		\node[umlclass, right=3cm of haus] (raum) {
+		    	\textbf{Raum}
+		    	\nodepart{second}
+		    	- groesse: double
+		    	\nodepart{third}
+		    	+ einrichten(): void
+		};
+		
+		\draw[compose] (haus) -- (raum);
+		\node[above] at ($ (haus.east)!0.5!(raum.west) $) {1..*};
+	\end{tikzpicture}
+\end{ausgabe}
+
+
+
+%%%%  UNTERKAPITEL 3.4  %%%%
+\subsection{Aggregation}
+
+Aggregation zeigt eine schwächere \glqq{}Teil-von\grqq{}-Beziehung mit leerem Diamanten:
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+	\node[umlclass] (team) {
+		\textbf{Team}
+		\nodepart{second}
+		- name: String
+		\nodepart{third}
+		+ spielen(): void
+	};
+	
+	\node[umlclass, right=3cm of team] (spieler) {
+		\textbf{Spieler}
+		\nodepart{second}
+		- name: String
+		\nodepart{third}
+		+ trainieren(): void
+	};
+	
+	\draw[aggregate] (team) -- (spieler);
+	\node[above] at ($ (team.east)!0.5!(spieler.west) $) {11};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\begin{tikzpicture}
+		\node[umlclass] (team) {
+		    	\textbf{Team}
+		    	\nodepart{second}
+		    	- name: String
+		    	\nodepart{third}
+		    	+ spielen(): void
+		};
+		
+		\node[umlclass, right=3cm of team] (spieler) {
+		    	\textbf{Spieler}
+		    	\nodepart{second}
+		    	- name: String
+		    	\nodepart{third}
+		    	+ trainieren(): void
+		};
+		
+		\draw[aggregate] (team) -- (spieler);
+		\node[above] at ($ (team.east)!0.5!(spieler.west) $) {11};
+	\end{tikzpicture}
+\end{ausgabe}
+
+
+
+%%%%  UNTERKAPITEL 3.5  %%%%
+\subsection{Abhängigkeit}
+
+Abhängigkeiten zeigen, dass eine Klasse eine andere temporär nutzt. Der \texttt{depend}-Stil erzeugt gestrichelte Pfeile für diese Beziehung:
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+	\node[umlclass] (kunde) {
+		\textbf{Kunde}
+		\nodepart{second}
+		- name: String
+		\nodepart{third}
+		+ drucken(): void
+	};
+		
+	\node[umlclass, right=3cm of kunde] (drucker) {
+		\textbf{Drucker}
+		\nodepart{second}
+		- modell: String
+		\nodepart{third}
+		+ print(): void
+	};
+	
+	\draw[depend] (kunde) -- (drucker);
+	\node[above] at ($ (kunde.east)!0.5!(drucker.west) $) {nutzt};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\begin{tikzpicture}
+		\node[umlclass] (kunde) {
+		    	\textbf{Kunde}
+		    	\nodepart{second}
+		    	- name: String
+		    	\nodepart{third}
+		    	+ drucken(): void
+		};
+		
+		\node[umlclass, right=3cm of kunde] (drucker) {
+		    	\textbf{Drucker}
+		    	\nodepart{second}
+		    	- modell: String
+		    	\nodepart{third}
+		    	+ print(): void
+		};
+		
+		\draw[depend] (kunde) -- (drucker);
+		\node[above] at ($ (kunde.east)!0.5!(drucker.west) $) {nutzt};
+	\end{tikzpicture}
+\end{ausgabe}
+
+
+
+%%%%  KAPITEL 4  %%%%
+\section{Eigene Befehle definieren}
+
+Für noch effizientere Diagrammerstellung können Sie eigene \hologo{LaTeX}-Befehle definieren. Diese Befehlsdefinitionen müssen ebenfalls in der Präambel Ihres Dokuments stehen, damit sie im gesamten Dokument verfügbar sind:
+
+\begin{lstlisting}[style=latex]
+% Befehl fuer einfache UML-Klasse - gehoert in die Praeambel!
+\newcommand{\umlklasse}[4]{
+	\node[umlclass] (#1) {
+		\textbf{#2}
+		\nodepart{second}
+		#3
+		\nodepart{third}
+		#4
+	};
+}
+\end{lstlisting}
+
+Verwendet werden kann dieser Befehl dann beispielsweise wie folgt:
+\begin{lstlisting}[style=latex]
+\umlklasse{personid}{Person}{- name: String}{+ getName(): String}
+\end{lstlisting}
+
+
+
+%%%%  KAPITEL 5  %%%%
+\section{Komplexes Beispiel: Schulverwaltungssystem}
+
+Hier ist ein Beispiel für ein vollständiges UML-Diagramm mit verschiedenen Beziehungstypen:
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}[node distance=2.5cm]
+	\node[umlclass] (person) {
+		\textbf{Person}
+		\nodepart{second}
+		\# name: String \\
+		\# geburtsdatum: Date
+		\nodepart{third}
+		+ getName(): String \\
+		+ getAlter(): int
+	};
+		
+	\node[umlclass, below left=of person] (student) {
+		\textbf{Student}
+		\nodepart{second}
+		- matrikelnr: int \\
+		- noten: List
+		\nodepart{third}
+		+ einschreiben(): void \\
+		+ noteHinzufuegen(): void
+	};
+		
+	\node[umlclass, below right=of person] (lehrer) {
+		\textbf{Lehrer}
+		\nodepart{second}
+		- personalNr: int \\
+		- gehalt: double
+		\nodepart{third}
+		+ unterrichten(): void \\
+		+ notenVergeben(): void
+	};
+		
+	\node[umlclass, below=2cm of person] (kurs) {
+		\textbf{Kurs}
+		\nodepart{second}
+		- name: String \\
+		- semester: String
+		\nodepart{third}
+		+ anmelden(): void \\
+		+ abhalten(): void
+	};
+	
+	% Vererbungspfeile
+	\draw[inherit] (student) -- (person);
+	\draw[inherit] (lehrer) -- (person);
+	
+	% Assoziationen
+	\draw[associate] (student) -- (kurs);
+	\draw[associate] (lehrer) -- (kurs);
+	
+	% Beschriftungen
+	\node[above] at ($ (student)!0.5!(kurs) $) {besucht *};
+	\node[above] at ($ (lehrer)!0.5!(kurs) $) {lehrt *};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\begin{tikzpicture}[node distance=2.5cm]
+		\node[umlclass] (person) {
+		    	\textbf{Person}
+		    	\nodepart{second}
+		    	\# name: String \\
+		    	\# geburtsdatum: Date
+		    	\nodepart{third}
+		    	+ getName(): String \\
+		    	+ getAlter(): int
+		};
+		
+		\node[umlclass, below left=of person] (student) {
+		    	\textbf{Student}
+		    	\nodepart{second}
+		    	- matrikelnr: int \\
+		    	- noten: List
+		    	\nodepart{third}
+		    	+ einschreiben(): void \\
+		    	+ noteHinzufuegen(): void
+		};
+		
+		\node[umlclass, below right=of person] (lehrer) {
+		    	\textbf{Lehrer}
+		    	\nodepart{second}
+		    	- personalNr: int \\
+		    	- gehalt: double
+		    	\nodepart{third}
+		    	+ unterrichten(): void \\
+		    	+ notenVergeben(): void
+		};
+		
+		\node[umlclass, below=2cm of person] (kurs) {
+		    	\textbf{Kurs}
+		    	\nodepart{second}
+		    	- name: String \\
+		    	- semester: String
+		    	\nodepart{third}
+		    	+ anmelden(): void \\
+		    	+ abhalten(): void
+		};
+		
+		% Vererbungspfeile
+		\draw[inherit] (student) -- (person);
+		\draw[inherit] (lehrer) -- (person);
+		
+		% Assoziationen
+		\draw[associate] (student) -- (kurs);
+		\draw[associate] (lehrer) -- (kurs);
+		
+		% Beschriftungen
+		\node[above] at ($ (student)!0.5!(kurs) $) {besucht *};
+		\node[above] at ($ (lehrer)!0.5!(kurs) $) {lehrt *};
+	\end{tikzpicture}
+\end{ausgabe}
+
+
+
+%%%%  KAPITEL 6  %%%%
+\section{Gruppierungen mit der \texttt{fit}-Bibliothek}
+
+Die \texttt{fit}-Bibliothek ermöglicht es, mehrere UML-Klassen zu gruppieren und mit einem gemeinsamen Rahmen zu versehen. Dies ist besonders nützlich für Pakete, Subsysteme oder logische Gruppierungen in größeren Diagrammen. Mit dem \texttt{fit}-Befehl können Sie automatisch einen Rahmen um mehrere Klassen zeichnen:
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+	\node[umlclass] (student) {
+		\textbf{Student}
+		\nodepart{second}
+		- matrikelnr: int
+		\nodepart{third}
+		+ einschreiben(): void
+	};
+	
+	\node[umlclass, right=2cm of student] (kurs) {
+		\textbf{Kurs}
+		\nodepart{second}
+		- name: String
+		\nodepart{third}
+		+ anmelden(): void
+	};
+	
+	% Gruppierung um beide Klassen
+	\node[draw, dashed, fit=(student) (kurs),  inner sep=0.5cm, label=above:Verwaltungssystem] {};
+	
+	\draw[associate] (student) -- (kurs);
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\begin{tikzpicture}
+		\node[umlclass] (student) {
+		    	\textbf{Student}
+		    	\nodepart{second}
+		    	- matrikelnr: int
+		    	\nodepart{third}
+		    	+ einschreiben(): void
+		};
+		
+		\node[umlclass, right=2cm of student] (kurs) {
+		    	\textbf{Kurs}
+		    	\nodepart{second}
+		    	- name: String
+		    	\nodepart{third}
+		    	+ anmelden(): void
+		};
+		
+		% Gruppierung um beide Klassen
+		\node[draw, dashed, fit=(student) (kurs), inner sep=0.5cm, label=above:Verwaltungssystem] {};
+		
+		\draw[associate] (student) -- (kurs);
+	\end{tikzpicture}
+\end{ausgabe}
+
+
+
+%%%%  KAPITEL 7  %%%%
+\section{Zusammenfassung}
+
+Mit Ti\textit{k}Z und benutzerdefinierten Stilen lassen sich wartbare UML-Klassendiagramme professionell erstellen. Die einmalige Definition von Stilen für Klassen und Beziehungen ermöglicht es, konsistente und ansprechende Diagramme effizient zu entwickeln.
+
+Mit den hier vorgestellten Techniken können Sie zuverlässig professionelle UML-Diagramme für Ihren Informatikunterricht erstellen und dabei von der Flexibilität und Mächtigkeit von Ti\textit{k}Z profitieren. Die systematische Verwendung von Stilen und eigenen Befehlen macht die Diagrammerstellung effizient und das Ergebnis professionell.
+
+\end{document}
