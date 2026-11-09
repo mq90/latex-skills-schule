@@ -1,13 +1,13 @@
 ---
 name: latex-stochastik-diagramme
-description: Stochastik-Darstellungen in LaTeX mit festen TikZ-Vorlagen – Baumdiagramme (zwei- und dreistufig, mit Pfadwahrscheinlichkeiten, ohne Zurücklegen, mit Lücken), Vierfeldertafeln und Säulendiagramme/Histogramme von Binomialverteilungen (Skript mit exakten Werten, kein pgfplots). Verwende diesen Skill IMMER, wenn Wahrscheinlichkeiten, Zufallsexperimente, Baumdiagramme, Vierfeldertafeln, bedingte Wahrscheinlichkeiten oder Binomialverteilungen auf ein Arbeitsblatt, in eine Klausur oder Handreichung kommen.
+description: Stochastik-Darstellungen in LaTeX mit festen TikZ-Vorlagen – Baumdiagramme (waagerecht oder von oben nach unten, zwei- und dreistufig, mit Pfadwahrscheinlichkeiten, ohne Zurücklegen, mit Lücken), Vierfeldertafeln und Säulendiagramme/Histogramme von Binomialverteilungen (Skript mit exakten Werten, kein pgfplots). Verwende diesen Skill IMMER, wenn Wahrscheinlichkeiten, Zufallsexperimente, Baumdiagramme, Vierfeldertafeln, bedingte Wahrscheinlichkeiten oder Binomialverteilungen auf ein Arbeitsblatt, in eine Klausur oder Handreichung kommen.
 ---
 
 # Stochastik-Diagramme mit TikZ
 
-Setzt `latex-grundstil` voraus. Die Stile `baumdiagramm`, `wkeit` und
-`punkt` stehen in der universalen `newcommands.tex`. Mengendiagramme für
-Ereignisse: `latex-venn-diagramme`.
+Setzt `latex-grundstil` voraus. Die Stile `baumdiagramm`,
+`baumdiagrammvertikal`, `wkeit` und `punkt` stehen in der universalen
+`newcommands.tex`. Mengendiagramme für Ereignisse: `latex-venn-diagramme`.
 
 ## Baumdiagramm (Standard)
 
@@ -36,6 +36,33 @@ Ereignisse: `latex-venn-diagramme`.
 - Mehr als zwei Äste pro Knoten: drei `child`-Einträge; mittlerer Ast
   ohne `above`/`below` (`node[wkeit, fill=white]`), ggf. `sibling distance`
   im Bild vergrößern.
+
+## Baumdiagramm von oben nach unten
+
+```latex
+\begin{tikzpicture}[baumdiagrammvertikal]
+	\node[punkt] {}
+		child {node {$A$}
+			child {node[label={[font=\scriptsize]below:$0{,}30$}] {$B$}
+				edge from parent node[wkeit, left] {$0{,}5$}}
+			child {node {$\overline{B}$} edge from parent node[wkeit, right] {$0{,}5$}}
+			edge from parent node[wkeit, left] {$0{,}6$}}
+		child {node {$\overline{A}$}
+			child {node {$B$} edge from parent node[wkeit, left] {$0{,}2$}}
+			child {node {$\overline{B}$} edge from parent node[wkeit, right] {$0{,}8$}}
+			edge from parent node[wkeit, right] {$0{,}4$}};
+\end{tikzpicture}
+```
+
+- Wächst nach unten, **erstes `child` = linker Ast**; links `left`, rechts
+  `right`, Beschriftung waagerecht (kein `sloped`).
+- Pfadwahrscheinlichkeit unter dem Blatt mit `label=below:…`.
+- Astabstände der Ebenen 1–3: 4,8 / 2,4 / 1,2 cm; dreistufig
+  `[baumdiagrammvertikal, level distance=1.4cm]`.
+- Passt platzsparend in die rechte Spalte von `multicols` neben Teilaufgaben.
+- Wann welche Richtung? Waagerecht, wenn Pfadrechnungen rechts daneben
+  stehen sollen; senkrecht, wenn das Blatt schmal ist oder der Baum neben
+  Teilaufgaben steht.
 
 ## Vierfeldertafel
 
@@ -72,12 +99,14 @@ y-Beschriftung mit Dezimalkomma.
   `grow'=right`. In eigenen Bäumen nicht auf `grow=right` zurückwechseln.
 - `\arraystretch` nur in einer Gruppe `{…}` ändern – die header.tex setzt
   1,25 für alle anderen Tabellen.
-- pgfmath kann keine großen Fakultäten (Überlauf ab ca. 8!). Binomialkoeffizienten
-  deshalb immer mit dem Skript.
+- pgfmath kann keine großen Fakultäten: `factorial(8)` bricht mit
+  „Arithmetic overflow“ ab (Grenze 16383). Binomialkoeffizienten deshalb
+  immer mit dem Skript.
 
 ## Referenz
 
 `references/handreichung_stochastik.tex` – Handreichung mit allen Vorlagen
 (Code oben, Ausgabe darunter): zweistufig, mit Pfadwahrscheinlichkeiten,
-ohne Zurücklegen, dreistufig, mit Lücken, Vierfeldertafel ausgefüllt und mit
+ohne Zurücklegen, dreistufig, mit Lücken, von oben nach unten (zwei- und
+dreistufig, mit Pfadwahrscheinlichkeiten), Vierfeldertafel ausgefüllt und mit
 Lücken, Säulendiagramm B(10; 0,3) mit P(X ≤ 3).

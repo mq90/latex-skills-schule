@@ -236,12 +236,156 @@ Fehlende Wahrscheinlichkeiten werden durch eine Linie ersetzt, die Schülerinnen
 
 
 %%%%  KAPITEL 2  %%%%
+\section{Baumdiagramme von oben nach unten}
+
+Senkrechte Baumdiagramme sparen Breite und passen gut neben Teilaufgaben in \texttt{multicols}. Der Stil heißt \texttt{baumdiagrammvertikal}. Das erste \texttt{child} ist der linke Ast; die Wahrscheinlichkeit steht am linken Ast mit \texttt{left}, am rechten mit \texttt{right}. Die Beschriftungen stehen waagerecht neben den Ästen.
+
+
+%%%%  UNTERKAPITEL 2.1  %%%%
+\subsection{Zweistufig}
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}[baumdiagrammvertikal]
+	\node[punkt] {}
+		child {node {$A$}
+			child {node {$B$} edge from parent node[wkeit, left] {$0{,}5$}}
+			child {node {$\overline{B}$} edge from parent node[wkeit, right] {$0{,}5$}}
+			edge from parent node[wkeit, left] {$0{,}6$}}
+		child {node {$\overline{A}$}
+			child {node {$B$} edge from parent node[wkeit, left] {$0{,}2$}}
+			child {node {$\overline{B}$} edge from parent node[wkeit, right] {$0{,}8$}}
+			edge from parent node[wkeit, right] {$0{,}4$}};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\centering
+\begin{tikzpicture}[baumdiagrammvertikal]
+	\node[punkt] {}
+		child {node {$A$}
+			child {node {$B$} edge from parent node[wkeit, left] {$0{,}5$}}
+			child {node {$\overline{B}$} edge from parent node[wkeit, right] {$0{,}5$}}
+			edge from parent node[wkeit, left] {$0{,}6$}}
+		child {node {$\overline{A}$}
+			child {node {$B$} edge from parent node[wkeit, left] {$0{,}2$}}
+			child {node {$\overline{B}$} edge from parent node[wkeit, right] {$0{,}8$}}
+			edge from parent node[wkeit, right] {$0{,}4$}};
+\end{tikzpicture}
+\end{ausgabe}
+
+
+%%%%  UNTERKAPITEL 2.2  %%%%
+\subsection{Pfadwahrscheinlichkeiten unter den Blättern}
+
+Die Pfadwahrscheinlichkeit steht mit \texttt{label=below:\dots} unter dem letzten Knoten:
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}[baumdiagrammvertikal]
+	\node[punkt] {}
+		child {node {$A$}
+			child {node[label={[font=\scriptsize]below:$0{,}30$}] {$B$}
+				edge from parent node[wkeit, left] {$0{,}5$}}
+			child {node[label={[font=\scriptsize]below:$0{,}30$}] {$\overline{B}$}
+				edge from parent node[wkeit, right] {$0{,}5$}}
+			edge from parent node[wkeit, left] {$0{,}6$}}
+		child {node {$\overline{A}$}
+			child {node[label={[font=\scriptsize]below:$0{,}08$}] {$B$}
+				edge from parent node[wkeit, left] {$0{,}2$}}
+			child {node[label={[font=\scriptsize]below:$0{,}32$}] {$\overline{B}$}
+				edge from parent node[wkeit, right] {$0{,}8$}}
+			edge from parent node[wkeit, right] {$0{,}4$}};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\centering
+\begin{tikzpicture}[baumdiagrammvertikal]
+	\node[punkt] {}
+		child {node {$A$}
+			child {node[label={[font=\scriptsize]below:$0{,}30$}] {$B$}
+				edge from parent node[wkeit, left] {$0{,}5$}}
+			child {node[label={[font=\scriptsize]below:$0{,}30$}] {$\overline{B}$}
+				edge from parent node[wkeit, right] {$0{,}5$}}
+			edge from parent node[wkeit, left] {$0{,}6$}}
+		child {node {$\overline{A}$}
+			child {node[label={[font=\scriptsize]below:$0{,}08$}] {$B$}
+				edge from parent node[wkeit, left] {$0{,}2$}}
+			child {node[label={[font=\scriptsize]below:$0{,}32$}] {$\overline{B}$}
+				edge from parent node[wkeit, right] {$0{,}8$}}
+			edge from parent node[wkeit, right] {$0{,}4$}};
+\end{tikzpicture}
+\end{ausgabe}
+
+
+%%%%  UNTERKAPITEL 2.3  %%%%
+\subsection{Dreistufig}
+
+Die Astabstände der drei Ebenen (4{,}8\,cm, 2{,}4\,cm, 1{,}2\,cm) stehen im Stil; die \texttt{level distance} kann verkürzt werden:
+
+\begin{lstlisting}[style=latex]
+% dreimaliger Münzwurf von oben nach unten
+\begin{tikzpicture}[baumdiagrammvertikal, level distance=1.4cm]
+	\node[punkt] {}
+		child {node {$W$}
+			child {node {$W$}
+				child {node {$W$} edge from parent node[wkeit, left] {$\tfrac{1}{2}$}}
+				child {node {$Z$} edge from parent node[wkeit, right] {$\tfrac{1}{2}$}}
+				edge from parent node[wkeit, left] {$\tfrac{1}{2}$}}
+			child {node {$Z$}
+				child {node {$W$} edge from parent node[wkeit, left] {$\tfrac{1}{2}$}}
+				child {node {$Z$} edge from parent node[wkeit, right] {$\tfrac{1}{2}$}}
+				edge from parent node[wkeit, right] {$\tfrac{1}{2}$}}
+			edge from parent node[wkeit, left] {$\tfrac{1}{2}$}}
+		child {node {$Z$}
+			child {node {$W$}
+				child {node {$W$} edge from parent node[wkeit, left] {$\tfrac{1}{2}$}}
+				child {node {$Z$} edge from parent node[wkeit, right] {$\tfrac{1}{2}$}}
+				edge from parent node[wkeit, left] {$\tfrac{1}{2}$}}
+			child {node {$Z$}
+				child {node {$W$} edge from parent node[wkeit, left] {$\tfrac{1}{2}$}}
+				child {node {$Z$} edge from parent node[wkeit, right] {$\tfrac{1}{2}$}}
+				edge from parent node[wkeit, right] {$\tfrac{1}{2}$}}
+			edge from parent node[wkeit, right] {$\tfrac{1}{2}$}};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\centering
+% dreimaliger Münzwurf von oben nach unten
+\begin{tikzpicture}[baumdiagrammvertikal, level distance=1.4cm]
+	\node[punkt] {}
+		child {node {$W$}
+			child {node {$W$}
+				child {node {$W$} edge from parent node[wkeit, left] {$\tfrac{1}{2}$}}
+				child {node {$Z$} edge from parent node[wkeit, right] {$\tfrac{1}{2}$}}
+				edge from parent node[wkeit, left] {$\tfrac{1}{2}$}}
+			child {node {$Z$}
+				child {node {$W$} edge from parent node[wkeit, left] {$\tfrac{1}{2}$}}
+				child {node {$Z$} edge from parent node[wkeit, right] {$\tfrac{1}{2}$}}
+				edge from parent node[wkeit, right] {$\tfrac{1}{2}$}}
+			edge from parent node[wkeit, left] {$\tfrac{1}{2}$}}
+		child {node {$Z$}
+			child {node {$W$}
+				child {node {$W$} edge from parent node[wkeit, left] {$\tfrac{1}{2}$}}
+				child {node {$Z$} edge from parent node[wkeit, right] {$\tfrac{1}{2}$}}
+				edge from parent node[wkeit, left] {$\tfrac{1}{2}$}}
+			child {node {$Z$}
+				child {node {$W$} edge from parent node[wkeit, left] {$\tfrac{1}{2}$}}
+				child {node {$Z$} edge from parent node[wkeit, right] {$\tfrac{1}{2}$}}
+				edge from parent node[wkeit, right] {$\tfrac{1}{2}$}}
+			edge from parent node[wkeit, right] {$\tfrac{1}{2}$}};
+\end{tikzpicture}
+\end{ausgabe}
+
+
+
+%%%%  KAPITEL 3  %%%%
 \section{Vierfeldertafeln}
 
 Vierfeldertafeln sind Tabellen mit senkrechten Linien. Die Zeilenhöhe wird nur innerhalb der geschweiften Klammer vergrößert:
 
 
-%%%%  UNTERKAPITEL 2.1  %%%%
+%%%%  UNTERKAPITEL 3.1  %%%%
 \subsection{Ausgefüllte Vierfeldertafel}
 
 \begin{lstlisting}[style=latex]
@@ -266,7 +410,7 @@ Vierfeldertafeln sind Tabellen mit senkrechten Linien. Die Zeilenhöhe wird nur 
 \end{ausgabe}
 
 
-%%%%  UNTERKAPITEL 2.2  %%%%
+%%%%  UNTERKAPITEL 3.2  %%%%
 \subsection{Vierfeldertafel mit Lücken}
 
 Für Lücken bekommen die Spalten eine feste Breite, damit genug Platz zum Schreiben bleibt:
@@ -294,7 +438,7 @@ Für Lücken bekommen die Spalten eine feste Breite, damit genug Platz zum Schre
 
 
 
-%%%%  KAPITEL 3  %%%%
+%%%%  KAPITEL 4  %%%%
 \section{Säulendiagramme von Binomialverteilungen}
 
 Die Wahrscheinlichkeiten einer Binomialverteilung rechnet \TikZ nur ungenau aus. Deshalb erzeugt das Skript \texttt{binomial\_saeulen.py} den fertigen \TikZ-Code mit exakten Werten, hier mit \texttt{python3 binomial\_saeulen.py 10 0.3 -{}-markiere 0-3 -{}-hoehe 4.5 -{}-breite 10}. Rot hervorgehoben ist $P(X \leq 3)$:
@@ -348,7 +492,7 @@ Die Wahrscheinlichkeiten einer Binomialverteilung rechnet \TikZ nur ungenau aus.
 
 
 
-%%%%  KAPITEL 4  %%%%
+%%%%  KAPITEL 5  %%%%
 \section{Zusammenfassung}
 
 Die wichtigsten Regeln:
@@ -356,6 +500,7 @@ Die wichtigsten Regeln:
 \begin{itemize}
 	\item Baumdiagramme mit \texttt{\textbackslash begin\{tikzpicture\}[baumdiagramm]}, Startpunkt \texttt{\textbackslash node[punkt] \{\}}
 	\item erstes \texttt{child} = oberer Ast, Wahrscheinlichkeit oben mit \texttt{above}, unten mit \texttt{below}, Stil \texttt{wkeit}
+	\item von oben nach unten mit \texttt{[baumdiagrammvertikal]}: erstes \texttt{child} = linker Ast, Beschriftung mit \texttt{left} bzw. \texttt{right}
 	\item Dezimalkomma als \texttt{0\{,\}5}, Brüche mit \texttt{\textbackslash tfrac}
 	\item Vierfeldertafel mit senkrechten Linien und \texttt{\textbackslash arraystretch} 1,6
 	\item Säulendiagramme mit \texttt{binomial\_saeulen.py} erzeugen, nicht von Hand rechnen

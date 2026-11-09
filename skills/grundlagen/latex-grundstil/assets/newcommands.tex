@@ -16,6 +16,7 @@
 %             Umlaute und · € ° → ≤ ≥ ≠ – — „ “ … × ² ³ π in allen Listings erlaubt (\lstset literate); \lehrerblase, \schuelerblase; PAP-Stile mit align=center (Zeilenumbruch mit \\);
 %             \ipa{...} für Lautschrift; \koordinatensystem[Schritt]{xmin}{xmax}{ymin}{ymax};
 %             TikZ-Stile punkt, punktoffen, baumdiagramm, wkeit
+% 2026-11-09  TikZ-Stil baumdiagrammvertikal (Baumdiagramm von oben nach unten)
 %
 
 
@@ -391,7 +392,8 @@
 
 %Koordinatensystem im Standardstil der Mathe-Arbeitsblätter (Gitter gray!30, Achsen -latex, Beschriftung \tiny)
 %\koordinatensystem[Schritt]{xmin}{xmax}{ymin}{ymax};
-%             TikZ-Stile punkt, punktoffen, baumdiagramm, wkeit – ganze Zahlen, Bereich muss 0 enthalten,
+%             TikZ-Stile punkt, punktoffen, baumdiagramm, wkeit
+% 2026-11-09  TikZ-Stil baumdiagrammvertikal (Baumdiagramm von oben nach unten) – ganze Zahlen, Bereich muss 0 enthalten,
 %Striche und Zahlen bei allen Vielfachen von Schritt (Standard 2). Innerhalb von tikzpicture[scale=0.42] verwenden.
 \newcommand{\koordinatensystem}[5][2]{%
 	\foreach \kosyx in {#2,...,#3} \draw[gray!30, thin] (\kosyx,#4) -- (\kosyx,#5);
@@ -433,6 +435,15 @@
     level 1/.style={sibling distance=3cm}, level 2/.style={sibling distance=1.5cm},
     level 3/.style={sibling distance=0.75cm}, edge from parent/.style={draw, thin}},
   wkeit/.style={font=\scriptsize, inner sep=2pt}
+}
+
+
+%Baumdiagramme von oben nach unten: \begin{tikzpicture}[baumdiagrammvertikal] \node[punkt]{} child{...}
+%erstes child = linker Ast; Wahrscheinlichkeit links mit node[wkeit, left], rechts mit node[wkeit, right]
+\tikzset{
+  baumdiagrammvertikal/.style={grow=down, level distance=1.6cm,
+    level 1/.style={sibling distance=4.8cm}, level 2/.style={sibling distance=2.4cm},
+    level 3/.style={sibling distance=1.2cm}, edge from parent/.style={draw, thin}}
 }
 %----------------------------------------------------------------------------------------------------%
 
