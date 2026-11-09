@@ -148,6 +148,20 @@ etwas Gleichwertiges gibt.
 | `style=latex` | Verwendung: \begin{lstlisting}[style=latex] ... \end{lstlisting}, darunter \begin{ausgabe} ... \end{ausgabe} |
 | `style=latexnummeriert` | Variante mit Zeilennummern: \begin{lstlisting}[style=latexnummeriert] |
 
+## Formularfelder (ausfüllbare PDFs)
+
+| Befehl | Zweck |
+|---|---|
+| `\DefaultOptionsofText` | Aussehen aller Felder: blauer Rand, hellblauer Hintergrund, Schrift 11 pt, wird mitgedruckt |
+| `\DefaultOptionsofCheckBox` | Aussehen aller Felder: blauer Rand, hellblauer Hintergrund, Schrift 11 pt, wird mitgedruckt |
+| `\DefaultOptionsofRadio` | Aussehen aller Felder: blauer Rand, hellblauer Hintergrund, Schrift 11 pt, wird mitgedruckt |
+| `\DefaultOptionsofPopdownBox` | Aussehen aller Felder: blauer Rand, hellblauer Hintergrund, Schrift 11 pt, wird mitgedruckt |
+| `\DefaultHeightofText` | Aussehen aller Felder: blauer Rand, hellblauer Hintergrund, Schrift 11 pt, wird mitgedruckt |
+| `\feld{…}{…}` | \feld[Breite]{Name} – einzeiliges Textfeld, sitzt auf der Grundlinie (Standardbreite 2,4 cm) |
+| `\zeichen{…}` | \zeichen{Name} – Feld für genau ein Zeichen, zentriert (z. B. E/V/A, Buchstabe einer Reihenfolge) |
+| `\kreuz{…}` | \kreuz{Name} – Ankreuzkästchen |
+| `\antwort{…}{…}` | \antwort[Höhe]{Name} – mehrzeiliges Antwortfeld über die ganze Zeilenbreite (Standardhöhe 3,2 cm ≈ 4 Zeilen) |
+
 ## Pakete in header.tex
 
 | Paket | Zweck |

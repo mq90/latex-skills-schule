@@ -14,7 +14,7 @@ passt – deshalb ist jedes Thema ein eigener Skill.
 
 ```
 skills/
-├── grundlagen/        Grundstil, LaTeX- und TikZ-Grundlagen, Multiple-Choice
+├── grundlagen/        Grundstil, LaTeX- und TikZ-Grundlagen, Multiple-Choice, PDF-Formulare
 ├── mathematik/        Funktionsgraphen, Geometrie, Stochastik, Venn-Diagramme
 ├── informatik/        Automaten, Schaltungen, Programmablaufpläne, UML, Quellcode
 ├── sprache-musik/     Lautschrift (IPA), Notensatz (MusiXTeX)
@@ -32,6 +32,7 @@ werkzeuge/             Prüf- und Hilfsskripte für das Repository
 | | [`latex-grundlagen`](skills/grundlagen/latex-grundlagen) | Präambel, Formelsatz, Tabellen, eigene Befehle | 4 Nachschlagewerke |
 | | [`latex-tikz-grundlagen`](skills/grundlagen/latex-tikz-grundlagen) | Zeichnen mit TikZ allgemein | Nachschlagewerk + Handreichung |
 | | [`latex-multiple-choice`](skills/grundlagen/latex-multiple-choice) | Ankreuzaufgaben horizontal/vertikal | Handreichung |
+| | [`latex-pdf-formulare`](skills/grundlagen/latex-pdf-formulare) | ausfüllbare PDFs, digitale Leistungskontrollen | Handreichung, Vorlage, Beispiel-LK, Skripte zum Einsammeln und Testen |
 | Mathematik | [`latex-funktionsgraphen`](skills/mathematik/latex-funktionsgraphen) | Koordinatensysteme und Graphen im festen Stil | `\koordinatensystem`, 13 Vorlagen |
 | | [`latex-geometrie`](skills/mathematik/latex-geometrie) | Dreiecke, Winkel, Konstruktionen, Körper | 14 Vorlagen |
 | | [`latex-stochastik-diagramme`](skills/mathematik/latex-stochastik-diagramme) | Baumdiagramme, Vierfeldertafeln, Binomialverteilungen | Stil `baumdiagramm`, Skript für Säulendiagramme |
@@ -100,7 +101,7 @@ ausführen.
   `texlive-games`, `texlive-plain-generic`, `texlive-fonts-extra`,
   `texlive-lang-german`, `texlive-music`; für Unicode-Lautschrift
   `texlive-xetex` und die Schrift Charis SIL
-- Python 3; je nach Skill `pip install chess` bzw. `pip install shapely pyproj`
+- Python 3; je nach Skill `pip install chess`, `pip install shapely pyproj` bzw. `pip install pypdf pypdfium2 pymupdf`
 
 ## Grundsätze
 

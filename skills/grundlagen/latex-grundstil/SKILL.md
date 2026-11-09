@@ -159,6 +159,8 @@ Einleitender Absatz …
 Kopfzeile in der Präambel: `\lk{Klasse}{Thema}`, `\ka{…}{…}`, `\kl{…}{…}`,
 `\tu{…}{…}` (Tägliche Übung). `\clearfancyheader` entfernt sie (z. B. ab
 der Lösungsseite). Diese Makros setzen Name/Punkte/Note und Typ/Klasse/Datum.
+Für eine digital ausfüllbare Fassung (Felder statt Kästchen und Linien):
+Skill `latex-pdf-formulare`.
 
 ## Mathematische Schreibweise
 
@@ -190,6 +192,7 @@ festen Vorlagen, damit alles gleich aussieht:
 | Mengen, Venn-Diagramme | `latex-venn-diagramme` |
 | Automaten, Schaltungen, PAP, UML, Quellcode | `latex-automaten`, `latex-digitale-schaltungen`, `latex-programmablaufplaene`, `latex-uml-klassendiagramme`, `latex-quellcode-listings` |
 | Multiple-Choice | `latex-multiple-choice` |
+| Ausfüllbare PDFs, digitale Leistungskontrollen | `latex-pdf-formulare` |
 | Formelsatz, Tabellen, eigene Befehle, Präambel | `latex-grundlagen` |
 | Figuren, Sprechblasen | `latex-tikzpeople`, `latex-sprechblasen` |
 | Lautschrift, Noten | `latex-lautschrift`, `latex-musixtex` |

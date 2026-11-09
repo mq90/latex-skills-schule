@@ -17,6 +17,8 @@
 %             \ipa{...} für Lautschrift; \koordinatensystem[Schritt]{xmin}{xmax}{ymin}{ymax};
 %             TikZ-Stile punkt, punktoffen, baumdiagramm, wkeit
 % 2026-11-09  TikZ-Stil baumdiagrammvertikal (Baumdiagramm von oben nach unten)
+% 2026-11-09  Formularfelder für ausfüllbare PDFs: \feld, \zeichen, \kreuz, \antwort, einheitliches
+%             Aussehen über \DefaultOptionsofText/CheckBox/Radio/PopdownBox (nur wirksam in einer Form-Umgebung)
 %
 
 
@@ -618,4 +620,37 @@
 	numberstyle=\tiny\color{gray!90!black},%
   	numbersep=-5pt%
 }
+%----------------------------------------------------------------------------------------------------%
+
+
+
+
+
+
+%----------------------------------------------------------------------------------------------------%
+%%%%%%%%%%%                          Formularfelder (ausfüllbare PDFs)                          %%%%%%%%%%%
+%----------------------------------------------------------------------------------------------------%
+% Nur innerhalb von \begin{Form} ... \end{Form} (hyperref) verwendbar. Für Optionsfelder (radio)
+% im Dokument zusätzlich \hypersetup{unicode=false}, sonst bekommen sie kaputte Namen.
+% Jedes Feld steckt in einer eigenen Box (\raisebox/\hbox): Ohne sie übernimmt pdfTeX die Höhe
+% der umgebenden Zeile, in Tabellen werden die Felder dann so hoch wie die ganze Zeile.
+
+%Aussehen aller Felder: blauer Rand, hellblauer Hintergrund, Schrift 11 pt, wird mitgedruckt
+\renewcommand{\DefaultOptionsofText}{print, bordercolor={0 0.353 0.612}, backgroundcolor={0.94 0.96 1}, charsize=11pt}
+\renewcommand{\DefaultOptionsofCheckBox}{print, bordercolor={0 0.353 0.612}, backgroundcolor={0.94 0.96 1}, charsize=11pt}
+\renewcommand{\DefaultOptionsofRadio}{print, notoggletooff, bordercolor={0 0.353 0.612}, backgroundcolor={0.94 0.96 1}, charsize=11pt}
+\renewcommand{\DefaultOptionsofPopdownBox}{print, bordercolor={0 0.353 0.612}, backgroundcolor={0.94 0.96 1}, charsize=11pt}
+\renewcommand{\DefaultHeightofText}{0.6cm}
+
+%\feld[Breite]{Name} – einzeiliges Textfeld, sitzt auf der Grundlinie (Standardbreite 2,4 cm)
+\newcommand{\feld}[2][2.4cm]{\raisebox{-0.17cm}{\TextField[name=#2, width=#1]{}}}
+
+%\zeichen{Name} – Feld für genau ein Zeichen, zentriert (z. B. E/V/A, Buchstabe einer Reihenfolge)
+\newcommand{\zeichen}[1]{\raisebox{-0.12cm}{\TextField[name=#1, width=0.8cm, height=0.5cm, maxlen=1, align=1]{}}}
+
+%\kreuz{Name} – Ankreuzkästchen
+\newcommand{\kreuz}[1]{\raisebox{-0.08cm}{\CheckBox[name=#1, width=0.42cm, height=0.42cm]{}}}
+
+%\antwort[Höhe]{Name} – mehrzeiliges Antwortfeld über die ganze Zeilenbreite (Standardhöhe 3,2 cm ≈ 4 Zeilen)
+\newcommand{\antwort}[2][3.2cm]{\par\vspace{0.15cm}\noindent\hbox{\TextField[name=#2, multiline=true, width=\linewidth, height=#1]{}}}
 %----------------------------------------------------------------------------------------------------%

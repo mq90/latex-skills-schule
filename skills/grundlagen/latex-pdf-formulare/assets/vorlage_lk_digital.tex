@@ -1,0 +1,50 @@
+\input{header.tex}
+\input{newcommands.tex}
+
+% Ausfüllbare Leistungskontrolle: Felder über \feld, \zeichen, \kreuz, \antwort (newcommands.tex).
+% Optionsfelder (radio) brauchen unicode=false.
+\hypersetup{unicode=false, pdftitle={Leistungskontrolle}}
+
+\begin{document}
+\begin{Form}
+
+Name: \feld[6cm]{name} \hfill Klasse: \feld[2cm]{klasse} \hfill Datum: \feld[3cm]{datum}
+
+\begin{center}\textbf{\Large{Leistungskontrolle Thema}}\end{center}
+
+{\small\itshape Klicke in die blauen Felder und schreibe oder kreuze dort deine Antworten an.
+Speichere die Datei vor dem Hochladen und öffne sie zur Kontrolle noch einmal.}
+
+\bigskip
+\begin{enumerate}[(1)]
+
+	\item Kreuze an, welche Werte vom Datentyp \texttt{int} sind. \hfill (2\,P)\\
+	\kreuz{a1-1}\ \texttt{15} \qquad \kreuz{a1-2}\ \texttt{1.5} \qquad
+	\kreuz{a1-3}\ \texttt{"7"} \qquad \kreuz{a1-4}\ \texttt{-3}
+
+	\item Entscheide für jede Aussage, ob sie richtig oder falsch ist. \hfill (2\,P)
+
+	\begin{tabular}{p{10cm}cc}
+		\toprule
+		Aussage & richtig & falsch \\
+		\midrule
+		Eine Zeile mit \texttt{\#} ist ein Kommentar. & \kreuz{a2-1-r} & \kreuz{a2-1-f} \\
+		\texttt{input()} liefert immer eine Zahl. & \kreuz{a2-2-r} & \kreuz{a2-2-f} \\
+		\bottomrule
+	\end{tabular}
+
+	\item Ordne zu: Eingabe (E), Verarbeitung (V) oder Ausgabe (A). \hfill (2\,P)\\
+	Münzen einwerfen \zeichen{a3-1} \qquad Wechselgeld berechnen \zeichen{a3-2}
+
+	\item Gib an, was Python ausgibt. \hfill (2\,P)\\
+	\texttt{17 // 5} = \feld[1.5cm]{a4-a} \qquad \texttt{17 \% 5} = \feld[1.5cm]{a4-b}
+
+	\item Erkläre den Unterschied zwischen \texttt{=} und \texttt{==}. \hfill (2\,P)
+	\antwort{a5}
+
+\end{enumerate}
+
+% Lösungen NICHT in diese Datei, sondern in eine eigene Datei für die Lehrkraft.
+
+\end{Form}
+\end{document}

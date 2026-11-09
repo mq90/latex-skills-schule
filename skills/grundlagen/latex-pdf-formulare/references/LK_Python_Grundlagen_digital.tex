@@ -1,0 +1,232 @@
+\documentclass[11pt,a4paper]{scrartcl}
+
+% -------------------------------------------------------
+% Pakete
+% -------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{lmodern}
+\usepackage[left=2cm, right=2cm, top=1.8cm, bottom=1.8cm]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{needspace}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+
+% Punkte am rechten Rand
+\newcommand{\punkte}[1]{\hfill\mbox{\small(#1\,P)}}
+
+% -------------------------------------------------------
+% Formularfelder (digitale Fassung)
+% -------------------------------------------------------
+% unicode=false: sonst bekommen Optionsfelder (radio) kaputte Namen (hyperref 7.01)
+\usepackage[unicode=false, pdftitle={Leistungskontrolle Informatik}]{hyperref}
+\definecolor{feldRand}{HTML}{005A9C}
+% Aussehen aller Felder: blauer Rand, hellblauer Hintergrund, Schrift 11 pt
+\renewcommand{\DefaultOptionsofText}{print, bordercolor={0 0.353 0.612},
+  backgroundcolor={0.94 0.96 1}, charsize=11pt}
+\renewcommand{\DefaultOptionsofCheckBox}{print, bordercolor={0 0.353 0.612},
+  backgroundcolor={0.94 0.96 1}, charsize=11pt}
+\renewcommand{\DefaultHeightofText}{0.6cm}
+% Jedes Feld steckt in einer eigenen Box (raisebox/hbox). Sonst übernimmt pdfTeX die
+% Höhe der ganzen Tabellenzeile und die Felder werden zu hoch.
+% \feld[Breite]{Name}      einzeiliges Textfeld (statt Schreiblücke)
+\newcommand{\feld}[2][2.4cm]{\raisebox{-0.17cm}{\TextField[name=#2, width=#1]{}}}
+% \zeichen{Name}           Feld für genau ein Zeichen, zentriert
+\newcommand{\zeichen}[1]{\raisebox{-0.12cm}{\TextField[name=#1, width=0.8cm, height=0.5cm, maxlen=1, align=1]{}}}
+% \kreuz{Name}             Ankreuzkästchen (statt $\square$)
+\newcommand{\kreuz}[1]{\raisebox{-0.08cm}{\CheckBox[name=#1, width=0.42cm, height=0.42cm]{}}}
+% \antwort[Höhe]{Name}     mehrzeiliges Textfeld (statt Schreiblinien)
+\newcommand{\antwort}[2][3.2cm]{\par\vspace{0.15cm}\noindent
+  \hbox{\TextField[name=#2, multiline=true, width=\linewidth, height=#1]{}}}
+
+% -------------------------------------------------------
+% Python-Listings
+% -------------------------------------------------------
+\definecolor{pyBack}{HTML}{F7F8FA}
+\definecolor{pyRule}{HTML}{005A9C}
+\definecolor{pyKey}{HTML}{0B4F8A}
+\definecolor{pyStr}{HTML}{A3361B}
+\definecolor{pyCom}{HTML}{5F7A5F}
+\lstdefinestyle{pythonMKG}{
+  language=Python,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{pyKey}\bfseries,
+  stringstyle=\color{pyStr},
+  commentstyle=\color{pyCom}\itshape,
+  backgroundcolor=\color{pyBack},
+  frame=leftline, framerule=2pt, rulecolor=\color{pyRule},
+  xleftmargin=8pt, framexleftmargin=6pt,
+  showstringspaces=false, columns=fullflexible, keepspaces=true, upquote=true,
+  numbers=left, numberstyle=\tiny\color{gray}, numbersep=12pt,
+  aboveskip=4pt, belowskip=4pt,
+}
+\lstset{style=pythonMKG}
+
+\setlist[enumerate,1]{label=(\arabic*), leftmargin=*, itemsep=10pt}
+\setlist[enumerate,2]{label=(\alph*), itemsep=4pt}
+
+\begin{document}
+\shorthandoff{"}
+\begin{Form}
+
+% -------------------------------------------------------
+% KOPF
+% -------------------------------------------------------
+Name: \feld[6cm]{name} \hfill Klasse: \feld[2cm]{klasse} \hfill Datum: \feld[3cm]{datum}
+
+\vspace{0.4cm}
+\begin{center}
+  {\Large\bfseries Leistungskontrolle Informatik}\\[0.15cm]
+  {\large Python-Grundlagen: Programme, Daten und Datentypen}
+\end{center}
+
+{\small\itshape Klicke in die blauen Felder und schreibe oder kreuze dort deine Antworten an.
+Speichere die Datei vor dem Hochladen und öffne sie zur Kontrolle noch einmal.}
+
+% -------------------------------------------------------
+\subsection*{A \quad Programme und Daten}
+% -------------------------------------------------------
+
+\begin{enumerate}
+
+\needspace{4cm}
+\item Kreuze an, welche Zeile des Programms zur Verarbeitung gehört. \punkte{1}
+\begin{lstlisting}
+seite = float(input("Seitenlaenge in m: "))
+flaeche = seite * seite
+print("Flaeche:", flaeche, "m2")
+\end{lstlisting}
+\kreuz{a1-z1}\ Zeile 1 \qquad \kreuz{a1-z2}\ Zeile 2 \qquad \kreuz{a1-z3}\ Zeile 3
+
+\needspace{6cm}
+\item Ein Getränkeautomat arbeitet nach dem EVA-Prinzip. Ordne jeden Schritt der Eingabe (E),
+der Verarbeitung (V) oder der Ausgabe (A) zu. \punkte{3}
+
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{c p{11.2cm} c}
+\toprule
+Schritt & Was passiert? & E / V / A \\
+\midrule
+1 & Das Display zeigt \glqq{}Bitte Getränk entnehmen\grqq{} an. & \zeichen{a2-s1} \\
+2 & Du wirfst Münzen ein. & \zeichen{a2-s2} \\
+3 & Der Automat berechnet das Wechselgeld. & \zeichen{a2-s3} \\
+4 & Du wählst per Tastendruck ein Getränk aus. & \zeichen{a2-s4} \\
+5 & Die Flasche fällt in das Ausgabefach. & \zeichen{a2-s5} \\
+6 & Der Automat zählt den Wert der eingeworfenen Münzen zusammen. & \zeichen{a2-s6} \\
+\bottomrule
+\end{tabular}
+
+\needspace{6cm}
+\item Die Zeilen eines Programms sind durcheinandergeraten. Das Programm soll zuerst
+nach dem Widerstand fragen. Gib die richtige Reihenfolge der Buchstaben an. \punkte{2}
+
+\begin{tabular}{>{\bfseries}l >{\ttfamily}l}
+A & u = r * i \\
+B & print("Spannung:", u, "V") \\
+C & \# Spannung nach dem Ohmschen Gesetz \\
+D & i = float(input("Stromstaerke in A: ")) \\
+E & r = float(input("Widerstand in Ohm: ")) \\
+\end{tabular}
+
+\vspace{0.2cm}
+Reihenfolge: \ \zeichen{a3-1}\ \zeichen{a3-2}\ \zeichen{a3-3}\ \zeichen{a3-4}\ \zeichen{a3-5}
+
+\needspace{5cm}
+\item Entscheide für jede Aussage, ob sie richtig oder falsch ist. \punkte{2}
+
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{12.2cm}cc}
+\toprule
+Aussage & richtig & falsch \\
+\midrule
+Eine Zeile, die mit \texttt{\#} beginnt, ist ein Kommentar und wird beim Ausführen
+übersprungen. & \kreuz{a4-1-r} & \kreuz{a4-1-f} \\
+Nach \texttt{x = 5} und danach \texttt{x = 8} hat \texttt{x} den Wert 13. & \kreuz{a4-2-r} & \kreuz{a4-2-f} \\
+Bei \texttt{a = b} wird der Wert von \texttt{b} in \texttt{a} kopiert, \texttt{b} bleibt
+unverändert. & \kreuz{a4-3-r} & \kreuz{a4-3-f} \\
+\texttt{input()} gibt einen Text auf dem Bildschirm aus, ohne auf eine Eingabe zu warten. &
+\kreuz{a4-4-r} & \kreuz{a4-4-f} \\
+\bottomrule
+\end{tabular}
+
+\needspace{5.5cm}
+\item Nenne vier Regeln, die du beim Festlegen eines Variablennamens in Python beachten musst.
+\punkte{4}
+\antwort{a5}
+
+\needspace{5cm}
+\item Erkläre den Unterschied zwischen einem Syntaxfehler und einem Semantikfehler.
+\punkte{2}
+\antwort{a6}
+
+\end{enumerate}
+
+% -------------------------------------------------------
+\needspace{9cm}
+\subsection*{B \quad Datentypen und Operatoren}
+% -------------------------------------------------------
+
+\begin{enumerate}[resume]
+
+\needspace{5.5cm}
+\item Kreuze für jeden Wert den passenden Datentyp an. \punkte{3}
+
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{>{\ttfamily}l ccc}
+\toprule
+\textrm{Wert} & \texttt{int} & \texttt{float} & \texttt{str} \\
+\midrule
+15 & \kreuz{a7-1-int} & \kreuz{a7-1-float} & \kreuz{a7-1-str} \\
+1.72 & \kreuz{a7-2-int} & \kreuz{a7-2-float} & \kreuz{a7-2-str} \\
+"04109" & \kreuz{a7-3-int} & \kreuz{a7-3-float} & \kreuz{a7-3-str} \\
+2.0 & \kreuz{a7-4-int} & \kreuz{a7-4-float} & \kreuz{a7-4-str} \\
+"7" & \kreuz{a7-5-int} & \kreuz{a7-5-float} & \kreuz{a7-5-str} \\
+-3 & \kreuz{a7-6-int} & \kreuz{a7-6-float} & \kreuz{a7-6-str} \\
+\bottomrule
+\end{tabular}
+
+\needspace{2.5cm}
+\item Gib an, was Python bei den folgenden Rechnungen ausgibt. \punkte{3}
+
+\begin{multicols}{3}
+\begin{enumerate}
+  \item \texttt{17 // 5} \ \feld[1.5cm]{a8-a}
+  \item \texttt{17 \% 5} \ \feld[1.5cm]{a8-b}
+  \item \texttt{10 / 4} \ \feld[1.5cm]{a8-c}
+\end{enumerate}
+\end{multicols}
+
+\end{enumerate}
+
+% -------------------------------------------------------
+\needspace{6cm}
+\subsection*{Zusatzaufgabe}
+% -------------------------------------------------------
+
+Mia und Ben sollen die Plätze tauschen. Ergänze die Lücken so, dass der Tausch mit einer
+Hilfsvariable gelingt. \punkte{+3}
+
+\begin{tabular}{>{\ttfamily}l}
+platz1 = "Mia" \\
+platz2 = "Ben" \\
+hilf = \ \feld[3cm]{z-1} \\[0.25cm]
+platz1 = \ \feld[3cm]{z-2} \\[0.25cm]
+platz2 = \ \feld[3cm]{z-3} \\
+\end{tabular}
+
+\vspace{0.6cm}
+\begin{center}
+\small Viel Erfolg!
+\end{center}
+
+\end{Form}
+\end{document}
