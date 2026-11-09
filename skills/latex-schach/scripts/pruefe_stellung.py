@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: MIT
 """
 pruefe_stellung.py – prüft Schachstellungen (FEN), bevor sie auf ein
 Arbeitsblatt kommen. Braucht: pip install chess

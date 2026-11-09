@@ -24,23 +24,23 @@
 \usepackage{xurl}
 \usepackage{hyperref}
 
-% --- Farben (Schulfarben; hier zentral anpassen) --------------------
-\definecolor{mkgblue}{HTML}{2563EB}
-\definecolor{mkgred}{HTML}{DC2626}
-\definecolor{mkggreen}{HTML}{16A34A}
-\definecolor{mkgpurple}{HTML}{7C3AED}
-\definecolor{mkgorange}{HTML}{EA580C}
+% --- Farben (hier zentral anpassen; hr = Handreichung) --------------------
+\definecolor{hrblau}{HTML}{2563EB}
+\definecolor{hrrot}{HTML}{DC2626}
+\definecolor{hrgruen}{HTML}{16A34A}
+\definecolor{hrlila}{HTML}{7C3AED}
+\definecolor{hrorange}{HTML}{EA580C}
 \definecolor{codebg}{HTML}{F4F4F7}
 \definecolor{codeframe}{HTML}{D0D0D8}
 
-\hypersetup{colorlinks=true, linkcolor=mkgblue, urlcolor=mkgblue}
+\hypersetup{colorlinks=true, linkcolor=hrblau, urlcolor=hrblau}
 
 % --- Quelltext ------------------------------------------------------
 % language=TeX statt [LaTeX]TeX: die LaTeX-Variante stört innerhalb
 % von tcblisting die Schachbefehle von skak.
 \lstdefinestyle{tex}{
   basicstyle=\ttfamily\small, columns=fullflexible, keepspaces=true,
-  breaklines=true, language=TeX, texcsstyle=*\color{mkgblue},
+  breaklines=true, language=TeX, texcsstyle=*\color{hrblau},
   commentstyle=\color{black!50}\itshape,
   literate={ä}{{\"a}}1 {ö}{{\"o}}1 {ü}{{\"u}}1 {Ä}{{\"A}}1 {Ö}{{\"O}}1
            {Ü}{{\"U}}1 {ß}{{\ss}}1 {–}{{--}}1
@@ -67,27 +67,27 @@
 
 % --- Merke-, Hinweis- und Tipp-Kästen -------------------------------
 \newtcolorbox{merke}[1][Merke]{enhanced, breakable, sharp corners,
-  colback=mkgorange!6, colframe=mkgorange, boxrule=0pt, leftrule=3pt,
-  fonttitle=\bfseries\color{mkgorange}, coltitle=mkgorange,
-  colbacktitle=mkgorange!6, title={#1}, attach title to upper={\ }}
+  colback=hrorange!6, colframe=hrorange, boxrule=0pt, leftrule=3pt,
+  fonttitle=\bfseries\color{hrorange}, coltitle=hrorange,
+  colbacktitle=hrorange!6, title={#1}, attach title to upper={\ }}
 \newtcolorbox{hinweis}[1][Achtung]{enhanced, breakable, sharp corners,
-  colback=mkgred!5, colframe=mkgred, boxrule=0pt, leftrule=3pt,
-  fonttitle=\bfseries, coltitle=mkgred, colbacktitle=mkgred!5,
+  colback=hrrot!5, colframe=hrrot, boxrule=0pt, leftrule=3pt,
+  fonttitle=\bfseries, coltitle=hrrot, colbacktitle=hrrot!5,
   title={#1}, attach title to upper={\ }}
 \newtcolorbox{tipp}[1][Tipp für den Unterricht]{enhanced, breakable, sharp corners,
-  colback=mkggreen!6, colframe=mkggreen, boxrule=0pt, leftrule=3pt,
-  fonttitle=\bfseries, coltitle=mkggreen, colbacktitle=mkggreen!6,
+  colback=hrgruen!6, colframe=hrgruen, boxrule=0pt, leftrule=3pt,
+  fonttitle=\bfseries, coltitle=hrgruen, colbacktitle=hrgruen!6,
   title={#1}, attach title to upper={\ }}
 
 % --- Kurzbefehle ----------------------------------------------------
-\newcommand\befehl[1]{\texttt{\textcolor{mkgblue}{\textbackslash #1}}}
-\newcommand\opt[1]{\texttt{\textcolor{mkgpurple}{#1}}}
+\newcommand\befehl[1]{\texttt{\textcolor{hrblau}{\textbackslash #1}}}
+\newcommand\opt[1]{\texttt{\textcolor{hrlila}{#1}}}
 \newcommand\paket[1]{\textsf{\bfseries #1}}
 
 % --- Titelblock -----------------------------------------------------
 % \Titel{Haupttitel}{Untertitel}
 \newcommand\Titel[2]{%
-  \begin{tcolorbox}[enhanced, sharp corners, colback=mkgblue, colframe=mkgblue,
+  \begin{tcolorbox}[enhanced, sharp corners, colback=hrblau, colframe=hrblau,
     coltext=white, boxsep=6pt, left=8pt]
     {\small\sffamily HANDREICHUNG}\par\smallskip
     {\LARGE\bfseries\sffamily #1}\par\smallskip

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: MIT
 """
 sudoku_generator.py – erzeugt Sudokus mit genau einer Lösung und gibt sie
 als LaTeX-Code für das Paket `sudoku` aus.

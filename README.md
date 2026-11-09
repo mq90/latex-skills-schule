@@ -44,3 +44,14 @@ mit Code links und Ergebnis rechts). Die Hauptfassung liegt in
 - Rätsel (Sudoku, Schach) werden maschinell auf eindeutige Lösbarkeit geprüft.
 - Fremde Daten (Geodaten) liegen nicht im Repo; die Skills erklären, woher
   man sie lädt und welche Lizenz gilt.
+
+## Farben anpassen
+
+Die Farben stehen zentral in `stil_handreichung.tex` (`hrblau`, `hrrot`,
+`hrgruen`, `hrlila`, `hrorange`; „hr“ = Handreichung). Wer Schul- oder
+Hausfarben möchte, ändert nur die HTML-Werte dort.
+
+## Lizenz
+
+Skripte (`*.py`): MIT. Alle übrigen Inhalte: CC BY 4.0 –
+Namensnennung „latex-skills-schule von Martin Quandt“. Details in [LICENSE](LICENSE).

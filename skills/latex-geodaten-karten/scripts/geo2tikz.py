@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: MIT
 """
 geo2tikz.py – wandelt GeoJSON-Geodaten in TikZ-Code für LaTeX um.
 
