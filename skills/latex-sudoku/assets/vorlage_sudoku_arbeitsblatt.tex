@@ -1,0 +1,50 @@
+\documentclass[11pt,a4paper]{article}
+% ===================================================================
+%  Vorlage: Sudoku-Arbeitsblatt mit Lösungsseite
+%  1. python3 sudoku_generator.py -n 4 -s mittel --seed 1 -o sudokus.tex
+%  2. pdflatex vorlage_sudoku_arbeitsblatt.tex
+% ===================================================================
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[ngerman]{babel}
+\usepackage[a4paper,margin=2cm]{geometry}
+\usepackage{xcolor}
+\usepackage{sudoku}          % NICHT zusammen mit printsudoku/sudokubundle laden
+
+\setlength\sudokusize{7.5cm}                    % Kantenlänge des Gitters
+\setlength\sudokuthickline{1.6pt}               % Blockränder
+\renewcommand*\sudokuformat[1]{\LARGE\sffamily#1}
+
+\input{sudokus}              % vom Generator erzeugt
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+\begin{document}
+{\Large\bfseries\sffamily Sudoku} \hfill Name: \rule{5cm}{0.4pt}
+
+\smallskip
+Trage die Ziffern 1 bis 9 so ein, dass jede Ziffer in jeder Zeile, jeder
+Spalte und jedem $3\times3$-Block genau einmal vorkommt.
+
+\bigskip
+\begin{minipage}[t]{0.49\textwidth}\centering\textbf{A}\SudokuAufgabeA\end{minipage}\hfill
+\begin{minipage}[t]{0.49\textwidth}\centering\textbf{B}\SudokuAufgabeB\end{minipage}
+
+\bigskip
+\begin{minipage}[t]{0.49\textwidth}\centering\textbf{C}\SudokuAufgabeC\end{minipage}\hfill
+\begin{minipage}[t]{0.49\textwidth}\centering\textbf{D}\SudokuAufgabeD\end{minipage}
+
+\newpage
+{\Large\bfseries\sffamily Lösungen}
+
+\bigskip
+\setlength\sudokusize{6cm}
+\renewcommand*\sudokuformat[1]{\large\sffamily#1}
+\begin{minipage}[t]{0.49\textwidth}\centering\textbf{A}\SudokuLoesungA\end{minipage}\hfill
+\begin{minipage}[t]{0.49\textwidth}\centering\textbf{B}\SudokuLoesungB\end{minipage}
+
+\bigskip
+\begin{minipage}[t]{0.49\textwidth}\centering\textbf{C}\SudokuLoesungC\end{minipage}\hfill
+\begin{minipage}[t]{0.49\textwidth}\centering\textbf{D}\SudokuLoesungD\end{minipage}
+\end{document}

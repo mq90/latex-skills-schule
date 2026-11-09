@@ -1,0 +1,41 @@
+\documentclass[11pt,a4paper]{article}
+% ===================================================================
+%  Vorlage: Kommunikationsszenario Alice – Bob – Eve (Kryptografie)
+%  Kompilieren: pdflatex vorlage_alice_bob_eve.tex
+% ===================================================================
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[ngerman]{babel}
+\usepackage[a4paper,margin=2cm]{geometry}
+\usepackage{tikzpeople}
+\usetikzlibrary{shapes.callouts}   % für Sprechblasen
+\setlength{\parindent}{0pt}
+
+\begin{document}
+{\Large\bfseries\sffamily Wer liest mit?}
+
+\medskip
+Alice schickt Bob eine Nachricht. Eve sitzt in der Leitung und hört mit.
+
+\begin{center}
+\begin{tikzpicture}
+  \node[alice, minimum size=2.2cm] (A) at (0,0) {};
+  \node[bob, mirrored, minimum size=2.2cm] (B) at (8,0) {};
+  \node[criminal, minimum size=1.6cm] (E) at (4,-2.6) {};
+  \node[below=1mm of A] {Alice};
+  \node[below=1mm of B] {Bob};
+  \node[below=1mm of E] {Eve};
+  \draw[-{Stealth[length=3mm]}, very thick] (A.east) -- node[above]{\texttt{KHOOR}} (B.west);
+  \draw[dashed, ->] (4,0) -- (E.north);
+  \node[ellipse callout, draw, fill=white, callout absolute pointer={(A.mouth)}]
+    at (1.2,2.1) {Hallo Bob!};
+  \node[cloud callout, draw, fill=white, aspect=2.5, callout absolute pointer={(E.north east)}]
+    at (6.2,-1.6) {\small KHOOR?};
+\end{tikzpicture}
+\end{center}
+
+\begin{enumerate}
+  \item Wie hat Alice die Nachricht verschlüsselt?
+  \item Was müsste Eve wissen, um sie zu lesen?
+\end{enumerate}
+\end{document}

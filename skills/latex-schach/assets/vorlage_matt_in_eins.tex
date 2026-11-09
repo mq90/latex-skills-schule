@@ -1,0 +1,49 @@
+\documentclass[11pt,a4paper]{article}
+% ===================================================================
+%  Vorlage: Arbeitsblatt „Matt in 1“ mit Lösungsteil
+%  Jede Stellung vorher prüfen:  python3 pruefe_stellung.py "FEN"
+%  Kompilieren: pdflatex vorlage_matt_in_eins.tex
+% ===================================================================
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[ngerman]{babel}
+\usepackage[a4paper,margin=2cm]{geometry}
+\usepackage{xcolor}
+\usepackage{xskak}
+\usepackage{chessboard}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+% Einheitliches Aussehen aller Bretter dieses Blatts
+\setchessboard{smallboard, showmover=true, label=true}
+
+% \Aufgabe{Nummer}{FEN}{Hinweis}
+\newcommand\Aufgabe[3]{%
+  \begin{minipage}[t]{0.48\textwidth}\centering
+    \textbf{Aufgabe #1}\par\smallskip
+    \chessboard[setfen={#2}]\par\smallskip
+    {\small #3}\par\smallskip
+    Lösung: \rule{3cm}{0.4pt}
+  \end{minipage}}
+
+\begin{document}
+{\Large\bfseries\sffamily Matt in einem Zug} \hfill Name: \rule{5cm}{0.4pt}
+
+\smallskip
+Weiß ist am Zug und setzt mit \emph{einem} Zug matt. Schreibe den Zug auf.
+Das kleine Quadrat neben dem Brett zeigt, wer am Zug ist.
+
+\bigskip
+\Aufgabe{1}{6k1/5ppp/8/8/8/8/5PPP/3R2K1 w - - 0 1}{Die eigenen Bauern sind im Weg.}\hfill
+\Aufgabe{2}{r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5Q2/PPPP1PPP/RNB1K1NR w KQkq - 4 4}{Ein schwacher Punkt: f7.}
+
+\bigskip\bigskip
+\Aufgabe{3}{6rk/6pp/8/6N1/8/8/8/6K1 w - - 0 1}{Der König erstickt.}\hfill
+\Aufgabe{4}{1k6/ppp5/8/8/8/8/8/K6R w - - 0 1}{Die letzte Reihe.}
+
+\vfill
+\rule{\textwidth}{0.4pt}\par
+{\small\textbf{Lösungen:}
+1)~\symrook d8\# \quad 2)~\symqueen xf7\# \quad
+3)~\symknight f7\# \quad 4)~\symrook h8\#}
+\end{document}

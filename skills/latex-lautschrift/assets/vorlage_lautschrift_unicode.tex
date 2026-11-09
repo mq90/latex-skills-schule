@@ -1,0 +1,41 @@
+\documentclass[11pt,a4paper]{article}
+% ===================================================================
+%  Vorlage: Lautschrift mit Unicode (xelatex + Charis SIL)
+%  Kompilieren: xelatex vorlage_lautschrift_unicode.tex
+%  Schrift: Charis SIL (kostenlos, software.sil.org/charis) – alternativ
+%  Doulos SIL oder Gentium Plus. Lautzeichen direkt eintippen oder aus
+%  ipa.typeit.org kopieren.
+% ===================================================================
+\usepackage{fontspec}
+\usepackage[ngerman]{babel}
+\usepackage[a4paper,margin=2cm]{geometry}
+\usepackage{tikz}
+\setmainfont{Charis SIL}
+\newcommand\ipa[1]{[#1]}     % hier gibt es keinen Konflikt mit babel
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+\begin{document}
+{\Large\bfseries Das Vokalviereck}
+
+\medskip
+Mädchen \ipa{ˈmɛːtçən}, Abend \ipa{ˈaːbn̩t}, ich \ipa{ɪç}, Leute \ipa{ˈlɔʏ̯tə},
+thing \ipa{θɪŋ}, un \ipa{œ̃}.
+
+\begin{center}
+\begin{tikzpicture}[x=1.6cm, y=1.6cm, every node/.style={font=\Large}]
+  % Trapez: vorne oben, hinten oben, hinten unten, vorne unten
+  \draw[thick] (0,3) -- (4,3) -- (4,0) -- (1.5,0) -- cycle;
+  \draw[gray] (0.5,2) -- (4,2)  (1,1) -- (4,1)  (2,3) -- (2.75,0);
+  % links vom Punkt ungerundet, rechts gerundet
+  \foreach \x/\y/\v/\r in {0/3/i/y, 0.5/2/e/ø, 1/1/ɛ/œ, 4/3//u, 4/2//o, 4/1//ɔ}{
+    \fill (\x,\y) circle (2pt);
+    \node[left]  at (\x,\y) {\v};
+    \node[right] at (\x,\y) {\r};}
+  \node at (0.6,2.6) {ɪ}; \node at (1.0,2.6) {ʏ}; \node at (3.5,2.6) {ʊ};
+  \node at (2.4,1.6) {ə}; \node at (2.3,0.45) {ɐ}; \node at (2.75,-0.3) {a};
+  \node[font=\small, gray, above] at (0,3.15) {vorne};
+  \node[font=\small, gray, above] at (4,3.15) {hinten};
+\end{tikzpicture}
+\end{center}
+\end{document}

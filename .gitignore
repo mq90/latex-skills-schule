@@ -1,0 +1,16 @@
+# LaTeX-Hilfsdateien
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.listing
+*.fdb_latexmk
+*.fls
+# erzeugte Dateien
+*.pdf
+sudokus.tex
+karte_daten.tex
+# Geodaten nicht ins Repo (Größe, Lizenzen)
+*.geojson
+__pycache__/

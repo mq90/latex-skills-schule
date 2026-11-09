@@ -1,0 +1,47 @@
+\documentclass[11pt,a4paper]{article}
+% ===================================================================
+%  Vorlage: Karte aus Geodaten (Bundesländer, Nachbarn, Flüsse, Seen)
+%  1. Daten erzeugen (siehe SKILL.md):  python3 geo2tikz.py ... -o karte_daten.tex
+%  2. pdflatex vorlage_karte.tex
+% ===================================================================
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[ngerman]{babel}
+\usepackage[a4paper,margin=2cm]{geometry}
+\usepackage{tikz}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+\input{karte_daten}
+
+% ---- Aussehen: erst die ganze Ebene, dann einzelne Objekte ----------
+\colorlet{wasser}{blue!45!cyan}
+\tikzset{
+  geo nachbarn/.style  = {fill=gray!12, draw=gray!50, line width=0.3pt},
+  geo laender/.style   = {fill=green!8!white, draw=gray!70, line width=0.4pt},
+  geo laender/DE-SN/.style = {fill=orange!45},          % Sachsen hervorheben
+  geo fluesse/.style   = {draw=wasser, line width=0.6pt, line cap=round, line join=round},
+  geo seen/.style      = {fill=wasser!40, draw=wasser, line width=0.3pt},
+}
+
+\begin{document}
+{\Large\bfseries\sffamily Deutschland – Bundesländer und Flüsse}
+
+\medskip
+\begin{center}
+\begin{tikzpicture}
+  \clip (0,0) rectangle (12,15.2);        % Größe steht in karte_daten.tex
+  \geonachbarn
+  \geolaender
+  \geoseen
+  \geofluesse
+  \node[font=\small\bfseries] at (laender-DE-SN) {SN};
+  \node[font=\small] at (laender-DE-BY) {BY};
+  \node[font=\footnotesize\itshape, text=wasser!80!black, fill=white, inner sep=1pt, opacity=.8, text opacity=1]
+       at (fluesse-Elbe) {Elbe};
+\end{tikzpicture}
+\end{center}
+
+\vfill
+{\footnotesize Kartendaten: Natural Earth (gemeinfrei), naturalearthdata.com}
+\end{document}
