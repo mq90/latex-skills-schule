@@ -1,0 +1,43 @@
+% ===================================================================
+%  Physik: Bildentstehung an der Sammellinse – BERECHNET.
+%  Gegenstandsweite g, Brennweite f und Gegenstandsgröße G vorgeben;
+%  Bildweite b und Bildgröße B rechnet TikZ mit der Linsengleichung
+%  1/f = 1/g + 1/b aus. Werte ändern -> Zeichnung stimmt automatisch.
+%  Kompilieren: pdflatex vorlage_linse.tex
+% ===================================================================
+\documentclass[tikz,border=2mm]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath}
+\usetikzlibrary{arrows.meta}
+
+\definecolor{akzentblau}{HTML}{2563EB}
+\definecolor{akzentrot}{HTML}{DC2626}
+\definecolor{akzentgruen}{HTML}{16A34A}
+\definecolor{akzentorange}{HTML}{EA580C}
+
+% \Linse{g}{f}{G}   (alle Werte in cm, g > f)
+\newcommand\Linse[3]{%
+  \begin{tikzpicture}[>={Stealth[length=5pt]}, font=\small]
+    \pgfmathsetmacro\g{#1}  \pgfmathsetmacro\f{#2}  \pgfmathsetmacro\G{#3}
+    \pgfmathsetmacro\b{1/(1/\f - 1/\g)}           % Linsengleichung
+    \pgfmathsetmacro\B{-\G*\b/\g}                 % Abbildungsmaßstab (Bild steht Kopf)
+    \draw[black!50] (-\g-0.8,0) -- (\b+0.8,0);                          % optische Achse
+    \draw[akzentblau!70, line width=1.3pt, <->] (0,-2.2) -- (0,2.2);    % Linse
+    \foreach \x/\n in {-\f/F, \f/F'} {\fill (\x,0) circle (1.3pt); \node[below] at (\x,0) {$\n$};}
+    \draw[akzentgruen!60!black, line width=1.4pt, ->] (-\g,0) -- (-\g,\G) node[above] {$G$};
+    \draw[akzentrot, line width=1.4pt, ->] (\b,0) -- (\b,\B) node[below] {$B$};
+    \draw[akzentorange] (-\g,\G) -- (0,\G) -- (\b,\B);     % Parallelstrahl -> Brennpunktstrahl
+    \draw[akzentorange] (-\g,\G) -- (\b,\B);                % Mittelpunktstrahl
+    \draw[akzentorange] (-\g,\G) -- (0,\B) -- (\b,\B);     % Brennpunktstrahl -> Parallelstrahl
+    \draw[|<->|, black!60] (-\g,-2.5) -- node[below]
+      {$g=\pgfmathprintnumber[use comma]{\g}\,\mathrm{cm}$} (0,-2.5);
+    \draw[|<->|, black!60] (0,-2.5) -- node[below]
+      {$b\approx\pgfmathprintnumber[fixed, precision=1, use comma]{\b}\,\mathrm{cm}$} (\b,-2.5);
+  \end{tikzpicture}}
+
+\begin{document}
+\Linse{4}{1.5}{1.2}      % Seite 1: Bild verkleinert
+\Linse{2.4}{1.5}{0.8}    % Seite 2: Bild vergrößert
+\end{document}

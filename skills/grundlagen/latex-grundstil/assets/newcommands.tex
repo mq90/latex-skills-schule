@@ -22,6 +22,7 @@
 % 2026-11-11  Akzentfarben akzentblau, akzentrot, akzentgruen, akzentorange, akzentlila (Karten,
 %             Naturwissenschaften, Schulorganisation); Box »hinweis« mit frei wählbarem Titel
 % 2026-11-11  Umgebung »passend«: verkleinert den Inhalt auf \linewidth, aber nur wenn er breiter ist
+% 2026-11-11  \oz{+II}{Cu}: Oxidationszahl über ein Elementsymbol (Chemie, auch innerhalb \ce{... $\oz{0}{Zn}$ ...})
 %
 
 
@@ -490,6 +491,10 @@
 
 %Schriftzug TikZ im Fließtext (Leerzeichen danach ist eingebaut)
 \newcommand{\TikZ}{Ti\textit{k}Z }
+
+
+%Oxidationszahl über ein Elementsymbol: $\oz{+II}{Cu}$, in \ce{...} zwischen Dollarzeichen: \ce{$\oz{0}{Zn}$ + ...}
+\newcommand{\oz}[2]{\overset{\scriptscriptstyle\mathrm{#1}}{\mathrm{\ce{#2}}}}
 
 
 %Umgebung passend: Inhalt (z.B. eine große tikzpicture) höchstens so breit wie die Zeile setzen.

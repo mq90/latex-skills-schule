@@ -1,0 +1,51 @@
+% ===================================================================
+%  Chemie: Energiediagramm einer exothermen Reaktion, mit und ohne
+%  Katalysator. Die Kurven sind Funktionen – Energien oben ändern.
+%  Kompilieren: pdflatex vorlage_energiediagramm.tex
+% ===================================================================
+\documentclass[border=2mm]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+
+\definecolor{akzentblau}{HTML}{2563EB}
+\definecolor{akzentrot}{HTML}{DC2626}
+\definecolor{akzentgruen}{HTML}{16A34A}
+
+% ---- Werte (in cm auf dem Papier) ---------------------------------
+\def\Eedukt{3}       % Energie der Edukte
+\def\Eprodukt{1}     % Energie der Produkte (kleiner -> exotherm)
+\def\Ea{2.6}         % Aktivierungsenergie ohne Katalysator
+\def\Eak{1.2}        % Aktivierungsenergie mit Katalysator
+% --------------------------------------------------------------------
+% Verlauf: weicher Übergang (Sigmoid) von Edukt- zu Produktniveau
+% plus ein "Berg" (Gaußglocke) in der Mitte
+\begin{document}
+\begin{tikzpicture}[>={Stealth[length=5pt]}, font=\small,
+  declare function={
+    stufe(\x) = \Eedukt + (\Eprodukt-\Eedukt)/(1+exp(-2.2*(\x-4)));
+    berg(\x,\h) = stufe(\x) + (\h + (\Eedukt-stufe(4)))*exp(-(\x-4)^2/0.9);}]
+  \draw[->] (0,0) -- (8.4,0) node[below left] {Reaktionsverlauf};
+  \draw[->] (0,0) -- (0,6.4) node[above] {Energie};
+  \draw[akzentrot, very thick, smooth, samples=120, domain=0.3:7.8] plot (\x, {berg(\x,\Ea)});
+  \draw[akzentgruen!70!black, very thick, dashed, smooth, samples=120, domain=0.3:7.8]
+       plot (\x, {berg(\x,\Eak)});
+  % Niveaus und Pfeile
+  \draw[dotted] (0.3,\Eedukt) -- (5.2,\Eedukt);
+  \draw[dotted] (4.3,\Eprodukt) -- (7.8,\Eprodukt);
+  \draw[dotted, akzentrot] (2.6,\Eedukt+\Ea) -- (4,\Eedukt+\Ea);
+  \draw[dotted, akzentgruen!70!black] (3.3,\Eedukt+\Eak) -- (4,\Eedukt+\Eak);
+  \draw[<->, akzentrot] (2.6,\Eedukt) -- node[left] {$E_A$} (2.6,\Eedukt+\Ea);
+  \draw[<->, akzentgruen!70!black] (3.3,\Eedukt) -- node[right, xshift=-1pt] {$E_A'$} (3.3,\Eedukt+\Eak);
+  \draw[<->, akzentblau] (6.8,\Eprodukt) -- node[right] {$\Delta_r H < 0$} (6.8,\Eedukt);
+  \draw[dotted] (6.8,\Eedukt) -- (5.2,\Eedukt);
+  \node[above] at (0.9,\Eedukt) {Edukte};
+  \node[below] at (7.2,\Eprodukt) {Produkte};
+  \draw[akzentrot, very thick] (5.6,5.9) -- (6.1,5.9) node[right, text=black] {ohne Katalysator};
+  \draw[akzentgruen!70!black, very thick, dashed] (5.6,5.4) -- (6.1,5.4) node[right, text=black] {mit Katalysator};
+\end{tikzpicture}
+\end{document}

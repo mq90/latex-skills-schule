@@ -1,0 +1,44 @@
+% ===================================================================
+%  Physik: Schaltpläne mit circuitikz (deutsche Symbole: Option european)
+%  Seite 1: Reihen- und Parallelschaltung
+%  Seite 2: Gruppe A (Lampen) und Gruppe B (Widerstände) aus EINER Vorlage
+%  Kompilieren: pdflatex vorlage_schaltplaene.tex
+% ===================================================================
+\documentclass[border=3mm]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath}
+\usepackage[european]{circuitikz}
+
+% Eine Schaltung mit Platzhalter-Bauteil: was "bauteil" ist, legt man davor fest
+\newcommand\Schaltung[1]{%
+  \begin{circuitikz}
+    \draw (0,0) to[battery1, l=$U$] (0,3)
+      to[bauteil, l=$X_1$] (3,3)
+      to[bauteil, l=$X_2$] (3,0) -- (0,0);
+    \node[font=\sffamily\bfseries] at (1.5,1.5) {#1};
+  \end{circuitikz}}
+
+\begin{document}
+\begin{minipage}{14cm}
+  \begin{circuitikz}   % Reihenschaltung mit Strommesser
+    \draw (0,0) to[battery1, l=$U$] (0,3)
+                to[lamp, l=$L_1$] (3,3)
+                to[lamp, l=$L_2$] (3,0)
+                to[rmeter, t=A] (0,0);
+  \end{circuitikz}\hspace{2cm}
+  \begin{circuitikz}   % Parallelschaltung mit Verzweigungspunkten
+    \draw (0,0) to[battery1, l=$U$] (0,3)
+                -- (2,3) to[lamp, l=$L_1$] (2,0)
+                -- (0,0);
+    \draw (2,3) -- (4,3) to[lamp, l=$L_2$] (4,0)
+                -- (2,0);
+    \draw (2,3) node[circ]{} (2,0) node[circ]{};
+  \end{circuitikz}
+
+  \bigskip
+  \tikzset{bauteil/.style={lamp}}\Schaltung{A}\hspace{2cm}
+  \tikzset{bauteil/.style={R}}\Schaltung{B}
+\end{minipage}
+\end{document}

@@ -1,0 +1,51 @@
+% ===================================================================
+%  Chemie: Titrationskurve starke Säure / starke Base – BERECHNET
+%  (einschließlich Autoprotolyse des Wassers), mit reinem TikZ.
+%  Versuchsdaten oben ändern -> neue Kurve, Äquivalenzpunkt wandert mit.
+%  Kompilieren: pdflatex vorlage_titration.tex
+% ===================================================================
+\documentclass[border=2mm]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath}
+\usepackage[version=4]{mhchem}
+\usepackage{tikz}
+
+\definecolor{akzentblau}{HTML}{2563EB}
+\definecolor{akzentrot}{HTML}{DC2626}
+
+% ---- Versuchsdaten -------------------------------------------------
+\def\cS{0.1}     % Konzentration der Salzsäure in mol/L
+\def\VS{20}      % vorgelegtes Volumen der Säure in mL
+\def\cB{0.1}     % Konzentration der Natronlauge in mol/L
+% --------------------------------------------------------------------
+% Überschuss d an H3O+ (positiv) bzw. OH- (negativ) in mol/L:
+%   d = (cS*VS - cB*V) / (VS + V)
+% Mit Autoprotolyse (Kw = 1e-14) gilt exakt  c(H3O+) = d/2 + sqrt(d^2/4 + Kw)
+% und daraus  pH = 7 - arsinh(d / 2e-7) / ln 10.
+% TikZ rechnet nur mit Zahlen bis etwa 16000 und 5 Nachkommastellen. Für
+% |d| >= 1e-5 gilt arsinh(u) = sign(u) * ln(2|u|) bis auf weniger als 0,0004
+% pH-Einheiten; ln(2|u|) = ln|d| + 7 ln 10 = ln|d| + 16.1181.
+% Kleinere |d| liegen am Äquivalenzpunkt: dort ist pH = 7.
+\pgfmathdeclarefunction{phwert}{1}{%
+  \pgfmathparse{(\cS*\VS - \cB*#1)/(\VS + #1)}\let\d\pgfmathresult
+  \pgfmathparse{abs(\d) < 0.00001 ? 7 : 7 - sign(\d)*(ln(max(abs(\d),0.00001)) + 16.1181)/ln(10)}}
+
+\begin{document}
+\begin{tikzpicture}[x=0.25cm, y=0.5cm, font=\small]
+  \pgfmathsetmacro\Vaeq{\cS*\VS/\cB}          % Äquivalenzpunkt in mL
+  \pgfmathsetmacro\Vmax{2*\Vaeq}
+  % Gitter und Achsen
+  \draw[dashed, black!20] (0,0) grid[xstep=5, ystep=2] (\Vmax,14);
+  \draw[->] (0,0) -- (\Vmax+2,0);
+  \node[below=18pt] at (\Vaeq,0) {zugegebenes Volumen $V(\ce{NaOH})$ in mL};
+  \draw[->] (0,0) -- (0,15) node[above] {pH-Wert};
+  \foreach \x in {0,5,...,\Vmax} \node[below] at (\x,0) {\pgfmathprintnumber[int detect]{\x}};
+  \foreach \y in {2,4,...,14} \node[left] at (0,\y) {\y};
+  % Kurve: 601 Punkte, darunter genau der Äquivalenzpunkt
+  \draw[akzentblau, very thick, line join=round]
+    plot[domain=0:\Vmax, samples=601] (\x,{phwert(\x)});
+  \fill[akzentrot] (\Vaeq,7) circle (2.5pt) node[right=3pt] {Äquivalenzpunkt};
+\end{tikzpicture}
+\end{document}

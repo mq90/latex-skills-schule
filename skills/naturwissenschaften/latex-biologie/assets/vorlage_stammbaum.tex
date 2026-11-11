@@ -1,0 +1,40 @@
+% ===================================================================
+%  Biologie: Stammbaum eines autosomal-rezessiven Erbgangs
+%  Aufgabe und Lösung aus EINER Datei: \loesungtrue setzen -> die
+%  erschlossenen Überträger (Aa) werden grau markiert.
+%  Kompilieren: pdflatex vorlage_stammbaum.tex
+% ===================================================================
+\documentclass[tikz,border=3mm]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[ngerman]{babel}
+\usepackage[all]{genealogytree}
+
+\newif\ifloesung
+
+% Ein Stammbaum, zweimal verwendet (Aufgabe / Lösung)
+\newcommand\Stammbaum{%
+\ifloesung \gtrset{traeger/.style={box={colback=black!30}}}%   Überträger grau
+\else      \gtrset{traeger/.style={}}\fi%                       Aufgabe: unmarkiert
+\begin{genealogypicture}[
+   node size=7mm, level size=7mm, level distance=1.1cm, child distance=5mm,
+   box={colback=white, colframe=black, boxrule=0.8pt, boxsep=0pt,
+        left=0pt, right=0pt, top=0pt, bottom=0pt, halign=center, valign=center,
+        fontupper=\sffamily\footnotesize},
+   edges={foreground={black, line width=0.8pt}, background={draw=none}},
+   mann/.style={box={sharp corners}},               % Quadrat = männlich
+   frau/.style={box={arc=3.5mm}},                    % Kreis   = weiblich
+   krank/.style={box={colback=black, colupper=white}}]
+  child{
+    g[mann, traeger]{1}  p[frau, traeger]{2}
+    c[frau]{3}
+    c[mann, krank]{4}
+    child{ g[frau, traeger]{5} p[mann, traeger]{6}
+           c[mann]{7} c[frau, krank]{8} c[frau]{9} }
+  }
+\end{genealogypicture}}
+
+\begin{document}
+\loesungfalse \Stammbaum     % Seite 1: Aufgabe
+\loesungtrue  \Stammbaum     % Seite 2: Lösung
+\end{document}

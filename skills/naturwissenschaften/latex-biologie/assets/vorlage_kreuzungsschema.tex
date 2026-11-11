@@ -1,0 +1,65 @@
+% ===================================================================
+%  Biologie: Kreuzungsschema (Punnett-Quadrat) – automatisch.
+%  Die Keimzellen eingeben, LaTeX bildet die Genotypen, sortiert die
+%  Allele (dominant zuerst), färbt nach Phänotyp und zählt das Verhältnis.
+%  Kompilieren: pdflatex vorlage_kreuzungsschema.tex
+% ===================================================================
+\documentclass[tikz,border=2mm]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[ngerman]{babel}
+\usepackage{tikz}
+
+\definecolor{akzentblau}{HTML}{2563EB}
+\definecolor{akzentgruen}{HTML}{16A34A}
+\definecolor{akzentorange}{HTML}{EA580C}
+\definecolor{akzentlila}{HTML}{7C3AED}
+\colorlet{pheno0}{akzentorange!35}   % beide Merkmale dominant
+\colorlet{pheno1}{akzentblau!30}     % nur 1. Merkmal dominant
+\colorlet{pheno2}{akzentgruen!30}    % nur 2. Merkmal dominant
+\colorlet{pheno3}{akzentlila!25}   % beide rezessiv
+
+% --- Hilfsbefehle ------------------------------------------------------
+% Allelpaar sortieren: Großbuchstabe (dominant) zuerst
+\def\paar#1#2{\ifnum`#1<`#2 #1#2\else#2#1\fi}
+% Genotyp aus zwei Keimzellen mit je zwei Allelen, z. B. AB und ab -> AaBb
+\def\genotyp#1#2{\edef\tmp{#1#2}\expandafter\genotypA\tmp\relax}
+\def\genotypA#1#2#3#4\relax{\paar{#1}{#3}\paar{#2}{#4}}
+% Phänotyp-Klasse 0..3 (Großbuchstaben haben kleinere Zeichencodes als 'a')
+\newcount\klasse
+\def\phaeno#1#2{\edef\tmp{#1#2}\expandafter\phaenoA\tmp\relax}
+\def\phaenoA#1#2#3#4\relax{%
+  \klasse=0
+  \ifnum`#1>`Z \ifnum`#3>`Z \advance\klasse by 2 \fi\fi   % 1. Merkmal rezessiv
+  \ifnum`#2>`Z \ifnum`#4>`Z \advance\klasse by 1 \fi\fi}  % 2. Merkmal rezessiv
+\newcount\anzA \newcount\anzB \newcount\anzC \newcount\anzD
+
+% \kreuzung{Keimzellen Elter 1}{Keimzellen Elter 2}
+\newcommand\kreuzung[2]{%
+  \global\anzA=0 \global\anzB=0 \global\anzC=0 \global\anzD=0
+  \begin{tikzpicture}[x=1.3cm, y=-1cm, font=\sffamily]
+    \foreach \v [count=\i] in {#1} {
+      \node[font=\sffamily\bfseries] at (\i,0) {\v};
+      \foreach \m [count=\j] in {#2} {
+        \phaeno{\v}{\m}%
+        \ifcase\klasse \global\advance\anzA1 \or \global\advance\anzB1
+          \or \global\advance\anzC1 \or \global\advance\anzD1 \fi
+        \edef\farbe{pheno\the\klasse}%
+        \filldraw[fill=\farbe, draw=white, line width=1pt] (\i-0.5,\j-0.5) rectangle ++(1,1);
+        \node at (\i,\j) {\genotyp{\v}{\m}};
+      }
+    }
+    \foreach \m [count=\j] in {#2} \node[font=\sffamily\bfseries] at (0,\j) {\m};
+    \draw[thick] (0.5,-0.4) -- (0.5,4.5)  (-0.4,0.5) -- (4.5,0.5);
+    \node[anchor=north west, font=\sffamily\small, align=left] at (-0.4,4.75)
+      {Verhältnis der Phänotypen:
+       \textcolor{akzentorange!80!black}{\the\anzA} :
+       \textcolor{akzentblau}{\the\anzB} :
+       \textcolor{akzentgruen!70!black}{\the\anzC} :
+       \textcolor{akzentlila}{\the\anzD}};
+  \end{tikzpicture}}
+
+\begin{document}
+\kreuzung{AB,Ab,aB,ab}{AB,Ab,aB,ab}   % Seite 1: AaBb x AaBb
+\kreuzung{AB,Ab,aB,ab}{ab,ab,ab,ab}   % Seite 2: Testkreuzung AaBb x aabb
+\end{document}

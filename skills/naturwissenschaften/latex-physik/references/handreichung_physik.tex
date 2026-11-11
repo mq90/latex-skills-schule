@@ -1,0 +1,402 @@
+\input{header.tex}
+\input{newcommands.tex}
+
+
+\title{Physik mit \hologo{LaTeX}: Einheiten, Messwerte, Schaltpläne und Optik}
+\author{Fortbildungsmaterial für MINT-Lehrkräfte}
+\date{\today}
+\pagestyle{plain}
+\setlength{\parskip}{1.5em} % Abstand zwischen Absätzen (Handreichungen)
+\setlength{\emergencystretch}{4em} % lange \texttt-Wörter umbrechen statt über den Rand
+
+
+\begin{document}
+
+\maketitle
+
+Ein Bild aus dem Schulbuch ist schnell eingescannt. \hologo{LaTeX} lohnt sich in der Physik dort, wo es etwas kann, was ein Scan oder ein Textverarbeitungsprogramm nicht kann:
+
+\begin{enumerate}
+	\item \textbf{Aus Daten wird ein Diagramm.} Messwerte eintragen, die Ausgleichsgerade und die Federkonstante rechnet \hologo{LaTeX} selbst aus. Nichts wird nachgezeichnet.
+	\item \textbf{Zeichnungen werden berechnet.} Der Strahlengang an der Linse folgt aus der Linsengleichung; ändert man die Gegenstandsweite, stimmt das Bild trotzdem.
+	\item \textbf{Varianten auf Knopfdruck.} Gruppe A und B, Aufgabe und Lösung entstehen aus \textit{einer} Datei.
+	\item \textbf{Fachschreibweise ohne Gefrickel.} Einheiten, Indizes und Schaltsymbole sitzen immer richtig, und selbst erstellte Grafiken darf man verändern und weitergeben.
+\end{enumerate}
+
+Jedes größere Beispiel liegt als eigenständige, kommentierte Vorlage im Ordner \texttt{assets} des Skills (\texttt{vorlage\_federdehnung.tex}, \texttt{vorlage\_schaltplaene.tex}, \texttt{vorlage\_linse.tex}). Die Werte, die man ändern kann, stehen dort jeweils ganz oben.
+
+\tableofcontents
+
+
+
+%%%%  KAPITEL 1  %%%%
+\section{Benötigte Pakete}
+
+In der universalen \texttt{header.tex} ist alles geladen. In einem eigenständigen Dokument braucht man:
+
+\begin{lstlisting}[style=latex]
+\usepackage{units}                  % Einheiten: \unit[9{,}81]{m}
+\usepackage[european]{circuitikz}   % Schaltpläne mit deutschen Symbolen
+\usepackage{tikz}                   % Diagramme und Optik
+\end{lstlisting}
+
+\begin{hinweis}[siunitx]
+	Viele Anleitungen empfehlen für Einheiten das Paket \texttt{siunitx}. Es verträgt sich aber nicht mit \texttt{units}, das die universale \texttt{header.tex} für alle Arbeitsblätter lädt (\texttt{\textbackslash unit[10]\{cm\}}): Beide definieren den Befehl \texttt{\textbackslash unit}, und \hologo{LaTeX} bricht mit \enquote{Package 'units' incompatible} ab. \texttt{siunitx} deshalb nur in eigenständigen Dokumenten ohne die universale \texttt{header.tex} verwenden.
+\end{hinweis}
+
+
+
+%%%%  KAPITEL 2  %%%%
+\section{Einheiten richtig setzen}
+
+Das Paket \texttt{units} setzt Wert und Einheit mit dem richtigen schmalen Abstand und die Einheit aufrecht, auch im Mathematikmodus. Das Dezimalkomma schreibt man als \texttt{\{,\}}, damit kein Leerraum nach dem Komma entsteht. Für Brüche gibt es \texttt{\textbackslash unitfrac}:
+
+\begin{lstlisting}[style=latex]
+$g = \unitfrac[9{,}81]{m}{s^2}$ \qquad $c = \unitfrac[3\cdot 10^8]{m}{s}$
+
+$U = \unit[230]{V}$, \quad $I = \unit[0{,}5]{A}$, \quad $R = \unit[4{,}7]{k\Omega}$
+
+$\vartheta = \unit[20]{^\circ C}$ \qquad $\rho = \unitfrac[1{,}0]{g}{cm^3}$
+\end{lstlisting}
+
+\begin{ausgabe}
+	$g = \unitfrac[9{,}81]{m}{s^2}$ \qquad $c = \unitfrac[3\cdot 10^8]{m}{s}$
+
+	$U = \unit[230]{V}$, \quad $I = \unit[0{,}5]{A}$, \quad $R = \unit[4{,}7]{k\Omega}$
+
+	$\vartheta = \unit[20]{^\circ C}$ \qquad $\rho = \unitfrac[1{,}0]{g}{cm^3}$
+\end{ausgabe}
+
+Ohne Wert in eckigen Klammern setzt \texttt{\textbackslash unit\{m\}} nur die Einheit, etwa in einer Tabellenüberschrift: Länge in \unit{m}.
+
+Werte, die \TikZ selbst berechnet hat (siehe die nächsten Kapitel), druckt man mit \texttt{\textbackslash pgfmathprintnumber}. Die Option \texttt{use comma} sorgt für das Dezimalkomma, \texttt{fixed, precision=2} für zwei Nachkommastellen und \texttt{zerofill} dafür, dass auch \enquote{0,50} statt \enquote{0,5} erscheint:
+
+\begin{lstlisting}[style=latex]
+\pgfmathsetmacro\v{12.5/3}
+$v = \pgfmathprintnumber[fixed, precision=2, use comma]{\v}\,\mathrm{\tfrac{m}{s}}$ \qquad
+$D = \pgfmathprintnumber[fixed, zerofill, precision=2, use comma]{0.4991}\,\mathrm{\tfrac{N}{cm}}$
+\end{lstlisting}
+
+\begin{ausgabe}
+	\pgfmathsetmacro\v{12.5/3}
+	$v = \pgfmathprintnumber[fixed, precision=2, use comma]{\v}\,\mathrm{\tfrac{m}{s}}$ \qquad
+	$D = \pgfmathprintnumber[fixed, zerofill, precision=2, use comma]{0.4991}\,\mathrm{\tfrac{N}{cm}}$
+\end{ausgabe}
+
+
+
+%%%%  KAPITEL 3  %%%%
+\section{Messwerte, Diagramm und Ausgleichsgerade}
+
+Beim Hookeschen Gesetz misst man zu jeder Dehnung $s$ die Kraft $F$. Die Messwerte stehen als Liste von Paaren \texttt{s/F} in einem Makro. Aus derselben Liste zeichnet \TikZ die Punkte und berechnet die \textbf{Ausgleichsgerade} $F = D\cdot s + a$ nach der Methode der kleinsten Quadrate:
+\[
+	D = \frac{n\sum s_iF_i - \sum s_i \sum F_i}{n\sum s_i^2 - \left(\sum s_i\right)^2}, \qquad
+	a = \frac{\sum F_i - D\sum s_i}{n}.
+\]
+Die Schleife über \texttt{\textbackslash messwerte} sammelt die vier Summen, danach stehen $D$ und $a$ als Makros bereit. Das Koordinatensystem ist mit reinem \TikZ gezeichnet:
+
+\begin{lstlisting}[style=latex]
+% ---- Messwerte: Dehnung s in cm / Kraft F in N ----------------------
+\def\messwerte{0.0/0.00, 1.1/0.50, 1.9/1.00, 3.1/1.50, 4.0/2.00, 4.9/2.50, 6.1/3.00}
+% ---------------------------------------------------------------------
+
+% Lineare Regression F = D*s + a (Methode der kleinsten Quadrate)
+\def\Anz{0}\def\Sx{0}\def\Sy{0}\def\Sxx{0}\def\Sxy{0}
+\foreach \x/\y in \messwerte {%
+  \pgfmathparse{\Anz+1}\xdef\Anz{\pgfmathresult}%
+  \pgfmathparse{\Sx+\x}\xdef\Sx{\pgfmathresult}%
+  \pgfmathparse{\Sy+\y}\xdef\Sy{\pgfmathresult}%
+  \pgfmathparse{\Sxx+\x*\x}\xdef\Sxx{\pgfmathresult}%
+  \pgfmathparse{\Sxy+\x*\y}\xdef\Sxy{\pgfmathresult}}
+\pgfmathsetmacro\D{(\Anz*\Sxy-\Sx*\Sy)/(\Anz*\Sxx-\Sx*\Sx)}   % Steigung = Federkonstante
+\pgfmathsetmacro\Achse{(\Sy-\D*\Sx)/\Anz}                      % y-Achsenabschnitt
+
+\begin{tikzpicture}[x=1.2cm, y=1.6cm, font=\small]
+  % Gitter und Achsen
+  \draw[dashed, black!20] (0,0) grid[xstep=1, ystep=0.5] (7,3.5);
+  \draw[->] (0,0) -- (7.4,0);
+  \node[below=18pt] at (3.5,0) {Dehnung $s$ in cm};
+  \draw[->] (0,0) -- (0,3.8) node[above right] {Kraft $F$ in N};
+  \foreach \x in {0,...,7} \node[below] at (\x,0) {\x};
+  \foreach \y in {0.5,1,...,3.5} \node[left] at (0,\y) {\pgfmathprintnumber[use comma]{\y}};
+  % Ausgleichsgerade und Messpunkte
+  \draw[akzentrot, thick] (0,\Achse) -- (7,{7*\D+\Achse});
+  \foreach \x/\y in \messwerte \fill[akzentblau] (\x,\y) circle (2.2pt);
+  % Legende und Ergebnis
+  \fill[akzentblau] (0.4,3.25) circle (2.2pt) node[right=3pt, text=black] {Messwerte};
+  \draw[akzentrot, thick] (0.25,2.95) -- (0.55,2.95) node[right, text=black] {Ausgleichsgerade};
+  \node[anchor=south east, fill=white, inner sep=3pt] at (6.9,0.3)
+    {$D \approx \pgfmathprintnumber[fixed, zerofill, precision=2, use comma]{\D}\,\mathrm{\tfrac{N}{cm}}$};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+% ---- Messwerte: Dehnung s in cm / Kraft F in N ----------------------
+\def\messwerte{0.0/0.00, 1.1/0.50, 1.9/1.00, 3.1/1.50, 4.0/2.00, 4.9/2.50, 6.1/3.00}
+% ---------------------------------------------------------------------
+
+% Lineare Regression F = D*s + a (Methode der kleinsten Quadrate)
+\def\Anz{0}\def\Sx{0}\def\Sy{0}\def\Sxx{0}\def\Sxy{0}
+\foreach \x/\y in \messwerte {%
+  \pgfmathparse{\Anz+1}\xdef\Anz{\pgfmathresult}%
+  \pgfmathparse{\Sx+\x}\xdef\Sx{\pgfmathresult}%
+  \pgfmathparse{\Sy+\y}\xdef\Sy{\pgfmathresult}%
+  \pgfmathparse{\Sxx+\x*\x}\xdef\Sxx{\pgfmathresult}%
+  \pgfmathparse{\Sxy+\x*\y}\xdef\Sxy{\pgfmathresult}}
+\pgfmathsetmacro\D{(\Anz*\Sxy-\Sx*\Sy)/(\Anz*\Sxx-\Sx*\Sx)}   % Steigung = Federkonstante
+\pgfmathsetmacro\Achse{(\Sy-\D*\Sx)/\Anz}                      % y-Achsenabschnitt
+\centering
+\begin{passend}%
+\begin{tikzpicture}[x=1.2cm, y=1.6cm, font=\small]
+  % Gitter und Achsen
+  \draw[dashed, black!20] (0,0) grid[xstep=1, ystep=0.5] (7,3.5);
+  \draw[->] (0,0) -- (7.4,0);
+  \node[below=18pt] at (3.5,0) {Dehnung $s$ in cm};
+  \draw[->] (0,0) -- (0,3.8) node[above right] {Kraft $F$ in N};
+  \foreach \x in {0,...,7} \node[below] at (\x,0) {\x};
+  \foreach \y in {0.5,1,...,3.5} \node[left] at (0,\y) {\pgfmathprintnumber[use comma]{\y}};
+  % Ausgleichsgerade und Messpunkte
+  \draw[akzentrot, thick] (0,\Achse) -- (7,{7*\D+\Achse});
+  \foreach \x/\y in \messwerte \fill[akzentblau] (\x,\y) circle (2.2pt);
+  % Legende und Ergebnis
+  \fill[akzentblau] (0.4,3.25) circle (2.2pt) node[right=3pt, text=black] {Messwerte};
+  \draw[akzentrot, thick] (0.25,2.95) -- (0.55,2.95) node[right, text=black] {Ausgleichsgerade};
+  \node[anchor=south east, fill=white, inner sep=3pt] at (6.9,0.3)
+    {$D \approx \pgfmathprintnumber[fixed, zerofill, precision=2, use comma]{\D}\,\mathrm{\tfrac{N}{cm}}$};
+\end{tikzpicture}%
+\end{passend}
+\end{ausgabe}
+
+
+\begin{merke}
+	Neue Messwerte, etwa aus dem Schülerexperiment, trägt man in \texttt{\textbackslash messwerte} ein und kompiliert neu. Punkte, Gerade und Federkonstante stimmen dann automatisch. Werte aus einer Tabellenkalkulation lassen sich spaltenweise kopieren; nur das Format \texttt{s/F,} muss stimmen, mit Punkt als Dezimaltrennzeichen.
+\end{merke}
+
+Die Schleife benutzt \texttt{\textbackslash xdef}, weil jeder Durchlauf von \texttt{\textbackslash foreach} in einer eigenen Gruppe steht; ein gewöhnliches \texttt{\textbackslash def} wäre am Ende des Durchlaufs wieder vergessen.
+
+
+
+%%%%  KAPITEL 4  %%%%
+\section{Schaltpläne mit \texttt{circuitikz}}
+
+Ein Schaltplan ist ein Weg von Punkt zu Punkt; \texttt{to[\dots]} setzt unterwegs ein Bauteil. Die Paketoption \texttt{european} sorgt für die in Deutschland üblichen Symbole. Mit \texttt{l=\dots} beschriftet man ein Bauteil, mit \texttt{t=A} schreibt man in ein Messgerät hinein, \texttt{node[circ]\{\}} setzt einen Verzweigungspunkt.
+
+Die Vorlage zeigt eine Reihen- und eine Parallelschaltung und darunter einen Trick für \textbf{Gruppe A und B}: Statt eines Bauteilnamens steht in der Schaltung der Stil \texttt{bauteil}. Erst davor legt \texttt{\textbackslash tikzset} fest, was er bedeutet, hier Lampen für Gruppe A und Widerstände für Gruppe B:
+
+\begin{lstlisting}[style=latex]
+% Eine Schaltung mit Platzhalter-Bauteil: was "bauteil" ist, legt man davor fest
+\newcommand\Schaltung[1]{%
+  \begin{circuitikz}
+    \draw (0,0) to[battery1, l=$U$] (0,3)
+      to[bauteil, l=$X_1$] (3,3)
+      to[bauteil, l=$X_2$] (3,0) -- (0,0);
+    \node[font=\sffamily\bfseries] at (1.5,1.5) {#1};
+  \end{circuitikz}}
+
+\begin{minipage}{14cm}
+  \begin{circuitikz}   % Reihenschaltung mit Strommesser
+    \draw (0,0) to[battery1, l=$U$] (0,3)
+                to[lamp, l=$L_1$] (3,3)
+                to[lamp, l=$L_2$] (3,0)
+                to[rmeter, t=A] (0,0);
+  \end{circuitikz}\hspace{2cm}
+  \begin{circuitikz}   % Parallelschaltung mit Verzweigungspunkten
+    \draw (0,0) to[battery1, l=$U$] (0,3)
+                -- (2,3) to[lamp, l=$L_1$] (2,0)
+                -- (0,0);
+    \draw (2,3) -- (4,3) to[lamp, l=$L_2$] (4,0)
+                -- (2,0);
+    \draw (2,3) node[circ]{} (2,0) node[circ]{};
+  \end{circuitikz}
+
+  \bigskip
+  \tikzset{bauteil/.style={lamp}}\Schaltung{A}\hspace{2cm}
+  \tikzset{bauteil/.style={R}}\Schaltung{B}
+\end{minipage}
+\end{lstlisting}
+
+\begin{ausgabe}
+% Eine Schaltung mit Platzhalter-Bauteil: was "bauteil" ist, legt man davor fest
+\newcommand\Schaltung[1]{%
+  \begin{circuitikz}
+    \draw (0,0) to[battery1, l=$U$] (0,3)
+      to[bauteil, l=$X_1$] (3,3)
+      to[bauteil, l=$X_2$] (3,0) -- (0,0);
+    \node[font=\sffamily\bfseries] at (1.5,1.5) {#1};
+  \end{circuitikz}}
+\centering
+\begin{passend}%
+\begin{minipage}{14cm}
+  \begin{circuitikz}   % Reihenschaltung mit Strommesser
+    \draw (0,0) to[battery1, l=$U$] (0,3)
+                to[lamp, l=$L_1$] (3,3)
+                to[lamp, l=$L_2$] (3,0)
+                to[rmeter, t=A] (0,0);
+  \end{circuitikz}\hspace{2cm}
+  \begin{circuitikz}   % Parallelschaltung mit Verzweigungspunkten
+    \draw (0,0) to[battery1, l=$U$] (0,3)
+                -- (2,3) to[lamp, l=$L_1$] (2,0)
+                -- (0,0);
+    \draw (2,3) -- (4,3) to[lamp, l=$L_2$] (4,0)
+                -- (2,0);
+    \draw (2,3) node[circ]{} (2,0) node[circ]{};
+  \end{circuitikz}
+
+  \bigskip
+  \tikzset{bauteil/.style={lamp}}\Schaltung{A}\hspace{2cm}
+  \tikzset{bauteil/.style={R}}\Schaltung{B}
+\end{minipage}%
+\end{passend}
+\end{ausgabe}
+
+
+
+%%%%  UNTERKAPITEL 4.1  %%%%
+\subsection{Die wichtigsten Bauteile}
+
+\begin{center}
+\begin{tabular}{@{}l>{\raggedright\arraybackslash}p{3.3cm}c@{\hspace{5mm}}l>{\raggedright\arraybackslash}p{3.2cm}c@{}}
+	\toprule
+	\textbf{Schlüssel} & \textbf{Bauteil} & \textbf{Symbol} & \textbf{Schlüssel} & \textbf{Bauteil} & \textbf{Symbol} \\
+	\midrule
+	\texttt{battery1} & Batterie, Gleichspannung & \begin{circuitikz}\draw (0,0) to[battery1] (1.6,0);\end{circuitikz} &
+	\texttt{lamp} & Lampe & \begin{circuitikz}\draw (0,0) to[lamp] (1.6,0);\end{circuitikz} \\
+	\texttt{sV} & Wechselspannung & \begin{circuitikz}\draw (0,0) to[sV] (1.6,0);\end{circuitikz} &
+	\texttt{R} & Widerstand & \begin{circuitikz}\draw (0,0) to[R] (1.6,0);\end{circuitikz} \\
+	\texttt{vR} & verstellbarer Widerstand & \begin{circuitikz}\draw (0,0) to[vR] (1.6,0);\end{circuitikz} &
+	\texttt{C} & Kondensator & \begin{circuitikz}\draw (0,0) to[C] (1.6,0);\end{circuitikz} \\
+	\texttt{L} & Spule & \begin{circuitikz}\draw (0,0) to[L] (1.6,0);\end{circuitikz} &
+	\texttt{D} & Diode & \begin{circuitikz}\draw (0,0) to[D] (1.6,0);\end{circuitikz} \\
+	\texttt{leD} & Leuchtdiode & \begin{circuitikz}\draw (0,0) to[leD] (1.6,0);\end{circuitikz} &
+	\texttt{nos} & Schalter, offen & \begin{circuitikz}\draw (0,0) to[nos] (1.6,0);\end{circuitikz} \\
+	\texttt{rmeter, t=A} & Strommesser & \begin{circuitikz}\draw (0,0) to[rmeter, t=A] (1.6,0);\end{circuitikz} &
+	\texttt{rmeter, t=V} & Spannungsmesser & \begin{circuitikz}\draw (0,0) to[rmeter, t=V] (1.6,0);\end{circuitikz} \\
+	\bottomrule
+\end{tabular}
+\end{center}
+
+Weitere Bauteile (Transistoren, Motoren, Sicherungen, Lautsprecher, Logikgatter) stehen in der Anleitung des Pakets, \url{https://ctan.org/pkg/circuitikz}.
+
+
+
+%%%%  KAPITEL 5  %%%%
+\section{Optik: Strahlengang berechnen statt zeichnen}
+
+Der Befehl \texttt{\textbackslash Linse\{g\}\{f\}\{G\}} rechnet mit der Linsengleichung $\frac1f = \frac1g + \frac1b$ die Bildweite $b$ und mit $\frac BG = -\frac bg$ die Bildgröße $B$ aus (negativ: das Bild steht auf dem Kopf). Die drei Konstruktionsstrahlen (Parallelstrahl, Mittelpunktstrahl, Brennpunktstrahl) treffen sich deshalb immer genau im Bildpunkt. Links steht der Gegenstand weit von der Linse entfernt, rechts nah am Brennpunkt:
+
+\begin{lstlisting}[style=latex]
+% \Linse{g}{f}{G}   (alle Werte in cm, g > f)
+\newcommand\Linse[3]{%
+  \begin{tikzpicture}[>={Stealth[length=5pt]}, font=\small]
+    \pgfmathsetmacro\g{#1}  \pgfmathsetmacro\f{#2}  \pgfmathsetmacro\G{#3}
+    \pgfmathsetmacro\b{1/(1/\f - 1/\g)}           % Linsengleichung
+    \pgfmathsetmacro\B{-\G*\b/\g}                 % Abbildungsmaßstab (Bild steht Kopf)
+    \draw[black!50] (-\g-0.8,0) -- (\b+0.8,0);                          % optische Achse
+    \draw[akzentblau!70, line width=1.3pt, <->] (0,-2.2) -- (0,2.2);    % Linse
+    \foreach \x/\n in {-\f/F, \f/F'} {\fill (\x,0) circle (1.3pt); \node[below] at (\x,0) {$\n$};}
+    \draw[akzentgruen!60!black, line width=1.4pt, ->] (-\g,0) -- (-\g,\G) node[above] {$G$};
+    \draw[akzentrot, line width=1.4pt, ->] (\b,0) -- (\b,\B) node[below] {$B$};
+    \draw[akzentorange] (-\g,\G) -- (0,\G) -- (\b,\B);     % Parallelstrahl -> Brennpunktstrahl
+    \draw[akzentorange] (-\g,\G) -- (\b,\B);                % Mittelpunktstrahl
+    \draw[akzentorange] (-\g,\G) -- (0,\B) -- (\b,\B);     % Brennpunktstrahl -> Parallelstrahl
+    \draw[|<->|, black!60] (-\g,-2.5) -- node[below]
+      {$g=\pgfmathprintnumber[use comma]{\g}\,\mathrm{cm}$} (0,-2.5);
+    \draw[|<->|, black!60] (0,-2.5) -- node[below]
+      {$b\approx\pgfmathprintnumber[fixed, precision=1, use comma]{\b}\,\mathrm{cm}$} (\b,-2.5);
+  \end{tikzpicture}}
+
+\Linse{4}{1.5}{1.2}      % Seite 1: Bild verkleinert
+\Linse{2.4}{1.5}{0.8}    % Seite 2: Bild vergrößert
+\end{lstlisting}
+
+\begin{ausgabe}
+% \Linse{g}{f}{G}   (alle Werte in cm, g > f)
+\newcommand\Linse[3]{%
+  \begin{tikzpicture}[>={Stealth[length=5pt]}, font=\small]
+    \pgfmathsetmacro\g{#1}  \pgfmathsetmacro\f{#2}  \pgfmathsetmacro\G{#3}
+    \pgfmathsetmacro\b{1/(1/\f - 1/\g)}           % Linsengleichung
+    \pgfmathsetmacro\B{-\G*\b/\g}                 % Abbildungsmaßstab (Bild steht Kopf)
+    \draw[black!50] (-\g-0.8,0) -- (\b+0.8,0);                          % optische Achse
+    \draw[akzentblau!70, line width=1.3pt, <->] (0,-2.2) -- (0,2.2);    % Linse
+    \foreach \x/\n in {-\f/F, \f/F'} {\fill (\x,0) circle (1.3pt); \node[below] at (\x,0) {$\n$};}
+    \draw[akzentgruen!60!black, line width=1.4pt, ->] (-\g,0) -- (-\g,\G) node[above] {$G$};
+    \draw[akzentrot, line width=1.4pt, ->] (\b,0) -- (\b,\B) node[below] {$B$};
+    \draw[akzentorange] (-\g,\G) -- (0,\G) -- (\b,\B);     % Parallelstrahl -> Brennpunktstrahl
+    \draw[akzentorange] (-\g,\G) -- (\b,\B);                % Mittelpunktstrahl
+    \draw[akzentorange] (-\g,\G) -- (0,\B) -- (\b,\B);     % Brennpunktstrahl -> Parallelstrahl
+    \draw[|<->|, black!60] (-\g,-2.5) -- node[below]
+      {$g=\pgfmathprintnumber[use comma]{\g}\,\mathrm{cm}$} (0,-2.5);
+    \draw[|<->|, black!60] (0,-2.5) -- node[below]
+      {$b\approx\pgfmathprintnumber[fixed, precision=1, use comma]{\b}\,\mathrm{cm}$} (\b,-2.5);
+  \end{tikzpicture}}
+\centering
+\begin{passend}%
+\Linse{4}{1.5}{1.2}      % Seite 1: Bild verkleinert
+\Linse{2.4}{1.5}{0.8}    % Seite 2: Bild vergrößert%
+\end{passend}
+\end{ausgabe}
+
+
+Für ein Arbeitsblatt \enquote{Konstruiere das Bild} lässt man in einer Kopie des Befehls die drei Strahlen und das Bild weg und hat Aufgabe und Lösung aus derselben Datei. Für $g < f$ (virtuelles Bild) ist der Befehl nicht gedacht; dort wird $b$ negativ.
+
+
+
+%%%%  KAPITEL 6  %%%%
+\section{Weitere Pakete für die Physik}
+
+\begin{itemize}
+	\item \texttt{tikz-3dplot}: räumliche Darstellungen, etwa elektrische und magnetische Felder oder Kristallgitter.
+	\item \texttt{tikz-feynman}: Feynman-Diagramme für die Teilchenphysik.
+	\item \texttt{pst-optexp}: optische Versuchsaufbauten (nur mit \texttt{xelatex} oder über den Umweg PostScript).
+	\item Die Bibliothek \texttt{decorations.pathmorphing} von \TikZ zeichnet Federn und Wellen: \texttt{\textbackslash draw[decorate, decoration=\{coil, segment length=3mm\}] (0,0) -- (3,0);}
+\end{itemize}
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+	\fill[pattern=north east lines] (-0.3,0) rectangle (0,1.2);   % Wand
+	\draw[thick] (0,0) -- (0,1.2);
+	\draw[decorate, decoration={coil, aspect=0.5, segment length=2.5mm, amplitude=2.5mm}]
+		(0,0.6) -- (3,0.6);
+	\draw[fill=akzentblau!25] (3,0.3) rectangle (3.8,0.9) node[midway] {$m$};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\centering
+	\begin{tikzpicture}
+		\fill[pattern=north east lines] (-0.3,0) rectangle (0,1.2);   % Wand
+		\draw[thick] (0,0) -- (0,1.2);
+		\draw[decorate, decoration={coil, aspect=0.5, segment length=2.5mm, amplitude=2.5mm}]
+			(0,0.6) -- (3,0.6);
+		\draw[fill=akzentblau!25] (3,0.3) rectangle (3.8,0.9) node[midway] {$m$};
+	\end{tikzpicture}
+\end{ausgabe}
+
+
+
+%%%%  KAPITEL 7  %%%%
+\section{Stolpersteine}
+
+\begin{itemize}
+	\item \textbf{\enquote{Package 'units' incompatible}:} \texttt{siunitx} zusammen mit der universalen \texttt{header.tex} geladen. Einheiten mit \texttt{\textbackslash unit} aus \texttt{units} setzen.
+	\item \textbf{Schaltplan mit amerikanischen Symbolen (Zickzack-Widerstand)?} Das Paket mit \texttt{\textbackslash usepackage[european]\{circuitikz\}} laden.
+	\item \textbf{Dezimalpunkt statt Komma bei berechneten Werten?} In \texttt{\textbackslash pgfmathprintnumber} die Option \texttt{use comma} setzen.
+	\item \textbf{\enquote{Dimension too large}:} Ein berechneter Wert ist zu groß für \TikZ (etwa über 16\,000), zum Beispiel eine Exponentialfunktion über einen zu großen Bereich. Den Bereich mit \texttt{domain=\dots} so wählen, dass die Werte im Bild bleiben, oder die Achse skalieren (\texttt{y=0.01cm}).
+	\item \textbf{Ausgleichsgerade fehlt oder stimmt nicht?} In \texttt{\textbackslash messwerte} muss jedes Paar die Form \texttt{s/F} haben, mit Punkt als Dezimaltrennzeichen und Kommas zwischen den Paaren.
+\end{itemize}
+
+
+
+%%%%  KAPITEL 8  %%%%
+\section{Zusammenfassung}
+
+\begin{itemize}
+	\item Einheiten mit \texttt{\textbackslash unit[Wert]\{Einheit\}} und \texttt{\textbackslash unitfrac}, berechnete Zahlen mit \texttt{\textbackslash pgfmathprintnumber[use comma]}.
+	\item Messwerte als Liste \texttt{s/F}; \TikZ zeichnet die Punkte und berechnet die Ausgleichsgerade selbst.
+	\item Schaltpläne mit \texttt{circuitikz}: \texttt{to[lamp]}, \texttt{to[R]}, \texttt{node[circ]\{\}}; mit einem Platzhalterstil entstehen Gruppe A und B aus einer Vorlage.
+	\item Optik mit \texttt{\textbackslash Linse\{g\}\{f\}\{G\}}: Die Zeichnung folgt aus der Linsengleichung.
+\end{itemize}
+
+Gemeinsam ist allen Beispielen: Die Zahlen stehen nur einmal in der Datei. Ändert man sie, passen sich Zeichnung, Rechnung und Beschriftung an, und Aufgabe und Lösung können nicht auseinanderlaufen.
+
+\end{document}

@@ -1,0 +1,34 @@
+% ===================================================================
+%  Biologie: Nahrungsnetz als Graph (Knoten = Lebewesen,
+%  Pfeil = "wird gefressen von"), angeordnet mit der Bibliothek positioning.
+%  Kompilieren: pdflatex vorlage_nahrungsnetz.tex
+% ===================================================================
+\documentclass[border=2mm]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[ngerman]{babel}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning}
+
+\definecolor{akzentrot}{HTML}{DC2626}
+\definecolor{akzentgruen}{HTML}{16A34A}
+\definecolor{akzentorange}{HTML}{EA580C}
+
+\begin{document}
+\begin{tikzpicture}[node distance=1.1cm and 1.6cm, >={Stealth[length=6pt]},
+    lw/.style={draw, rounded corners, font=\sffamily\small, minimum width=2cm, minimum height=7mm},
+    pflanze/.style={lw, fill=akzentgruen!20}, tier/.style={lw, fill=akzentorange!20},
+    raeuber/.style={lw, fill=akzentrot!20}]
+  \node[pflanze] (gras) {Gras};
+  \node[pflanze, right=of gras] (eiche) {Eiche};
+  \node[tier, above=of gras] (maus) {Maus};
+  \node[tier, above=of eiche] (raupe) {Raupe};
+  \node[tier, right=of raupe] (reh) {Reh};
+  \node[tier, above=of raupe] (meise) {Meise};
+  \node[raeuber, above=of maus] (fuchs) {Fuchs};
+  \node[raeuber, above=of meise] (habicht) {Habicht};
+  \foreach \a/\b in {gras/maus, eiche/raupe, eiche/maus, gras/reh, eiche/reh,
+                     raupe/meise, maus/fuchs, maus/habicht, meise/habicht}
+    \draw[->, thick] (\a) -- (\b);
+\end{tikzpicture}
+\end{document}

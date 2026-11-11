@@ -1,0 +1,42 @@
+% ===================================================================
+%  Biologie: exponentielles und logistisches Populationswachstum
+%  aus denselben drei Parametern – BERECHNET, mit reinem TikZ.
+%  Kompilieren: pdflatex vorlage_wachstum.tex
+% ===================================================================
+\documentclass[border=2mm]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath}
+\usepackage{tikz}
+
+\definecolor{akzentblau}{HTML}{2563EB}
+\definecolor{akzentrot}{HTML}{DC2626}
+
+% ---- Parameter -----------------------------------------------------
+\def\Nnull{10}     % Startpopulation N_0
+\def\rate{0.5}     % Wachstumsrate pro Tag
+\def\K{500}        % Kapazität des Lebensraums
+% --------------------------------------------------------------------
+
+\begin{document}
+\begin{tikzpicture}[x=0.45cm, y=0.01cm, font=\small]
+  \pgfmathsetmacro\ymax{1.3*\K}
+  % Ende der Exponentialkurve: dort, wo sie den oberen Rand erreicht
+  \pgfmathsetmacro\tend{min(20, ln(\ymax/\Nnull)/\rate)}
+  % Gitter und Achsen
+  \draw[dashed, black!20] (0,0) grid[xstep=5, ystep=100] (20,\ymax);
+  \draw[->] (0,0) -- (21,0);
+  \node[below=18pt] at (10,0) {Zeit $t$ in Tagen};
+  \draw[->] (0,0) -- (0,\ymax+60) node[above] {Individuen $N$};
+  \foreach \x in {0,5,...,20} \node[below] at (\x,0) {\x};
+  \foreach \y in {100,200,...,600} \node[left] at (0,\y) {\y};
+  % Kapazität, exponentiell, logistisch
+  \draw[black!60, dotted, thick] (0,\K) -- (20,\K) node[above left, black!70] {Kapazität $K=\K$};
+  \draw[akzentrot, very thick, dashed] plot[domain=0:\tend, samples=150] (\x,{\Nnull*exp(\rate*\x)});
+  \draw[akzentblau, very thick] plot[domain=0:20, samples=200] (\x,{\K/(1 + (\K/\Nnull - 1)*exp(-\rate*\x))});
+  % Legende
+  \draw[akzentrot, very thick, dashed] (13.5,180) -- (15,180) node[right, text=black] {exponentiell};
+  \draw[akzentblau, very thick] (13.5,110) -- (15,110) node[right, text=black] {logistisch};
+\end{tikzpicture}
+\end{document}

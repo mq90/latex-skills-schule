@@ -1,0 +1,533 @@
+\input{header.tex}
+\input{newcommands.tex}
+
+
+\title{Biologie mit \hologo{LaTeX}: Erbgänge, Stammbäume, Codesonne und Wachstum}
+\author{Fortbildungsmaterial für MINT-Lehrkräfte}
+\date{\today}
+\pagestyle{plain}
+\setlength{\parskip}{1.5em} % Abstand zwischen Absätzen (Handreichungen)
+\setlength{\emergencystretch}{4em} % lange \texttt-Wörter umbrechen statt über den Rand
+
+
+\begin{document}
+
+\maketitle
+
+Biologie lebt von Fotos und realistischen Zeichnungen, und dafür ist \hologo{LaTeX} kein Zeichenprogramm. Stark ist es dort, wo Biologie eigentlich \textit{Struktur} ist: Erbgänge, Stammbäume, der genetische Code, Wachstumsmodelle und Nahrungsnetze. Diese Strukturen lassen sich \textit{berechnen}. Das Kreuzungsschema füllt sich aus den Keimzellen selbst aus und zählt das Aufspaltungsverhältnis, der Stammbaum zeigt auf Knopfdruck die Lösung, die Codesonne entsteht aus drei verschachtelten Schleifen. Ein Fehler beim Abtippen ist so ausgeschlossen.
+
+Alle Beispiele liegen als eigenständige, kommentierte Vorlagen im Ordner \texttt{assets} des Skills (\texttt{vorlage\_kreuzungsschema.tex}, \texttt{vorlage\_stammbaum.tex}, \texttt{vorlage\_codesonne.tex}, \texttt{vorlage\_wachstum.tex}, \texttt{vorlage\_nahrungsnetz.tex}).
+
+\tableofcontents
+
+
+
+%%%%  KAPITEL 1  %%%%
+\section{Benötigte Pakete}
+
+In der universalen \texttt{header.tex} ist alles geladen. In einem eigenständigen Dokument braucht man:
+
+\begin{lstlisting}[style=latex]
+\usepackage{tikz}                   % Kreuzungsschema, Codesonne, Diagramme
+\usetikzlibrary{arrows.meta, positioning}
+\usepackage[all]{genealogytree}     % Stammbäume
+\end{lstlisting}
+
+
+
+%%%%  KAPITEL 2  %%%%
+\section{Ein Kreuzungsschema, das sich selbst ausfüllt}
+
+Der Befehl \texttt{\textbackslash kreuzung} bekommt nur die Keimzellen der beiden Eltern, je eine Liste mit Komma. Er bildet alle Genotypen, sortiert die Allele (dominant, also Großbuchstabe, zuerst), färbt jedes Feld nach dem Phänotyp und \textit{zählt} das Aufspaltungsverhältnis. Die Hilfsbefehle vergleichen dafür die Zeichencodes der Buchstaben: Großbuchstaben haben kleinere Codes als Kleinbuchstaben.
+
+\begin{lstlisting}[style=latex]
+\colorlet{pheno0}{akzentorange!35}   % beide Merkmale dominant
+\colorlet{pheno1}{akzentblau!30}     % nur 1. Merkmal dominant
+\colorlet{pheno2}{akzentgruen!30}    % nur 2. Merkmal dominant
+\colorlet{pheno3}{akzentlila!25}   % beide rezessiv
+
+% --- Hilfsbefehle ------------------------------------------------------
+% Allelpaar sortieren: Großbuchstabe (dominant) zuerst
+\def\paar#1#2{\ifnum`#1<`#2 #1#2\else#2#1\fi}
+% Genotyp aus zwei Keimzellen mit je zwei Allelen, z. B. AB und ab -> AaBb
+\def\genotyp#1#2{\edef\tmp{#1#2}\expandafter\genotypA\tmp\relax}
+\def\genotypA#1#2#3#4\relax{\paar{#1}{#3}\paar{#2}{#4}}
+% Phänotyp-Klasse 0..3 (Großbuchstaben haben kleinere Zeichencodes als 'a')
+\newcount\klasse
+\def\phaeno#1#2{\edef\tmp{#1#2}\expandafter\phaenoA\tmp\relax}
+\def\phaenoA#1#2#3#4\relax{%
+  \klasse=0
+  \ifnum`#1>`Z \ifnum`#3>`Z \advance\klasse by 2 \fi\fi   % 1. Merkmal rezessiv
+  \ifnum`#2>`Z \ifnum`#4>`Z \advance\klasse by 1 \fi\fi}  % 2. Merkmal rezessiv
+\newcount\anzA \newcount\anzB \newcount\anzC \newcount\anzD
+
+% \kreuzung{Keimzellen Elter 1}{Keimzellen Elter 2}
+\newcommand\kreuzung[2]{%
+  \global\anzA=0 \global\anzB=0 \global\anzC=0 \global\anzD=0
+  \begin{tikzpicture}[x=1.3cm, y=-1cm, font=\sffamily]
+    \foreach \v [count=\i] in {#1} {
+      \node[font=\sffamily\bfseries] at (\i,0) {\v};
+      \foreach \m [count=\j] in {#2} {
+        \phaeno{\v}{\m}%
+        \ifcase\klasse \global\advance\anzA1 \or \global\advance\anzB1
+          \or \global\advance\anzC1 \or \global\advance\anzD1 \fi
+        \edef\farbe{pheno\the\klasse}%
+        \filldraw[fill=\farbe, draw=white, line width=1pt] (\i-0.5,\j-0.5) rectangle ++(1,1);
+        \node at (\i,\j) {\genotyp{\v}{\m}};
+      }
+    }
+    \foreach \m [count=\j] in {#2} \node[font=\sffamily\bfseries] at (0,\j) {\m};
+    \draw[thick] (0.5,-0.4) -- (0.5,4.5)  (-0.4,0.5) -- (4.5,0.5);
+    \node[anchor=north west, font=\sffamily\small, align=left] at (-0.4,4.75)
+      {Verhältnis der Phänotypen:
+       \textcolor{akzentorange!80!black}{\the\anzA} :
+       \textcolor{akzentblau}{\the\anzB} :
+       \textcolor{akzentgruen!70!black}{\the\anzC} :
+       \textcolor{akzentlila}{\the\anzD}};
+  \end{tikzpicture}}
+
+\kreuzung{AB,Ab,aB,ab}{AB,Ab,aB,ab}   % Seite 1: AaBb x AaBb
+\kreuzung{AB,Ab,aB,ab}{ab,ab,ab,ab}   % Seite 2: Testkreuzung AaBb x aabb
+\end{lstlisting}
+
+\begin{ausgabe}
+\colorlet{pheno0}{akzentorange!35}   % beide Merkmale dominant
+\colorlet{pheno1}{akzentblau!30}     % nur 1. Merkmal dominant
+\colorlet{pheno2}{akzentgruen!30}    % nur 2. Merkmal dominant
+\colorlet{pheno3}{akzentlila!25}   % beide rezessiv
+
+% --- Hilfsbefehle ------------------------------------------------------
+% Allelpaar sortieren: Großbuchstabe (dominant) zuerst
+\def\paar#1#2{\ifnum`#1<`#2 #1#2\else#2#1\fi}
+% Genotyp aus zwei Keimzellen mit je zwei Allelen, z. B. AB und ab -> AaBb
+\def\genotyp#1#2{\edef\tmp{#1#2}\expandafter\genotypA\tmp\relax}
+\def\genotypA#1#2#3#4\relax{\paar{#1}{#3}\paar{#2}{#4}}
+% Phänotyp-Klasse 0..3 (Großbuchstaben haben kleinere Zeichencodes als 'a')
+\newcount\klasse
+\def\phaeno#1#2{\edef\tmp{#1#2}\expandafter\phaenoA\tmp\relax}
+\def\phaenoA#1#2#3#4\relax{%
+  \klasse=0
+  \ifnum`#1>`Z \ifnum`#3>`Z \advance\klasse by 2 \fi\fi   % 1. Merkmal rezessiv
+  \ifnum`#2>`Z \ifnum`#4>`Z \advance\klasse by 1 \fi\fi}  % 2. Merkmal rezessiv
+\newcount\anzA \newcount\anzB \newcount\anzC \newcount\anzD
+
+% \kreuzung{Keimzellen Elter 1}{Keimzellen Elter 2}
+\newcommand\kreuzung[2]{%
+  \global\anzA=0 \global\anzB=0 \global\anzC=0 \global\anzD=0
+  \begin{tikzpicture}[x=1.3cm, y=-1cm, font=\sffamily]
+    \foreach \v [count=\i] in {#1} {
+      \node[font=\sffamily\bfseries] at (\i,0) {\v};
+      \foreach \m [count=\j] in {#2} {
+        \phaeno{\v}{\m}%
+        \ifcase\klasse \global\advance\anzA1 \or \global\advance\anzB1
+          \or \global\advance\anzC1 \or \global\advance\anzD1 \fi
+        \edef\farbe{pheno\the\klasse}%
+        \filldraw[fill=\farbe, draw=white, line width=1pt] (\i-0.5,\j-0.5) rectangle ++(1,1);
+        \node at (\i,\j) {\genotyp{\v}{\m}};
+      }
+    }
+    \foreach \m [count=\j] in {#2} \node[font=\sffamily\bfseries] at (0,\j) {\m};
+    \draw[thick] (0.5,-0.4) -- (0.5,4.5)  (-0.4,0.5) -- (4.5,0.5);
+    \node[anchor=north west, font=\sffamily\small, align=left] at (-0.4,4.75)
+      {Verhältnis der Phänotypen:
+       \textcolor{akzentorange!80!black}{\the\anzA} :
+       \textcolor{akzentblau}{\the\anzB} :
+       \textcolor{akzentgruen!70!black}{\the\anzC} :
+       \textcolor{akzentlila}{\the\anzD}};
+  \end{tikzpicture}}
+\centering
+\begin{passend}%
+\kreuzung{AB,Ab,aB,ab}{AB,Ab,aB,ab}   % Seite 1: AaBb x AaBb
+\kreuzung{AB,Ab,aB,ab}{ab,ab,ab,ab}   % Seite 2: Testkreuzung AaBb x aabb%
+\end{passend}
+\end{ausgabe}
+
+
+Links die bekannte 9\,:\,3\,:\,3\,:\,1-Aufspaltung des dihybriden Erbgangs, rechts die Testkreuzung mit 4\,:\,4\,:\,4\,:\,4, also 1\,:\,1\,:\,1\,:\,1. Die Zählung macht \TeX\ selbst; das Schema kann sich also nicht verzählen.
+
+
+
+
+%%%%  KAPITEL 3  %%%%
+\section{Stammbaum mit Lösungsschalter}
+
+Stammbäume entstehen mit dem Paket \texttt{genealogytree}. Eine Familie ist ein \texttt{child} mit den Eltern \texttt{g} (die Person, um die es geht) und \texttt{p} (Partner) und den Kindern \texttt{c}. Ein Kind, das selbst eine Familie gründet, ist wieder ein \texttt{child}. Quadrate (männlich), Kreise (weiblich) und kranke Personen (schwarz) sind als Stile angelegt.
+
+Der Schalter \texttt{\textbackslash ifloesung} entscheidet, ob die erschlossenen Überträger (\texttt{Aa}) grau erscheinen. So entstehen Aufgabe (links) und Lösung (rechts) aus demselben Stammbaum:
+
+\begin{lstlisting}[style=latex]
+\newif\ifloesung
+
+% Ein Stammbaum, zweimal verwendet (Aufgabe / Lösung)
+\newcommand\Stammbaum{%
+\ifloesung \gtrset{traeger/.style={box={colback=black!30}}}%   Überträger grau
+\else      \gtrset{traeger/.style={}}\fi%                       Aufgabe: unmarkiert
+\begin{genealogypicture}[
+   node size=7mm, level size=7mm, level distance=1.1cm, child distance=5mm,
+   box={colback=white, colframe=black, boxrule=0.8pt, boxsep=0pt,
+        left=0pt, right=0pt, top=0pt, bottom=0pt, halign=center, valign=center,
+        fontupper=\sffamily\footnotesize},
+   edges={foreground={black, line width=0.8pt}, background={draw=none}},
+   mann/.style={box={sharp corners}},               % Quadrat = männlich
+   frau/.style={box={arc=3.5mm}},                    % Kreis   = weiblich
+   krank/.style={box={colback=black, colupper=white}}]
+  child{
+    g[mann, traeger]{1}  p[frau, traeger]{2}
+    c[frau]{3}
+    c[mann, krank]{4}
+    child{ g[frau, traeger]{5} p[mann, traeger]{6}
+           c[mann]{7} c[frau, krank]{8} c[frau]{9} }
+  }
+\end{genealogypicture}}
+
+\loesungfalse \Stammbaum     % Seite 1: Aufgabe
+\loesungtrue  \Stammbaum     % Seite 2: Lösung
+\end{lstlisting}
+
+\begin{ausgabe}
+\newif\ifloesung
+
+% Ein Stammbaum, zweimal verwendet (Aufgabe / Lösung)
+\newcommand\Stammbaum{%
+\ifloesung \gtrset{traeger/.style={box={colback=black!30}}}%   Überträger grau
+\else      \gtrset{traeger/.style={}}\fi%                       Aufgabe: unmarkiert
+\begin{genealogypicture}[
+   node size=7mm, level size=7mm, level distance=1.1cm, child distance=5mm,
+   box={colback=white, colframe=black, boxrule=0.8pt, boxsep=0pt,
+        left=0pt, right=0pt, top=0pt, bottom=0pt, halign=center, valign=center,
+        fontupper=\sffamily\footnotesize},
+   edges={foreground={black, line width=0.8pt}, background={draw=none}},
+   mann/.style={box={sharp corners}},               % Quadrat = männlich
+   frau/.style={box={arc=3.5mm}},                    % Kreis   = weiblich
+   krank/.style={box={colback=black, colupper=white}}]
+  child{
+    g[mann, traeger]{1}  p[frau, traeger]{2}
+    c[frau]{3}
+    c[mann, krank]{4}
+    child{ g[frau, traeger]{5} p[mann, traeger]{6}
+           c[mann]{7} c[frau, krank]{8} c[frau]{9} }
+  }
+\end{genealogypicture}}
+\centering
+\begin{passend}%
+\loesungfalse \Stammbaum     % Seite 1: Aufgabe
+\loesungtrue  \Stammbaum     % Seite 2: Lösung%
+\end{passend}
+\end{ausgabe}
+
+
+Die Logik der Lösung: Person 4 und Person 8 sind krank (\texttt{aa}), ihre Eltern aber gesund; also müssen 1, 2, 5 und 6 Überträger sein, der Erbgang ist autosomal-rezessiv. Bei 3, 7 und 9 ist \texttt{AA} oder \texttt{Aa} möglich; sie bleiben unmarkiert.
+
+
+
+%%%%  KAPITEL 4  %%%%
+\section{Die Codesonne}
+
+Die Codesonne wird vollständig berechnet: Drei verschachtelte Schleifen über die Basen U, C, A, G erzeugen die $4 + 16 + 64$ Felder der drei Ringe, die Aminosäuren stehen als Liste im Code. Gelesen wird von innen nach außen: erste Base am 5'-Ende, zweite Base, dritte Base, außen die Aminosäure. Die Farben zeigen die Eigenschaft der Aminosäure, das Start-Codon AUG ist markiert.
+
+\begin{lstlisting}[style=latex]
+% Farben der Basen und der Aminosäure-Gruppen
+\colorlet{baseU}{akzentrot!30}    \colorlet{baseC}{akzentblau!30}
+\colorlet{baseA}{akzentgruen!30}  \colorlet{baseG}{akzentorange!35}
+\colorlet{aau}{yellow!35}      % unpolar
+\colorlet{aap}{akzentgruen!22}    % polar
+\colorlet{aas}{akzentrot!25}      % sauer
+\colorlet{aab}{akzentblau!25}     % basisch
+\colorlet{aax}{black!25}       % Stopp
+
+% Ring zwischen Radius r1 und r2, von Winkel a1 bis a2 (im Uhrzeigersinn)
+\newcommand\ringstueck[5]{% #1 r1, #2 r2, #3 a1, #4 a2, #5 Füllfarbe
+  \filldraw[fill=#5, draw=white, line width=0.6pt]
+    (#3:#1) arc[start angle=#3, end angle=#4, radius=#1]
+    -- (#4:#2) arc[start angle=#4, end angle=#3, radius=#2] -- cycle;}
+
+\begin{tikzpicture}[font=\sffamily]
+  \def\w{5.625}     % 360° / 64 Codons
+  % ---------- Ringe 1 bis 3: die drei Basen -----------------------------
+  \foreach \b [count=\i from 0] in {U,C,A,G} {
+    % 1. Base: 4 Viertel
+    \pgfmathsetmacro\aA{90-\i*90} \pgfmathsetmacro\aB{\aA-90}
+    \ringstueck{0}{1.25}{\aA}{\aB}{base\b}
+    \node[font=\sffamily\Large\bfseries] at ({\aA-45}:0.75) {\b};
+    \foreach \c [count=\j from 0] in {U,C,A,G} {
+      % 2. Base: 16 Stücke
+      \pgfmathsetmacro\bA{\aA-\j*22.5} \pgfmathsetmacro\bB{\bA-22.5}
+      \ringstueck{1.25}{2.2}{\bA}{\bB}{base\c}
+      \node[font=\sffamily\bfseries] at ({\bA-11.25}:1.73) {\c};
+      \foreach \d [count=\k from 0] in {U,C,A,G} {
+        % 3. Base: 64 Stücke
+        \pgfmathsetmacro\cA{\bA-\k*\w} \pgfmathsetmacro\cB{\cA-\w}
+        \ringstueck{2.2}{2.9}{\cA}{\cB}{base\d}
+        \node[font=\sffamily\scriptsize] at ({\cA-\w/2}:2.55) {\d};
+      }
+    }
+  }
+  % ---------- Ring 4: Aminosäuren ----------------------------------------
+  % Start/Anzahl Codons/Name/Eigenschaft (u, p, s, b, x)
+  \foreach \s/\n/\aa/\e in {0/2/Phe/u, 2/2/Leu/u, 4/4/Ser/p, 8/2/Tyr/p, 10/2/Stopp/x,
+      12/2/Cys/p, 14/1/Stopp/x, 15/1/Trp/u, 16/4/Leu/u, 20/4/Pro/u, 24/2/His/b,
+      26/2/Gln/p, 28/4/Arg/b, 32/3/Ile/u, 35/1/Met/u, 36/4/Thr/p, 40/2/Asn/p,
+      42/2/Lys/b, 44/2/Ser/p, 46/2/Arg/b, 48/4/Val/u, 52/4/Ala/u, 56/2/Asp/s,
+      58/2/Glu/s, 60/4/Gly/u} {
+    \pgfmathsetmacro\dA{90-\s*\w} \pgfmathsetmacro\dB{\dA-\n*\w}
+    \pgfmathsetmacro\mitte{(\dA+\dB)/2}
+    \ringstueck{2.9}{4.25}{\dA}{\dB}{aa\e}
+    % Schrift radial; auf der linken Seite um 180° gedreht, damit lesbar
+    \pgfmathsetmacro\m{mod(\mitte+720,360)}
+    \pgfmathsetmacro\dreh{(\m>90 && \m<270) ? \mitte+180 : \mitte}
+    \node[rotate=\dreh, font=\sffamily\small] at (\mitte:3.58) {\aa};
+  }
+  % Start-Codon AUG hervorheben
+  \pgfmathsetmacro\sA{90-35*\w}
+  \draw[akzentrot, line width=1.4pt] (\sA:2.9) arc[start angle=\sA, end angle=\sA-\w, radius=2.9]
+     -- ({\sA-\w}:4.25) arc[start angle=\sA-\w, end angle=\sA, radius=4.25] -- cycle;
+  \node[akzentrot, font=\sffamily\footnotesize\bfseries, anchor=west] at ({\sA-\w/2}:4.35) {Start};
+  % ---------- Legende ----------------------------------------------------
+  \begin{scope}[shift={(5.2,-2.2)}, font=\sffamily\footnotesize]
+    \foreach \f/\t [count=\i] in {aau/unpolar, aap/polar, aas/sauer, aab/basisch, aax/Stopp} {
+      \fill[\f, draw=black!30] (0,-0.45*\i) rectangle ++(0.35,0.3);
+      \node[anchor=west] at (0.4,-0.45*\i+0.15) {\t};
+    }
+  \end{scope}
+  \node[font=\sffamily\footnotesize, align=left, anchor=north west] at (5.2,3.9)
+       {Lesen von innen nach außen:\\ 1.\ Base (5'-Ende) \\ 2.\ Base \\ 3.\ Base (3'-Ende)\\
+        $\to$ Aminosäure};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+% Farben der Basen und der Aminosäure-Gruppen
+\colorlet{baseU}{akzentrot!30}    \colorlet{baseC}{akzentblau!30}
+\colorlet{baseA}{akzentgruen!30}  \colorlet{baseG}{akzentorange!35}
+\colorlet{aau}{yellow!35}      % unpolar
+\colorlet{aap}{akzentgruen!22}    % polar
+\colorlet{aas}{akzentrot!25}      % sauer
+\colorlet{aab}{akzentblau!25}     % basisch
+\colorlet{aax}{black!25}       % Stopp
+
+% Ring zwischen Radius r1 und r2, von Winkel a1 bis a2 (im Uhrzeigersinn)
+\newcommand\ringstueck[5]{% #1 r1, #2 r2, #3 a1, #4 a2, #5 Füllfarbe
+  \filldraw[fill=#5, draw=white, line width=0.6pt]
+    (#3:#1) arc[start angle=#3, end angle=#4, radius=#1]
+    -- (#4:#2) arc[start angle=#4, end angle=#3, radius=#2] -- cycle;}
+\centering
+\begin{passend}%
+\begin{tikzpicture}[font=\sffamily]
+  \def\w{5.625}     % 360° / 64 Codons
+  % ---------- Ringe 1 bis 3: die drei Basen -----------------------------
+  \foreach \b [count=\i from 0] in {U,C,A,G} {
+    % 1. Base: 4 Viertel
+    \pgfmathsetmacro\aA{90-\i*90} \pgfmathsetmacro\aB{\aA-90}
+    \ringstueck{0}{1.25}{\aA}{\aB}{base\b}
+    \node[font=\sffamily\Large\bfseries] at ({\aA-45}:0.75) {\b};
+    \foreach \c [count=\j from 0] in {U,C,A,G} {
+      % 2. Base: 16 Stücke
+      \pgfmathsetmacro\bA{\aA-\j*22.5} \pgfmathsetmacro\bB{\bA-22.5}
+      \ringstueck{1.25}{2.2}{\bA}{\bB}{base\c}
+      \node[font=\sffamily\bfseries] at ({\bA-11.25}:1.73) {\c};
+      \foreach \d [count=\k from 0] in {U,C,A,G} {
+        % 3. Base: 64 Stücke
+        \pgfmathsetmacro\cA{\bA-\k*\w} \pgfmathsetmacro\cB{\cA-\w}
+        \ringstueck{2.2}{2.9}{\cA}{\cB}{base\d}
+        \node[font=\sffamily\scriptsize] at ({\cA-\w/2}:2.55) {\d};
+      }
+    }
+  }
+  % ---------- Ring 4: Aminosäuren ----------------------------------------
+  % Start/Anzahl Codons/Name/Eigenschaft (u, p, s, b, x)
+  \foreach \s/\n/\aa/\e in {0/2/Phe/u, 2/2/Leu/u, 4/4/Ser/p, 8/2/Tyr/p, 10/2/Stopp/x,
+      12/2/Cys/p, 14/1/Stopp/x, 15/1/Trp/u, 16/4/Leu/u, 20/4/Pro/u, 24/2/His/b,
+      26/2/Gln/p, 28/4/Arg/b, 32/3/Ile/u, 35/1/Met/u, 36/4/Thr/p, 40/2/Asn/p,
+      42/2/Lys/b, 44/2/Ser/p, 46/2/Arg/b, 48/4/Val/u, 52/4/Ala/u, 56/2/Asp/s,
+      58/2/Glu/s, 60/4/Gly/u} {
+    \pgfmathsetmacro\dA{90-\s*\w} \pgfmathsetmacro\dB{\dA-\n*\w}
+    \pgfmathsetmacro\mitte{(\dA+\dB)/2}
+    \ringstueck{2.9}{4.25}{\dA}{\dB}{aa\e}
+    % Schrift radial; auf der linken Seite um 180° gedreht, damit lesbar
+    \pgfmathsetmacro\m{mod(\mitte+720,360)}
+    \pgfmathsetmacro\dreh{(\m>90 && \m<270) ? \mitte+180 : \mitte}
+    \node[rotate=\dreh, font=\sffamily\small] at (\mitte:3.58) {\aa};
+  }
+  % Start-Codon AUG hervorheben
+  \pgfmathsetmacro\sA{90-35*\w}
+  \draw[akzentrot, line width=1.4pt] (\sA:2.9) arc[start angle=\sA, end angle=\sA-\w, radius=2.9]
+     -- ({\sA-\w}:4.25) arc[start angle=\sA-\w, end angle=\sA, radius=4.25] -- cycle;
+  \node[akzentrot, font=\sffamily\footnotesize\bfseries, anchor=west] at ({\sA-\w/2}:4.35) {Start};
+  % ---------- Legende ----------------------------------------------------
+  \begin{scope}[shift={(5.2,-2.2)}, font=\sffamily\footnotesize]
+    \foreach \f/\t [count=\i] in {aau/unpolar, aap/polar, aas/sauer, aab/basisch, aax/Stopp} {
+      \fill[\f, draw=black!30] (0,-0.45*\i) rectangle ++(0.35,0.3);
+      \node[anchor=west] at (0.4,-0.45*\i+0.15) {\t};
+    }
+  \end{scope}
+  \node[font=\sffamily\footnotesize, align=left, anchor=north west] at (5.2,3.9)
+       {Lesen von innen nach außen:\\ 1.\ Base (5'-Ende) \\ 2.\ Base \\ 3.\ Base (3'-Ende)\\
+        $\to$ Aminosäure};
+\end{tikzpicture}%
+\end{passend}
+\end{ausgabe}
+
+
+Wer eine andere Farbgebung oder Reihenfolge der Basen braucht, ändert eine Zeile, und die ganze Sonne baut sich neu auf. Für ein Arbeitsblatt kann man die Aminosäuren weglassen und von den Schülerinnen und Schülern eintragen lassen.
+
+
+
+%%%%  KAPITEL 5  %%%%
+\section{Populationswachstum}
+
+Exponentielles und logistisches Wachstum entstehen aus denselben drei Parametern: Startpopulation $N_0$, Wachstumsrate $r$ und Kapazität $K$ des Lebensraums.
+\[
+	N(t) = N_0\,e^{rt} \qquad\text{bzw.}\qquad N(t) = \frac{K}{1 + \left(\frac{K}{N_0} - 1\right)e^{-rt}}
+\]
+Das Diagramm ist mit reinem \TikZ gezeichnet. Die y-Achse ist mit \texttt{y=0.01cm} gestaucht, damit Werte bis 650 auf 6,5\,cm passen; die Exponentialkurve endet dort, wo sie den oberen Rand erreicht.
+
+\begin{lstlisting}[style=latex]
+% ---- Parameter -----------------------------------------------------
+\def\Nnull{10}     % Startpopulation N_0
+\def\rate{0.5}     % Wachstumsrate pro Tag
+\def\K{500}        % Kapazität des Lebensraums
+% --------------------------------------------------------------------
+
+\begin{tikzpicture}[x=0.45cm, y=0.01cm, font=\small]
+  \pgfmathsetmacro\ymax{1.3*\K}
+  % Ende der Exponentialkurve: dort, wo sie den oberen Rand erreicht
+  \pgfmathsetmacro\tend{min(20, ln(\ymax/\Nnull)/\rate)}
+  % Gitter und Achsen
+  \draw[dashed, black!20] (0,0) grid[xstep=5, ystep=100] (20,\ymax);
+  \draw[->] (0,0) -- (21,0);
+  \node[below=18pt] at (10,0) {Zeit $t$ in Tagen};
+  \draw[->] (0,0) -- (0,\ymax+60) node[above] {Individuen $N$};
+  \foreach \x in {0,5,...,20} \node[below] at (\x,0) {\x};
+  \foreach \y in {100,200,...,600} \node[left] at (0,\y) {\y};
+  % Kapazität, exponentiell, logistisch
+  \draw[black!60, dotted, thick] (0,\K) -- (20,\K) node[above left, black!70] {Kapazität $K=\K$};
+  \draw[akzentrot, very thick, dashed] plot[domain=0:\tend, samples=150] (\x,{\Nnull*exp(\rate*\x)});
+  \draw[akzentblau, very thick] plot[domain=0:20, samples=200] (\x,{\K/(1 + (\K/\Nnull - 1)*exp(-\rate*\x))});
+  % Legende
+  \draw[akzentrot, very thick, dashed] (13.5,180) -- (15,180) node[right, text=black] {exponentiell};
+  \draw[akzentblau, very thick] (13.5,110) -- (15,110) node[right, text=black] {logistisch};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+% ---- Parameter -----------------------------------------------------
+\def\Nnull{10}     % Startpopulation N_0
+\def\rate{0.5}     % Wachstumsrate pro Tag
+\def\K{500}        % Kapazität des Lebensraums
+% --------------------------------------------------------------------
+\centering
+\begin{passend}%
+\begin{tikzpicture}[x=0.45cm, y=0.01cm, font=\small]
+  \pgfmathsetmacro\ymax{1.3*\K}
+  % Ende der Exponentialkurve: dort, wo sie den oberen Rand erreicht
+  \pgfmathsetmacro\tend{min(20, ln(\ymax/\Nnull)/\rate)}
+  % Gitter und Achsen
+  \draw[dashed, black!20] (0,0) grid[xstep=5, ystep=100] (20,\ymax);
+  \draw[->] (0,0) -- (21,0);
+  \node[below=18pt] at (10,0) {Zeit $t$ in Tagen};
+  \draw[->] (0,0) -- (0,\ymax+60) node[above] {Individuen $N$};
+  \foreach \x in {0,5,...,20} \node[below] at (\x,0) {\x};
+  \foreach \y in {100,200,...,600} \node[left] at (0,\y) {\y};
+  % Kapazität, exponentiell, logistisch
+  \draw[black!60, dotted, thick] (0,\K) -- (20,\K) node[above left, black!70] {Kapazität $K=\K$};
+  \draw[akzentrot, very thick, dashed] plot[domain=0:\tend, samples=150] (\x,{\Nnull*exp(\rate*\x)});
+  \draw[akzentblau, very thick] plot[domain=0:20, samples=200] (\x,{\K/(1 + (\K/\Nnull - 1)*exp(-\rate*\x))});
+  % Legende
+  \draw[akzentrot, very thick, dashed] (13.5,180) -- (15,180) node[right, text=black] {exponentiell};
+  \draw[akzentblau, very thick] (13.5,110) -- (15,110) node[right, text=black] {logistisch};
+\end{tikzpicture}%
+\end{passend}
+\end{ausgabe}
+
+
+Das ist gleichzeitig ein Stück Mathematik (Exponentialfunktion, Grenzwert, Wendepunkt bei $K/2$) und eignet sich für fächerverbindenden Unterricht. Mit einer größeren Rate \texttt{\textbackslash rate} oder einer kleineren Kapazität \texttt{\textbackslash K} sieht man sofort, wie sich das Modell verändert.
+
+
+
+%%%%  KAPITEL 6  %%%%
+\section{Nahrungsnetz}
+
+Ein Nahrungsnetz ist ein \textbf{Graph}: Lebewesen sind Knoten, Pfeile zeigen \enquote{wird gefressen von}. Mit der Bibliothek \texttt{positioning} ordnet man die Knoten relativ zueinander an (\texttt{above=of gras}); die Pfeile entstehen in einer einzigen Schleife über die Liste der Fressbeziehungen.
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}[node distance=1.1cm and 1.6cm, >={Stealth[length=6pt]},
+    lw/.style={draw, rounded corners, font=\sffamily\small, minimum width=2cm, minimum height=7mm},
+    pflanze/.style={lw, fill=akzentgruen!20}, tier/.style={lw, fill=akzentorange!20},
+    raeuber/.style={lw, fill=akzentrot!20}]
+  \node[pflanze] (gras) {Gras};
+  \node[pflanze, right=of gras] (eiche) {Eiche};
+  \node[tier, above=of gras] (maus) {Maus};
+  \node[tier, above=of eiche] (raupe) {Raupe};
+  \node[tier, right=of raupe] (reh) {Reh};
+  \node[tier, above=of raupe] (meise) {Meise};
+  \node[raeuber, above=of maus] (fuchs) {Fuchs};
+  \node[raeuber, above=of meise] (habicht) {Habicht};
+  \foreach \a/\b in {gras/maus, eiche/raupe, eiche/maus, gras/reh, eiche/reh,
+                     raupe/meise, maus/fuchs, maus/habicht, meise/habicht}
+    \draw[->, thick] (\a) -- (\b);
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\centering
+\begin{passend}%
+\begin{tikzpicture}[node distance=1.1cm and 1.6cm, >={Stealth[length=6pt]},
+    lw/.style={draw, rounded corners, font=\sffamily\small, minimum width=2cm, minimum height=7mm},
+    pflanze/.style={lw, fill=akzentgruen!20}, tier/.style={lw, fill=akzentorange!20},
+    raeuber/.style={lw, fill=akzentrot!20}]
+  \node[pflanze] (gras) {Gras};
+  \node[pflanze, right=of gras] (eiche) {Eiche};
+  \node[tier, above=of gras] (maus) {Maus};
+  \node[tier, above=of eiche] (raupe) {Raupe};
+  \node[tier, right=of raupe] (reh) {Reh};
+  \node[tier, above=of raupe] (meise) {Meise};
+  \node[raeuber, above=of maus] (fuchs) {Fuchs};
+  \node[raeuber, above=of meise] (habicht) {Habicht};
+  \foreach \a/\b in {gras/maus, eiche/raupe, eiche/maus, gras/reh, eiche/reh,
+                     raupe/meise, maus/fuchs, maus/habicht, meise/habicht}
+    \draw[->, thick] (\a) -- (\b);
+\end{tikzpicture}%
+\end{passend}
+\end{ausgabe}
+
+
+Die Farben unterscheiden Produzenten (grün), Konsumenten (orange) und Endkonsumenten (rot). Für eine Aufgabe lässt man die Schleife mit den Pfeilen weg; die Lösung ist dieselbe Datei mit Pfeilen.
+
+
+
+%%%%  KAPITEL 7  %%%%
+\section{Weitere Pakete für die Biologie}
+
+\begin{itemize}
+	\item \texttt{forest}: Bäume aller Art, etwa Bestimmungsschlüssel oder Stammbäume der Evolution (Kladogramme).
+	\item \texttt{pgfmolbio}: DNA-Sequenzen, Chromatogramme und Domänen von Proteinen.
+	\item \texttt{genealogytree} kann auch Ahnentafeln, Zeitleisten und Datenbanken mit Lebensdaten.
+	\item Zellen, Organe und Pflanzen zeichnet man besser in einem Vektorprogramm und bindet sie mit \texttt{\textbackslash includegraphics} ein.
+\end{itemize}
+
+
+
+%%%%  KAPITEL 8  %%%%
+\section{Stolpersteine}
+
+\begin{itemize}
+	\item \textbf{\enquote{Dimension too large}:} Eine Exponentialfunktion wird über einen zu großen Bereich gezeichnet. Den Bereich mit \texttt{domain=0:\textbackslash tend} begrenzen und die Achse mit \texttt{y=0.01cm} stauchen.
+	\item \textbf{Kreuzungsschema mit falschen Farben?} Die Keimzellen müssen genau zwei Buchstaben haben, das erste Merkmal zuerst (\texttt{Ab}, nicht \texttt{bA}).
+	\item \textbf{Stammbaum: Kreis statt Quadrat?} Die Stile \texttt{mann} und \texttt{frau} unterscheiden sich nur in \texttt{arc}; ohne einen der beiden Stile hat ein Kästchen leicht abgerundete Ecken.
+	\item \textbf{\texttt{\textbackslash r} als eigener Name:} In \hologo{LaTeX} ist \texttt{\textbackslash r} bereits ein Akzentbefehl (Ring, wie in \r{a}). Für die Wachstumsrate heißt das Makro deshalb \texttt{\textbackslash rate}.
+	\item \textbf{Eigene Zähler in einem Befehl:} \texttt{\textbackslash newcount} gehört in die Präambel, nicht in den Befehl selbst; sonst wird bei jedem Aufruf ein neues Register belegt.
+\end{itemize}
+
+
+
+%%%%  KAPITEL 9  %%%%
+\section{Zusammenfassung}
+
+\begin{itemize}
+	\item \texttt{\textbackslash kreuzung\{Keimzellen 1\}\{Keimzellen 2\}} bildet Genotypen, färbt nach Phänotyp und zählt das Verhältnis.
+	\item Stammbäume mit \texttt{genealogytree}: \texttt{child}, \texttt{g}, \texttt{p}, \texttt{c}; ein Schalter \texttt{\textbackslash ifloesung} macht Aufgabe und Lösung.
+	\item Die Codesonne entsteht aus drei Schleifen über U, C, A, G.
+	\item Wachstumsmodelle als Funktionen mit \texttt{\textbackslash draw plot}, Nahrungsnetze als Graph mit \texttt{positioning}.
+\end{itemize}
+
+\end{document}

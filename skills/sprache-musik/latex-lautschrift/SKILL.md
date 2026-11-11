@@ -101,6 +101,10 @@ Mädchen \ipa{ˈmɛːtçən}
 
 ## Vokalviereck
 
+`assets/vorlage_vokaltrapez.tex` (pdflatex, tipa) ist das vollständige IPA-Vokaltrapez
+mit Achsen (geschlossen … offen, vorne/zentral/hinten); die Vokale des Deutschen
+sind blau, die übrigen grau. Erste Wahl für Phonetik- und DaZ-Material.
+
 `assets/vorlage_lautschrift_unicode.tex` enthält ein Vokaltrapez mit TikZ
 (vorne/hinten, oben/unten, ungerundet links und gerundet rechts vom Punkt).
 Für pdflatex die Beschriftungen durch `\textipa{…}` ersetzen.
@@ -116,7 +120,9 @@ fehlende Zeichen (Schrift), stimmlos (`\textsubring`) statt silbisch
 ## Für eine Handreichung
 
 Fertige Handreichung zu diesem Skill: `references/handreichung_lautschrift.tex`
-(tipa-Weg mit pdflatex, Unicode-Weg als Code). Für eine neue Handreichung:
+(12 Seiten: Was ist Lautschrift, tipa, babel-Konflikt, Kürzeltabellen, fünf
+Sprachen, Vokabellisten, Zusatzzeichen, Vokalviereck, Unicode-Weg als Code,
+Quellen für richtige Umschriften, Checkliste). Für eine neue Handreichung:
 
 Aufbau und Listing-Stil aus `latex-grundstil` (Code in
 `lstlisting[style=latex]`, Ausgabe direkt darunter in `ausgabe`). Für den

@@ -13,6 +13,10 @@
 %             arrows.meta, shapes.callouts, circuits.logic.US, circuits.logic.IEC; Pakete array, booktabs,
 %             longtable; xskak, chessboard, sudoku, tikzpeople, tipa (safe); MusiXTeX als auskommentierte
 %             Option (definiert \cup als Achtelnote um – bricht $A \cup B$)
+% 2026-11-11  Naturwissenschaften: circuitikz [european] (Schaltpläne), mhchem [version=4] (\ce),
+%             chemfig (Strukturformeln), pgf-PeriodicTable (\pgfPT), genealogytree [all] (Stammbäume).
+%             NICHT siunitx: kollidiert mit units (\unit[10]{cm}); siunitx nur in eigenständigen Dokumenten
+% 2026-11-11  TikZ-Bibliothek decorations.pathmorphing (Federn, Wellen: decoration=coil/snake)
 %
 
 
@@ -103,7 +107,7 @@
 \pgfplotsset{compat=1.17}
 \usetikzlibrary{arrows,%Pfeile
 			calc,%Rechnen in Koordinaten, z.B. mit ($(1,2)+5*(0,1)$) auf Punkt (1,7) kommen
-			angles, plotmarks, quotes, babel, intersections, shapes.geometric, decorations.pathreplacing, automata, positioning, shadows, patterns, patterns.meta,%
+			angles, plotmarks, quotes, babel, intersections, shapes.geometric, decorations.pathreplacing, decorations.pathmorphing, automata, positioning, shadows, patterns, patterns.meta,%
 			fit,%Rahmen um mehrere Knoten (UML, Automaten)
 			shapes.multipart,%geteilte Knoten (UML-Klassen)
 			arrows.meta,%moderne Pfeilspitzen, z.B. -{Triangle[open]}
@@ -133,6 +137,11 @@
 \usepackage{sudoku} %Sudoku-Gitter mit \begin{sudoku} |5|3| | ... |. \end{sudoku}
 \usepackage{tikzpeople} %Personen-Figuren als TikZ-Knoten, z.B. \node[alice, minimum size=2cm]{};
 \usepackage[safe]{tipa} %Lautschrift mit \textipa{...}; [safe], weil tipa sonst \; \: \! \* \s umdefiniert (bricht z.B. \(\;\)) – Langformen siehe latex-lautschrift
+\usepackage[european]{circuitikz} %Schaltpläne mit deutschen Symbolen: \begin{circuitikz} \draw (0,0) to[lamp] (2,0); \end{circuitikz}
+\usepackage[version=4]{mhchem} %Reaktionsgleichungen mit \ce{2 H2 + O2 -> 2 H2O}
+\usepackage{chemfig} %Strukturformeln mit \chemfig{H-C(-[2]H)(-[6]H)-H}, freie Elektronenpaare mit \charge
+\usepackage{pgf-PeriodicTable} %Periodensystem mit \pgfPT[...], deutsche Namen mit \pgfPTsetLanguage{de}
+\usepackage[all]{genealogytree} %Stammbäume mit \begin{genealogypicture} ... \end{genealogypicture}
 %\usepackage{musixtex} %Notensatz – NUR für Musik-Dokumente einkommentieren: definiert u.a. \cup als Note um (bricht $A \cup B$)
 %\usepackage[list=true, font=large, labelfont=bf, labelformat=brace, position=top]{subcaption}
 

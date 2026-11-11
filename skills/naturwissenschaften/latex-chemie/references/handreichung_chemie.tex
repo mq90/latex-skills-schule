@@ -1,0 +1,437 @@
+\input{header.tex}
+\input{newcommands.tex}
+
+
+\title{Chemie mit \hologo{LaTeX}: Reaktionsgleichungen, Strukturformeln und Diagramme}
+\author{Fortbildungsmaterial für MINT-Lehrkräfte}
+\date{\today}
+\pagestyle{plain}
+\setlength{\parskip}{1.5em} % Abstand zwischen Absätzen (Handreichungen)
+\setlength{\emergencystretch}{4em} % lange \texttt-Wörter umbrechen statt über den Rand
+
+
+\begin{document}
+
+\maketitle
+
+In der Chemie kostet die Schreibweise in einem Textverarbeitungsprogramm viel Zeit: tiefgestellte Indizes, hochgestellte Ladungen, Reaktionspfeile mit Bedingungen, Strukturformeln. In \hologo{LaTeX} tippt man eine Reaktionsgleichung so, wie man sie spricht, und eine Strukturformel als kurze Zeichenkette. Dazu kommen Diagramme, die \hologo{LaTeX} selbst \textit{berechnet}: eine Titrationskurve aus den Konzentrationen und ein Energiediagramm aus den Energieniveaus. Ändert man die Werte, entsteht die passende neue Kurve.
+
+Die größeren Beispiele liegen als eigenständige Vorlagen im Ordner \texttt{assets} des Skills (\texttt{vorlage\_titration.tex}, \texttt{vorlage\_energiediagramm.tex}, \texttt{vorlage\_periodensystem.tex}).
+
+\tableofcontents
+
+
+
+%%%%  KAPITEL 1  %%%%
+\section{Benötigte Pakete}
+
+In der universalen \texttt{header.tex} ist alles geladen. In einem eigenständigen Dokument braucht man:
+
+\begin{lstlisting}[style=latex]
+\usepackage[version=4]{mhchem}      % Reaktionsgleichungen: \ce{...}
+\usepackage{chemfig}                % Strukturformeln: \chemfig{...}
+\usepackage{pgf-PeriodicTable}      % Periodensystem: \pgfPT[...]
+\usepackage{tikz}                   % Diagramme
+\end{lstlisting}
+
+
+
+%%%%  KAPITEL 2  %%%%
+\section{Reaktionsgleichungen mit \texttt{mhchem}}
+
+\texttt{\textbackslash ce\{\dots\}} ist der wichtigste Befehl für die Chemie. Zahlen hinter einem Symbol werden tiefgestellt, Zahlen vor einem Symbol bleiben als Koeffizient stehen, Ladungen kommen mit \texttt{\^{}} nach oben, und \texttt{->} wird zum Reaktionspfeil. \texttt{\textbackslash ce} funktioniert im Text und in Formeln.
+
+\begin{lstlisting}[style=latex]
+\ce{2 H2 + O2 -> 2 H2O}
+
+\ce{Zn + 2 HCl -> ZnCl2 + H2 ^}
+
+\ce{Cu^2+ + 2 e- -> Cu}
+
+\ce{N2 + 3 H2 <=> 2 NH3}
+
+\ce{CaCO3 ->[\Delta] CaO + CO2}
+
+\ce{NaCl(s) ->[H2O] Na+(aq) + Cl-(aq)}
+
+\ce{CuSO4 * 5 H2O}
+
+\ce{Ag+ + Cl- -> AgCl v}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\ce{2 H2 + O2 -> 2 H2O}
+
+	\ce{Zn + 2 HCl -> ZnCl2 + H2 ^}
+
+	\ce{Cu^2+ + 2 e- -> Cu}
+
+	\ce{N2 + 3 H2 <=> 2 NH3}
+
+	\ce{CaCO3 ->[\Delta] CaO + CO2}
+
+	\ce{NaCl(s) ->[H2O] Na+(aq) + Cl-(aq)}
+
+	\ce{CuSO4 * 5 H2O}
+
+	\ce{Ag+ + Cl- -> AgCl v}
+\end{ausgabe}
+
+Die wichtigsten Eingaben im Überblick:
+
+\begin{center}
+\begin{tabular}{@{}ll@{\hspace{1.2cm}}ll@{}}
+	\toprule
+	\textbf{Eingabe} & \textbf{Ergebnis} & \textbf{Eingabe} & \textbf{Ergebnis} \\
+	\midrule
+	\texttt{->} & \ce{->} & \texttt{\^{}} (nach einem Gas) & \ce{H2 ^} entweicht \\
+	\texttt{<=>} & \ce{<=>} & \texttt{v} (nach einem Stoff) & \ce{AgCl v} Niederschlag \\
+	\texttt{<->} & \ce{<->} (Mesomerie) & \texttt{->[oben][unten]} & \ce{->[Kat.][\Delta]} \\
+	\texttt{\^{}2+}, \texttt{\^{}-} & \ce{Cu^2+}, \ce{OH^-} & \texttt{(aq)}, \texttt{(s)}, \texttt{(g)}, \texttt{(l)} & \ce{Na+(aq)} \\
+	\texttt{e-} & \ce{e-} & \texttt{*} & \ce{CuSO4 * 5 H2O} \\
+	\bottomrule
+\end{tabular}
+\end{center}
+
+
+
+%%%%  KAPITEL 3  %%%%
+\section{Oxidationszahlen}
+
+Für Redoxgleichungen steht die Oxidationszahl über dem Symbol. Der Befehl \texttt{\textbackslash oz\{Zahl\}\{Symbol\}} aus der universalen \texttt{newcommands.tex} erledigt das. Innerhalb von \texttt{\textbackslash ce\{\dots\}} steht er zwischen Dollarzeichen:
+
+\begin{lstlisting}[style=latex]
+\ce{$\oz{0}{Zn}$ + $\oz{+II}{Cu}$^2+ -> $\oz{+II}{Zn}$^2+ + $\oz{0}{Cu}$}
+
+\ce{$\oz{+I}{H}$2$\oz{-II}{O}$} \qquad \ce{$\oz{+VII}{Mn}$$\oz{-II}{O}$4^-}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\ce{$\oz{0}{Zn}$ + $\oz{+II}{Cu}$^2+ -> $\oz{+II}{Zn}$^2+ + $\oz{0}{Cu}$}
+
+	\ce{$\oz{+I}{H}$2$\oz{-II}{O}$} \qquad \ce{$\oz{+VII}{Mn}$$\oz{-II}{O}$4^-}
+\end{ausgabe}
+
+Ob römische (\texttt{+II}) oder arabische Zahlen (\texttt{+2}): Man schreibt einfach, was im Unterricht üblich ist. Für eine Lückenaufgabe ersetzt man die Zahl durch einen Strich, etwa \texttt{\textbackslash oz\{\textbackslash rule\{4mm\}\{0.4pt\}\}\{Fe\}}.
+
+
+
+%%%%  KAPITEL 4  %%%%
+\section{Strukturformeln mit \texttt{chemfig}}
+
+Atome werden mit Bindungsstrichen verbunden: \texttt{-} einfach, \texttt{=} doppelt, \texttt{\textasciitilde} dreifach. Die Richtung steht in eckigen Klammern in 45°-Schritten: \texttt{[0]} nach rechts (Standard), \texttt{[2]} nach oben (90°), \texttt{[4]} nach links, \texttt{[6]} nach unten (270°), \texttt{[1]} schräg nach oben (45°) usw. Verzweigungen stehen in runden Klammern.
+
+
+%%%%  UNTERKAPITEL 4.1  %%%%
+\subsection{Kettenmoleküle und Ringe}
+
+\begin{lstlisting}[style=latex]
+\chemfig{H-C(-[2]H)(-[6]H)-H}                          % Methan
+\qquad
+\chemfig{H-C(-[2]H)(-[6]H)-C(-[2]H)(-[6]H)-H}          % Ethan
+
+\chemfig{H-C(-[2]H)(-[6]H)-C(-[2]H)(-[6]H)-O-H}        % Ethanol
+\qquad
+\chemfig{H_3C-C(=[1]O)-[7]OH}                          % Essigsäure
+\qquad
+\chemfig{*6(-=-=-=)}                                   % Benzol
+\end{lstlisting}
+
+\begin{ausgabe}
+	\chemfig{H-C(-[2]H)(-[6]H)-H}                          % Methan
+	\qquad
+	\chemfig{H-C(-[2]H)(-[6]H)-C(-[2]H)(-[6]H)-H}          % Ethan
+
+	\chemfig{H-C(-[2]H)(-[6]H)-C(-[2]H)(-[6]H)-O-H}        % Ethanol
+	\qquad
+	\chemfig{H_3C-C(=[1]O)-[7]OH}                          % Essigsäure
+	\qquad
+	\chemfig{*6(-=-=-=)}                                   % Benzol
+\end{ausgabe}
+
+\texttt{*6(\dots)} ist ein Sechsring; die Zeichen in der Klammer sind seine sechs Bindungen. Ein Fünfring entsteht mit \texttt{*5(\dots)}.
+
+
+%%%%  UNTERKAPITEL 4.2  %%%%
+\subsection{Valenzstrichformeln}
+
+Freie Elektronenpaare als Striche setzt \texttt{\textbackslash charge}. Vor dem Gleichheitszeichen steht der Winkel, an dem der Strich sitzt, danach \texttt{\textbackslash|} für einen Strich (ein Elektronenpaar) oder \texttt{\textbackslash.} für einen Punkt (ein einzelnes Elektron):
+
+\begin{lstlisting}[style=latex]
+\chemfig{H-\charge{90=\|,270=\|}{O}-H}                 % Wasser
+\qquad
+\chemfig{\charge{180=\|}{N}~\charge{0=\|}{N}}          % Stickstoff
+\qquad
+\chemfig{H-\charge{0=\|,90=\|,270=\|}{Cl}}             % Chlorwasserstoff
+\qquad
+\chemfig{\charge{90=\.}{C}}                            % ein einzelnes Elektron
+\end{lstlisting}
+
+\begin{ausgabe}
+	\chemfig{H-\charge{90=\|,270=\|}{O}-H}                 % Wasser
+	\qquad
+	\chemfig{\charge{180=\|}{N}~\charge{0=\|}{N}}          % Stickstoff
+	\qquad
+	\chemfig{H-\charge{0=\|,90=\|,270=\|}{Cl}}             % Chlorwasserstoff
+	\qquad
+	\chemfig{\charge{90=\.}{C}}                            % ein einzelnes Elektron
+\end{ausgabe}
+
+In älteren Anleitungen heißt der Befehl \texttt{\textbackslash lewis}; in aktuellen Versionen von \texttt{chemfig} gibt es nur noch \texttt{\textbackslash charge}.
+
+
+
+%%%%  KAPITEL 5  %%%%
+\section{Das Periodensystem}
+
+Das Paket \texttt{pgf-PeriodicTable} zeichnet das Periodensystem; \texttt{\textbackslash pgfPTsetLanguage\{de\}} schaltet auf deutsche Elementnamen um. Mit \texttt{back color scheme} färbt man es nach Themen ein, mit \texttt{Z list} zeigt man nur einen Ausschnitt.
+
+
+%%%%  UNTERKAPITEL 5.1  %%%%
+\subsection{Das vollständige Periodensystem}
+
+\begin{lstlisting}[style=latex]
+\pgfPTsetLanguage{de}
+\pgfPT[show title=false, show legend=false, back color scheme=MNM]
+\end{lstlisting}
+
+\begin{ausgabe}
+	\pgfPTsetLanguage{de}
+	\centering
+	\begin{passend}%
+	\pgfPT[show title=false, show legend=false, back color scheme=MNM]%
+	\end{passend}
+\end{ausgabe}
+
+Das Farbschema \texttt{MNM} unterscheidet Metalle, Halbmetalle und Nichtmetalle. Weitere Schemata sind \texttt{Wikipedia} (Elementgruppen) und \texttt{Soft}.
+
+
+%%%%  UNTERKAPITEL 5.2  %%%%
+\subsection{Ein Ausschnitt für den Anfangsunterricht}
+
+\begin{lstlisting}[style=latex]
+\pgfPTsetLanguage{de}
+\pgfPT[show title=false, show legend=false, back color scheme=Wikipedia, Z list={1,...,20}]
+\end{lstlisting}
+
+\begin{ausgabe}
+	\pgfPTsetLanguage{de}
+	\centering
+	\begin{passend}%
+	\pgfPT[show title=false, show legend=false, back color scheme=Wikipedia, Z list={1,...,20}]%
+	\end{passend}
+\end{ausgabe}
+
+Die Vorlage \texttt{vorlage\_periodensystem.tex} enthält beide Fassungen als zwei Seiten. Weitere Optionen (Elektronenkonfiguration, Atommasse ausblenden, eigene Farben) stehen in der Anleitung, \url{https://ctan.org/pkg/pgf-periodictable}.
+
+
+
+%%%%  KAPITEL 6  %%%%
+\section{Titrationskurve: berechnet, nicht gezeichnet}
+
+Die Kurve für die Titration von Salzsäure mit Natronlauge wird aus den Konzentrationen \textit{berechnet}, einschließlich der Autoprotolyse des Wassers. Ganz oben stehen die Versuchsdaten; ändert man sie, entsteht die neue Kurve samt verschobenem Äquivalenzpunkt.
+
+Die Rechnung: Nach Zugabe von $V$ mL Lauge ist der Überschuss an Oxonium-Ionen (positiv) bzw. Hydroxid-Ionen (negativ)
+\[
+	d = \frac{c_S\,V_S - c_B\,V}{V_S + V} .
+\]
+Mit dem Ionenprodukt $K_W = 10^{-14}$ gilt exakt $c(\ce{H3O+}) = \frac d2 + \sqrt{\frac{d^2}{4} + K_W}$ und daraus
+\[
+	\mathrm{pH} = 7 - \frac{\operatorname{arsinh}\bigl(d / (2\cdot 10^{-7})\bigr)}{\ln 10}.
+\]
+\TikZ rechnet nur mit Zahlen bis etwa 16\,000 und fünf Nachkommastellen; $10^{-14}$ kann es nicht darstellen. Für $|d| \ge 10^{-5}$ ersetzt man deshalb $\operatorname{arsinh}(u)$ durch $\operatorname{sign}(u)\cdot\ln(2|u|) = \operatorname{sign}(d)\cdot(\ln|d| + 7\ln 10)$; der Fehler ist kleiner als 0,0004 pH-Einheiten. Noch kleinere $|d|$ treten nur direkt am Äquivalenzpunkt auf, dort ist pH\,=\,7.
+
+\begin{lstlisting}[style=latex]
+% ---- Versuchsdaten -------------------------------------------------
+\def\cS{0.1}     % Konzentration der Salzsäure in mol/L
+\def\VS{20}      % vorgelegtes Volumen der Säure in mL
+\def\cB{0.1}     % Konzentration der Natronlauge in mol/L
+% --------------------------------------------------------------------
+% Überschuss d an H3O+ (positiv) bzw. OH- (negativ) in mol/L:
+%   d = (cS*VS - cB*V) / (VS + V)
+% Mit Autoprotolyse (Kw = 1e-14) gilt exakt  c(H3O+) = d/2 + sqrt(d^2/4 + Kw)
+% und daraus  pH = 7 - arsinh(d / 2e-7) / ln 10.
+% TikZ rechnet nur mit Zahlen bis etwa 16000 und 5 Nachkommastellen. Für
+% |d| >= 1e-5 gilt arsinh(u) = sign(u) * ln(2|u|) bis auf weniger als 0,0004
+% pH-Einheiten; ln(2|u|) = ln|d| + 7 ln 10 = ln|d| + 16.1181.
+% Kleinere |d| liegen am Äquivalenzpunkt: dort ist pH = 7.
+\pgfmathdeclarefunction{phwert}{1}{%
+  \pgfmathparse{(\cS*\VS - \cB*#1)/(\VS + #1)}\let\d\pgfmathresult
+  \pgfmathparse{abs(\d) < 0.00001 ? 7 : 7 - sign(\d)*(ln(max(abs(\d),0.00001)) + 16.1181)/ln(10)}}
+
+\begin{tikzpicture}[x=0.25cm, y=0.5cm, font=\small]
+  \pgfmathsetmacro\Vaeq{\cS*\VS/\cB}          % Äquivalenzpunkt in mL
+  \pgfmathsetmacro\Vmax{2*\Vaeq}
+  % Gitter und Achsen
+  \draw[dashed, black!20] (0,0) grid[xstep=5, ystep=2] (\Vmax,14);
+  \draw[->] (0,0) -- (\Vmax+2,0);
+  \node[below=18pt] at (\Vaeq,0) {zugegebenes Volumen $V(\ce{NaOH})$ in mL};
+  \draw[->] (0,0) -- (0,15) node[above] {pH-Wert};
+  \foreach \x in {0,5,...,\Vmax} \node[below] at (\x,0) {\pgfmathprintnumber[int detect]{\x}};
+  \foreach \y in {2,4,...,14} \node[left] at (0,\y) {\y};
+  % Kurve: 601 Punkte, darunter genau der Äquivalenzpunkt
+  \draw[akzentblau, very thick, line join=round]
+    plot[domain=0:\Vmax, samples=601] (\x,{phwert(\x)});
+  \fill[akzentrot] (\Vaeq,7) circle (2.5pt) node[right=3pt] {Äquivalenzpunkt};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+% ---- Versuchsdaten -------------------------------------------------
+\def\cS{0.1}     % Konzentration der Salzsäure in mol/L
+\def\VS{20}      % vorgelegtes Volumen der Säure in mL
+\def\cB{0.1}     % Konzentration der Natronlauge in mol/L
+% --------------------------------------------------------------------
+% Überschuss d an H3O+ (positiv) bzw. OH- (negativ) in mol/L:
+%   d = (cS*VS - cB*V) / (VS + V)
+% Mit Autoprotolyse (Kw = 1e-14) gilt exakt  c(H3O+) = d/2 + sqrt(d^2/4 + Kw)
+% und daraus  pH = 7 - arsinh(d / 2e-7) / ln 10.
+% TikZ rechnet nur mit Zahlen bis etwa 16000 und 5 Nachkommastellen. Für
+% |d| >= 1e-5 gilt arsinh(u) = sign(u) * ln(2|u|) bis auf weniger als 0,0004
+% pH-Einheiten; ln(2|u|) = ln|d| + 7 ln 10 = ln|d| + 16.1181.
+% Kleinere |d| liegen am Äquivalenzpunkt: dort ist pH = 7.
+\pgfmathdeclarefunction{phwert}{1}{%
+  \pgfmathparse{(\cS*\VS - \cB*#1)/(\VS + #1)}\let\d\pgfmathresult
+  \pgfmathparse{abs(\d) < 0.00001 ? 7 : 7 - sign(\d)*(ln(max(abs(\d),0.00001)) + 16.1181)/ln(10)}}
+\centering
+\begin{passend}%
+\begin{tikzpicture}[x=0.25cm, y=0.5cm, font=\small]
+  \pgfmathsetmacro\Vaeq{\cS*\VS/\cB}          % Äquivalenzpunkt in mL
+  \pgfmathsetmacro\Vmax{2*\Vaeq}
+  % Gitter und Achsen
+  \draw[dashed, black!20] (0,0) grid[xstep=5, ystep=2] (\Vmax,14);
+  \draw[->] (0,0) -- (\Vmax+2,0);
+  \node[below=18pt] at (\Vaeq,0) {zugegebenes Volumen $V(\ce{NaOH})$ in mL};
+  \draw[->] (0,0) -- (0,15) node[above] {pH-Wert};
+  \foreach \x in {0,5,...,\Vmax} \node[below] at (\x,0) {\pgfmathprintnumber[int detect]{\x}};
+  \foreach \y in {2,4,...,14} \node[left] at (0,\y) {\y};
+  % Kurve: 601 Punkte, darunter genau der Äquivalenzpunkt
+  \draw[akzentblau, very thick, line join=round]
+    plot[domain=0:\Vmax, samples=601] (\x,{phwert(\x)});
+  \fill[akzentrot] (\Vaeq,7) circle (2.5pt) node[right=3pt] {Äquivalenzpunkt};
+\end{tikzpicture}%
+\end{passend}
+\end{ausgabe}
+
+
+Kontrolle: Vor der Titration ist pH\,=\,1 (0,1-molare Salzsäure), nach Zugabe von 40\,mL Natronlauge pH\,$\approx$\,12,5, wie es die Rechnung von Hand ergibt. Für eine Aufgabe mit anderen Konzentrationen ändert man nur die drei Zeilen \texttt{\textbackslash def\textbackslash cS}, \texttt{\textbackslash def\textbackslash VS} und \texttt{\textbackslash def\textbackslash cB}.
+
+
+
+%%%%  KAPITEL 7  %%%%
+\section{Energiediagramm mit und ohne Katalysator}
+
+Auch dieses Diagramm besteht aus Funktionen: Ein weicher Übergang (Sigmoidfunktion) führt vom Edukt- zum Produktniveau, eine Gaußglocke in der Mitte bildet den \enquote{Berg} der Aktivierungsenergie. Oben stehen die Energien der Edukte und Produkte und die beiden Aktivierungsenergien (in cm auf dem Papier). Eine endotherme Reaktion entsteht, indem man das Produktniveau höher setzt als das Eduktniveau.
+
+\begin{lstlisting}[style=latex]
+% ---- Werte (in cm auf dem Papier) ---------------------------------
+\def\Eedukt{3}       % Energie der Edukte
+\def\Eprodukt{1}     % Energie der Produkte (kleiner -> exotherm)
+\def\Ea{2.6}         % Aktivierungsenergie ohne Katalysator
+\def\Eak{1.2}        % Aktivierungsenergie mit Katalysator
+% --------------------------------------------------------------------
+% Verlauf: weicher Übergang (Sigmoid) von Edukt- zu Produktniveau
+% plus ein "Berg" (Gaußglocke) in der Mitte
+
+\begin{tikzpicture}[>={Stealth[length=5pt]}, font=\small,
+  declare function={
+    stufe(\x) = \Eedukt + (\Eprodukt-\Eedukt)/(1+exp(-2.2*(\x-4)));
+    berg(\x,\h) = stufe(\x) + (\h + (\Eedukt-stufe(4)))*exp(-(\x-4)^2/0.9);}]
+  \draw[->] (0,0) -- (8.4,0) node[below left] {Reaktionsverlauf};
+  \draw[->] (0,0) -- (0,6.4) node[above] {Energie};
+  \draw[akzentrot, very thick, smooth, samples=120, domain=0.3:7.8] plot (\x, {berg(\x,\Ea)});
+  \draw[akzentgruen!70!black, very thick, dashed, smooth, samples=120, domain=0.3:7.8]
+       plot (\x, {berg(\x,\Eak)});
+  % Niveaus und Pfeile
+  \draw[dotted] (0.3,\Eedukt) -- (5.2,\Eedukt);
+  \draw[dotted] (4.3,\Eprodukt) -- (7.8,\Eprodukt);
+  \draw[dotted, akzentrot] (2.6,\Eedukt+\Ea) -- (4,\Eedukt+\Ea);
+  \draw[dotted, akzentgruen!70!black] (3.3,\Eedukt+\Eak) -- (4,\Eedukt+\Eak);
+  \draw[<->, akzentrot] (2.6,\Eedukt) -- node[left] {$E_A$} (2.6,\Eedukt+\Ea);
+  \draw[<->, akzentgruen!70!black] (3.3,\Eedukt) -- node[right, xshift=-1pt] {$E_A'$} (3.3,\Eedukt+\Eak);
+  \draw[<->, akzentblau] (6.8,\Eprodukt) -- node[right] {$\Delta_r H < 0$} (6.8,\Eedukt);
+  \draw[dotted] (6.8,\Eedukt) -- (5.2,\Eedukt);
+  \node[above] at (0.9,\Eedukt) {Edukte};
+  \node[below] at (7.2,\Eprodukt) {Produkte};
+  \draw[akzentrot, very thick] (5.6,5.9) -- (6.1,5.9) node[right, text=black] {ohne Katalysator};
+  \draw[akzentgruen!70!black, very thick, dashed] (5.6,5.4) -- (6.1,5.4) node[right, text=black] {mit Katalysator};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+% ---- Werte (in cm auf dem Papier) ---------------------------------
+\def\Eedukt{3}       % Energie der Edukte
+\def\Eprodukt{1}     % Energie der Produkte (kleiner -> exotherm)
+\def\Ea{2.6}         % Aktivierungsenergie ohne Katalysator
+\def\Eak{1.2}        % Aktivierungsenergie mit Katalysator
+% --------------------------------------------------------------------
+% Verlauf: weicher Übergang (Sigmoid) von Edukt- zu Produktniveau
+% plus ein "Berg" (Gaußglocke) in der Mitte
+\centering
+\begin{passend}%
+\begin{tikzpicture}[>={Stealth[length=5pt]}, font=\small,
+  declare function={
+    stufe(\x) = \Eedukt + (\Eprodukt-\Eedukt)/(1+exp(-2.2*(\x-4)));
+    berg(\x,\h) = stufe(\x) + (\h + (\Eedukt-stufe(4)))*exp(-(\x-4)^2/0.9);}]
+  \draw[->] (0,0) -- (8.4,0) node[below left] {Reaktionsverlauf};
+  \draw[->] (0,0) -- (0,6.4) node[above] {Energie};
+  \draw[akzentrot, very thick, smooth, samples=120, domain=0.3:7.8] plot (\x, {berg(\x,\Ea)});
+  \draw[akzentgruen!70!black, very thick, dashed, smooth, samples=120, domain=0.3:7.8]
+       plot (\x, {berg(\x,\Eak)});
+  % Niveaus und Pfeile
+  \draw[dotted] (0.3,\Eedukt) -- (5.2,\Eedukt);
+  \draw[dotted] (4.3,\Eprodukt) -- (7.8,\Eprodukt);
+  \draw[dotted, akzentrot] (2.6,\Eedukt+\Ea) -- (4,\Eedukt+\Ea);
+  \draw[dotted, akzentgruen!70!black] (3.3,\Eedukt+\Eak) -- (4,\Eedukt+\Eak);
+  \draw[<->, akzentrot] (2.6,\Eedukt) -- node[left] {$E_A$} (2.6,\Eedukt+\Ea);
+  \draw[<->, akzentgruen!70!black] (3.3,\Eedukt) -- node[right, xshift=-1pt] {$E_A'$} (3.3,\Eedukt+\Eak);
+  \draw[<->, akzentblau] (6.8,\Eprodukt) -- node[right] {$\Delta_r H < 0$} (6.8,\Eedukt);
+  \draw[dotted] (6.8,\Eedukt) -- (5.2,\Eedukt);
+  \node[above] at (0.9,\Eedukt) {Edukte};
+  \node[below] at (7.2,\Eprodukt) {Produkte};
+  \draw[akzentrot, very thick] (5.6,5.9) -- (6.1,5.9) node[right, text=black] {ohne Katalysator};
+  \draw[akzentgruen!70!black, very thick, dashed] (5.6,5.4) -- (6.1,5.4) node[right, text=black] {mit Katalysator};
+\end{tikzpicture}%
+\end{passend}
+\end{ausgabe}
+
+
+
+
+%%%%  KAPITEL 8  %%%%
+\section{Weitere Pakete für die Chemie}
+
+\begin{itemize}
+	\item \texttt{chemmacros}: viele Chemie-Hilfen, etwa GHS-Piktogramme, Gefahren- und Sicherheitssätze, Nomenklatur. Achtung beim Einsatz mit deutschem \texttt{babel}, siehe Stolpersteine.
+	\item \texttt{modiagram}: Molekülorbital-Schemata.
+	\item \texttt{chemfig} kann auch Reaktionsschemata mit Strukturformeln und Pfeilen setzen (\texttt{\textbackslash schemestart} \dots\ \texttt{\textbackslash schemestop}).
+	\item Laborgeräte (Kolben, Brenner, Destillation) zeichnet man mit \TikZ selbst oder nimmt fertige Vektorgrafiken.
+\end{itemize}
+
+
+
+%%%%  KAPITEL 9  %%%%
+\section{Stolpersteine}
+
+\begin{itemize}
+	\item \textbf{\texttt{chemmacros} und deutsches \texttt{babel}:} Der Befehl \texttt{\textbackslash ch} aus \texttt{chemmacros} benutzt Anführungszeichen, die auch das deutsche \texttt{babel} belegt. Im Test blieb \texttt{pdflatex} dabei hängen. Für Gleichungen deshalb \texttt{\textbackslash ce} aus \texttt{mhchem} nehmen.
+	\item \textbf{\texttt{\textbackslash lewis} unbekannt?} In neuen Versionen von \texttt{chemfig} heißen freie Elektronenpaare \texttt{\textbackslash charge} (Kapitel~4.2).
+	\item \textbf{Ladung landet am falschen Atom?} In \texttt{\textbackslash ce} gehört die Ladung direkt hinter das Teilchen: \texttt{SO4\^{}2-}, nicht \texttt{SO4 \^{}2-}.
+	\item \textbf{Oxidationszahl innerhalb von \texttt{\textbackslash ce}?} \texttt{\textbackslash oz} braucht dort Dollarzeichen: \texttt{\textbackslash ce\{\$\textbackslash oz\{0\}\{Zn\}\$ + \dots\}}.
+	\item \textbf{\enquote{Dimension too large} oder \enquote{Arithmetic overflow}:} Ein Zwischenwert ist für \TikZ zu groß oder zu klein (etwa $10^{-14}$). Die Rechnung so umformen, dass alle Zwischenwerte zwischen etwa $10^{-5}$ und $16\,000$ liegen, wie bei der Titrationskurve.
+\end{itemize}
+
+
+
+%%%%  KAPITEL 10  %%%%
+\section{Zusammenfassung}
+
+\begin{itemize}
+	\item Reaktionsgleichungen mit \texttt{\textbackslash ce\{\dots\}}: \texttt{->}, \texttt{<=>}, \texttt{\^{}2+}, \texttt{e-}, \texttt{(aq)}, \texttt{\^{}} und \texttt{v}.
+	\item Oxidationszahlen mit \texttt{\textbackslash oz\{+II\}\{Cu\}}.
+	\item Strukturformeln mit \texttt{\textbackslash chemfig\{\dots\}}, Richtungen in 45°-Schritten, Ringe mit \texttt{*6(\dots)}, Elektronenpaare mit \texttt{\textbackslash charge}.
+	\item Periodensystem mit \texttt{\textbackslash pgfPT[\dots]}, deutsch mit \texttt{\textbackslash pgfPTsetLanguage\{de\}}.
+	\item Titrationskurve und Energiediagramm werden aus wenigen Werten berechnet; neue Werte ergeben eine neue, richtige Kurve.
+\end{itemize}
+
+\end{document}

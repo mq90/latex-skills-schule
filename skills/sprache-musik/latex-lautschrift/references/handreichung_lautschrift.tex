@@ -18,6 +18,22 @@ Vokabellisten mit Aussprache, Material für Deutsch als Zweitsprache, ein Arbeit
 
 
 
+%%%%  KAPITEL  %%%%
+\section{Was ist Lautschrift?}
+
+Die Schreibweise eines Wortes verrät oft nicht, wie man es ausspricht. Im Englischen werden \textit{through}, \textit{though} und \textit{tough} völlig verschieden gesprochen, obwohl sie fast gleich aussehen. Die \textbf{Lautschrift} löst das Problem: \textbf{Ein Zeichen steht immer für genau einen Laut}, in jeder Sprache.
+
+Das weltweit übliche System ist das \textbf{Internationale Phonetische Alphabet (IPA)}. Es steht in fast jedem Wörterbuch, im Duden und in Wikipedia. Zwei Arten von Klammern sind üblich:
+
+\begin{itemize}
+	\item \textbf{eckige Klammern} [\,\dots\,] für die genaue Aussprache, z.\,B.\ sprechen [\textipa{\textprimstress SpKEC\textsyllabic{n}}],
+	\item \textbf{Schrägstriche} /\,\dots\,/ für die \enquote{gemeinte} Lautfolge; so stehen sie in englischen Wörterbüchern, z.\,B.\ think /\textipa{TINk}/.
+\end{itemize}
+
+Für den Alltag ist der Unterschied unwichtig: Man übernimmt die Klammern, die das Wörterbuch benutzt.
+
+
+
 %%%%  KAPITEL 1  %%%%
 \section{Zwei Wege zur Lautschrift}
 
@@ -33,7 +49,7 @@ Vokabellisten mit Aussprache, Material für Deutsch als Zweitsprache, ein Arbeit
 \end{tabular}
 \end{center}
 
-Als Faustregel gilt: Für einzelne Umschriften in einem bestehenden Dokument nimmt man \texttt{tipa}. Für neues Material mit viel Lautschrift, etwa lange Vokabellisten, ist Unicode bequemer. Diese Handreichung ist mit pdflatex gesetzt; alle Ausgaben stammen deshalb aus \texttt{tipa}. Der Unicode-Weg folgt in Kapitel~7.
+Als Faustregel gilt: Für einzelne Umschriften in einem bestehenden Dokument nimmt man \texttt{tipa}. Für neues Material mit viel Lautschrift, etwa lange Vokabellisten, ist Unicode bequemer. Diese Handreichung ist mit pdflatex gesetzt; alle Ausgaben stammen deshalb aus \texttt{tipa}. Der Unicode-Weg folgt in Kapitel~\ref{sec:unicode}.
 
 
 
@@ -69,7 +85,7 @@ Lied [\textipa{li:t}], Bett [\textipa{bEt}], ich [\textipa{IC}], Schule [\textip
 
 
 %%%%  KAPITEL 3  %%%%
-\section{Betonung und der Konflikt mit \texttt{babel}}
+\section{Betonung und der Konflikt mit \texttt{babel}}\label{sec:babel}
 
 In \texttt{tipa} steht das Anführungszeichen \texttt{"} für den Betonungsstrich \textipa{\textprimstress} vor der betonten Silbe. Mit \texttt{babel} und der Sprache \texttt{ngerman} ist \texttt{"} aber bereits belegt: \texttt{"a} ergibt dort ein \enquote{ä}. Das Ergebnis ist eine falsche Umschrift ohne jede Fehlermeldung:
 
@@ -240,6 +256,101 @@ Für Englisch kommen einige Zeichen hinzu, etwa \texttt{T} und \texttt{D} für d
 
 
 
+%%%%  UNTERKAPITEL  %%%%
+\subsection{Beispiele aus fünf Sprachen}
+
+Dieselben Kürzel funktionieren für jede Sprache. In der Tabelle steht der Betonungsstrich als \texttt{\textbackslash textprimstress}, deshalb genügt hier \texttt{\textbackslash textipa}. Neu sind \texttt{\textbackslash textsubarch} (unsilbischer Laut), \texttt{\textbackslash t\{ts\}} (Bogen über zwei Zeichen), \texttt{R} (einmal angeschlagenes r) und \texttt{\textbackslash super j} (hochgestelltes j für weiche Konsonanten):
+
+\begin{lstlisting}[style=latex]
+\begin{tabular}{lll}
+	\toprule
+	\textbf{Sprache} & \textbf{Wort} & \textbf{Lautschrift} \\
+	\midrule
+	Deutsch    & Bär            & [\textipa{bE:\textsubarch{5}}] \\
+	           & Mütter         & [\textipa{\textprimstress mYt5}] \\
+	           & Zeitung        & [\textipa{\textprimstress \t{ts}aItUN}] \\
+	\midrule
+	Englisch   & thought        & /\textipa{TO:t}/ \\
+	(britisch) & though         & /\textipa{D@U}/ \\
+	           & tough          & /\textipa{t2f}/ \\
+	\midrule
+	Französisch & bon vin       & [\textipa{b\~O v\~E}] \\
+	           & rue            & [\textipa{Ky}] \\
+	           & peur           & [\textipa{p\oe K}] \\
+	\midrule
+	Spanisch   & perro (Hund)   & [\textipa{\textprimstress pero}] \\
+	           & pero (aber)    & [\textipa{\textprimstress peRo}] \\
+	           & lado (Seite)   & [\textipa{\textprimstress laDo}] \\
+	\midrule
+	Russisch   & mjaso (Fleisch) & [\textipa{\textprimstress m\super jas@}] \\
+	\bottomrule
+\end{tabular}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\centering
+	\begin{tabular}{lll}
+		\toprule
+		\textbf{Sprache} & \textbf{Wort} & \textbf{Lautschrift} \\
+		\midrule
+		Deutsch    & Bär            & [\textipa{bE:\textsubarch{5}}] \\
+		           & Mütter         & [\textipa{\textprimstress mYt5}] \\
+		           & Zeitung        & [\textipa{\textprimstress \t{ts}aItUN}] \\
+		\midrule
+		Englisch   & thought        & /\textipa{TO:t}/ \\
+		(britisch) & though         & /\textipa{D@U}/ \\
+		           & tough          & /\textipa{t2f}/ \\
+		\midrule
+		Französisch & bon vin       & [\textipa{b\~O v\~E}] \\
+		           & rue            & [\textipa{Ky}] \\
+		           & peur           & [\textipa{p\oe K}] \\
+		\midrule
+		Spanisch   & perro (Hund)   & [\textipa{\textprimstress pero}] \\
+		           & pero (aber)    & [\textipa{\textprimstress peRo}] \\
+		           & lado (Seite)   & [\textipa{\textprimstress laDo}] \\
+		\midrule
+		Russisch   & mjaso (Fleisch) & [\textipa{\textprimstress m\super jas@}] \\
+		\bottomrule
+	\end{tabular}
+\end{ausgabe}
+
+Im Spanischen zeigt sich schön, warum Lautschrift nützt: \textit{perro} (Hund) hat ein gerolltes [\textipa{r}], \textit{pero} (aber) ein einmal angeschlagenes [\textipa{R}]; im Schriftbild sieht man nur ein oder zwei r.
+
+
+%%%%  UNTERKAPITEL  %%%%
+\subsection{Ein eigener Befehl für Vokabellisten}
+
+Ein eigener Befehl spart Tipparbeit und sorgt für einheitliche Klammern. Sechs Wörter mit \enquote{ough} und sechs verschiedenen Aussprachen sind ein guter Einstieg, um zu zeigen, warum man Lautschrift überhaupt braucht:
+
+\begin{lstlisting}[style=latex]
+\newcommand\aussprache[1]{/\textipa{#1}/}
+\begin{tabular}{lll}
+	through & \aussprache{Tru:} & durch \\
+	thought & \aussprache{TO:t} & Gedanke \\
+	though  & \aussprache{D@U}  & obwohl \\
+	tough   & \aussprache{t2f}  & hart, zäh \\
+	cough   & \aussprache{k6f}  & Husten \\
+	bough   & \aussprache{baU}  & Ast \\
+\end{tabular}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\centering
+	\newcommand\aussprache[1]{/\textipa{#1}/}
+	\begin{tabular}{lll}
+		through & \aussprache{Tru:} & durch \\
+		thought & \aussprache{TO:t} & Gedanke \\
+		though  & \aussprache{D@U}  & obwohl \\
+		tough   & \aussprache{t2f}  & hart, zäh \\
+		cough   & \aussprache{k6f}  & Husten \\
+		bough   & \aussprache{baU}  & Ast \\
+	\end{tabular}
+\end{ausgabe}
+
+Für Umschriften mit Betonungsstrich \texttt{"} nimmt man stattdessen \texttt{\textbackslash ipa}, der die Schrägstriche durch eckige Klammern ersetzt (Kapitel~\ref{sec:babel}).
+
+
+
 %%%%  KAPITEL 5  %%%%
 \section{Zusatzzeichen und Langformen}
 
@@ -327,7 +438,7 @@ Das Vokalviereck ordnet die Vokale nach der Lage der Zunge: links vorn, rechts h
 
 
 %%%%  KAPITEL 7  %%%%
-\section{Der Unicode-Weg mit xelatex}
+\section{Der Unicode-Weg mit xelatex}\label{sec:unicode}
 
 Mit xelatex (oder lualatex) schreibt man die Lautzeichen direkt in den Quelltext, zum Beispiel kopiert von \texttt{ipa.typeit.org}. Dafür braucht man eine Schrift, die alle IPA-Zeichen enthält. Gut geeignet und kostenlos sind \textit{Charis SIL}, \textit{Doulos SIL} und \textit{Gentium Plus} (\texttt{software.sil.org}). Das Grundgerüst:
 
@@ -344,6 +455,43 @@ Mädchen \ipa{!\textipa{\textprimstress mE:tC@n}!}, Abend \ipa{!\textipa{\textpr
 \end{lstlisting}
 
 Ein Konflikt mit \texttt{babel} entsteht hier nicht, weil der Betonungsstrich ein eigenes Zeichen ist. Das Dokument muss aber mit \texttt{xelatex} statt \texttt{pdflatex} übersetzt werden. Fehlt der Schrift ein Zeichen, bleibt im PDF eine Lücke; im Protokoll (\texttt{.log}) steht dann \enquote{Missing character}. Ein vollständiges Beispiel mit Vokalviereck liegt im Skill als \texttt{vorlage\_lautschrift\_unicode.tex}.
+
+
+
+%%%%  KAPITEL  %%%%
+\section{Wo finde ich die richtige Lautschrift?}
+
+\begin{center}
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{3.8cm}>{\raggedright\arraybackslash}p{11.6cm}@{}}
+	\toprule
+	\textbf{Wiktionary} & Aussprache in IPA zu fast jedem Wort, viele Sprachen \newline \url{https://de.wiktionary.org} \\ \addlinespace
+	\textbf{Cambridge Dictionary} & Englisch, britisch und amerikanisch, mit Hörbeispiel \newline \url{https://dictionary.cambridge.org} \\ \addlinespace
+	\textbf{Duden online} & Deutsche Wörter, bei vielen Einträgen mit Lautschrift \newline \url{https://www.duden.de} \\ \addlinespace
+	\textbf{IPA-Tabelle (deutsch)} & Die offizielle Übersicht aller Zeichen, frei unter einer Creative-Commons-Lizenz \newline \url{https://de.wikipedia.org/wiki/Datei:IPA-Tabelle_2020_de.pdf} \\ \addlinespace
+	\textbf{IPA mit Hörbeispielen} & Jedes Zeichen anklicken und anhören \newline \url{https://www.internationalphoneticalphabet.org/ipa-sounds/ipa-chart-with-sounds/} \\ \addlinespace
+	\textbf{Liste der IPA-Zeichen} & Alle Zeichen mit Beispielen (Wikipedia) \newline \url{https://de.wikipedia.org/wiki/Liste_der_IPA-Zeichen} \\ \addlinespace
+	\textbf{IPA-Tastatur} & Zeichen anklicken, kopieren, einfügen (für den Unicode-Weg) \newline \url{https://ipa.typeit.org} \\ \addlinespace
+	\textbf{tipa} & Paket und Anleitung \texttt{tipaman.pdf} \newline \url{https://ctan.org/pkg/tipa} \\ \addlinespace
+	\textbf{Charis SIL / Doulos SIL} & Kostenlose Schriften mit allen IPA-Zeichen \newline \url{https://software.sil.org/charis/} \\
+	\bottomrule
+\end{tabular}
+\end{center}
+
+
+
+%%%%  KAPITEL  %%%%
+\section{Checkliste bei Problemen}
+
+\begin{itemize}
+	\item \textbf{Zeichen sieht falsch aus?} In \texttt{\textbackslash textipa\{\dots\}} sind Groß- und Kleinbuchstaben verschieden: \texttt{S} = \textipa{S}, \texttt{s} = \textipa{s}. Ziffern sind Sonderzeichen: \texttt{5} = \textipa{5}, \texttt{6} = \textipa{6}.
+	\item \textbf{Ein ä statt der Betonung?} Das Anführungszeichen wurde mit \texttt{\textbackslash textipa} benutzt; \texttt{\textbackslash ipa\{\dots\}} oder \texttt{\textbackslash textprimstress} nehmen (Kapitel~\ref{sec:babel}).
+	\item \textbf{\texttt{\textbackslash;} oder \texttt{\textbackslash!} in einer Formel bricht ab?} \texttt{tipa} wurde ohne die Option \texttt{safe} geladen.
+	\item \textbf{Ein gewöhnliches r statt \textipa{\textturnr} oder \textipa{\textscr}, ohne Fehlermeldung?} Im \texttt{safe}-Modus die Langformen \texttt{\textbackslash textturnr} und \texttt{\textbackslash textscr} verwenden.
+	\item \textbf{Schrift sieht pixelig aus?} \texttt{\textbackslash usepackage\{lmodern\}} und \texttt{\textbackslash usepackage[T1]\{fontenc\}} in die Präambel (in der universalen \texttt{header.tex} enthalten).
+	\item \textbf{IPA-Zeichen aus dem Internet eingefügt und pdflatex meldet einen Fehler?} pdflatex versteht diese Zeichen nicht. Entweder das \texttt{tipa}-Kürzel benutzen oder mit xelatex übersetzen (Kapitel~\ref{sec:unicode}).
+	\item \textbf{Mit xelatex fehlen Zeichen im PDF?} Die Schrift hat sie nicht; Charis SIL oder Doulos SIL einstellen.
+\end{itemize}
 
 
 

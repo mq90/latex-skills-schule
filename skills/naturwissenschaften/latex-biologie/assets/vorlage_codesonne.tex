@@ -1,0 +1,87 @@
+% ===================================================================
+%  Biologie: Codesonne (genetischer Code der mRNA), komplett berechnet.
+%  Lesen von innen nach außen: 1. Base (5'), 2. Base, 3. Base (3'),
+%  außen die Aminosäure. Farben: Eigenschaft der Aminosäure.
+%  Kompilieren: pdflatex vorlage_codesonne.tex
+% ===================================================================
+\documentclass[border=2mm]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[ngerman]{babel}
+\usepackage{tikz}
+
+\definecolor{akzentblau}{HTML}{2563EB}
+\definecolor{akzentrot}{HTML}{DC2626}
+\definecolor{akzentgruen}{HTML}{16A34A}
+\definecolor{akzentorange}{HTML}{EA580C}
+\definecolor{akzentlila}{HTML}{7C3AED}
+
+% Farben der Basen und der Aminosäure-Gruppen
+\colorlet{baseU}{akzentrot!30}    \colorlet{baseC}{akzentblau!30}
+\colorlet{baseA}{akzentgruen!30}  \colorlet{baseG}{akzentorange!35}
+\colorlet{aau}{yellow!35}      % unpolar
+\colorlet{aap}{akzentgruen!22}    % polar
+\colorlet{aas}{akzentrot!25}      % sauer
+\colorlet{aab}{akzentblau!25}     % basisch
+\colorlet{aax}{black!25}       % Stopp
+
+% Ring zwischen Radius r1 und r2, von Winkel a1 bis a2 (im Uhrzeigersinn)
+\newcommand\ringstueck[5]{% #1 r1, #2 r2, #3 a1, #4 a2, #5 Füllfarbe
+  \filldraw[fill=#5, draw=white, line width=0.6pt]
+    (#3:#1) arc[start angle=#3, end angle=#4, radius=#1]
+    -- (#4:#2) arc[start angle=#4, end angle=#3, radius=#2] -- cycle;}
+
+\begin{document}
+\begin{tikzpicture}[font=\sffamily]
+  \def\w{5.625}     % 360° / 64 Codons
+  % ---------- Ringe 1 bis 3: die drei Basen -----------------------------
+  \foreach \b [count=\i from 0] in {U,C,A,G} {
+    % 1. Base: 4 Viertel
+    \pgfmathsetmacro\aA{90-\i*90} \pgfmathsetmacro\aB{\aA-90}
+    \ringstueck{0}{1.25}{\aA}{\aB}{base\b}
+    \node[font=\sffamily\Large\bfseries] at ({\aA-45}:0.75) {\b};
+    \foreach \c [count=\j from 0] in {U,C,A,G} {
+      % 2. Base: 16 Stücke
+      \pgfmathsetmacro\bA{\aA-\j*22.5} \pgfmathsetmacro\bB{\bA-22.5}
+      \ringstueck{1.25}{2.2}{\bA}{\bB}{base\c}
+      \node[font=\sffamily\bfseries] at ({\bA-11.25}:1.73) {\c};
+      \foreach \d [count=\k from 0] in {U,C,A,G} {
+        % 3. Base: 64 Stücke
+        \pgfmathsetmacro\cA{\bA-\k*\w} \pgfmathsetmacro\cB{\cA-\w}
+        \ringstueck{2.2}{2.9}{\cA}{\cB}{base\d}
+        \node[font=\sffamily\scriptsize] at ({\cA-\w/2}:2.55) {\d};
+      }
+    }
+  }
+  % ---------- Ring 4: Aminosäuren ----------------------------------------
+  % Start/Anzahl Codons/Name/Eigenschaft (u, p, s, b, x)
+  \foreach \s/\n/\aa/\e in {0/2/Phe/u, 2/2/Leu/u, 4/4/Ser/p, 8/2/Tyr/p, 10/2/Stopp/x,
+      12/2/Cys/p, 14/1/Stopp/x, 15/1/Trp/u, 16/4/Leu/u, 20/4/Pro/u, 24/2/His/b,
+      26/2/Gln/p, 28/4/Arg/b, 32/3/Ile/u, 35/1/Met/u, 36/4/Thr/p, 40/2/Asn/p,
+      42/2/Lys/b, 44/2/Ser/p, 46/2/Arg/b, 48/4/Val/u, 52/4/Ala/u, 56/2/Asp/s,
+      58/2/Glu/s, 60/4/Gly/u} {
+    \pgfmathsetmacro\dA{90-\s*\w} \pgfmathsetmacro\dB{\dA-\n*\w}
+    \pgfmathsetmacro\mitte{(\dA+\dB)/2}
+    \ringstueck{2.9}{4.25}{\dA}{\dB}{aa\e}
+    % Schrift radial; auf der linken Seite um 180° gedreht, damit lesbar
+    \pgfmathsetmacro\m{mod(\mitte+720,360)}
+    \pgfmathsetmacro\dreh{(\m>90 && \m<270) ? \mitte+180 : \mitte}
+    \node[rotate=\dreh, font=\sffamily\small] at (\mitte:3.58) {\aa};
+  }
+  % Start-Codon AUG hervorheben
+  \pgfmathsetmacro\sA{90-35*\w}
+  \draw[akzentrot, line width=1.4pt] (\sA:2.9) arc[start angle=\sA, end angle=\sA-\w, radius=2.9]
+     -- ({\sA-\w}:4.25) arc[start angle=\sA-\w, end angle=\sA, radius=4.25] -- cycle;
+  \node[akzentrot, font=\sffamily\footnotesize\bfseries, anchor=west] at ({\sA-\w/2}:4.35) {Start};
+  % ---------- Legende ----------------------------------------------------
+  \begin{scope}[shift={(5.2,-2.2)}, font=\sffamily\footnotesize]
+    \foreach \f/\t [count=\i] in {aau/unpolar, aap/polar, aas/sauer, aab/basisch, aax/Stopp} {
+      \fill[\f, draw=black!30] (0,-0.45*\i) rectangle ++(0.35,0.3);
+      \node[anchor=west] at (0.4,-0.45*\i+0.15) {\t};
+    }
+  \end{scope}
+  \node[font=\sffamily\footnotesize, align=left, anchor=north west] at (5.2,3.9)
+       {Lesen von innen nach außen:\\ 1.\ Base (5'-Ende) \\ 2.\ Base \\ 3.\ Base (3'-Ende)\\
+        $\to$ Aminosäure};
+\end{tikzpicture}
+\end{document}
