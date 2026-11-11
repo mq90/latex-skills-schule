@@ -9,6 +9,7 @@
 *.fls
 # erzeugte Dateien
 *.pdf
+!handreichungen/**/*.pdf
 sudokus.tex
 karte_daten.tex
 # Geodaten nicht ins Repo (Größe, Lizenzen)

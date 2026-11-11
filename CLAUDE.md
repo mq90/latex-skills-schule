@@ -12,5 +12,9 @@
   `python3 werkzeuge/makros_auflisten.py` und
   `python3 werkzeuge/alles_kompilieren.py` – es muss alles kompilieren.
   Neue oder geänderte Grafiken als PNG rendern und ansehen.
+- Nach Änderungen an Handreichungen oder Stildateien
+  `python3 werkzeuge/handreichungen_bauen.py` ausführen und die PDFs in
+  `handreichungen/` mit committen; neue Handreichungen in der PDF-Tabelle der
+  `README.md` ergänzen.
 - Keine Stolpersteine in eine SKILL.md schreiben, die nicht getestet sind.
 - Commits mit der anonymen GitHub-Adresse (`72416397+mq90@users.noreply.github.com`).

@@ -21,6 +21,7 @@ skills/
 ├── illustration/              tikzpeople-Figuren, Sprechblasen
 ├── gesellschaftswissenschaft/ Landkarten aus Geodaten
 └── raetsel-spiele/            Sudoku, Schach
+handreichungen/                fertige PDFs aller Handreichungen
 werkzeuge/                     Prüf- und Hilfsskripte für das Repository
 ```
 
@@ -77,6 +78,35 @@ Jedes Beispiel steht erst als Code (gelber Kasten, `style=latex`) und
 den `references/`-Ordnern sind vollständige Handreichungen und zugleich die
 Vorlagen-Sammlung für Claude.
 
+## Handreichungen als PDF
+
+Alle Handreichungen und Nachschlagewerke liegen fertig gesetzt im Ordner
+[`handreichungen/`](handreichungen) – zum Lesen, Ausdrucken und Weitergeben,
+auch ohne LaTeX-Installation. Die Quelltexte stehen in den
+`references/`-Ordnern der jeweiligen Skills.
+
+| Bereich | Handreichung | Seiten |
+|---|---|---|
+| Grundlagen | [Erste Schritte mit LaTeX: Die Präambel](handreichungen/grundlagen/Erste-Schritte-mit-LaTeX-Die-Pr%C3%A4ambel.pdf) | 5 |
+|  | [Erste Schritte mit TikZ: Grundlagen des Grafikpakets](handreichungen/grundlagen/Erste-Schritte-mit-TikZ-Grundlagen-des-Grafikpakets.pdf) | 11 |
+|  | [Erste Schritte mit eigenen Befehlen und Umgebungen in LaTeX](handreichungen/grundlagen/Erste-Schritte-mit-eigenen-Befehlen-und-Umgebungen-in-LaTeX.pdf) | 6 |
+|  | [Erste Schritte mit mathematischem Formelsatz in LaTeX](handreichungen/grundlagen/Erste-Schritte-mit-mathematischem-Formelsatz-in-LaTeX.pdf) | 16 |
+|  | [Multiple-Choice-Fragen mit LaTeX erstellen](handreichungen/grundlagen/Multiple-Choice-Fragen-mit-LaTeX-erstellen.pdf) | 6 |
+|  | [Tabellenstruktur und Tabellengestaltung in LaTeX](handreichungen/grundlagen/Tabellenstruktur-und-Tabellengestaltung-in-LaTeX.pdf) | 17 |
+|  | [Zeichnen mit TikZ in LaTeX](handreichungen/grundlagen/Zeichnen-mit-TikZ-in-LaTeX.pdf) | 13 |
+| Mathematik | [Baumdiagramme und Diagramme der Stochastik mit TikZ](handreichungen/mathematik/Baumdiagramme-und-Diagramme-der-Stochastik-mit-TikZ.pdf) | 9 |
+|  | [Funktionsgraphen mit TikZ zeichnen](handreichungen/mathematik/Funktionsgraphen-mit-TikZ-zeichnen.pdf) | 11 |
+|  | [Geometrische Figuren mit TikZ zeichnen](handreichungen/mathematik/Geometrische-Figuren-mit-TikZ-zeichnen.pdf) | 10 |
+|  | [Venn-Diagramme mit TikZ in LaTeX](handreichungen/mathematik/Venn-Diagramme-mit-TikZ-in-LaTeX.pdf) | 10 |
+| Informatik | [Ausfüllbare PDF-Formulare mit LaTeX erstellen](handreichungen/informatik/Ausf%C3%BCllbare-PDF-Formulare-mit-LaTeX-erstellen.pdf) | 15 |
+|  | [Automaten mit TikZ erstellen](handreichungen/informatik/Automaten-mit-TikZ-erstellen.pdf) | 7 |
+|  | [Digitale Schaltkreise mit TikZ erstellen](handreichungen/informatik/Digitale-Schaltkreise-mit-TikZ-erstellen.pdf) | 5 |
+|  | [Programmablaufpläne mit TikZ erstellen](handreichungen/informatik/Programmablaufpl%C3%A4ne-mit-TikZ-erstellen.pdf) | 6 |
+|  | [Quellcode mit dem listings-Paket darstellen](handreichungen/informatik/Quellcode-mit-dem-listings-Paket-darstellen.pdf) | 6 |
+|  | [UML-Klassendiagramme mit TikZ erstellen](handreichungen/informatik/UML-Klassendiagramme-mit-TikZ-erstellen.pdf) | 9 |
+| Illustration | [Sprechblasen mit TikZ in LaTeX](handreichungen/illustration/Sprechblasen-mit-TikZ-in-LaTeX.pdf) | 5 |
+| Sprache & Musik | [Notensätze mit MusiXTeX erstellen](handreichungen/sprache-musik/Notens%C3%A4tze-mit-MusiXTeX-erstellen.pdf) | 3 |
+
 ## Installieren
 
 - **claude.ai / Claude-App:** den Ordner eines Skills als ZIP packen (der
@@ -91,9 +121,10 @@ Vorlagen-Sammlung für Claude.
 |---|---|
 | `werkzeuge/alles_kompilieren.py` | kompiliert jede Vorlage, jede Handreichung und jedes Code-Beispiel aus den SKILL.md-Dateien gegen die universalen Stildateien; `--pdf ordner` sammelt die PDFs |
 | `werkzeuge/makros_auflisten.py` | erzeugt `makros.md` neu aus header/newcommands |
+| `werkzeuge/handreichungen_bauen.py` | baut alle Handreichungen neu als PDF in `handreichungen/` |
 
-Nach jeder Änderung an `header.tex` oder `newcommands.tex` beide Skripte
-ausführen.
+Nach jeder Änderung an `header.tex` oder `newcommands.tex` alle drei Skripte
+ausführen, nach Änderungen an einer Handreichung `handreichungen_bauen.py`.
 
 ## Voraussetzungen
 
