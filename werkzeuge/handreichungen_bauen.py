@@ -58,9 +58,11 @@ def main():
         bereich = tex.relative_to(ROOT / "skills").parts[0]
         with tempfile.TemporaryDirectory() as d:
             d = pathlib.Path(d)
-            for f in tex.parent.iterdir():
-                if f.is_file():
-                    shutil.copy(f, d)
+            # Datendateien aus assets/ desselben Skills (z. B. Karten) stehen auch zur Verfügung
+            for o in (tex.parent.parent / "assets", tex.parent):
+                for f in o.iterdir() if o.is_dir() else []:
+                    if f.is_file():
+                        shutil.copy(f, d)
             for f in ("header.tex", "newcommands.tex"):
                 shutil.copy(STIL / f, d)
             ok, msg = kompiliere(d / tex.name, d)

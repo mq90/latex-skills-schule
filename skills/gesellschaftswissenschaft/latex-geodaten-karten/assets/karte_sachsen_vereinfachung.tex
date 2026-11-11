@@ -1,0 +1,40 @@
+% ===================================================================
+%  Sachsen in vier Vereinfachungsstufen (Douglas-Peucker)
+%  Daten: Natural Earth (gemeinfrei), erzeugt mit karten_beispiele.py sachsen
+% ===================================================================
+\documentclass[border=0.1mm]{standalone}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+
+\input{sachsen_stufen.tex}
+
+\definecolor{akzentorange}{HTML}{EA580C}
+
+% "Punkte/Fläche" aus der Datendatei zerlegen und ausgeben
+\def\zeigeinfo#1/#2\relax{#1 Punkte \quad $A \approx #2\,\mathrm{km}^2$}
+\newcommand\info[1]{\expandafter\expandafter\expandafter
+  \zeigeinfo\csname geo:info:SN-#1\endcsname\relax}
+
+\begin{document}
+\begin{tikzpicture}[font=\sffamily\scriptsize,
+                    umriss/.style={fill=akzentorange!22, draw=akzentorange!80!black,
+                                   line width=0.5pt, line join=round}]
+  \foreach \stufe/\x/\titel in {Original/0/Original, Fein/5.6/{Toleranz 0,2\,mm},
+                                Mittel/11.2/{Toleranz 1\,mm}, Grob/16.8/{Toleranz 4\,mm}} {
+    \begin{scope}[xshift=\x cm]
+      \path[umriss] \csname geo:gebiet:SN-\stufe\endcsname;
+      \node[font=\sffamily\small\bfseries] at (2.5,4.45) {\titel};
+      \node at (2.5,-0.4) {\info{\stufe}};
+    \end{scope}
+  }
+  % Eckpunkte der beiden groben Stufen sichtbar machen
+  \foreach \stufe/\x in {Mittel/11.2, Grob/16.8} {
+    \expandafter\let\expandafter\liste\csname geo:punkte:SN-\stufe\endcsname
+    \begin{scope}[xshift=\x cm]
+      \foreach \p in \liste { \fill[black] \p circle (0.9pt); }
+    \end{scope}
+  }
+\end{tikzpicture}
+\end{document}

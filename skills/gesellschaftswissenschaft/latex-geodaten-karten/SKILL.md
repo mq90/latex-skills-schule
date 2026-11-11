@@ -1,6 +1,6 @@
 ---
 name: latex-geodaten-karten
-description: Echte Landkarten in LaTeX/TikZ zeichnen – Deutschland mit Bundesländern, Sachsen, Europa, Weltkarten in verschiedenen Projektionen, Flüsse, Seen, Gebirge, Straßen, historische Grenzen – aus freien Geodaten (GeoJSON) mit dem Skript geo2tikz.py. Verwende diesen Skill immer, wenn jemand eine Karte, stumme Karte, Umrisskarte, Länder- oder Bundesländerkarte, Kartenprojektionen (Mercator, Robinson, Equal Earth), Polygonvereinfachung (Douglas-Peucker) oder Geografie-Arbeitsblätter mit LaTeX oder TikZ erstellen will.
+description: Echte Landkarten in LaTeX/TikZ zeichnen – Deutschland mit Bundesländern, Sachsen, Europa, Weltkarten in verschiedenen Projektionen, Flüsse, Seen, Gebirge, Straßen, historische Grenzen – aus freien Geodaten (GeoJSON) mit den Skripten geo2tikz.py (beliebiger Ausschnitt) und karten_beispiele.py (fertiger Atlas: physische Karte mit Höhenschichten, Autobahnen und Bahn, USA, Europa mit Vierfärbung, Welt mit Tissot-Kreisen, Römisches Reich, Deutschland 1938/1945/1949–1990). Verwende diesen Skill immer, wenn jemand eine Karte, stumme Karte, Umrisskarte, Länder- oder Bundesländerkarte, Kartenprojektionen (Mercator, Robinson, Equal Earth), Polygonvereinfachung (Douglas-Peucker), Höhenschichten, historische Karten, Georeferenzieren oder Geografie-, Geschichts- und GK-Arbeitsblätter mit LaTeX oder TikZ erstellen will.
 ---
 
 # Karten aus Geodaten mit TikZ
@@ -65,6 +65,44 @@ Leerzeichen zu `-`, mehrfach vorkommende IDs bekommen `-2`, `-3` (Rhein, Rhein-2
 | `--toleranz 0.02` | Vereinfachung in cm (Douglas-Peucker). Größer = kleinere Datei, gröbere Umrisse. `0` = aus |
 | `--nachkomma 2` | Nachkommastellen der Koordinaten |
 
+## Der fertige Atlas (`assets/karte_*.tex`)
+
+Zehn getestete `standalone`-Karten mit ihren Datendateien. Erst prüfen, ob
+eine davon passt oder sich anpassen lässt, bevor neue Daten erzeugt werden.
+
+| Vorlage | Datendatei | Inhalt |
+|---|---|---|
+| `karte_sachsen_lage.tex` | `deutschland_daten.tex` | Lagekarte: Sachsen farbig, Elbe, Saale, drei Städte |
+| `karte_deutschland_bundeslaender.tex` | `deutschland_daten.tex` | Länder in vier Farben, Flüsse, Seen, Hauptstädte, Maßstab, Nordpfeil |
+| `karte_deutschland_physisch.tex` | `deutschland_daten.tex` | Höhenschichten (ETOPO1), Gebirge, Gipfel, Legende |
+| `karte_deutschland_verkehr.tex` | `deutschland_daten.tex` | Autobahnen mit Nummern, Bahnstrecken |
+| `karte_usa_bundesstaaten.tex` | `usa_daten.tex` | Census-Regionen, Alaska/Hawaii als Einschub |
+| `karte_europa.tex` | `europa_daten.tex` | DSatur-Färbung (4 Farben), Länderkürzel |
+| `karte_welt_projektionen.tex` | `welt_*_daten.tex` | Mercator, Robinson, Equal Earth mit Tissot-Kreisen |
+| `karte_rom_200.tex` | `rom_daten.tex` | Römisches Reich um 200 n. Chr., Provinzen, Straßen |
+| `karte_deutschland_historisch.tex` | `historisch_daten.tex` | Ende 1938, Besatzungszonen 1945, BRD/DDR |
+| `karte_sachsen_vereinfachung.tex` | `sachsen_stufen.tex` | Douglas-Peucker in vier Stufen mit Punktzahl und Fläche |
+
+Befehle der Atlas-Datendateien (anderes Schema als bei `geo2tikz.py`):
+`\Gebiet{DE-SN}`, `\Fluss{Elbe}`, `\See{Bodensee}`, `\GeoKoordinaten`
+(legt `(DE-SN)`, `(Leipzig)` … an), `\Rahmen`, `\HundertKm`, `\GebietListe`;
+in `deutschland_daten.tex` zusätzlich `\Hoehe{500}`, `\Gebirge{Harz}`,
+`\Autobahn{A9}`, `\Bahn{alle}` und zu jeder Ebene `\…Liste`. Alle mit `\def`
+definiert: mehrere Datendateien in einem Dokument je in `\begingroup … \endgroup`
+laden. Bei `\begin{scope}[scale=…]` muss `\GeoKoordinaten` innerhalb des Scopes stehen.
+
+Neu erzeugen mit `scripts/karten_beispiele.py` (feste Einstellungen je Karte):
+```bash
+pip install shapely pyproj h5py contourpy scipy
+python3 scripts/karten_beispiele.py download   # ~170 MB nach geodaten/ (nicht ins Repo)
+python3 scripts/karten_beispiele.py deutschland   # oder usa, sachsen, europa, welt, rom, historisch
+```
+Getestet: Ein vollständiger Lauf erzeugt alle neun Datendateien identisch neu.
+
+**Lizenzen:** `rom_daten.tex` (AWMC) steht unter ODbL, `historisch_daten.tex`
+(historical-basemaps) unter GPL-3.0 – nicht unter CC BY wie der Rest des
+Repositorys. Quelle auf der Karte nennen, abgeleitete Daten unter derselben Lizenz.
+
 ## Datenquellen und Lizenzen
 
 | Quelle | Inhalt | Lizenz |
@@ -75,10 +113,9 @@ Leerzeichen zu `-`, mehrfach vorkommende IDs bekommen `-2`, `-3` (Rhein, Rhein-2
 
 Rohdaten **nicht** in ein öffentliches Repo oder Material-Paket legen
 (Größe, Lizenzpflichten). Besser: Download-Befehl dokumentieren. Ausnahme:
-die kleinen, daraus erzeugten Beispieldateien `references/beispiel_*.tex`
-(Natural Earth, gemeinfrei) für die Handreichung – Deutschland mit Ländern,
-Flüssen, Seen und Städten, Sachsen in drei Vereinfachungsstufen, Welt in
-Mercator und Equal Earth. Sie eignen sich auch zum schnellen Ausprobieren. Auf jede
+die daraus erzeugten, vereinfachten Datendateien des Atlas (`assets/*_daten.tex`)
+und `references/beispiel_deutschland.tex` (Ebenen-Schema von `geo2tikz.py`:
+Länder, Nachbarn, Flüsse, Seen, Städte; gut zum schnellen Ausprobieren). Auf jede
 Karte eine Quellenzeile setzen (in der Vorlage enthalten).
 
 ## Stolpersteine (getestet)
@@ -111,9 +148,12 @@ Karte eine Quellenzeile setzen (in der Vorlage enthalten).
 
 ## Für eine Handreichung
 
-Fertige Handreichung zu diesem Skill: `references/handreichung_landkarten.tex` (PDF im Ordner
-`handreichungen/` des Repositorys). Sie ist die Vorlagen-Sammlung für
-neue Beispiele. Für eine neue Handreichung:
+Fertige Handreichung zu diesem Skill: `references/handreichung_landkarten.tex`
+(37 Seiten; PDF im Ordner `handreichungen/` des Repositorys): Grundlagen
+(Polygonzug, Projektion, Douglas-Peucker), `geo2tikz.py` mit Beispielen,
+der komplette Atlas mit Code, Georeferenzieren, Unterrichtsideen,
+Datenquellen-Katalog. Die Atlas-Abschnitte enthalten den Code der
+`assets/karte_*.tex` wörtlich; nach Änderungen an einer Karte dort mitändern. Für eine neue Handreichung:
 
 Aufbau und Listing-Stil aus `latex-grundstil` übernehmen
 (`assets/vorlage_handreichung.tex` dort): `\input{header.tex}` und

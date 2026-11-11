@@ -1,0 +1,91 @@
+% ===================================================================
+%  Karte: Deutschland mit Bundesländern, Flüssen, Seen
+%  Daten: Natural Earth (gemeinfrei), umgewandelt mit karten_beispiele.py
+%  Kompilieren: pdflatex karte_deutschland_bundeslaender.tex
+%  (deutschland_daten.tex muss im selben Ordner liegen)
+% ===================================================================
+\documentclass[border=0.1mm]{standalone}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc}
+
+\input{deutschland_daten.tex}
+
+% --- Farben (Akzentfarben, aufgehellt) ----------------------------------
+\definecolor{akzentblau}{HTML}{2563EB}
+\definecolor{akzentgruen}{HTML}{16A34A}
+\definecolor{akzentorange}{HTML}{EA580C}
+\definecolor{akzentlila}{HTML}{7C3AED}
+\colorlet{farbeA}{akzentblau!18}
+\colorlet{farbeB}{akzentgruen!18}
+\colorlet{farbeC}{akzentorange!20}
+\colorlet{farbeD}{akzentlila!18}
+\colorlet{wasser}{akzentblau!55!cyan!80!black}
+\colorlet{meer}{akzentblau!7}
+
+\begin{document}
+\begin{tikzpicture}[
+    land/.style    = {draw=white, line width=0.6pt, line join=round},
+    fluss/.style   = {draw=wasser, line width=0.55pt, line join=round, line cap=round},
+    kuerzel/.style = {font=\sffamily\scriptsize\bfseries, text=black!75},
+  ]
+
+  % --- Hintergrund: Meer und Nachbarstaaten ---------------------------
+  \clip \Rahmen;
+  \fill[meer] \Rahmen;
+  \foreach \staat in {DNK,POL,CZE,AUT,CHE,LIE,FRA,LUX,BEL,NLD}
+    \fill[black!7, draw=white, line width=0.8pt] \Gebiet{\staat};
+
+  % --- Bundesländer, eingefärbt nach dem Vierfarbensatz -----------------
+  \foreach \land/\farbe in {NI/A, SH/B, HH/C, MV/C, HB/B, BB/B, BE/A, ST/C,
+                           SN/A, TH/B, HE/C, NW/B, RP/A, SL/B, BW/B, BY/D}
+    \fill[farbe\farbe, land] \Gebiet{DE-\land};
+
+  % --- Bundesgrenze kräftig nachziehen ---------------------------------
+  \draw[black!65, line width=0.9pt, line join=round] \Gebiet{DEU};
+
+  % --- Gewässer --------------------------------------------------------
+  \foreach \f in {Rhein,Elbe,Donau,Weser,Main,Oder,Mosel,Ems,Inn,Neckar,
+                  Saale,Spree,Isar,Havel,Fulda,Werra,Aller,Lech,Neisse,
+                  WeisseElster,Mulde,Lahn,Ruhr}
+    \draw[fluss] \Fluss{\f};
+  \foreach \s in {Bodensee,Mueritz,SchwerinerSee,Chiemsee,StarnbergerSee,
+                  Ammersee,SteinhuderMeer,PlauerSee,KummerowerSee}
+    \fill[wasser] \See{\s};
+
+  % --- Landeshauptstädte -----------------------------------------------
+  %     \GeoKoordinaten legt alle Orte und Ländermitten als benannte
+  %     Punkte an: (Berlin), (DE-SN), ($(Berlin)+(1,0)$) usw.
+  \GeoKoordinaten
+  \foreach \stadt in {Kiel,Hamburg,Schwerin,Bremen,Hannover,Berlin,Potsdam,
+                      Magdeburg,Duesseldorf,Erfurt,Dresden,Wiesbaden,Mainz,
+                      Saarbruecken,Stuttgart,Muenchen}
+    \fill[black!80] (\stadt) circle (1.1pt);
+  \fill[akzentorange!85!black] (Leipzig) circle (1.4pt)
+    node[right, font=\sffamily\tiny] {Leipzig};
+
+  % --- Kürzel der Länder (kleine Länder mit Hinweislinie) ---------------
+  \foreach \land in {NI,SH,MV,BB,ST,SN,TH,HE,NW,RP,BW,BY}
+    \node[kuerzel] at (DE-\land) {\land};
+  \node[kuerzel] (hh) at ($(Hamburg)+(0.75,0.25)$) {HH};
+  \node[kuerzel] (hb) at ($(Bremen)+(-0.75,0.2)$) {HB};
+  \node[kuerzel] (be) at ($(Berlin)+(0.75,0.25)$) {BE};
+  \node[kuerzel] (sl) at ($(Saarbruecken)+(-0.6,-0.45)$) {SL};
+  \draw[black!60, line width=0.3pt] (Hamburg) -- (hh.west)
+                                    (Bremen)  -- (hb.east)
+                                    (Berlin)  -- (be.west)
+                                    (Saarbruecken) -- (sl.north east);
+
+  % --- Maßstabsleiste und Nordpfeil -----------------------------------
+  \begin{scope}[shift={(0.4,0.35)}, font=\sffamily\tiny]
+    \fill[black!80] (0,0) rectangle (\HundertKm,0.08);
+    \fill[white, draw=black!80, line width=0.3pt] (\HundertKm,0) rectangle (2*\HundertKm,0.08);
+    \node[above] at (0,0.08) {0};
+    \node[above] at (\HundertKm,0.08) {100};
+    \node[above] at (2*\HundertKm,0.08) {200\,km};
+  \end{scope}
+  \draw[-{Stealth[length=5pt]}, line width=0.8pt] (11.3,12.8) -- (11.3,13.5)
+    node[above, font=\sffamily\scriptsize\bfseries] {N};
+\end{tikzpicture}
+\end{document}

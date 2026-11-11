@@ -1,0 +1,56 @@
+% ===================================================================
+%  Karte: Deutschland – Autobahnen und Bahnstrecken
+%  Daten: Natural Earth 1:10m (gemeinfrei), umgewandelt mit karten_beispiele.py
+% ===================================================================
+\documentclass[border=0.1mm]{standalone}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+
+\input{deutschland_daten.tex}
+
+\definecolor{akzentblau}{HTML}{2563EB}
+\definecolor{akzentorange}{HTML}{EA580C}
+\colorlet{autobahn}{akzentblau!85!black}
+
+\begin{document}
+\begin{tikzpicture}[
+    schild/.style = {fill=autobahn, text=white, font=\sffamily\tiny\bfseries,
+                     rounded corners=1pt, inner sep=1.2pt},
+  ]
+  \GeoKoordinaten
+  \clip \Rahmen;
+  \foreach \staat in {DNK,POL,CZE,AUT,CHE,LIE,FRA,LUX,BEL,NLD}
+    \fill[black!5, draw=white, line width=0.8pt] \Gebiet{\staat};
+  \fill[black!10] \Gebiet{DEU};
+  \foreach \land in {SH,HH,NI,HB,MV,BB,BE,ST,SN,TH,HE,NW,RP,SL,BW,BY}
+    \draw[white, line width=0.6pt] \Gebiet{DE-\land};
+  \draw[black!50, line width=0.7pt] \Gebiet{DEU};
+
+  % --- Bahnstrecken: dünn, grau-schwarz -------------------------------
+  \draw[black!45, line width=0.25pt, line join=round] \Bahn{alle};
+
+  % --- Autobahnen: alle aus der Liste, weißer Rand für bessere Lesbarkeit
+  \foreach \a in \AutobahnListe
+    \draw[white, line width=1.6pt, line join=round, line cap=round] \Autobahn{\a};
+  \foreach \a in \AutobahnListe
+    \draw[autobahn, line width=0.9pt, line join=round, line cap=round] \Autobahn{\a};
+
+  % --- Nummernschilder an einigen wichtigen Autobahnen ------------------
+  \foreach \a in {A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A14,A20,A24,A38,A45,A61,A72,A93}
+    \node[schild] at (\a) {\a};
+
+  % --- Großstädte --------------------------------------------------------
+  \foreach \stadt/\lage in {Berlin/above left, Hamburg/above left, Muenchen/below right,
+                            Leipzig/left, Dresden/right, Stuttgart/left, Hannover/left}
+    \fill[akzentorange!85!black] (\stadt) circle (1.6pt);
+  \node[left, font=\sffamily\scriptsize\bfseries] at (Leipzig) {Leipzig};
+
+  % --- Legende -------------------------------------------------------------
+  \begin{scope}[shift={(0.4,13.6)}, font=\sffamily\scriptsize]
+    \draw[autobahn, line width=0.9pt] (0,0) -- (0.6,0) node[right, black] {Autobahn};
+    \draw[black!45, line width=0.25pt] (0,-0.35) -- (0.6,-0.35) node[right, black] {Bahnstrecke};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

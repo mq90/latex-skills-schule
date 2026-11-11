@@ -1,0 +1,34 @@
+% ===================================================================
+%  Weltkarte in drei Projektionen – je eine Seite (standalone, tikz)
+%  Rot: Kreise mit 800 km Radius auf der Erde (Tissot-Indikatrix)
+%  Daten: Natural Earth 1:110m (gemeinfrei), umgewandelt mit karten_beispiele.py
+% ===================================================================
+\documentclass[tikz,border=0.1mm]{standalone}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usetikzlibrary{arrows.meta}
+
+\definecolor{akzentblau}{HTML}{2563EB}
+\definecolor{akzentrot}{HTML}{DC2626}
+\definecolor{akzentorange}{HTML}{EA580C}
+\colorlet{meer}{akzentblau!7}
+
+% Eine Karte zeichnen. Die Daten werden in einer Gruppe geladen,
+% damit sich die drei Projektionen nicht gegenseitig überschreiben.
+\newcommand\Weltkarte[1]{%
+  \begingroup
+  \input{welt_#1_daten.tex}%
+  \begin{tikzpicture}
+    \fill[meer] \Rahmen;
+    \foreach \land in \GebietListe \fill[black!12, draw=white, line width=0.25pt] \Gebiet{\land};
+    \foreach \land in \AfrikaListe \fill[akzentorange!45, draw=white, line width=0.25pt] \Gebiet{\land};
+    \fill[akzentblau!45] \Gebiet{GRL};
+    \foreach \k in \TissotListe \fill[akzentrot, fill opacity=0.45] \Tissot{\k};
+  \end{tikzpicture}%
+  \endgroup}
+
+\begin{document}
+\Weltkarte{mercator}     % Seite 1: winkeltreu, Flächen stark verzerrt
+\Weltkarte{robinson}     % Seite 2: Kompromiss (weder winkel- noch flächentreu)
+\Weltkarte{equalearth}   % Seite 3: flächentreu
+\end{document}

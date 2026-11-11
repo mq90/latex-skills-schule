@@ -15,3 +15,5 @@ karte_daten.tex
 # Geodaten nicht ins Repo (Größe, Lizenzen)
 *.geojson
 __pycache__/
+# Rohdaten für karten_beispiele.py (python3 karten_beispiele.py download)
+geodaten/

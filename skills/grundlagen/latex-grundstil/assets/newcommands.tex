@@ -19,6 +19,9 @@
 % 2026-11-09  TikZ-Stil baumdiagrammvertikal (Baumdiagramm von oben nach unten)
 % 2026-11-09  Formularfelder für ausfüllbare PDFs: \feld, \zeichen, \kreuz, \antwort, einheitliches
 %             Aussehen über \DefaultOptionsofText/CheckBox/Radio/PopdownBox (nur wirksam in einer Form-Umgebung)
+% 2026-11-11  Akzentfarben akzentblau, akzentrot, akzentgruen, akzentorange, akzentlila (Karten,
+%             Naturwissenschaften, Schulorganisation); Box »hinweis« mit frei wählbarem Titel
+% 2026-11-11  Umgebung »passend«: verkleinert den Inhalt auf \linewidth, aber nur wenn er breiter ist
 %
 
 
@@ -141,6 +144,13 @@
 \definecolor{sunrise}{rgb}{0.80784, 0.36078, 0}
 \definecolor{lightblue}{rgb}{0.15,0.35,0.75}
 \definecolor{carolina}{rgb}{153, 186, 221}
+
+%Akzentfarben für Grafiken, Karten und Diagramme (kräftig, gut unterscheidbar; aufgehellt z.B. akzentblau!18)
+\definecolor{akzentblau}{HTML}{2563EB}
+\definecolor{akzentrot}{HTML}{DC2626}
+\definecolor{akzentgruen}{HTML}{16A34A}
+\definecolor{akzentorange}{HTML}{EA580C}
+\definecolor{akzentlila}{HTML}{7C3AED}
 %----------------------------------------------------------------------------------------------------%
 
 
@@ -297,6 +307,22 @@
       	enhanced,%
 	breakable,%
         	attach boxed title to top left={xshift=0.5cm,yshift=-2mm}%
+}
+
+
+%Hinweis-Box mit frei wählbarem Titel: \begin{hinweis}[Lizenz] ... \end{hinweis} (Standardtitel: Hinweis)
+\newtcolorbox{hinweis}[1][Hinweis]{%
+	enhanced,%
+	breakable,%
+	sharp corners,%
+	colback=akzentblau!5,%
+	colframe=akzentblau,%
+	boxrule=0pt,%
+	leftrule=3pt,%
+	fonttitle=\bfseries,%
+	coltitle=akzentblau!85!black,%
+	attach title to upper={\ },%
+	title={#1:}%
 }
 
 
@@ -464,6 +490,13 @@
 
 %Schriftzug TikZ im Fließtext (Leerzeichen danach ist eingebaut)
 \newcommand{\TikZ}{Ti\textit{k}Z }
+
+
+%Umgebung passend: Inhalt (z.B. eine große tikzpicture) höchstens so breit wie die Zeile setzen.
+%Ist er schmaler, bleibt er unverändert. \begin{passend} ... \end{passend} (Inhalt nicht als Argument, # erlaubt)
+\newsavebox{\passendbox}
+\newenvironment{passend}{\begin{lrbox}{\passendbox}}{\end{lrbox}%
+	\ifdim\wd\passendbox>\linewidth\resizebox{\linewidth}{!}{\usebox{\passendbox}}\else\usebox{\passendbox}\fi}
 
 
 %Box für die Ausgabe unter einem Code-Beispiel: erst lstlisting[style=latex], darunter \begin{ausgabe} ... \end{ausgabe}

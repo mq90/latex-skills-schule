@@ -1,0 +1,68 @@
+% ===================================================================
+%  Karte: USA mit Bundesstaaten, großen Flüssen und den Großen Seen
+%  Daten: Natural Earth 1:50m (gemeinfrei), umgewandelt mit karten_beispiele.py
+%  Alaska und Hawaii als Einschub (nicht maßstabsgetreu)
+% ===================================================================
+\documentclass[border=0.1mm]{standalone}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+
+\input{usa_daten.tex}
+
+\definecolor{akzentblau}{HTML}{2563EB}
+\definecolor{akzentgruen}{HTML}{16A34A}
+\definecolor{akzentorange}{HTML}{EA580C}
+\definecolor{akzentlila}{HTML}{7C3AED}
+\colorlet{wasser}{akzentblau!55!cyan!80!black}
+
+\begin{document}
+\begin{tikzpicture}[
+    staat/.style   = {draw=white, line width=0.5pt, line join=round},
+    fluss/.style   = {draw=wasser, line width=0.5pt, line join=round, line cap=round},
+    kuerzel/.style = {font=\sffamily\tiny\bfseries, text=black!70},
+  ]
+  \GeoKoordinaten
+
+  % --- Staaten: Farbe nach Region (Census Regions) ---------------------
+  \foreach \s in {ME,NH,VT,MA,RI,CT,NY,NJ,PA}
+    \fill[akzentblau!20, staat] \Gebiet{\s};                       % Nordosten
+  \foreach \s in {OH,MI,IN,IL,WI,MN,IA,MO,ND,SD,NE,KS}
+    \fill[akzentgruen!20, staat] \Gebiet{\s};                      % Mittlerer Westen
+  \foreach \s in {DE,MD,DC,VA,WV,NC,SC,GA,FL,KY,TN,AL,MS,AR,LA,OK,TX}
+    \fill[akzentorange!22, staat] \Gebiet{\s};                     % Süden
+  \foreach \s in {MT,ID,WY,CO,NM,AZ,UT,NV,CA,OR,WA,AK,HI}
+    \fill[akzentlila!18, staat] \Gebiet{\s};                     % Westen
+
+  % --- Gewässer --------------------------------------------------------
+  \foreach \f in {Mississippi,Missouri,Ohio,Colorado,RioGrande,Columbia,
+                  Arkansas,Tennessee,Snake}
+    \draw[fluss] \Fluss{\f};
+  \foreach \s in {Superior,Michigan,Huron,Erie,Ontario,GreatSaltLake}
+    \fill[wasser] \See{\s};
+
+  % --- Kürzel (nur Staaten, die groß genug sind) ------------------------
+  \foreach \s in {WA,OR,CA,NV,ID,MT,WY,UT,AZ,CO,NM,ND,SD,NE,KS,OK,TX,MN,IA,
+                  MO,AR,LA,WI,IL,MI,IN,OH,KY,TN,MS,AL,GA,FL,SC,NC,VA,WV,PA,
+                  NY,ME,AK,HI}
+    \node[kuerzel] at (\s) {\s};
+
+  % --- Hauptstadt ------------------------------------------------------
+  \fill[black] (Washington) circle (1.3pt)
+    node[right=1pt, font=\sffamily\tiny] {Washington, D.C.};
+
+  % --- Rahmen um die Einschübe -----------------------------------------
+  \draw[black!40, line width=0.3pt] (-0.2,-2.5) rectangle (3.75,0.6)
+                                    (3.85,-2.5) rectangle (6.8,-0.4);
+
+  % --- Maßstabsleiste (gilt nur für die 48 Staaten) ---------------------
+  \begin{scope}[shift={(12.2,-1.2)}, font=\sffamily\tiny]
+    \fill[black!80] (0,0) rectangle (5*\HundertKm,0.07);
+    \fill[white, draw=black!80, line width=0.3pt] (5*\HundertKm,0) rectangle (10*\HundertKm,0.07);
+    \node[above] at (0,0.07) {0};
+    \node[above] at (5*\HundertKm,0.07) {500};
+    \node[above] at (10*\HundertKm,0.07) {1000\,km};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

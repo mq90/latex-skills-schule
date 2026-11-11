@@ -1,0 +1,39 @@
+% ===================================================================
+%  Karte: Europa mit allen Staaten (eingefärbt per Graphfärbung)
+%  Daten: Natural Earth 1:50m (gemeinfrei), umgewandelt mit karten_beispiele.py
+% ===================================================================
+\documentclass[border=0.1mm]{standalone}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+
+\input{europa_daten.tex}
+
+\definecolor{akzentblau}{HTML}{2563EB}
+\definecolor{akzentgruen}{HTML}{16A34A}
+\definecolor{akzentorange}{HTML}{EA580C}
+\definecolor{akzentlila}{HTML}{7C3AED}
+\colorlet{farbe0}{akzentblau!18}
+\colorlet{farbe1}{akzentgruen!18}
+\colorlet{farbe2}{akzentorange!20}
+\colorlet{farbe3}{akzentlila!18}
+\colorlet{farbe4}{yellow!35}
+\colorlet{meer}{akzentblau!7}
+
+\begin{document}
+\begin{tikzpicture}
+  \GeoKoordinaten
+  \clip \Rahmen;
+  \fill[meer] \Rahmen;
+  % Länder außerhalb Europas grau
+  \foreach \land in \AndereLaender
+    \fill[black!8, draw=white, line width=0.4pt] \Gebiet{\land};
+  % europäische Länder: Farbnummer kommt aus der Graphfärbung im Skript
+  \foreach \land/\nr in \EuropaFarben
+    \fill[farbe\nr, draw=white, line width=0.5pt, line join=round] \Gebiet{\land};
+  % Länderkürzel (ISO 3166)
+  \foreach \land/\iso in \EuropaKuerzel
+    \node[font=\sffamily\tiny\bfseries, text=black!70] at (\land) {\iso};
+\end{tikzpicture}
+\end{document}

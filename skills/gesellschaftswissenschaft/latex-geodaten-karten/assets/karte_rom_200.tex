@@ -1,0 +1,51 @@
+% ===================================================================
+%  Karte: Das Römische Reich um 200 n. Chr. – Provinzen und Straßen
+%  Daten: Ancient World Mapping Center (AWMC, ODbL),
+%         Küsten und Flüsse: Natural Earth (gemeinfrei)
+% ===================================================================
+\documentclass[border=0.1mm]{standalone}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+
+\input{rom_daten.tex}
+
+\definecolor{akzentblau}{HTML}{2563EB}
+\definecolor{akzentrot}{HTML}{DC2626}
+\colorlet{meer}{akzentblau!11}
+\colorlet{reich}{akzentrot!22}
+
+\begin{document}
+\begin{tikzpicture}[
+    stadt/.style = {font=\sffamily\tiny, inner sep=1pt, fill=white, fill opacity=0.7, text opacity=1, rounded corners=1pt},
+  ]
+  \GeoKoordinaten
+  \clip \Rahmen;
+  \fill[meer] \Rahmen;
+  \fill[black!14] \Land{heute};                                    % heutige Küsten
+  \fill[reich] \Reich{200};                                       % Reichsgebiet
+  \draw[white, line width=0.4pt, line join=round] \Provinzgrenzen{200};
+  \draw[akzentblau!60, line width=0.35pt] \Gewaesser{alle};          % große Flüsse
+  \draw[akzentrot!45!black, line width=0.15pt, line join=round, opacity=0.5] \Strasse{neben};
+  \draw[akzentrot!70!black, line width=0.4pt, line join=round] \Strasse{haupt};  % Hauptstraßen
+  \draw[akzentrot!80!black, line width=0.6pt, line join=round] \Reich{200};
+
+  % --- Städte (lateinische Namen) ------------------------------------
+  \fill[black] (Roma) circle (1.6pt) node[below, stadt, font=\sffamily\scriptsize\bfseries] {Roma};
+  \foreach \ort/\name/\lage in {Londinium/Londinium/left, ColoniaAgrippina/Colonia Agrippina/right,
+        AugustaTreverorum/Augusta Treverorum/left, Lugdunum/Lugdunum/left,
+        Carthago/Carthago/below, Alexandria/Alexandria/below, Athenae/Athenae/below,
+        Antiochia/Antiochia/right, Byzantium/Byzantium/above, Hierosolyma/Hierosolyma/right,
+        Augusta/Augusta Vindelicum/right}
+    \fill (\ort) circle (1.1pt) node[\lage, stadt] {\name};
+
+  % --- Legende ---------------------------------------------------------
+  \begin{scope}[shift={(0.3,0.35)}, font=\sffamily\scriptsize]
+    \fill[reich, draw=akzentrot!80!black] (0,0) rectangle (0.4,0.25);
+    \node[right] at (0.45,0.125) {Römisches Reich um 200 n.\,Chr.};
+    \draw[akzentrot!70!black, line width=0.3pt] (0,-0.25) -- (0.4,-0.25);
+    \node[right] at (0.45,-0.25) {Römerstraßen (Hauptstraßen kräftig)};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

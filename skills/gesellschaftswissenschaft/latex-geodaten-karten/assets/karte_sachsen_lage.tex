@@ -1,0 +1,34 @@
+% ===================================================================
+%  Karte: Deutschland mit hervorgehobenem Sachsen (Lagekarte)
+%  Daten: Natural Earth (gemeinfrei), umgewandelt mit karten_beispiele.py
+% ===================================================================
+\documentclass[border=0.1mm]{standalone}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+
+\input{deutschland_daten.tex}
+
+\definecolor{akzentblau}{HTML}{2563EB}
+\definecolor{akzentorange}{HTML}{EA580C}
+\colorlet{wasser}{akzentblau!55!cyan!80!black}
+
+\begin{document}
+\begin{tikzpicture}[scale=0.6]
+  \GeoKoordinaten
+
+  % alle Länder hellgrau, Sachsen farbig
+  \foreach \land in {SH,HH,NI,HB,MV,BB,BE,ST,TH,HE,NW,RP,SL,BW,BY}
+    \fill[black!10, draw=white, line width=0.4pt] \Gebiet{DE-\land};
+  \fill[akzentorange!35, draw=akzentorange!80!black, line width=0.6pt] \Gebiet{DE-SN};
+  \draw[black!60, line width=0.6pt] \Gebiet{DEU};
+
+  % Elbe und Saale
+  \draw[wasser, line width=0.5pt] \Fluss{Elbe} \Fluss{Saale};
+
+  % Städte
+  \foreach \stadt/\lage in {Leipzig/left, Dresden/above right, Chemnitz/below}
+    \fill (\stadt) circle (1.3pt) node[\lage, font=\sffamily\tiny] {\stadt};
+\end{tikzpicture}
+\end{document}

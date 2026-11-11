@@ -9,68 +9,247 @@
 \setlength{\parskip}{1.5em} % Abstand zwischen Absätzen (Handreichungen)
 \setlength{\emergencystretch}{2em} % lange \texttt-Wörter umbrechen statt über den Rand
 
-% Beispieldaten, erzeugt mit geo2tikz.py aus Natural Earth (gemeinfrei)
+% Beispieldaten für Kapitel 6 (erzeugt mit geo2tikz.py aus Natural Earth, gemeinfrei).
+% Die Daten des Atlas (Kapitel 7 bis 10) werden jeweils in der Ausgabe geladen.
 \input{beispiel_deutschland.tex}
-\input{beispiel_sachsen_A.tex}
-\input{beispiel_sachsen_B.tex}
-\input{beispiel_sachsen_C.tex}
-\input{beispiel_welt_mercator.tex}
-\input{beispiel_welt_equalearth.tex}
 
 
 \begin{document}
 
 \maketitle
 
-Stumme Karten zum Beschriften, eine Lagekarte für ein Projekt in Sachsen, Kartenprojektionen im Vergleich oder ein Algorithmus, der Umrisse vereinfacht: Karten sind in Geografie, Geschichte, Gemeinschaftskunde, Mathematik und Informatik nützlich. Eine Karte \enquote{aus dem Kopf} mit Ti\textit{k}Z-Koordinaten zu zeichnen, gelingt aber nie überzeugend. Diese Handreichung zeigt einen anderen Weg: Freie Geodaten werden mit einem kleinen Python-Skript in Ti\textit{k}Z-Pfade umgerechnet, danach lässt sich jedes Bundesland, jeder Fluss und jede Stadt einzeln gestalten.
+Stumme Karten zum Beschriften, eine Lagekarte für ein Projekt in Sachsen, die Besatzungszonen von 1945, Kartenprojektionen im Vergleich oder ein Algorithmus, der Umrisse vereinfacht: Karten werden in Geografie, Geschichte, Gemeinschaftskunde, Mathematik und Informatik gebraucht. Eine Karte \enquote{aus dem Kopf} mit Ti\textit{k}Z-Koordinaten zu zeichnen, gelingt aber nie überzeugend. Diese Handreichung zeigt einen anderen Weg: Freie Geodaten werden mit einem Python-Skript in Ti\textit{k}Z-Pfade umgerechnet. Danach lässt sich jedes Land, jeder Fluss, jede Autobahn und jede Höhenstufe einzeln gestalten.
 
+Die Kapitel 1 bis 4 erklären die Grundlagen: Polygonzüge, Geodaten, Projektionen und Vereinfachung. Kapitel 6 zeigt, wie man mit dem Werkzeug \texttt{geo2tikz.py} eigene Karten für einen beliebigen Ausschnitt baut. Die Kapitel 7 bis 10 stellen einen fertigen Atlas mit zehn Beispielkarten vor, von Deutschland mit Höhenschichten bis zum Römischen Reich. Am Ende stehen Unterrichtsideen, ein Katalog freier Datenquellen und die wichtigsten Stolpersteine.
 
+\tableofcontents
+
+\newpage
 
 %%%%  KAPITEL 1  %%%%
-\section{Der Arbeitsablauf}
+\section{Die Idee: Ein Land ist ein Polygonzug}
 
-Eine Karte entsteht in drei Schritten:
-
-\begin{enumerate}
-	\item \textbf{Daten holen.} Freie Geodaten im Format GeoJSON herunterladen, zum Beispiel Bundesländer, Flüsse und Seen.
-	\item \textbf{Umrechnen.} Das Skript \texttt{geo2tikz.py} aus dem Ordner \texttt{scripts} des Skills projiziert die Daten aufs Papier, vereinfacht die Umrisse, schneidet den Ausschnitt zu und schreibt eine \texttt{.tex}-Datei.
-	\item \textbf{Gestalten.} Die erzeugte Datei wird mit \texttt{\textbackslash input} geladen. Farben, Linien und Beschriftungen legt man wie gewohnt in \TikZ fest.
-\end{enumerate}
-
-Das Skript braucht Python~3 und zwei Zusatzpakete, die man einmalig installiert:
+Jede Grenze auf einer Landkarte ist mathematisch betrachtet ein \textbf{geschlossener Polygonzug}: eine Folge von Punkten $P_1, P_2, \dots, P_n$, die nacheinander durch Strecken verbunden werden; der letzte Punkt wird wieder mit dem ersten verbunden. Genau das kann \TikZ mit \texttt{-{}-} und \texttt{cycle}. Eine sehr grobe Fassung von Sachsen mit nur elf Punkten:
 
 \begin{lstlisting}[style=latex]
-pip install shapely pyproj
+\begin{tikzpicture}
+	\draw[help lines, black!15] (0,0) grid (5,4);
+	\draw[fill=akzentorange!25, draw=akzentorange!80!black, thick, line join=round]
+		(4.03,2.35) -- (0.69,0.00) -- (0.00,0.66) -- (1.19,1.91) -- (0.37,2.60) -- (0.47,3.61)
+		-- (1.51,3.93) -- (2.96,3.16) -- (4.44,3.74) -- (4.92,2.54) -- (4.65,1.87) -- cycle;
+	\foreach \p in {(4.03,2.35),(0.69,0.00),(0.00,0.66),(1.19,1.91),(0.37,2.60),(0.47,3.61),
+	                (1.51,3.93),(2.96,3.16),(4.44,3.74),(4.92,2.54),(4.65,1.87)}
+		\fill \p circle (1.2pt);
+	\node[font=\scriptsize, black!60] at (2.5,-0.35) {1 Kästchen $\hat{=}$ 1\,cm $\hat{=}$ ca.\ 43\,km};
+\end{tikzpicture}
 \end{lstlisting}
 
-Für die Karte selbst genügt \TikZ und das ist in der universalen \texttt{header.tex} bereits geladen.
+\begin{ausgabe}
+	\centering
+	\begin{tikzpicture}
+		\draw[help lines, black!15] (0,0) grid (5,4);
+		\draw[fill=akzentorange!25, draw=akzentorange!80!black, thick, line join=round]
+			(4.03,2.35) -- (0.69,0.00) -- (0.00,0.66) -- (1.19,1.91) -- (0.37,2.60) -- (0.47,3.61)
+			-- (1.51,3.93) -- (2.96,3.16) -- (4.44,3.74) -- (4.92,2.54) -- (4.65,1.87) -- cycle;
+		\foreach \p in {(4.03,2.35),(0.69,0.00),(0.00,0.66),(1.19,1.91),(0.37,2.60),(0.47,3.61),
+		                (1.51,3.93),(2.96,3.16),(4.44,3.74),(4.92,2.54),(4.65,1.87)}
+			\fill \p circle (1.2pt);
+		\node[font=\scriptsize, black!60] at (2.5,-0.35) {1 Kästchen $\hat{=}$ 1\,cm $\hat{=}$ ca.\ 43\,km};
+	\end{tikzpicture}
+\end{ausgabe}
+
+Für eine \textit{echte} Karte braucht man nicht 11, sondern einige hundert bis tausend Punkte pro Land, und die tippt niemand von Hand ab. Man holt sie aus frei verfügbaren \textbf{Geodaten} und lässt sie von einem Skript in Ti\textit{k}Z-Koordinaten umrechnen.
+
+\begin{merke}
+	Eine Ti\textit{k}Z-Karte besteht aus drei Zutaten: (1)~Koordinaten in Längen- und Breitengrad aus einer Geodatenbank, (2)~eine \textbf{Projektion}, die die Kugel auf das Papier abbildet, und (3)~eine \textbf{Vereinfachung}, die überflüssige Punkte weglässt. Danach ist alles nur noch \texttt{\textbackslash draw \dots\ -{}- \dots\ -{}- cycle;}.
+\end{merke}
 
 
 
 %%%%  KAPITEL 2  %%%%
-\section{Geodaten besorgen}
+\section{Woher bekommt man die Koordinaten?}
 
-
-%%%%  UNTERKAPITEL 2.1  %%%%
-\subsection{Datenquellen und Lizenzen}
+Es gibt genau solche Datenbanken, und die wichtigsten sind kostenlos. Die Daten liegen meist im Format \textbf{GeoJSON} (eine Textdatei) oder als \textbf{Shapefile} (ein Format aus Geoinformationssystemen) vor. Die wichtigsten Quellen:
 
 \begin{center}
-\begin{tabular}{@{}>{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}p{7.4cm}>{\raggedright\arraybackslash}p{4.2cm}@{}}
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{3.2cm}>{\raggedright\arraybackslash}p{8.2cm}>{\raggedright\arraybackslash}p{3cm}@{}}
 	\toprule
 	\textbf{Quelle} & \textbf{Inhalt} & \textbf{Lizenz} \\
 	\midrule
-	Natural Earth & Staaten, Bundesländer und Provinzen, Flüsse, Seen, Gebirgsregionen, Straßen, Bahnlinien, Städte & gemeinfrei; Quellenangabe ist trotzdem üblich \\
-	historical-basemaps & Weltgrenzen zu Stichjahren, etwa 1938 oder 1945 & GPL-3.0: Quelle nennen, abgeleitete Daten bleiben GPL \\
-	AWMC geodata & Antike, zum Beispiel das Römische Reich & ODbL: Quelle nennen \\
+	\textbf{Natural Earth} & Staaten, Bundesländer und Provinzen weltweit, Flüsse, Seen, Küsten, Gebirge, Straßen, Städte; drei Detailstufen (1\,:\,10~Mio., 1\,:\,50~Mio., 1\,:\,110~Mio.). \textit{Erste Wahl für Unterrichtskarten.} & gemeinfrei \\
+	\addlinespace
+	\textbf{BKG} (VG250, VG2500) & amtliche Verwaltungsgrenzen Deutschlands bis zur Gemeinde, vom Bundesamt für Kartographie und Geodäsie & DL-DE/BY-2.0 \\
+	\addlinespace
+	\textbf{OpenStreetMap} & sehr detailliert: Grenzen, jeder Bach, jeder See, jede Straße & ODbL \\
+	\addlinespace
+	\textbf{GADM} & Verwaltungsgrenzen aller Staaten bis zur Kreisebene & nur nicht-kommerziell \\
 	\bottomrule
 \end{tabular}
 \end{center}
 
-Alle drei Quellen liegen auf GitHub: \texttt{nvkelso/natural-earth-vector} (Ordner \texttt{geojson}), \texttt{aourednik/historical-basemaps} und \texttt{AWMC/geodata}. Die Rohdaten sind teilweise sehr groß (die Bundesländer der ganzen Welt umfassen 39\,MB). Man legt sie deshalb nicht in Materialsammlungen ab, sondern notiert den Download-Befehl. Auf jede Karte gehört eine Quellenzeile.
+Eine ausführliche, nach Themen sortierte Liste mit Links, von Gebirgen über Autobahnen bis zu den Grenzen des Römischen Reichs, steht im Datenquellen-Katalog in Kapitel~\ref{sec:katalog}.
+
+Natural Earth gibt es auf \url{https://www.naturalearthdata.com}, die GeoJSON-Fassung auf GitHub unter \url{https://github.com/nvkelso/natural-earth-vector} (Ordner \texttt{geojson}). Ein GeoJSON-Eintrag ist gut lesbar. Gekürzt sieht Sachsen so aus; man erkennt den Polygonzug, allerdings in (Längengrad, Breitengrad):
+
+\begin{lstlisting}[style=latex]
+{ "type": "Feature",
+  "properties": { "name": "Sachsen", "iso_3166_2": "DE-SN", ... },
+  "geometry": { "type": "Polygon",
+    "coordinates": [[ [14.40, 51.01], [14.39, 51.01], [14.38, 51.02], ... ]] } }
+\end{lstlisting}
+
+\begin{hinweis}[Lizenz]
+	Bei Natural Earth ist keine Quellenangabe vorgeschrieben, sie ist aber guter Stil (\enquote{Kartendaten: Natural Earth}). Bei BKG-Daten und OpenStreetMap ist die Namensnennung \textit{Pflicht}, zum Beispiel \enquote{\textcopyright\ GeoBasis-DE / BKG 2026} bzw. \enquote{\textcopyright\ OpenStreetMap-Mitwirkende}.
+\end{hinweis}
 
 
-%%%%  UNTERKAPITEL 2.2  %%%%
-\subsection{Herunterladen}
+
+%%%%  KAPITEL 3  %%%%
+\section{Vom Globus aufs Papier: die Projektion}
+
+Längen- und Breitengrade sind \textit{Winkel} auf einer Kugel. Würde man sie direkt als $x$- und $y$-Koordinate zeichnen, wäre Deutschland in Ost-West-Richtung stark gestreckt, denn ein Längengrad ist bei uns deutlich kürzer als am Äquator. Die einfachste Korrektur, die \enquote{Plattkarte}, lautet für eine Bezugsbreite $\varphi_0$:
+\[
+	x = R\cdot\lambda\cdot\cos\varphi_0, \qquad y = R\cdot\varphi
+	\qquad (\lambda,\varphi \text{ im Bogenmaß},\ R \approx 6371\,\mathrm{km}).
+\]
+Für Deutschland ($\varphi_0 \approx 51^\circ$) ist $\cos\varphi_0 \approx 0{,}63$: Ein Längengrad ist hier also nur etwa 70\,km lang, ein Breitengrad etwa 111\,km. Für saubere Karten nimmt man eine fertige Projektion aus der Python-Bibliothek \texttt{pyproj}. Jede Projektion hat einen Code:
+
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{}}
+	\toprule
+	\textbf{Gebiet} & \textbf{Projektion} & \textbf{Code} \\
+	\midrule
+	Deutschland (West) & UTM Zone 32N (amtlich) & EPSG:25832 \\
+	Ostdeutschland, Sachsen & UTM Zone 33N & EPSG:25833 \\
+	Europa & Lambert, flächentreu & EPSG:3035 \\
+	USA (48 Staaten) & Albers, flächentreu & EPSG:5070 \\
+	Alaska / Hawaii & Alaska Albers / Hawaii Albers & EPSG:3338 / ESRI:102007 \\
+	Welt, flächentreu & Equal Earth & EPSG:8857 \\
+	Welt, Kompromiss & Robinson & ESRI:54030 \\
+	\bottomrule
+\end{tabular}
+\end{center}
+
+Wie stark Projektionen sich unterscheiden, zeigt Kapitel~\ref{sec:welt}.
+
+
+
+%%%%  KAPITEL 4  %%%%
+\section{Vereinfachen: der Douglas-Peucker-Algorithmus}\label{sec:dp}
+
+Die Natural-Earth-Grenze von Sachsen hat 645 Punkte. Auf einer 5\,cm breiten Karte liegen viele davon weniger als 0,1\,mm auseinander; sie kosten nur Kompilierzeit. Der \textbf{Douglas-Peucker-Algorithmus} entfernt solche Punkte:
+
+\begin{enumerate}
+	\item Verbinde Anfangs- und Endpunkt des Linienzugs durch eine Strecke.
+	\item Suche den Punkt mit dem größten Abstand zu dieser Strecke.
+	\item Ist dieser Abstand kleiner als die \textbf{Toleranz} $\varepsilon$, werden alle Zwischenpunkte gelöscht. Sonst wird der Punkt behalten und das Verfahren \textit{rekursiv} auf beide Teilstücke angewendet.
+\end{enumerate}
+
+Die Datei \texttt{sachsen\_stufen.tex} enthält Sachsen in vier Stufen, jeweils mit Punktzahl und Fläche. Die Karte zeigt sie nebeneinander, bei den beiden groben Stufen mit allen Eckpunkten:
+
+\begin{lstlisting}[style=latex]
+% Präambel: \input{sachsen_stufen.tex}
+\def\zeigeinfo#1/#2\relax{#1 Punkte \quad $A \approx #2\,\mathrm{km}^2$}
+\newcommand\info[1]{\expandafter\expandafter\expandafter
+  \zeigeinfo\csname geo:info:SN-#1\endcsname\relax}
+\begin{tikzpicture}[font=\sffamily\scriptsize,
+                    umriss/.style={fill=akzentorange!22, draw=akzentorange!80!black,
+                                   line width=0.5pt, line join=round}]
+  \foreach \stufe/\x/\titel in {Original/0/Original, Fein/5.6/{Toleranz 0,2\,mm},
+                                Mittel/11.2/{Toleranz 1\,mm}, Grob/16.8/{Toleranz 4\,mm}} {
+    \begin{scope}[xshift=\x cm]
+      \path[umriss] \csname geo:gebiet:SN-\stufe\endcsname;
+      \node[font=\sffamily\small\bfseries] at (2.5,4.45) {\titel};
+      \node at (2.5,-0.4) {\info{\stufe}};
+    \end{scope}
+  }
+  % Eckpunkte der beiden groben Stufen sichtbar machen
+  \foreach \stufe/\x in {Mittel/11.2, Grob/16.8} {
+    \expandafter\let\expandafter\liste\csname geo:punkte:SN-\stufe\endcsname
+    \begin{scope}[xshift=\x cm]
+      \foreach \p in \liste { \fill[black] \p circle (0.9pt); }
+    \end{scope}
+  }
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\input{sachsen_stufen.tex}
+\def\zeigeinfo#1/#2\relax{#1 Punkte \quad $A \approx #2\,\mathrm{km}^2$}
+\newcommand\info[1]{\expandafter\expandafter\expandafter
+  \zeigeinfo\csname geo:info:SN-#1\endcsname\relax}
+\centering
+\begin{passend}%
+\begin{tikzpicture}[font=\sffamily\scriptsize,
+                    umriss/.style={fill=akzentorange!22, draw=akzentorange!80!black,
+                                   line width=0.5pt, line join=round}]
+  \foreach \stufe/\x/\titel in {Original/0/Original, Fein/5.6/{Toleranz 0,2\,mm},
+                                Mittel/11.2/{Toleranz 1\,mm}, Grob/16.8/{Toleranz 4\,mm}} {
+    \begin{scope}[xshift=\x cm]
+      \path[umriss] \csname geo:gebiet:SN-\stufe\endcsname;
+      \node[font=\sffamily\small\bfseries] at (2.5,4.45) {\titel};
+      \node at (2.5,-0.4) {\info{\stufe}};
+    \end{scope}
+  }
+  % Eckpunkte der beiden groben Stufen sichtbar machen
+  \foreach \stufe/\x in {Mittel/11.2, Grob/16.8} {
+    \expandafter\let\expandafter\liste\csname geo:punkte:SN-\stufe\endcsname
+    \begin{scope}[xshift=\x cm]
+      \foreach \p in \liste { \fill[black] \p circle (0.9pt); }
+    \end{scope}
+  }
+\end{tikzpicture}%
+\end{passend}
+\end{ausgabe}
+
+
+Bei 0,2\,mm Toleranz bleiben nur 145 der 645 Punkte übrig, ohne dass man einen Unterschied sieht. Die Flächen wurden mit der Gaußschen Trapezformel berechnet (siehe Kapitel~\ref{sec:unterricht}). Amtlich ist Sachsen rund 18\,450\,km² groß; auch die \enquote{Original}-Daten sind also schon leicht vereinfacht.
+
+\begin{hinweis}[Gemeinsame Grenzen]
+	Vereinfacht man jedes Bundesland \textit{einzeln}, werden die gemeinsamen Grenzen unterschiedlich gekürzt, und es entstehen Lücken oder Überlappungen. Das Skript \texttt{karten\_beispiele.py} nutzt deshalb \texttt{shapely.coverage\_simplify}, das alle Länder gemeinsam vereinfacht; jede Grenze wird dabei nur einmal bearbeitet. Beim allgemeinen Werkzeug \texttt{geo2tikz.py} hilft eine kleine Toleranz (Standard 0,02\,cm).
+\end{hinweis}
+
+
+
+%%%%  KAPITEL 5  %%%%
+\section{Zwei Werkzeuge}
+
+Im Ordner \texttt{scripts} des Skills liegen zwei Python-Skripte. Beide lesen GeoJSON, projizieren, vereinfachen und schreiben eine \texttt{.tex}-Datei; sie unterscheiden sich im Zweck:
+
+\begin{center}
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{3cm}>{\raggedright\arraybackslash}p{6.2cm}>{\raggedright\arraybackslash}p{6.2cm}@{}}
+	\toprule
+	& \textbf{\texttt{geo2tikz.py}} & \textbf{\texttt{karten\_beispiele.py}} \\
+	\midrule
+	Zweck & eigene Karten mit beliebigem Ausschnitt & der fertige Atlas dieser Handreichung \\
+	Einstellungen & alles über die Kommandozeile: Ausschnitt, Breite, Projektion, Ebenen & fest im Skript, je eine Funktion pro Karte \\
+	Zeichnen mit & \texttt{\textbackslash geolaender}, Stile \texttt{geo laender/DE-SN} & \texttt{\textbackslash Gebiet\{DE-SN\}}, \texttt{\textbackslash Fluss\{Elbe\}}, \dots \\
+	Besonderheiten & jede GeoJSON-Datei, jeder Filter & Höhenschichten, Gebirge, Autobahnen, Einschübe (USA), Färbung, Tissot-Kreise, historische Daten \\
+	Kapitel & \ref{sec:eigene} & \ref{sec:atlas} bis \ref{sec:geschichte} \\
+	\bottomrule
+\end{tabular}
+\end{center}
+
+Beide brauchen Python~3 mit einigen Zusatzpaketen, die man einmalig installiert:
+
+\begin{lstlisting}[style=latex]
+pip install shapely pyproj                 # geo2tikz.py
+pip install shapely pyproj h5py contourpy scipy  # karten_beispiele.py (Höhenschichten)
+\end{lstlisting}
+
+Für die Karten selbst genügt \TikZ und das ist in der universalen \texttt{header.tex} bereits geladen.
+
+
+
+%%%%  KAPITEL 6  %%%%
+\section{Eigene Karten mit \texttt{geo2tikz.py}}\label{sec:eigene}
+
+
+%%%%  UNTERKAPITEL 6.1  %%%%
+\subsection{Daten herunterladen}
 
 Im Terminal lädt \texttt{curl} die Dateien direkt herunter. Für eine Deutschlandkarte mit Bundesländern, Nachbarstaaten, Flüssen, Seen und Städten:
 
@@ -83,18 +262,13 @@ curl -sSfLO $B/ne_10m_lakes.geojson
 curl -sSfLO $B/ne_10m_populated_places_simple.geojson
 \end{lstlisting}
 
-Die Zahl im Dateinamen gibt die Genauigkeit an: \texttt{10m} ist der feinste Maßstab (1\,:\,10~Mio.), \texttt{50m} und \texttt{110m} sind gröber und reichen für Übersichtskarten von Europa oder der Welt.
+Die Zahl im Dateinamen gibt die Genauigkeit an: \texttt{10m} ist der feinste Maßstab (1\,:\,10~Mio.), \texttt{50m} und \texttt{110m} sind gröber und reichen für Übersichtskarten von Europa oder der Welt. Die Rohdaten sind teilweise sehr groß (die Bundesländer der ganzen Welt umfassen 39\,MB); man legt sie nicht in Materialsammlungen ab, sondern notiert den Download-Befehl.
 
 
-
-%%%%  KAPITEL 3  %%%%
-\section{Umrechnen mit \texttt{geo2tikz.py}}
-
-
-%%%%  UNTERKAPITEL 3.1  %%%%
+%%%%  UNTERKAPITEL 6.2  %%%%
 \subsection{Der Aufruf}
 
-Das Skript bekommt den Kartenausschnitt in Grad, die gewünschte Breite in Zentimetern, eine Projektion und eine oder mehrere Ebenen. Alle Ebenen einer Karte werden in \textbf{einem} Aufruf umgerechnet, sonst haben sie verschiedene Maßstäbe und die Flüsse liegen neben den Ländern. Mit diesem Aufruf entstand die Datei für die Beispiele dieser Handreichung:
+Das Skript bekommt den Kartenausschnitt in Grad, die gewünschte Breite in Zentimetern, eine Projektion und eine oder mehrere Ebenen. Alle Ebenen einer Karte werden in \textbf{einem} Aufruf umgerechnet, sonst haben sie verschiedene Maßstäbe, und die Flüsse liegen neben den Ländern. Mit diesem Aufruf entstand die Datei für dieses Kapitel:
 
 \begin{lstlisting}[style=latex]
 python3 geo2tikz.py --bbox 5.8,47.2,15.1,55.1 --breite 9 --proj EPSG:3035 --toleranz 0.03 \
@@ -108,19 +282,16 @@ python3 geo2tikz.py --bbox 5.8,47.2,15.1,55.1 --breite 9 --proj EPSG:3035 --tole
 
 Das Skript meldet danach, wie viele Objekte jede Ebene enthält und wie groß die Karte wird, hier 9,0\,×\,11,4\,cm.
 
-
-%%%%  UNTERKAPITEL 3.2  %%%%
-\subsection{Die Optionen}
-
 \begin{center}
+\small
 \begin{tabular}{@{}l>{\raggedright\arraybackslash}p{11.5cm}@{}}
 	\toprule
 	\textbf{Option} & \textbf{Bedeutung} \\
 	\midrule
 	\texttt{-{}-bbox} & Ausschnitt als Länge/Breite links unten und rechts oben in Grad. Bei negativen Werten mit Gleichheitszeichen schreiben: \texttt{-{}-bbox=-180,-58,180,84} \\
 	\texttt{-{}-breite} & Kartenbreite in cm; die Höhe ergibt sich aus der Projektion \\
-	\texttt{-{}-proj} & \texttt{plattkarte} (Standard), \texttt{mercator} oder ein EPSG-Code: \texttt{EPSG:3035} für Europa (flächentreu), \texttt{EPSG:25833} für Ostdeutschland, \texttt{EPSG:8857} (Equal Earth) für die Welt \\
-	\texttt{-{}-toleranz} & Vereinfachung der Umrisse in cm (Kapitel~6); \texttt{0} schaltet sie aus \\
+	\texttt{-{}-proj} & \texttt{plattkarte} (Standard), \texttt{mercator} oder ein Code aus Kapitel~3, z.\,B. \texttt{EPSG:3035} \\
+	\texttt{-{}-toleranz} & Vereinfachung der Umrisse in cm (Kapitel~\ref{sec:dp}); \texttt{0} schaltet sie aus \\
 	\texttt{-{}-ebene} & eine Ebene: \texttt{name} (nur Buchstaben), \texttt{datei}, optional \texttt{filter} und \texttt{id} \\
 	\texttt{-o} & Name der erzeugten Datei \\
 	\bottomrule
@@ -130,10 +301,10 @@ Das Skript meldet danach, wie viele Objekte jede Ebene enthält und wie groß di
 Zwei Fallstricke bei den Filtern: Bundesländer haben in Natural Earth die Kennung \texttt{iso\_3166\_2} (\texttt{DE-SN}, \texttt{DE-BY} \dots). Bei Staaten fehlen Frankreich und Norwegen, wenn man nach \texttt{ISO\_A2} filtert, weil dort \texttt{-99} eingetragen ist. Deshalb filtert man Staaten nach \texttt{ISO\_A2\_EH} oder \texttt{ADM0\_A3} (\texttt{DEU}, \texttt{FRA}).
 
 
-%%%%  UNTERKAPITEL 3.3  %%%%
+%%%%  UNTERKAPITEL 6.3  %%%%
 \subsection{Was in der erzeugten Datei steht}
 
-Für jede Ebene schreibt das Skript einen Befehl, der alle Objekte zeichnet, und einen leeren Stil für die Ebene und für jedes einzelne Objekt. Außerdem legt es für jedes Objekt einen Punkt an, der garantiert im Inneren liegt. Gekürzt sieht das so aus:
+Für jede Ebene schreibt das Skript einen Befehl, der alle Objekte zeichnet, und einen leeren Stil für die Ebene und für jedes einzelne Objekt. Außerdem legt es für jedes Objekt einen Punkt an, der garantiert im Inneren liegt. Gekürzt:
 
 \begin{lstlisting}[style=latex]
 \tikzset{geo laender/.style={},
@@ -146,9 +317,8 @@ Für jede Ebene schreibt das Skript einen Befehl, der alle Objekte zeichnet, und
 ...}
 \end{lstlisting}
 
-Daraus ergibt sich die Arbeitsweise:
-
 \begin{center}
+\small
 \begin{tabular}{@{}ll>{\raggedright\arraybackslash}p{5.2cm}@{}}
 	\toprule
 	\textbf{Element} & \textbf{Beispiel} & \textbf{Zweck} \\
@@ -164,9 +334,8 @@ Daraus ergibt sich die Arbeitsweise:
 Weil alle Stile zunächst leer sind, zeichnet ein Befehl wie \texttt{\textbackslash geolaender} ohne eigenen Stil nichts. Erst ein Stil mit \texttt{fill} oder \texttt{draw} macht die Ebene sichtbar.
 
 
-
-%%%%  KAPITEL 4  %%%%
-\section{Die erste Karte}
+%%%%  UNTERKAPITEL 6.4  %%%%
+\subsection{Die erste Karte}
 
 Die erzeugte Datei wird in der Präambel geladen:
 
@@ -174,7 +343,7 @@ Die erzeugte Datei wird in der Präambel geladen:
 \input{beispiel_deutschland.tex}
 \end{lstlisting}
 
-Danach genügt ein Stil für die Ebene und der Befehl \texttt{\textbackslash geolaender}. Mit \texttt{scale} lässt sich die Karte verkleinern:
+Danach genügen ein Stil für die Ebene und der Befehl \texttt{\textbackslash geolaender}. Mit \texttt{scale} lässt sich die Karte verkleinern:
 
 \begin{lstlisting}[style=latex]
 \begin{tikzpicture}[scale=0.6,
@@ -194,12 +363,7 @@ Danach genügt ein Stil für die Ebene und der Befehl \texttt{\textbackslash geo
 Die Stile stehen hier in den Optionen der \texttt{tikzpicture}. Sie gelten dann nur für diese eine Karte, und dieselben Daten lassen sich im selben Dokument für eine zweite Karte mit anderem Aussehen verwenden.
 
 
-
-%%%%  KAPITEL 5  %%%%
-\section{Karten gestalten}
-
-
-%%%%  UNTERKAPITEL 5.1  %%%%
+%%%%  UNTERKAPITEL 6.5  %%%%
 \subsection{Mehrere Ebenen, Hervorhebungen und Städte}
 
 Die Ebenen werden von unten nach oben gezeichnet: erst die Nachbarstaaten, dann die Bundesländer, darüber Seen und Flüsse und zuletzt die Beschriftung. \texttt{\textbackslash clip} schneidet alles am Kartenrand ab; die Maße stehen in der letzten Zeile der erzeugten Datei. Die Ebene \texttt{staedte} zeichnet selbst nichts, legt aber die Punkte der Städte an.
@@ -242,7 +406,7 @@ Die Ebenen werden von unten nach oben gezeichnet: erst die Nachbarstaaten, dann 
 Die Namen der Städte stammen aus Natural Earth und sind englisch (\texttt{Munich}, \texttt{Cologne}). Umlaute ersetzt das Skript in den Namen der Punkte, aus Düsseldorf wird \texttt{staedte-Duesseldorf}. Welche Namen es gibt, zeigt ein Blick in die erzeugte Datei. Bei Flüssen lohnt das besonders: Der Rhein heißt je nach Abschnitt \texttt{Rhein}, \texttt{Rhin} oder \texttt{Rhine}.
 
 
-%%%%  UNTERKAPITEL 5.2  %%%%
+%%%%  UNTERKAPITEL 6.6  %%%%
 \subsection{Eine stumme Karte}
 
 Für ein Arbeitsblatt bekommen die Bundesländer Nummern statt Namen. Die Schleife setzt an den Punkt jedes Landes einen kleinen Kreis mit seiner Nummer:
@@ -270,104 +434,1250 @@ Die Lösung ergibt sich aus der Reihenfolge in der Liste: 1~Schleswig-Holstein, 
 
 
 
-%%%%  KAPITEL 6  %%%%
-\section{Umrisse vereinfachen}
-
-Echte Grenzen haben sehr viele Eckpunkte. Für eine kleine Karte sind die meisten davon unsichtbar, machen die Datei aber groß und \hologo{LaTeX} langsam. Das Skript vereinfacht die Umrisse deshalb mit dem Douglas-Peucker-Algorithmus: Ein Eckpunkt fällt weg, wenn er weniger als \texttt{-{}-toleranz} Zentimeter von der Linie zwischen seinen Nachbarn abweicht. Sachsen, dreimal mit verschiedener Toleranz umgerechnet:
-
-\begin{lstlisting}[style=latex]
-\begin{tikzpicture}[geo sachsenA/.style={fill=orange!40, draw=black, line width=0.4pt}]
-	\geosachsenA \node at (2.3,-0.4) {\small Toleranz 0: 645 Ecken};
-\end{tikzpicture}\hfill
-\begin{tikzpicture}[geo sachsenB/.style={fill=orange!40, draw=black, line width=0.4pt}]
-	\geosachsenB \node at (2.3,-0.4) {\small 0,05\,cm: 56 Ecken};
-\end{tikzpicture}\hfill
-\begin{tikzpicture}[geo sachsenC/.style={fill=orange!40, draw=black, line width=0.4pt}]
-	\geosachsenC \node at (2.3,-0.4) {\small 0,25\,cm: 14 Ecken};
-\end{tikzpicture}
-\end{lstlisting}
-
-\begin{ausgabe}
-	\begin{tikzpicture}[geo sachsenA/.style={fill=orange!40, draw=black, line width=0.4pt}]
-		\geosachsenA \node at (2.3,-0.4) {\small Toleranz 0: 645 Ecken};
-	\end{tikzpicture}\hfill
-	\begin{tikzpicture}[geo sachsenB/.style={fill=orange!40, draw=black, line width=0.4pt}]
-		\geosachsenB \node at (2.3,-0.4) {\small 0,05\,cm: 56 Ecken};
-	\end{tikzpicture}\hfill
-	\begin{tikzpicture}[geo sachsenC/.style={fill=orange!40, draw=black, line width=0.4pt}]
-		\geosachsenC \node at (2.3,-0.4) {\small 0,25\,cm: 14 Ecken};
-	\end{tikzpicture}
-\end{ausgabe}
-
-Die Ebenen heißen hier \texttt{sachsenA}, \texttt{sachsenB} und \texttt{sachsenC}, weil jede Datei sonst denselben Befehl \texttt{\textbackslash geosachsen} anlegen würde. Mit dem Standardwert \texttt{0.02} sieht man bei normalen Kartengrößen keinen Unterschied zum Original. Bei großer Toleranz können zwischen benachbarten Ländern kleine Lücken entstehen, weil jedes Land für sich vereinfacht wird.
-
-
-
 %%%%  KAPITEL 7  %%%%
-\section{Projektionen vergleichen}
+\section{Der Beispiel-Atlas}\label{sec:atlas}
 
-Die Erde ist eine Kugel, die Karte ist flach. Jede Projektion verzerrt deshalb etwas: Winkel, Flächen oder Entfernungen. Die Mercator-Projektion ist winkeltreu, vergrößert aber Flächen zu den Polen hin sehr stark. Die Projektion \textit{Equal Earth} ist flächentreu. Beide Karten entstanden aus denselben Daten (\texttt{ne\_110m\_admin\_0\_countries}) mit \texttt{-{}-proj mercator} bzw. \texttt{-{}-proj EPSG:8857}. Hervorgehoben sind Grönland und die Demokratische Republik Kongo:
+Die Karten der folgenden Kapitel liegen als fertige Vorlagen im Ordner \texttt{assets} des Skills (\texttt{karte\_*.tex}), zusammen mit ihren Datendateien (\texttt{*\_daten.tex}). Jede Vorlage ist ein eigenständiges \texttt{standalone}-Dokument und lässt sich mit \texttt{pdflatex} direkt übersetzen. Die Datendateien hat das Skript \texttt{karten\_beispiele.py} erzeugt; wer sie neu erzeugen oder verändern will:
 
 \begin{lstlisting}[style=latex]
-\begin{tikzpicture}[scale=0.95,
-	geo weltmercator/.style={fill=gray!40, draw=white, line width=0.15pt},
-	geo weltmercator/GRL/.style={fill=red!60},
-	geo weltmercator/COD/.style={fill=blue!60}]
-	\geoweltmercator
-	\node[font=\small] at (3.8,-0.35) {Mercator};
-\end{tikzpicture}\hfill
-\begin{tikzpicture}[scale=0.95,
-	geo weltequal/.style={fill=gray!40, draw=white, line width=0.15pt},
-	geo weltequal/GRL/.style={fill=red!60},
-	geo weltequal/COD/.style={fill=blue!60}]
-	\geoweltequal
-	\node[font=\small] at (3.8,-0.35) {Equal Earth};
+python3 karten_beispiele.py download      # Rohdaten laden (ca. 170 MB, einmalig)
+python3 karten_beispiele.py deutschland   # -> deutschland_daten.tex
+python3 karten_beispiele.py usa           # -> usa_daten.tex
+python3 karten_beispiele.py sachsen       # -> sachsen_stufen.tex
+python3 karten_beispiele.py europa        # -> europa_daten.tex
+python3 karten_beispiele.py welt          # -> welt_mercator/_robinson/_equalearth_daten.tex
+python3 karten_beispiele.py rom           # -> rom_daten.tex
+python3 karten_beispiele.py historisch    # -> historisch_daten.tex
+python3 karten_beispiele.py               # alles auf einmal
+\end{lstlisting}
+
+Die wichtigsten Stellschrauben stehen am Anfang der jeweiligen Funktion im Skript, zum Beispiel in \texttt{deutschland()}:
+
+\begin{lstlisting}[style=latex]
+bbox = (5.4, 47.1, 15.6, 55.15)           # Kartenausschnitt in Grad
+k = Karte("EPSG:25832", bbox, breite_cm=12, toleranz_cm=0.025)
+\end{lstlisting}
+
+
+%%%%  UNTERKAPITEL 7.1  %%%%
+\subsection{Die Befehle der Datendateien}
+
+Eine Datendatei wie \texttt{deutschland\_daten.tex} wird mit \texttt{\textbackslash input} geladen und stellt diese Befehle bereit:
+
+\begin{center}
+\small
+\begin{tabular}{@{}l>{\raggedright\arraybackslash}p{11cm}@{}}
+	\toprule
+	\textbf{Befehl} & \textbf{Bedeutung} \\
+	\midrule
+	\texttt{\textbackslash Gebiet\{DE-SN\}} & Polygonzug eines Gebiets (Bundesländer nach ISO 3166-2: \texttt{DE-BY}, \texttt{DE-NW}, \dots; Nachbarstaaten \texttt{POL}, \texttt{CZE}, \dots; ganz Deutschland \texttt{DEU}; US-Staaten \texttt{TX}, \texttt{CA}, \dots) \\
+	\texttt{\textbackslash Fluss\{Elbe\}} & Linienzug eines Flusses \\
+	\texttt{\textbackslash See\{Bodensee\}} & Polygonzug eines Sees \\
+	\texttt{\textbackslash GeoKoordinaten} & legt benannte Punkte an: die Mitte jedes Gebiets, z.\,B. \texttt{(DE-SN)}, und Städte, z.\,B. \texttt{(Leipzig)} \\
+	\texttt{\textbackslash Rahmen} & Rechteck des Kartenausschnitts (zum Clippen) \\
+	\texttt{\textbackslash HundertKm} & Länge von 100\,km auf der Karte in cm (Maßstabsleiste) \\
+	\texttt{\textbackslash GebietListe} & alle Gebietskennungen der Datei, z.\,B. für \texttt{\textbackslash foreach \textbackslash g in \textbackslash GebietListe} \\
+	\midrule
+	\texttt{\textbackslash Hoehe\{500\}} & Höhenschicht: alle Flächen höher als 500\,m \\
+	\texttt{\textbackslash Gebirge\{Harz\}} & Fläche eines Gebirges \\
+	\texttt{\textbackslash Autobahn\{A9\}} & Linienzug einer Autobahn \\
+	\texttt{\textbackslash Bahn\{alle\}} & alle Bahnstrecken \\
+	\texttt{\textbackslash \dots Liste} & zu jeder Ebene die Liste ihrer Namen, z.\,B. \texttt{\textbackslash AutobahnListe}, \texttt{\textbackslash HoeheListe} \\
+	\bottomrule
+\end{tabular}
+\end{center}
+
+Intern ist jedes Gebiet ein Makro mit dem Polygonzug. Inseln, etwa Rügen, stehen als weitere Teilpfade im selben Makro, deshalb genügt ein einziges \texttt{\textbackslash fill \textbackslash Gebiet\{DE-MV\};}.
+
+\begin{lstlisting}[style=latex]
+\expandafter\def\csname geo:gebiet:DE-SN\endcsname{
+  (10.09,6.96) -- (10.08,6.97) -- ... -- (10.11,6.96) -- cycle}
+\end{lstlisting}
+
+\begin{merke}
+	Städte und Ländermitten erst mit \texttt{\textbackslash GeoKoordinaten} anlegen, dann wie gewohnt verwenden: \texttt{\textbackslash fill (Leipzig) circle (1pt);} oder \texttt{\textbackslash node at (\$(Berlin)+(0.5,0)\$) \{BE\};}. Die Mitte wird als \enquote{Pol der Unzugänglichkeit} berechnet, also als der Punkt, der am weitesten vom Rand entfernt ist. So landen Beschriftungen sicher im Land.
+\end{merke}
+
+In den folgenden Beispielen steht über dem Code, welche Datendatei in der Präambel geladen wird. Die Ausgabe ist jeweils auf die Zeilenbreite verkleinert, wenn die Karte breiter ist.
+
+
+%%%%  UNTERKAPITEL 7.2  %%%%
+\subsection{Lagekarte: Sachsen in Deutschland}
+
+Alle Länder hellgrau, Sachsen farbig, dazu Elbe, Saale und drei Städte. Die Vorlage heißt \texttt{karte\_sachsen\_lage.tex}.
+
+\begin{lstlisting}[style=latex]
+% Präambel: \input{deutschland_daten.tex}
+\colorlet{wasser}{akzentblau!55!cyan!80!black}
+\begin{tikzpicture}[scale=0.6]
+  \GeoKoordinaten
+
+  % alle Länder hellgrau, Sachsen farbig
+  \foreach \land in {SH,HH,NI,HB,MV,BB,BE,ST,TH,HE,NW,RP,SL,BW,BY}
+    \fill[black!10, draw=white, line width=0.4pt] \Gebiet{DE-\land};
+  \fill[akzentorange!35, draw=akzentorange!80!black, line width=0.6pt] \Gebiet{DE-SN};
+  \draw[black!60, line width=0.6pt] \Gebiet{DEU};
+
+  % Elbe und Saale
+  \draw[wasser, line width=0.5pt] \Fluss{Elbe} \Fluss{Saale};
+
+  % Städte
+  \foreach \stadt/\lage in {Leipzig/left, Dresden/above right, Chemnitz/below}
+    \fill (\stadt) circle (1.3pt) node[\lage, font=\sffamily\tiny] {\stadt};
 \end{tikzpicture}
 \end{lstlisting}
 
 \begin{ausgabe}
-	\begin{tikzpicture}[scale=0.95,
-		geo weltmercator/.style={fill=gray!40, draw=white, line width=0.15pt},
-		geo weltmercator/GRL/.style={fill=red!60},
-		geo weltmercator/COD/.style={fill=blue!60}]
-		\geoweltmercator
-		\node[font=\small] at (3.8,-0.35) {Mercator};
-	\end{tikzpicture}\hfill
-	\begin{tikzpicture}[scale=0.95,
-		geo weltequal/.style={fill=gray!40, draw=white, line width=0.15pt},
-		geo weltequal/GRL/.style={fill=red!60},
-		geo weltequal/COD/.style={fill=blue!60}]
-		\geoweltequal
-		\node[font=\small] at (3.8,-0.35) {Equal Earth};
-	\end{tikzpicture}
+\input{deutschland_daten.tex}
+\colorlet{wasser}{akzentblau!55!cyan!80!black}
+\centering
+\begin{passend}%
+\begin{tikzpicture}[scale=0.6]
+  \GeoKoordinaten
+
+  % alle Länder hellgrau, Sachsen farbig
+  \foreach \land in {SH,HH,NI,HB,MV,BB,BE,ST,TH,HE,NW,RP,SL,BW,BY}
+    \fill[black!10, draw=white, line width=0.4pt] \Gebiet{DE-\land};
+  \fill[akzentorange!35, draw=akzentorange!80!black, line width=0.6pt] \Gebiet{DE-SN};
+  \draw[black!60, line width=0.6pt] \Gebiet{DEU};
+
+  % Elbe und Saale
+  \draw[wasser, line width=0.5pt] \Fluss{Elbe} \Fluss{Saale};
+
+  % Städte
+  \foreach \stadt/\lage in {Leipzig/left, Dresden/above right, Chemnitz/below}
+    \fill (\stadt) circle (1.3pt) node[\lage, font=\sffamily\tiny] {\stadt};
+\end{tikzpicture}%
+\end{passend}
 \end{ausgabe}
 
-In der Mercator-Karte wirkt Grönland (rot) größer als der Kongo (blau). Tatsächlich ist der Kongo mit rund 2,34~Mio.\,km² sogar etwas größer als Grönland mit rund 2,17~Mio.\,km², wie die flächentreue Karte zeigt. Die Kennungen \texttt{GRL} und \texttt{COD} sind die dreistelligen Ländercodes aus dem Feld \texttt{ADM0\_A3}.
+
+
+%%%%  UNTERKAPITEL 7.3  %%%%
+\subsection{Deutschland mit Bundesländern, Flüssen und Seen}
+
+Die große Karte (\texttt{karte\_deutschland\_bundeslaender.tex}) zeichnet in Schichten von hinten nach vorn: Meer, Nachbarstaaten, Bundesländer, Bundesgrenze, Flüsse, Seen, Städte, Beschriftung, Maßstabsleiste und Nordpfeil. Die Bundesländer sind mit vier Farben so gefärbt, dass benachbarte Länder nie dieselbe Farbe haben (Vierfarbensatz). Kleine Länder bekommen ihr Kürzel mit einer Hinweislinie.
+
+\begin{lstlisting}[style=latex]
+% Präambel: \input{deutschland_daten.tex}
+\colorlet{farbeA}{akzentblau!18}
+\colorlet{farbeB}{akzentgruen!18}
+\colorlet{farbeC}{akzentorange!20}
+\colorlet{farbeD}{akzentlila!18}
+\colorlet{wasser}{akzentblau!55!cyan!80!black}
+\colorlet{meer}{akzentblau!7}
+\begin{tikzpicture}[
+    land/.style    = {draw=white, line width=0.6pt, line join=round},
+    fluss/.style   = {draw=wasser, line width=0.55pt, line join=round, line cap=round},
+    kuerzel/.style = {font=\sffamily\scriptsize\bfseries, text=black!75},
+  ]
+
+  % --- Hintergrund: Meer und Nachbarstaaten ---------------------------
+  \clip \Rahmen;
+  \fill[meer] \Rahmen;
+  \foreach \staat in {DNK,POL,CZE,AUT,CHE,LIE,FRA,LUX,BEL,NLD}
+    \fill[black!7, draw=white, line width=0.8pt] \Gebiet{\staat};
+
+  % --- Bundesländer, eingefärbt nach dem Vierfarbensatz -----------------
+  \foreach \land/\farbe in {NI/A, SH/B, HH/C, MV/C, HB/B, BB/B, BE/A, ST/C,
+                           SN/A, TH/B, HE/C, NW/B, RP/A, SL/B, BW/B, BY/D}
+    \fill[farbe\farbe, land] \Gebiet{DE-\land};
+
+  % --- Bundesgrenze kräftig nachziehen ---------------------------------
+  \draw[black!65, line width=0.9pt, line join=round] \Gebiet{DEU};
+
+  % --- Gewässer --------------------------------------------------------
+  \foreach \f in {Rhein,Elbe,Donau,Weser,Main,Oder,Mosel,Ems,Inn,Neckar,
+                  Saale,Spree,Isar,Havel,Fulda,Werra,Aller,Lech,Neisse,
+                  WeisseElster,Mulde,Lahn,Ruhr}
+    \draw[fluss] \Fluss{\f};
+  \foreach \s in {Bodensee,Mueritz,SchwerinerSee,Chiemsee,StarnbergerSee,
+                  Ammersee,SteinhuderMeer,PlauerSee,KummerowerSee}
+    \fill[wasser] \See{\s};
+
+  % --- Landeshauptstädte -----------------------------------------------
+  %     \GeoKoordinaten legt alle Orte und Ländermitten als benannte
+  %     Punkte an: (Berlin), (DE-SN), ($(Berlin)+(1,0)$) usw.
+  \GeoKoordinaten
+  \foreach \stadt in {Kiel,Hamburg,Schwerin,Bremen,Hannover,Berlin,Potsdam,
+                      Magdeburg,Duesseldorf,Erfurt,Dresden,Wiesbaden,Mainz,
+                      Saarbruecken,Stuttgart,Muenchen}
+    \fill[black!80] (\stadt) circle (1.1pt);
+  \fill[akzentorange!85!black] (Leipzig) circle (1.4pt)
+    node[right, font=\sffamily\tiny] {Leipzig};
+
+  % --- Kürzel der Länder (kleine Länder mit Hinweislinie) ---------------
+  \foreach \land in {NI,SH,MV,BB,ST,SN,TH,HE,NW,RP,BW,BY}
+    \node[kuerzel] at (DE-\land) {\land};
+  \node[kuerzel] (hh) at ($(Hamburg)+(0.75,0.25)$) {HH};
+  \node[kuerzel] (hb) at ($(Bremen)+(-0.75,0.2)$) {HB};
+  \node[kuerzel] (be) at ($(Berlin)+(0.75,0.25)$) {BE};
+  \node[kuerzel] (sl) at ($(Saarbruecken)+(-0.6,-0.45)$) {SL};
+  \draw[black!60, line width=0.3pt] (Hamburg) -- (hh.west)
+                                    (Bremen)  -- (hb.east)
+                                    (Berlin)  -- (be.west)
+                                    (Saarbruecken) -- (sl.north east);
+
+  % --- Maßstabsleiste und Nordpfeil -----------------------------------
+  \begin{scope}[shift={(0.4,0.35)}, font=\sffamily\tiny]
+    \fill[black!80] (0,0) rectangle (\HundertKm,0.08);
+    \fill[white, draw=black!80, line width=0.3pt] (\HundertKm,0) rectangle (2*\HundertKm,0.08);
+    \node[above] at (0,0.08) {0};
+    \node[above] at (\HundertKm,0.08) {100};
+    \node[above] at (2*\HundertKm,0.08) {200\,km};
+  \end{scope}
+  \draw[-{Stealth[length=5pt]}, line width=0.8pt] (11.3,12.8) -- (11.3,13.5)
+    node[above, font=\sffamily\scriptsize\bfseries] {N};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\input{deutschland_daten.tex}
+\colorlet{farbeA}{akzentblau!18}
+\colorlet{farbeB}{akzentgruen!18}
+\colorlet{farbeC}{akzentorange!20}
+\colorlet{farbeD}{akzentlila!18}
+\colorlet{wasser}{akzentblau!55!cyan!80!black}
+\colorlet{meer}{akzentblau!7}
+\centering
+\begin{passend}%
+\begin{tikzpicture}[
+    land/.style    = {draw=white, line width=0.6pt, line join=round},
+    fluss/.style   = {draw=wasser, line width=0.55pt, line join=round, line cap=round},
+    kuerzel/.style = {font=\sffamily\scriptsize\bfseries, text=black!75},
+  ]
+
+  % --- Hintergrund: Meer und Nachbarstaaten ---------------------------
+  \clip \Rahmen;
+  \fill[meer] \Rahmen;
+  \foreach \staat in {DNK,POL,CZE,AUT,CHE,LIE,FRA,LUX,BEL,NLD}
+    \fill[black!7, draw=white, line width=0.8pt] \Gebiet{\staat};
+
+  % --- Bundesländer, eingefärbt nach dem Vierfarbensatz -----------------
+  \foreach \land/\farbe in {NI/A, SH/B, HH/C, MV/C, HB/B, BB/B, BE/A, ST/C,
+                           SN/A, TH/B, HE/C, NW/B, RP/A, SL/B, BW/B, BY/D}
+    \fill[farbe\farbe, land] \Gebiet{DE-\land};
+
+  % --- Bundesgrenze kräftig nachziehen ---------------------------------
+  \draw[black!65, line width=0.9pt, line join=round] \Gebiet{DEU};
+
+  % --- Gewässer --------------------------------------------------------
+  \foreach \f in {Rhein,Elbe,Donau,Weser,Main,Oder,Mosel,Ems,Inn,Neckar,
+                  Saale,Spree,Isar,Havel,Fulda,Werra,Aller,Lech,Neisse,
+                  WeisseElster,Mulde,Lahn,Ruhr}
+    \draw[fluss] \Fluss{\f};
+  \foreach \s in {Bodensee,Mueritz,SchwerinerSee,Chiemsee,StarnbergerSee,
+                  Ammersee,SteinhuderMeer,PlauerSee,KummerowerSee}
+    \fill[wasser] \See{\s};
+
+  % --- Landeshauptstädte -----------------------------------------------
+  %     \GeoKoordinaten legt alle Orte und Ländermitten als benannte
+  %     Punkte an: (Berlin), (DE-SN), ($(Berlin)+(1,0)$) usw.
+  \GeoKoordinaten
+  \foreach \stadt in {Kiel,Hamburg,Schwerin,Bremen,Hannover,Berlin,Potsdam,
+                      Magdeburg,Duesseldorf,Erfurt,Dresden,Wiesbaden,Mainz,
+                      Saarbruecken,Stuttgart,Muenchen}
+    \fill[black!80] (\stadt) circle (1.1pt);
+  \fill[akzentorange!85!black] (Leipzig) circle (1.4pt)
+    node[right, font=\sffamily\tiny] {Leipzig};
+
+  % --- Kürzel der Länder (kleine Länder mit Hinweislinie) ---------------
+  \foreach \land in {NI,SH,MV,BB,ST,SN,TH,HE,NW,RP,BW,BY}
+    \node[kuerzel] at (DE-\land) {\land};
+  \node[kuerzel] (hh) at ($(Hamburg)+(0.75,0.25)$) {HH};
+  \node[kuerzel] (hb) at ($(Bremen)+(-0.75,0.2)$) {HB};
+  \node[kuerzel] (be) at ($(Berlin)+(0.75,0.25)$) {BE};
+  \node[kuerzel] (sl) at ($(Saarbruecken)+(-0.6,-0.45)$) {SL};
+  \draw[black!60, line width=0.3pt] (Hamburg) -- (hh.west)
+                                    (Bremen)  -- (hb.east)
+                                    (Berlin)  -- (be.west)
+                                    (Saarbruecken) -- (sl.north east);
+
+  % --- Maßstabsleiste und Nordpfeil -----------------------------------
+  \begin{scope}[shift={(0.4,0.35)}, font=\sffamily\tiny]
+    \fill[black!80] (0,0) rectangle (\HundertKm,0.08);
+    \fill[white, draw=black!80, line width=0.3pt] (\HundertKm,0) rectangle (2*\HundertKm,0.08);
+    \node[above] at (0,0.08) {0};
+    \node[above] at (\HundertKm,0.08) {100};
+    \node[above] at (2*\HundertKm,0.08) {200\,km};
+  \end{scope}
+  \draw[-{Stealth[length=5pt]}, line width=0.8pt] (11.3,12.8) -- (11.3,13.5)
+    node[above, font=\sffamily\scriptsize\bfseries] {N};
+\end{tikzpicture}%
+\end{passend}
+\end{ausgabe}
+
+
+
+%%%%  UNTERKAPITEL 7.4  %%%%
+\subsection{USA mit Bundesstaaten}
+
+Für die USA wird die flächentreue Albers-Projektion benutzt. Alaska und Hawaii sind, wie in Atlanten üblich, mit eigener Projektion und eigenem Maßstab als Einschub unten links eingesetzt. Die Farben zeigen die vier Census-Regionen.
+
+\begin{lstlisting}[style=latex]
+% Präambel: \input{usa_daten.tex}
+\colorlet{wasser}{akzentblau!55!cyan!80!black}
+\begin{tikzpicture}[
+    staat/.style   = {draw=white, line width=0.5pt, line join=round},
+    fluss/.style   = {draw=wasser, line width=0.5pt, line join=round, line cap=round},
+    kuerzel/.style = {font=\sffamily\tiny\bfseries, text=black!70},
+  ]
+  \GeoKoordinaten
+
+  % --- Staaten: Farbe nach Region (Census Regions) ---------------------
+  \foreach \s in {ME,NH,VT,MA,RI,CT,NY,NJ,PA}
+    \fill[akzentblau!20, staat] \Gebiet{\s};                       % Nordosten
+  \foreach \s in {OH,MI,IN,IL,WI,MN,IA,MO,ND,SD,NE,KS}
+    \fill[akzentgruen!20, staat] \Gebiet{\s};                      % Mittlerer Westen
+  \foreach \s in {DE,MD,DC,VA,WV,NC,SC,GA,FL,KY,TN,AL,MS,AR,LA,OK,TX}
+    \fill[akzentorange!22, staat] \Gebiet{\s};                     % Süden
+  \foreach \s in {MT,ID,WY,CO,NM,AZ,UT,NV,CA,OR,WA,AK,HI}
+    \fill[akzentlila!18, staat] \Gebiet{\s};                     % Westen
+
+  % --- Gewässer --------------------------------------------------------
+  \foreach \f in {Mississippi,Missouri,Ohio,Colorado,RioGrande,Columbia,
+                  Arkansas,Tennessee,Snake}
+    \draw[fluss] \Fluss{\f};
+  \foreach \s in {Superior,Michigan,Huron,Erie,Ontario,GreatSaltLake}
+    \fill[wasser] \See{\s};
+
+  % --- Kürzel (nur Staaten, die groß genug sind) ------------------------
+  \foreach \s in {WA,OR,CA,NV,ID,MT,WY,UT,AZ,CO,NM,ND,SD,NE,KS,OK,TX,MN,IA,
+                  MO,AR,LA,WI,IL,MI,IN,OH,KY,TN,MS,AL,GA,FL,SC,NC,VA,WV,PA,
+                  NY,ME,AK,HI}
+    \node[kuerzel] at (\s) {\s};
+
+  % --- Hauptstadt ------------------------------------------------------
+  \fill[black] (Washington) circle (1.3pt)
+    node[right=1pt, font=\sffamily\tiny] {Washington, D.C.};
+
+  % --- Rahmen um die Einschübe -----------------------------------------
+  \draw[black!40, line width=0.3pt] (-0.2,-2.5) rectangle (3.75,0.6)
+                                    (3.85,-2.5) rectangle (6.8,-0.4);
+
+  % --- Maßstabsleiste (gilt nur für die 48 Staaten) ---------------------
+  \begin{scope}[shift={(12.2,-1.2)}, font=\sffamily\tiny]
+    \fill[black!80] (0,0) rectangle (5*\HundertKm,0.07);
+    \fill[white, draw=black!80, line width=0.3pt] (5*\HundertKm,0) rectangle (10*\HundertKm,0.07);
+    \node[above] at (0,0.07) {0};
+    \node[above] at (5*\HundertKm,0.07) {500};
+    \node[above] at (10*\HundertKm,0.07) {1000\,km};
+  \end{scope}
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\input{usa_daten.tex}
+\colorlet{wasser}{akzentblau!55!cyan!80!black}
+\centering
+\begin{passend}%
+\begin{tikzpicture}[
+    staat/.style   = {draw=white, line width=0.5pt, line join=round},
+    fluss/.style   = {draw=wasser, line width=0.5pt, line join=round, line cap=round},
+    kuerzel/.style = {font=\sffamily\tiny\bfseries, text=black!70},
+  ]
+  \GeoKoordinaten
+
+  % --- Staaten: Farbe nach Region (Census Regions) ---------------------
+  \foreach \s in {ME,NH,VT,MA,RI,CT,NY,NJ,PA}
+    \fill[akzentblau!20, staat] \Gebiet{\s};                       % Nordosten
+  \foreach \s in {OH,MI,IN,IL,WI,MN,IA,MO,ND,SD,NE,KS}
+    \fill[akzentgruen!20, staat] \Gebiet{\s};                      % Mittlerer Westen
+  \foreach \s in {DE,MD,DC,VA,WV,NC,SC,GA,FL,KY,TN,AL,MS,AR,LA,OK,TX}
+    \fill[akzentorange!22, staat] \Gebiet{\s};                     % Süden
+  \foreach \s in {MT,ID,WY,CO,NM,AZ,UT,NV,CA,OR,WA,AK,HI}
+    \fill[akzentlila!18, staat] \Gebiet{\s};                     % Westen
+
+  % --- Gewässer --------------------------------------------------------
+  \foreach \f in {Mississippi,Missouri,Ohio,Colorado,RioGrande,Columbia,
+                  Arkansas,Tennessee,Snake}
+    \draw[fluss] \Fluss{\f};
+  \foreach \s in {Superior,Michigan,Huron,Erie,Ontario,GreatSaltLake}
+    \fill[wasser] \See{\s};
+
+  % --- Kürzel (nur Staaten, die groß genug sind) ------------------------
+  \foreach \s in {WA,OR,CA,NV,ID,MT,WY,UT,AZ,CO,NM,ND,SD,NE,KS,OK,TX,MN,IA,
+                  MO,AR,LA,WI,IL,MI,IN,OH,KY,TN,MS,AL,GA,FL,SC,NC,VA,WV,PA,
+                  NY,ME,AK,HI}
+    \node[kuerzel] at (\s) {\s};
+
+  % --- Hauptstadt ------------------------------------------------------
+  \fill[black] (Washington) circle (1.3pt)
+    node[right=1pt, font=\sffamily\tiny] {Washington, D.C.};
+
+  % --- Rahmen um die Einschübe -----------------------------------------
+  \draw[black!40, line width=0.3pt] (-0.2,-2.5) rectangle (3.75,0.6)
+                                    (3.85,-2.5) rectangle (6.8,-0.4);
+
+  % --- Maßstabsleiste (gilt nur für die 48 Staaten) ---------------------
+  \begin{scope}[shift={(12.2,-1.2)}, font=\sffamily\tiny]
+    \fill[black!80] (0,0) rectangle (5*\HundertKm,0.07);
+    \fill[white, draw=black!80, line width=0.3pt] (5*\HundertKm,0) rectangle (10*\HundertKm,0.07);
+    \node[above] at (0,0.07) {0};
+    \node[above] at (5*\HundertKm,0.07) {500};
+    \node[above] at (10*\HundertKm,0.07) {1000\,km};
+  \end{scope}
+\end{tikzpicture}%
+\end{passend}
+\end{ausgabe}
+
 
 
 
 %%%%  KAPITEL 8  %%%%
-\section{Historische Karten}
+\section{Mehr Ebenen für Deutschland: Gebirge, Höhen, Verkehr}\label{sec:ebenen}
 
-Grenzen vergangener Zeiten gibt es ebenfalls als freie Geodaten. \textit{historical-basemaps} enthält Weltkarten zu Stichjahren wie 1938 oder 1945, \textit{AWMC geodata} unter anderem die Ausdehnung des Römischen Reichs. Der Arbeitsablauf ist derselbe: herunterladen, mit \texttt{geo2tikz.py} umrechnen, gestalten. Zwei Dinge sind dabei anders als bei Natural Earth: Die Lizenzen (GPL-3.0 bzw. ODbL) verlangen eine Quellenangabe auf der Karte, und historische Grenzen sind oft umstritten oder nur ungefähr bekannt. Darauf sollte das Material hinweisen.
+Natural Earth enthält weit mehr als Grenzen und Flüsse. Für Deutschland sind unter anderem verfügbar:
+
+\begin{itemize}
+	\item \textbf{Gebirge} als Flächen (Harz, Erzgebirge, Böhmerwald, Alpen, Vogesen, Ardennen, Jura, Sudeten) und \textbf{Landschaften} wie das Norddeutsche Tiefland,
+	\item \textbf{Gipfel} mit Lage und Höhe (Zugspitze, Feldberg, Brocken, Hohe Acht; der Fichtelberg fehlt in Natural Earth und wurde im Skript ergänzt),
+	\item \textbf{Straßen} mit Nummern (alle großen Autobahnen, z.\,B.\ \enquote{A9}), \textbf{Bahnstrecken}, Flughäfen und Häfen,
+	\item außerdem Städte mit Einwohnerzahl, Zeitzonen, Meerestiefen, Gradnetz und vieles mehr.
+\end{itemize}
+
+Das Skript legt dafür zusätzliche \textbf{Ebenen} an. Jede Ebene bekommt einen eigenen Befehl und eine Liste ihrer Namen, zum Beispiel \texttt{\textbackslash Hoehe\{500\}} und \texttt{\textbackslash HoeheListe}.
+
+
+%%%%  UNTERKAPITEL 8.1  %%%%
+\subsection{Höhenschichten aus einem Höhenmodell}
+
+Für das Relief braucht man ein \textbf{digitales Höhenmodell}: ein Gitter, in dem für jeden Punkt $(x,y)$ die Höhe $z = f(x,y)$ gespeichert ist. Das Skript berechnet daraus für jede Stufe $h$ die Fläche $\{(x,y) \mid f(x,y) \ge h\}$, mathematisch eine \textbf{Niveaumenge}; ihr Rand ist die \textbf{Höhenlinie} (Niveaulinie) zur Höhe $h$. Gezeichnet werden die Flächen von unten nach oben übereinander, wie die Farbstufen im Atlas. Intern arbeitet dabei der Algorithmus \textit{Marching Squares} (Bibliothek \texttt{contourpy}): Er prüft jedes Gitterquadrat, ob die Höhenlinie hindurchläuft, und setzt die Linie stückweise zusammen.
+
+\begin{lstlisting}[style=latex]
+% Präambel: \input{deutschland_daten.tex}
+\colorlet{wasser}{akzentblau!55!cyan!80!black}
+\colorlet{meer}{akzentblau!7}
+\definecolor{h0}{HTML}{BFE0B0}   % unter 100 m
+\definecolor{h100}{HTML}{DCEBB5}
+\definecolor{h200}{HTML}{EEEDB4}
+\definecolor{h300}{HTML}{EDDDA2}
+\definecolor{h500}{HTML}{E4C58D}
+\definecolor{h750}{HTML}{D4A877}
+\definecolor{h1000}{HTML}{C08D63}
+\definecolor{h1500}{HTML}{A6735A}
+\begin{tikzpicture}[
+    fluss/.style  = {draw=wasser, line width=0.5pt, line join=round, line cap=round},
+    gebirge/.style = {font=\sffamily\scriptsize\itshape, text=black!75},
+  ]
+  \GeoKoordinaten
+  \clip \Rahmen;
+  \fill[meer] \Rahmen;
+  \foreach \staat in {DNK,POL,CZE,AUT,CHE,LIE,FRA,LUX,BEL,NLD}
+    \fill[black!7, draw=white, line width=0.8pt] \Gebiet{\staat};
+
+  % --- Höhenschichten: von unten nach oben übereinander malen -----------
+  \fill[h0] \Gebiet{DEU};
+  \foreach \h in \HoeheListe
+    \fill[h\h] \Hoehe{\h};
+
+  % --- Länder- und Bundesgrenzen, Gewässer -----------------------------
+  \foreach \land in {SH,HH,NI,HB,MV,BB,BE,ST,SN,TH,HE,NW,RP,SL,BW,BY}
+    \draw[white, line width=0.35pt, line join=round] \Gebiet{DE-\land};
+  \draw[black!65, line width=0.9pt, line join=round] \Gebiet{DEU};
+  \foreach \f in {Rhein,Elbe,Donau,Weser,Main,Oder,Mosel,Ems,Inn,Neckar,Saale,
+                  Spree,Isar,Havel,Fulda,Werra,Aller,Lech,Neisse,WeisseElster,Mulde}
+    \draw[fluss] \Fluss{\f};
+  \foreach \s in {Bodensee,Mueritz,SchwerinerSee,Chiemsee,StarnbergerSee,Ammersee}
+    \fill[wasser] \See{\s};
+
+  % --- Gebirgsnamen (nur die in bzw. an Deutschland) --------------------
+  \node[gebirge] at ($(Gebirge-Harz)+(0,-0.25)$) {Harz};
+  \node[gebirge, rotate=28] at ($(Gebirge-Erzgebirge)+(0.2,-0.3)$) {Erzgebirge};
+  \node[gebirge, rotate=-38] at (Gebirge-Boehmerwald) {Böhmerwald};
+  \node[gebirge] at (10.3,0.45) {Alpen};
+
+  % --- Gipfel mit Höhe: Dreieck aus der Liste, Beschriftung von Hand ------
+  \foreach \g/\name/\h in \GipfelListe
+    \fill[black] (\g) ++(0,0.1) -- ++(-0.08,-0.14) -- ++(0.16,0) -- cycle;
+  \begin{scope}[font=\sffamily\tiny, inner sep=1.5pt]
+    \node[above=1pt]       at (Brocken)     {Brocken 1141};
+    \node[right=2pt]       at (Fichtelberg) {Fichtelberg 1215};
+    \node[left=2pt]        at (HoheAcht)    {Hohe Acht 747};
+    \node[above left=1pt]  at (Feldberg)    {Feldberg 1493};
+    \node[above left=1pt]  at (Zugspitze)   {Zugspitze 2962};
+  \end{scope}
+
+  % --- Legende ----------------------------------------------------------
+  \begin{scope}[shift={(1.0,13.75)}, font=\sffamily\tiny]
+    \foreach \farbe/\text [count=\i] in {h0/{0}, h100/{100}, h200/{200}, h300/{300},
+                                         h500/{500}, h750/{750}, h1000/{1000}, h1500/{1500\,m}}
+      \fill[\farbe, draw=black!40, line width=0.2pt] (0.6*\i-0.6,0) rectangle ++(0.6,0.22)
+        node[above, inner sep=1pt] at (0.6*\i-0.6,0.22) {\text};
+    \node[left, inner sep=1pt] at (0,0.11) {Höhe:};
+  \end{scope}
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\input{deutschland_daten.tex}
+\colorlet{wasser}{akzentblau!55!cyan!80!black}
+\colorlet{meer}{akzentblau!7}
+\definecolor{h0}{HTML}{BFE0B0}   % unter 100 m
+\definecolor{h100}{HTML}{DCEBB5}
+\definecolor{h200}{HTML}{EEEDB4}
+\definecolor{h300}{HTML}{EDDDA2}
+\definecolor{h500}{HTML}{E4C58D}
+\definecolor{h750}{HTML}{D4A877}
+\definecolor{h1000}{HTML}{C08D63}
+\definecolor{h1500}{HTML}{A6735A}
+\centering
+\begin{passend}%
+\begin{tikzpicture}[
+    fluss/.style  = {draw=wasser, line width=0.5pt, line join=round, line cap=round},
+    gebirge/.style = {font=\sffamily\scriptsize\itshape, text=black!75},
+  ]
+  \GeoKoordinaten
+  \clip \Rahmen;
+  \fill[meer] \Rahmen;
+  \foreach \staat in {DNK,POL,CZE,AUT,CHE,LIE,FRA,LUX,BEL,NLD}
+    \fill[black!7, draw=white, line width=0.8pt] \Gebiet{\staat};
+
+  % --- Höhenschichten: von unten nach oben übereinander malen -----------
+  \fill[h0] \Gebiet{DEU};
+  \foreach \h in \HoeheListe
+    \fill[h\h] \Hoehe{\h};
+
+  % --- Länder- und Bundesgrenzen, Gewässer -----------------------------
+  \foreach \land in {SH,HH,NI,HB,MV,BB,BE,ST,SN,TH,HE,NW,RP,SL,BW,BY}
+    \draw[white, line width=0.35pt, line join=round] \Gebiet{DE-\land};
+  \draw[black!65, line width=0.9pt, line join=round] \Gebiet{DEU};
+  \foreach \f in {Rhein,Elbe,Donau,Weser,Main,Oder,Mosel,Ems,Inn,Neckar,Saale,
+                  Spree,Isar,Havel,Fulda,Werra,Aller,Lech,Neisse,WeisseElster,Mulde}
+    \draw[fluss] \Fluss{\f};
+  \foreach \s in {Bodensee,Mueritz,SchwerinerSee,Chiemsee,StarnbergerSee,Ammersee}
+    \fill[wasser] \See{\s};
+
+  % --- Gebirgsnamen (nur die in bzw. an Deutschland) --------------------
+  \node[gebirge] at ($(Gebirge-Harz)+(0,-0.25)$) {Harz};
+  \node[gebirge, rotate=28] at ($(Gebirge-Erzgebirge)+(0.2,-0.3)$) {Erzgebirge};
+  \node[gebirge, rotate=-38] at (Gebirge-Boehmerwald) {Böhmerwald};
+  \node[gebirge] at (10.3,0.45) {Alpen};
+
+  % --- Gipfel mit Höhe: Dreieck aus der Liste, Beschriftung von Hand ------
+  \foreach \g/\name/\h in \GipfelListe
+    \fill[black] (\g) ++(0,0.1) -- ++(-0.08,-0.14) -- ++(0.16,0) -- cycle;
+  \begin{scope}[font=\sffamily\tiny, inner sep=1.5pt]
+    \node[above=1pt]       at (Brocken)     {Brocken 1141};
+    \node[right=2pt]       at (Fichtelberg) {Fichtelberg 1215};
+    \node[left=2pt]        at (HoheAcht)    {Hohe Acht 747};
+    \node[above left=1pt]  at (Feldberg)    {Feldberg 1493};
+    \node[above left=1pt]  at (Zugspitze)   {Zugspitze 2962};
+  \end{scope}
+
+  % --- Legende ----------------------------------------------------------
+  \begin{scope}[shift={(1.0,13.75)}, font=\sffamily\tiny]
+    \foreach \farbe/\text [count=\i] in {h0/{0}, h100/{100}, h200/{200}, h300/{300},
+                                         h500/{500}, h750/{750}, h1000/{1000}, h1500/{1500\,m}}
+      \fill[\farbe, draw=black!40, line width=0.2pt] (0.6*\i-0.6,0) rectangle ++(0.6,0.22)
+        node[above, inner sep=1pt] at (0.6*\i-0.6,0.22) {\text};
+    \node[left, inner sep=1pt] at (0,0.11) {Höhe:};
+  \end{scope}
+\end{tikzpicture}%
+\end{passend}
+\end{ausgabe}
+
+
+\begin{hinweis}[Auflösung]
+	Für diese Karte wurde ein grobes, weltweites Höhenmodell benutzt (ETOPO1 der NOAA, auf 10 Bogenminuten gemittelt; ein Gitterpunkt etwa alle 12\,km $\times$ 18\,km). Für Deutschland im Ganzen reicht das, aber Gipfel werden \enquote{abgeflacht}: Das Erzgebirge erreicht in diesem Raster keine 800\,m. Für Detailkarten, etwa das Erzgebirge oder den Harz mit Höhenlinien alle 100\,m, nimmt man das \textbf{Copernicus-Höhenmodell} mit 30\,m Auflösung (Link im Katalog). Das Skript liest GeoTIFF-Dateien direkt (dafür zusätzlich \texttt{pip install rasterio}):
+\end{hinweis}
+
+\begin{lstlisting}[style=latex]
+lon, lat, z = lade_hoehenmodell("Copernicus_DSM_COG_10_N50_00_E012_00_DEM.tif",
+                                (12.3, 50.2, 13.6, 50.8))   # Ausschnitt in Grad
+schichten = hoehenschichten(lon, lat, z, [400, 500, 600, 700, 800, 900, 1000, 1100, 1200])
+\end{lstlisting}
+
+
+%%%%  UNTERKAPITEL 8.2  %%%%
+\subsection{Autobahnen und Bahnstrecken}
+
+Die Verkehrskarte nutzt dieselbe Datendatei. Autobahnen werden einzeln gezeichnet und mit ihrer Nummer beschriftet, alle Bahnstrecken mit einem einzigen Befehl.
+
+\begin{lstlisting}[style=latex]
+% Präambel: \input{deutschland_daten.tex}
+\colorlet{autobahn}{akzentblau!85!black}
+\begin{tikzpicture}[
+    schild/.style = {fill=autobahn, text=white, font=\sffamily\tiny\bfseries,
+                     rounded corners=1pt, inner sep=1.2pt},
+  ]
+  \GeoKoordinaten
+  \clip \Rahmen;
+  \foreach \staat in {DNK,POL,CZE,AUT,CHE,LIE,FRA,LUX,BEL,NLD}
+    \fill[black!5, draw=white, line width=0.8pt] \Gebiet{\staat};
+  \fill[black!10] \Gebiet{DEU};
+  \foreach \land in {SH,HH,NI,HB,MV,BB,BE,ST,SN,TH,HE,NW,RP,SL,BW,BY}
+    \draw[white, line width=0.6pt] \Gebiet{DE-\land};
+  \draw[black!50, line width=0.7pt] \Gebiet{DEU};
+
+  % --- Bahnstrecken: dünn, grau-schwarz -------------------------------
+  \draw[black!45, line width=0.25pt, line join=round] \Bahn{alle};
+
+  % --- Autobahnen: alle aus der Liste, weißer Rand für bessere Lesbarkeit
+  \foreach \a in \AutobahnListe
+    \draw[white, line width=1.6pt, line join=round, line cap=round] \Autobahn{\a};
+  \foreach \a in \AutobahnListe
+    \draw[autobahn, line width=0.9pt, line join=round, line cap=round] \Autobahn{\a};
+
+  % --- Nummernschilder an einigen wichtigen Autobahnen ------------------
+  \foreach \a in {A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A14,A20,A24,A38,A45,A61,A72,A93}
+    \node[schild] at (\a) {\a};
+
+  % --- Großstädte --------------------------------------------------------
+  \foreach \stadt/\lage in {Berlin/above left, Hamburg/above left, Muenchen/below right,
+                            Leipzig/left, Dresden/right, Stuttgart/left, Hannover/left}
+    \fill[akzentorange!85!black] (\stadt) circle (1.6pt);
+  \node[left, font=\sffamily\scriptsize\bfseries] at (Leipzig) {Leipzig};
+
+  % --- Legende -------------------------------------------------------------
+  \begin{scope}[shift={(0.4,13.6)}, font=\sffamily\scriptsize]
+    \draw[autobahn, line width=0.9pt] (0,0) -- (0.6,0) node[right, black] {Autobahn};
+    \draw[black!45, line width=0.25pt] (0,-0.35) -- (0.6,-0.35) node[right, black] {Bahnstrecke};
+  \end{scope}
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\input{deutschland_daten.tex}
+\colorlet{autobahn}{akzentblau!85!black}
+\centering
+\begin{passend}%
+\begin{tikzpicture}[
+    schild/.style = {fill=autobahn, text=white, font=\sffamily\tiny\bfseries,
+                     rounded corners=1pt, inner sep=1.2pt},
+  ]
+  \GeoKoordinaten
+  \clip \Rahmen;
+  \foreach \staat in {DNK,POL,CZE,AUT,CHE,LIE,FRA,LUX,BEL,NLD}
+    \fill[black!5, draw=white, line width=0.8pt] \Gebiet{\staat};
+  \fill[black!10] \Gebiet{DEU};
+  \foreach \land in {SH,HH,NI,HB,MV,BB,BE,ST,SN,TH,HE,NW,RP,SL,BW,BY}
+    \draw[white, line width=0.6pt] \Gebiet{DE-\land};
+  \draw[black!50, line width=0.7pt] \Gebiet{DEU};
+
+  % --- Bahnstrecken: dünn, grau-schwarz -------------------------------
+  \draw[black!45, line width=0.25pt, line join=round] \Bahn{alle};
+
+  % --- Autobahnen: alle aus der Liste, weißer Rand für bessere Lesbarkeit
+  \foreach \a in \AutobahnListe
+    \draw[white, line width=1.6pt, line join=round, line cap=round] \Autobahn{\a};
+  \foreach \a in \AutobahnListe
+    \draw[autobahn, line width=0.9pt, line join=round, line cap=round] \Autobahn{\a};
+
+  % --- Nummernschilder an einigen wichtigen Autobahnen ------------------
+  \foreach \a in {A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A14,A20,A24,A38,A45,A61,A72,A93}
+    \node[schild] at (\a) {\a};
+
+  % --- Großstädte --------------------------------------------------------
+  \foreach \stadt/\lage in {Berlin/above left, Hamburg/above left, Muenchen/below right,
+                            Leipzig/left, Dresden/right, Stuttgart/left, Hannover/left}
+    \fill[akzentorange!85!black] (\stadt) circle (1.6pt);
+  \node[left, font=\sffamily\scriptsize\bfseries] at (Leipzig) {Leipzig};
+
+  % --- Legende -------------------------------------------------------------
+  \begin{scope}[shift={(0.4,13.6)}, font=\sffamily\scriptsize]
+    \draw[autobahn, line width=0.9pt] (0,0) -- (0.6,0) node[right, black] {Autobahn};
+    \draw[black!45, line width=0.25pt] (0,-0.35) -- (0.6,-0.35) node[right, black] {Bahnstrecke};
+  \end{scope}
+\end{tikzpicture}%
+\end{passend}
+\end{ausgabe}
+
 
 
 
 %%%%  KAPITEL 9  %%%%
-\section{Zusammenfassung}
+\section{Europa und die ganze Welt}\label{sec:welt}
 
-Die wichtigsten Techniken im Überblick:
+Die Natural-Earth-Datei \texttt{ne\_50m\_admin\_0\_countries} enthält alle Staaten der Erde mit einer Spalte \texttt{CONTINENT}. Ein Kontinent ist also nur ein Filter, im Skript eine einzige Zeile.
+
+
+%%%%  UNTERKAPITEL 9.1  %%%%
+\subsection{Europa: Färben ist ein Graphenproblem}
+
+Damit benachbarte Länder verschiedene Farben bekommen, fasst das Skript die Karte als \textbf{Graph} auf: Jedes Land ist ein Knoten, jede gemeinsame Grenze eine Kante. Gefärbt wird mit dem Verfahren \textbf{DSatur}: Als Nächstes kommt immer das Land an die Reihe, dessen Nachbarn schon die meisten verschiedenen Farben haben; es bekommt die kleinste noch freie Farbe. Für Europa reichen so \textbf{vier Farben}, wie es der Vierfarbensatz für jede Landkarte garantiert. Die Datendatei liefert das Ergebnis als Liste \texttt{\textbackslash EuropaFarben}.
+
+\begin{lstlisting}[style=latex]
+% Präambel: \input{europa_daten.tex}
+\colorlet{farbe0}{akzentblau!18}
+\colorlet{farbe1}{akzentgruen!18}
+\colorlet{farbe2}{akzentorange!20}
+\colorlet{farbe3}{akzentlila!18}
+\colorlet{farbe4}{yellow!35}
+\colorlet{meer}{akzentblau!7}
+\begin{tikzpicture}
+  \GeoKoordinaten
+  \clip \Rahmen;
+  \fill[meer] \Rahmen;
+  % Länder außerhalb Europas grau
+  \foreach \land in \AndereLaender
+    \fill[black!8, draw=white, line width=0.4pt] \Gebiet{\land};
+  % europäische Länder: Farbnummer kommt aus der Graphfärbung im Skript
+  \foreach \land/\nr in \EuropaFarben
+    \fill[farbe\nr, draw=white, line width=0.5pt, line join=round] \Gebiet{\land};
+  % Länderkürzel (ISO 3166)
+  \foreach \land/\iso in \EuropaKuerzel
+    \node[font=\sffamily\tiny\bfseries, text=black!70] at (\land) {\iso};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\input{europa_daten.tex}
+\colorlet{farbe0}{akzentblau!18}
+\colorlet{farbe1}{akzentgruen!18}
+\colorlet{farbe2}{akzentorange!20}
+\colorlet{farbe3}{akzentlila!18}
+\colorlet{farbe4}{yellow!35}
+\colorlet{meer}{akzentblau!7}
+\centering
+\begin{passend}%
+\begin{tikzpicture}
+  \GeoKoordinaten
+  \clip \Rahmen;
+  \fill[meer] \Rahmen;
+  % Länder außerhalb Europas grau
+  \foreach \land in \AndereLaender
+    \fill[black!8, draw=white, line width=0.4pt] \Gebiet{\land};
+  % europäische Länder: Farbnummer kommt aus der Graphfärbung im Skript
+  \foreach \land/\nr in \EuropaFarben
+    \fill[farbe\nr, draw=white, line width=0.5pt, line join=round] \Gebiet{\land};
+  % Länderkürzel (ISO 3166)
+  \foreach \land/\iso in \EuropaKuerzel
+    \node[font=\sffamily\tiny\bfseries, text=black!70] at (\land) {\iso};
+\end{tikzpicture}%
+\end{passend}
+\end{ausgabe}
+
+
+
+%%%%  UNTERKAPITEL 9.2  %%%%
+\subsection{Weltkarten: Jede Projektion lügt, aber anders}
+
+Eine Kugel lässt sich nicht verzerrungsfrei in die Ebene abwickeln. Man muss sich entscheiden, was erhalten bleiben soll:
 
 \begin{itemize}
-	\item Karten nicht von Hand zeichnen, sondern freie Geodaten mit \texttt{geo2tikz.py} umrechnen.
-	\item Alle Ebenen einer Karte in einem einzigen Aufruf umrechnen, damit sie zusammenpassen.
-	\item Die erzeugte Datei mit \texttt{\textbackslash input} laden; jede Ebene hat einen Befehl (\texttt{\textbackslash geolaender}), einen Stil (\texttt{geo laender}) und Stile für jedes Objekt (\texttt{geo laender/DE-SN}).
-	\item Ebenen von unten nach oben zeichnen und mit \texttt{\textbackslash clip} am Kartenrand abschneiden.
-	\item Beschriften über die Punkte im Inneren, etwa \texttt{(laender-DE-SN)} oder \texttt{(staedte-Leipzig)}.
-	\item Projektion nach Zweck wählen: \texttt{EPSG:3035} für Europa, \texttt{EPSG:25833} für Sachsen, \texttt{EPSG:8857} für flächentreue Weltkarten.
-	\item Auf jede Karte eine Quellenzeile setzen.
+	\item \textbf{Mercator} ist \textit{winkeltreu} und deshalb für Seekarten und Online-Karten beliebt: $x = R\lambda$, \ $y = R\ln\tan\left(\frac{\pi}{4}+\frac{\varphi}{2}\right)$. Wegen $y'(\varphi) = \frac{R}{\cos\varphi}$ wird jede Strecke um den Faktor $\frac{1}{\cos\varphi}$ gestreckt, jede Fläche also um $\frac{1}{\cos^2\varphi}$; bei $75^\circ$ Breite ist das schon das 15-Fache.
+	\item \textbf{Robinson} ist ein Kompromiss: weder winkel- noch flächentreu, aber \enquote{sieht richtig aus}.
+	\item \textbf{Equal Earth} ist \textit{flächentreu}: Gleich große Gebiete erscheinen gleich groß.
 \end{itemize}
 
-Die Karten lassen sich fächerübergreifend nutzen: stumme Karten in Geografie und Geschichte, Projektionen und Flächenberechnung in Mathematik (die Fläche des vereinfachten Sachsens lässt sich mit der Gaußschen Trapezformel berechnen), Douglas-Peucker als rekursiver Algorithmus und GeoJSON als Datenformat in Informatik. Eine passende Aufgabe für Fortgeschrittene ist das Färben einer Europakarte mit möglichst wenigen Farben, sodass Nachbarländer nie dieselbe Farbe haben.
+Die roten Flecken sind Kreise mit 800\,km Radius auf der Erdkugel (\textbf{Tissot-Indikatrix}). Auf der Kugel sind sie alle gleich groß; auf der Karte zeigen sie, wie die Projektion verzerrt. Das Skript misst außerdem nach, wie viel größer Afrika (orange) auf der Karte ist als Grönland (blau). In Wirklichkeit ist Afrika rund 14-mal so groß.
+
+\begin{center}
+\small
+\begin{tabular}{@{}lccc@{}}
+	\toprule
+	& \textbf{Mercator} & \textbf{Robinson} & \textbf{Equal Earth} \\
+	\midrule
+	Fläche Afrika : Fläche Grönland auf der Karte & 0{,}9 & 7{,}2 & 13{,}6 \\
+	\bottomrule
+\end{tabular}
+\end{center}
+
+Die drei Datendateien definieren dieselben Befehle. Damit sie sich nicht überschreiben, wird jede in einer Gruppe geladen; das übernimmt der Befehl \texttt{\textbackslash Weltkarte}:
+
+\begin{lstlisting}[style=latex]
+\colorlet{meer}{akzentblau!7}
+\newcommand\Weltkarte[2]{%
+	\begingroup
+	\input{welt_#1_daten.tex}%
+	\begin{tikzpicture}
+		\fill[meer] \Rahmen;
+		\foreach \land in \GebietListe \fill[black!12, draw=white, line width=0.25pt] \Gebiet{\land};
+		\foreach \land in \AfrikaListe \fill[akzentorange!45, draw=white, line width=0.25pt] \Gebiet{\land};
+		\fill[akzentblau!45] \Gebiet{GRL};
+		\foreach \k in \TissotListe \fill[akzentrot, fill opacity=0.45] \Tissot{\k};
+		\node[anchor=north west, font=\sffamily\small\bfseries] at (0.1,-0.05) {#2};
+	\end{tikzpicture}%
+	\endgroup}
+\Weltkarte{mercator}{Mercator}\par\medskip
+\Weltkarte{robinson}{Robinson}\par\medskip
+\Weltkarte{equalearth}{Equal Earth}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\centering
+	\colorlet{meer}{akzentblau!7}
+	\newcommand\Weltkarte[2]{%
+		\begingroup
+		\input{welt_#1_daten.tex}%
+		\begin{tikzpicture}
+			\fill[meer] \Rahmen;
+			\foreach \land in \GebietListe \fill[black!12, draw=white, line width=0.25pt] \Gebiet{\land};
+			\foreach \land in \AfrikaListe \fill[akzentorange!45, draw=white, line width=0.25pt] \Gebiet{\land};
+			\fill[akzentblau!45] \Gebiet{GRL};
+			\foreach \k in \TissotListe \fill[akzentrot, fill opacity=0.45] \Tissot{\k};
+			\node[anchor=north west, font=\sffamily\small\bfseries] at (0.1,-0.05) {#2};
+		\end{tikzpicture}%
+		\endgroup}
+	\Weltkarte{mercator}{Mercator}\par\medskip
+	\Weltkarte{robinson}{Robinson}\par\medskip
+	\Weltkarte{equalearth}{Equal Earth}
+\end{ausgabe}
+
+Die Vorlage \texttt{karte\_welt\_projektionen.tex} erzeugt dieselben drei Karten als drei Seiten eines \texttt{standalone}-Dokuments (Option \texttt{tikz}: pro \texttt{tikzpicture} eine Seite).
+
+
+
+%%%%  KAPITEL 10  %%%%
+\section{Historische Karten}\label{sec:geschichte}
+
+Auch für historische Grenzen gibt es frei verfügbare Datensätze; sie sind aber \textit{Rekonstruktionen}. Historische Grenzen waren oft unscharf, umstritten oder änderten sich mehrmals im Jahr. Jede Karte zeigt deshalb nur einen \textbf{Schnappschuss}, und die Daten sollten vor dem Unterrichtseinsatz mit einem Geschichtsatlas abgeglichen werden.
+
+\begin{itemize}
+	\item \textbf{historical-basemaps} (A.~Ourednik): Weltkarten zu über 50 Zeitpunkten von 123\,000 v.\,Chr.\ bis 2010, u.\,a.\ für 1914, 1920, 1930, 1938, 1945 und 1960. Der Autor bezeichnet das Projekt ausdrücklich als \enquote{work in progress}.
+	\item \textbf{CShapes 2.0} (ETH Zürich): Staatsgrenzen Jahr für Jahr von 1886 bis 2019, wissenschaftlich gepflegt (als R-Paket).
+	\item \textbf{Ancient World Mapping Center} (AWMC): Antike, darunter das Römische Reich zu mehreren Zeitpunkten, Provinzen, Straßen, Aquädukte, antike Küstenlinien; Grundlage ist der \textit{Barrington Atlas of the Greek and Roman World}.
+	\item \textbf{Itiner-e}: das bisher vollständigste Netz der Römerstraßen (rund 300\,000\,km); \textbf{Pleiades}: antike Orte mit Koordinaten.
+\end{itemize}
+
+\begin{hinweis}[Lizenzen der historischen Daten]
+	Die Datendateien \texttt{historisch\_daten.tex} (abgeleitet aus historical-basemaps) und \texttt{rom\_daten.tex} (abgeleitet aus AWMC) stehen nicht unter CC~BY wie der Rest dieses Repositorys, sondern unter der Lizenz ihrer Quelle: GPL-3.0 bzw. ODbL. Wer sie weitergibt oder verändert, muss die Quelle nennen und die Daten unter derselben Lizenz weitergeben. Auf den Karten selbst steht die Quellenangabe bereits.
+\end{hinweis}
+
+
+%%%%  UNTERKAPITEL 10.1  %%%%
+\subsection{Das Römische Reich um 200 n.\,Chr.}
+
+Reichsgebiet, Provinzgrenzen und Straßen stammen vom AWMC, die heutigen Küsten und Flüsse von Natural Earth. Die Städte sind mit ihren lateinischen Namen beschriftet (Colonia Agrippina = Köln, Augusta Treverorum = Trier, Augusta Vindelicum = Augsburg).
+
+\begin{lstlisting}[style=latex]
+% Präambel: \input{rom_daten.tex}
+\colorlet{meer}{akzentblau!11}
+\colorlet{reich}{akzentrot!22}
+\begin{tikzpicture}[
+    stadt/.style = {font=\sffamily\tiny, inner sep=1pt, fill=white, fill opacity=0.7, text opacity=1, rounded corners=1pt},
+  ]
+  \GeoKoordinaten
+  \clip \Rahmen;
+  \fill[meer] \Rahmen;
+  \fill[black!14] \Land{heute};                                    % heutige Küsten
+  \fill[reich] \Reich{200};                                       % Reichsgebiet
+  \draw[white, line width=0.4pt, line join=round] \Provinzgrenzen{200};
+  \draw[akzentblau!60, line width=0.35pt] \Gewaesser{alle};          % große Flüsse
+  \draw[akzentrot!45!black, line width=0.15pt, line join=round, opacity=0.5] \Strasse{neben};
+  \draw[akzentrot!70!black, line width=0.4pt, line join=round] \Strasse{haupt};  % Hauptstraßen
+  \draw[akzentrot!80!black, line width=0.6pt, line join=round] \Reich{200};
+
+  % --- Städte (lateinische Namen) ------------------------------------
+  \fill[black] (Roma) circle (1.6pt) node[below, stadt, font=\sffamily\scriptsize\bfseries] {Roma};
+  \foreach \ort/\name/\lage in {Londinium/Londinium/left, ColoniaAgrippina/Colonia Agrippina/right,
+        AugustaTreverorum/Augusta Treverorum/left, Lugdunum/Lugdunum/left,
+        Carthago/Carthago/below, Alexandria/Alexandria/below, Athenae/Athenae/below,
+        Antiochia/Antiochia/right, Byzantium/Byzantium/above, Hierosolyma/Hierosolyma/right,
+        Augusta/Augusta Vindelicum/right}
+    \fill (\ort) circle (1.1pt) node[\lage, stadt] {\name};
+
+  % --- Legende ---------------------------------------------------------
+  \begin{scope}[shift={(0.3,0.35)}, font=\sffamily\scriptsize]
+    \fill[reich, draw=akzentrot!80!black] (0,0) rectangle (0.4,0.25);
+    \node[right] at (0.45,0.125) {Römisches Reich um 200 n.\,Chr.};
+    \draw[akzentrot!70!black, line width=0.3pt] (0,-0.25) -- (0.4,-0.25);
+    \node[right] at (0.45,-0.25) {Römerstraßen (Hauptstraßen kräftig)};
+  \end{scope}
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\input{rom_daten.tex}
+\colorlet{meer}{akzentblau!11}
+\colorlet{reich}{akzentrot!22}
+\centering
+\begin{passend}%
+\begin{tikzpicture}[
+    stadt/.style = {font=\sffamily\tiny, inner sep=1pt, fill=white, fill opacity=0.7, text opacity=1, rounded corners=1pt},
+  ]
+  \GeoKoordinaten
+  \clip \Rahmen;
+  \fill[meer] \Rahmen;
+  \fill[black!14] \Land{heute};                                    % heutige Küsten
+  \fill[reich] \Reich{200};                                       % Reichsgebiet
+  \draw[white, line width=0.4pt, line join=round] \Provinzgrenzen{200};
+  \draw[akzentblau!60, line width=0.35pt] \Gewaesser{alle};          % große Flüsse
+  \draw[akzentrot!45!black, line width=0.15pt, line join=round, opacity=0.5] \Strasse{neben};
+  \draw[akzentrot!70!black, line width=0.4pt, line join=round] \Strasse{haupt};  % Hauptstraßen
+  \draw[akzentrot!80!black, line width=0.6pt, line join=round] \Reich{200};
+
+  % --- Städte (lateinische Namen) ------------------------------------
+  \fill[black] (Roma) circle (1.6pt) node[below, stadt, font=\sffamily\scriptsize\bfseries] {Roma};
+  \foreach \ort/\name/\lage in {Londinium/Londinium/left, ColoniaAgrippina/Colonia Agrippina/right,
+        AugustaTreverorum/Augusta Treverorum/left, Lugdunum/Lugdunum/left,
+        Carthago/Carthago/below, Alexandria/Alexandria/below, Athenae/Athenae/below,
+        Antiochia/Antiochia/right, Byzantium/Byzantium/above, Hierosolyma/Hierosolyma/right,
+        Augusta/Augusta Vindelicum/right}
+    \fill (\ort) circle (1.1pt) node[\lage, stadt] {\name};
+
+  % --- Legende ---------------------------------------------------------
+  \begin{scope}[shift={(0.3,0.35)}, font=\sffamily\scriptsize]
+    \fill[reich, draw=akzentrot!80!black] (0,0) rectangle (0.4,0.25);
+    \node[right] at (0.45,0.125) {Römisches Reich um 200 n.\,Chr.};
+    \draw[akzentrot!70!black, line width=0.3pt] (0,-0.25) -- (0.4,-0.25);
+    \node[right] at (0.45,-0.25) {Römerstraßen (Hauptstraßen kräftig)};
+  \end{scope}
+\end{tikzpicture}%
+\end{passend}
+\end{ausgabe}
+
+
+
+%%%%  UNTERKAPITEL 10.2  %%%%
+\subsection{Deutschland 1938 -- 1945 -- 1949 bis 1990}
+
+Drei verkleinerte Teilkarten nebeneinander, jede in einem eigenen \texttt{scope}. Die gestrichelte Linie ist die heutige Grenze Deutschlands zum Vergleich.
+
+\begin{lstlisting}[style=latex]
+% Präambel: \input{historisch_daten.tex}
+\colorlet{meer}{akzentblau!7}
+\begin{tikzpicture}[
+    titel/.style = {font=\sffamily\bfseries\small, anchor=north west},
+    klein/.style = {font=\sffamily\tiny, inner sep=1pt},
+    heute/.style = {draw=black, line width=0.5pt, dash pattern=on 2pt off 1.2pt},
+  ]
+
+  % ================= 1) Ende 1938 =====================================
+  \begin{scope}[scale=0.46]
+    \GeoKoordinaten          % Punkte im verkleinerten Koordinatensystem anlegen
+    \begin{scope}
+      \clip \Rahmen;
+      \fill[meer] \Rahmen;
+      \foreach \g in \NachbarnReich \fill[black!9, draw=white, line width=0.4pt] \Gebiet{\g};
+      \fill[akzentrot!35, draw=akzentrot!70!black, line width=0.5pt] \Gebiet{1938-Reich};
+      \draw[heute] \Heute{DEU};
+      \fill (Berlin) circle (2.5pt) (Wien) circle (2.5pt);
+    \end{scope}
+    \node[titel] at (0.2,9.7) {Ende 1938};
+  \end{scope}
+
+  % ================= 2) 1945: Besatzungszonen =========================
+  \begin{scope}[xshift=5.8cm, scale=0.46]
+    \GeoKoordinaten          % Punkte im verkleinerten Koordinatensystem anlegen
+    \begin{scope}
+      \clip \Rahmen;
+      \fill[meer] \Rahmen;
+      \foreach \g in \NachbarnZonen \fill[black!9, draw=white, line width=0.4pt] \Gebiet{\g};
+      \foreach \z/\farbe in {USA/akzentblau, UK/akzentgruen, FRA/akzentlila, SOV/akzentrot}
+        \fill[\farbe!35, draw=white, line width=0.5pt] \Gebiet{1945-\z};
+      \draw[heute] \Heute{DEU};
+      \fill (Berlin) circle (2.5pt);
+    \end{scope}
+    \node[titel] at (0.2,9.7) {1945: Besatzungszonen};
+    \begin{scope}[shift={(0.4,0.5)}, font=\sffamily\tiny]
+      \foreach \z/\farbe/\text [count=\i] in {USA/akzentblau/amerikanisch, UK/akzentgruen/britisch,
+                                             FRA/akzentlila/französisch, SOV/akzentrot/sowjetisch}
+        \fill[\farbe!35] (0,1.3-0.42*\i) rectangle ++(0.5,0.3) node[right, black, inner sep=2pt] at (0.5,1.45-0.42*\i) {\text};
+    \end{scope}
+  \end{scope}
+
+  % ================= 3) 1949–1990: BRD und DDR =========================
+  \begin{scope}[xshift=11.6cm, scale=0.46]
+    \GeoKoordinaten          % Punkte im verkleinerten Koordinatensystem anlegen
+    \begin{scope}
+      \clip \Rahmen;
+      \fill[meer] \Rahmen;
+      \foreach \g in \NachbarnHeute \fill[black!9, draw=white, line width=0.4pt] \Gebiet{\g};
+      \fill[akzentblau!30] \Heute{West};
+      \fill[akzentrot!30] \Heute{Ost};
+      \draw[black, line width=1pt] \Heute{Grenze};
+      \fill (Bonn) circle (2.5pt) (Berlin) circle (2.5pt);
+    \end{scope}
+    \node[titel] at (0.2,9.7) {1949--1990};
+    \node[klein, right] at (Bonn) {Bonn};
+    \node[klein, above] at (Berlin) {Berlin};
+    \node[font=\sffamily\scriptsize\bfseries] at ($(Bonn)+(2.4,-1.8)$) {BRD};
+    \node[font=\sffamily\scriptsize\bfseries] at ($(Leipzig)+(0.6,-0.6)$) {DDR};
+  \end{scope}
+
+  % gemeinsame Legende
+  \draw[heute] (0,-0.35) -- (0.6,-0.35)
+    node[right, font=\sffamily\tiny, black] {heutige Grenze Deutschlands zum Vergleich};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+\input{historisch_daten.tex}
+\colorlet{meer}{akzentblau!7}
+\centering
+\begin{passend}%
+\begin{tikzpicture}[
+    titel/.style = {font=\sffamily\bfseries\small, anchor=north west},
+    klein/.style = {font=\sffamily\tiny, inner sep=1pt},
+    heute/.style = {draw=black, line width=0.5pt, dash pattern=on 2pt off 1.2pt},
+  ]
+
+  % ================= 1) Ende 1938 =====================================
+  \begin{scope}[scale=0.46]
+    \GeoKoordinaten          % Punkte im verkleinerten Koordinatensystem anlegen
+    \begin{scope}
+      \clip \Rahmen;
+      \fill[meer] \Rahmen;
+      \foreach \g in \NachbarnReich \fill[black!9, draw=white, line width=0.4pt] \Gebiet{\g};
+      \fill[akzentrot!35, draw=akzentrot!70!black, line width=0.5pt] \Gebiet{1938-Reich};
+      \draw[heute] \Heute{DEU};
+      \fill (Berlin) circle (2.5pt) (Wien) circle (2.5pt);
+    \end{scope}
+    \node[titel] at (0.2,9.7) {Ende 1938};
+  \end{scope}
+
+  % ================= 2) 1945: Besatzungszonen =========================
+  \begin{scope}[xshift=5.8cm, scale=0.46]
+    \GeoKoordinaten          % Punkte im verkleinerten Koordinatensystem anlegen
+    \begin{scope}
+      \clip \Rahmen;
+      \fill[meer] \Rahmen;
+      \foreach \g in \NachbarnZonen \fill[black!9, draw=white, line width=0.4pt] \Gebiet{\g};
+      \foreach \z/\farbe in {USA/akzentblau, UK/akzentgruen, FRA/akzentlila, SOV/akzentrot}
+        \fill[\farbe!35, draw=white, line width=0.5pt] \Gebiet{1945-\z};
+      \draw[heute] \Heute{DEU};
+      \fill (Berlin) circle (2.5pt);
+    \end{scope}
+    \node[titel] at (0.2,9.7) {1945: Besatzungszonen};
+    \begin{scope}[shift={(0.4,0.5)}, font=\sffamily\tiny]
+      \foreach \z/\farbe/\text [count=\i] in {USA/akzentblau/amerikanisch, UK/akzentgruen/britisch,
+                                             FRA/akzentlila/französisch, SOV/akzentrot/sowjetisch}
+        \fill[\farbe!35] (0,1.3-0.42*\i) rectangle ++(0.5,0.3) node[right, black, inner sep=2pt] at (0.5,1.45-0.42*\i) {\text};
+    \end{scope}
+  \end{scope}
+
+  % ================= 3) 1949–1990: BRD und DDR =========================
+  \begin{scope}[xshift=11.6cm, scale=0.46]
+    \GeoKoordinaten          % Punkte im verkleinerten Koordinatensystem anlegen
+    \begin{scope}
+      \clip \Rahmen;
+      \fill[meer] \Rahmen;
+      \foreach \g in \NachbarnHeute \fill[black!9, draw=white, line width=0.4pt] \Gebiet{\g};
+      \fill[akzentblau!30] \Heute{West};
+      \fill[akzentrot!30] \Heute{Ost};
+      \draw[black, line width=1pt] \Heute{Grenze};
+      \fill (Bonn) circle (2.5pt) (Berlin) circle (2.5pt);
+    \end{scope}
+    \node[titel] at (0.2,9.7) {1949--1990};
+    \node[klein, right] at (Bonn) {Bonn};
+    \node[klein, above] at (Berlin) {Berlin};
+    \node[font=\sffamily\scriptsize\bfseries] at ($(Bonn)+(2.4,-1.8)$) {BRD};
+    \node[font=\sffamily\scriptsize\bfseries] at ($(Leipzig)+(0.6,-0.6)$) {DDR};
+  \end{scope}
+
+  % gemeinsame Legende
+  \draw[heute] (0,-0.35) -- (0.6,-0.35)
+    node[right, font=\sffamily\tiny, black] {heutige Grenze Deutschlands zum Vergleich};
+\end{tikzpicture}%
+\end{passend}
+\end{ausgabe}
+
+
+\begin{itemize}
+	\item \textbf{Ende 1938:} Der Datensatz für 1938 enthält bereits die Annexion Österreichs (\enquote{Anschluss}, März 1938) und des Sudetengebiets (Oktober 1938), aber noch nicht das Memelland (März 1939). Das wurde durch Punkttests im Skript geprüft: Wien und Karlsbad liegen im Gebiet, Prag und Memel nicht.
+	\item \textbf{1945:} die vier Besatzungszonen; die Gebiete östlich von Oder und Neiße gehören im Datensatz zu Polen bzw.\ zur Sowjetunion. Vereinfachungen: Berlin ist nicht in Sektoren geteilt, das Saarland ist bereits als eigenes Gebiet (\enquote{Saar Protectorate}, eigentlich erst ab 1947) erfasst.
+	\item \textbf{1949--1990:} Diese Karte braucht gar keinen historischen Datensatz. Die DDR besteht aus den heutigen Ländern MV, BB, BE, ST, SN und TH, die innerdeutsche Grenze ist die gemeinsame Grenze dieser Länder mit den alten Ländern. Zwei Ungenauigkeiten: West-Berlin wird mitgefärbt, und das Amt Neuhaus (östlich der Elbe) gehörte zur DDR, liegt aber seit 1993 in Niedersachsen.
+\end{itemize}
+
+\begin{merke}
+	Historische Karten mit \TikZ entstehen genauso wie aktuelle: GeoJSON laden, projizieren, vereinfachen, zeichnen. Der Unterschied liegt in der \textit{Quellenkritik}: Wer hat die Grenze rekonstruiert, auf welcher Grundlage, und für welchen Stichtag?
+\end{merke}
+
+
+
+%%%%  KAPITEL 11  %%%%
+\section{Und wenn ich nur eine Grafik habe?}
+
+Aus einer Grafik lässt sich ebenfalls ein Polygonzug gewinnen; es gibt vier Wege. Für \textit{echte} Grenzen sind die Geodaten aus Kapitel~2 aber fast immer besser.
+
+\begin{enumerate}[label=\textbf{(\arabic*)}]
+	\item \textbf{Vektorgrafik (SVG) umwandeln.} Viele Karten auf Wikimedia Commons sind SVG-Dateien. Mit dem Programm \texttt{svg2tikz} (als Inkscape-Erweiterung oder per \texttt{pip install svg2tikz}) wird daraus Ti\textit{k}Z-Code. Nachteil: Die Koordinaten haben keinen geografischen Bezug, und man muss die Lizenz der Grafik beachten (oft CC~BY-SA).
+	\item \textbf{Rastergrafik nachzeichnen lassen.} In Inkscape wandelt \textit{Pfad $\to$ Bitmap nachzeichnen} ein Bild (PNG, JPG) automatisch in Pfade um, danach geht es weiter wie in~(1). Das liefert Bézierkurven statt eines sauberen Polygonzugs und braucht meist Nacharbeit.
+	\item \textbf{Von Hand digitalisieren.} Das Bild wird in \TikZ hinterlegt, ein Gitter darübergelegt, und man liest die Eckpunkte ab, ideal mit Schülerinnen und Schülern auf Millimeterpapier. Das Grundgerüst (mit einer eigenen Bilddatei \texttt{vorlage.png}):
+\end{enumerate}
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+	\node[anchor=south west, inner sep=0, opacity=0.5]
+	     at (0,0) {\includegraphics[width=10cm]{vorlage.png}};
+	\draw[help lines, black!30, step=0.5] (0,0) grid (10,8);   % Ablesegitter
+	\foreach \x in {0,...,10} \node[below, font=\tiny] at (\x,0) {\x};
+	\foreach \y in {0,...,8}  \node[left,  font=\tiny] at (0,\y) {\y};
+	\draw[red, thick] (2.1,3.4) -- (2.8,4.0) -- (3.5,3.9) -- ... -- cycle;
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{enumerate}[resume, label=\textbf{(\arabic*)}]
+	\item \textbf{Georeferenzieren, der saubere Weg.} Eine Kartengrafik (z.\,B.\ ein gemeinfreier Atlas aus dem 19.\,Jahrhundert) wird in \textbf{QGIS} über \textit{Layer $\to$ Georeferenzierer} geladen. Man setzt \textbf{Passpunkte}: Punkte, die man auf der alten Karte \textit{und} in der Wirklichkeit eindeutig erkennt (Flussmündungen, Grenzecken, Kirchtürme, Kreuzungen im Gradnetz). QGIS berechnet daraus eine Transformation und legt die Grafik passgenau auf echte Koordinaten. Danach zeichnet man die gesuchten Grenzen in einem neuen Vektorlayer nach, exportiert ihn als GeoJSON und verarbeitet ihn mit \texttt{geo2tikz.py} wie alle anderen Daten. So lassen sich auch Grenzen digitalisieren, für die es keine Datenbank gibt.
+\end{enumerate}
+
+Mathematisch steckt hinter dem Georeferenzieren eine \textbf{affine Abbildung} von den Bildkoordinaten $(u,v)$ in die Kartenkoordinaten $(x,y)$:
+\[
+	x = a\,u + b\,v + c, \qquad y = d\,u + e\,v + f .
+\]
+Jeder Passpunkt liefert zwei Gleichungen. Mit \textbf{drei Passpunkten} entstehen zwei lineare Gleichungssysteme mit je drei Unbekannten ($a,b,c$ bzw.\ $d,e,f$). Setzt man mehr Passpunkte, ist das System überbestimmt; QGIS wählt dann die Lösung mit den kleinsten Fehlerquadraten und zeigt für jeden Passpunkt den Restfehler an. So fallen falsch gesetzte Punkte sofort auf.
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}[font=\sffamily\scriptsize, >={Stealth[length=5pt]},
+                    pp/.style={circle, fill=akzentrot, inner sep=1.4pt}]
+	\begin{scope}   % Bildkoordinaten
+		\draw[black!30, fill=black!3] (0,0) rectangle (4,3);
+		\draw[akzentorange!80!black, thick, fill=akzentorange!15, line join=round]
+			(0.6,0.5) -- (1.4,0.4) -- (2.6,0.9) -- (3.4,0.6) -- (3.5,1.8) -- (2.6,2.5) -- (1.3,2.4) -- (0.5,1.6) -- cycle;
+		\node[pp, label=left:$P_1$] at (0.6,0.5) {};
+		\node[pp, label=right:$P_2$] at (3.4,0.6) {};
+		\node[pp, label=above:$P_3$] at (2.6,2.5) {};
+		\draw[->] (0,0) -- (4.4,0) node[right] {$u$};
+		\draw[->] (0,0) -- (0,3.4) node[above] {$v$};
+		\node[above] at (2,3.4) {gescannte Karte (Pixel)};
+	\end{scope}
+	\draw[->, thick, akzentblau] (4.8,1.5) -- node[above, align=center] {affine\\Abbildung} (6.6,1.5);
+	\begin{scope}[shift={(7.5,0.1)}, xslant=0.15, rotate=-8, xscale=1.15]   % echte Koordinaten
+		\draw[black!30, fill=akzentblau!4] (0,0) rectangle (4,3);
+		\draw[akzentorange!80!black, thick, fill=akzentorange!15, line join=round]
+			(0.6,0.5) -- (1.4,0.4) -- (2.6,0.9) -- (3.4,0.6) -- (3.5,1.8) -- (2.6,2.5) -- (1.3,2.4) -- (0.5,1.6) -- cycle;
+		\node[pp, label=left:$P_1'$] at (0.6,0.5) {};
+		\node[pp, label=right:$P_2'$] at (3.4,0.6) {};
+		\node[pp, label=above:$P_3'$] at (2.6,2.5) {};
+	\end{scope}
+	\node at (9.9,3.6) {echte Koordinaten (Länge, Breite)};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\centering
+	\begin{tikzpicture}[font=\sffamily\scriptsize, >={Stealth[length=5pt]},
+	                    pp/.style={circle, fill=akzentrot, inner sep=1.4pt}]
+		\begin{scope}   % Bildkoordinaten
+			\draw[black!30, fill=black!3] (0,0) rectangle (4,3);
+			\draw[akzentorange!80!black, thick, fill=akzentorange!15, line join=round]
+				(0.6,0.5) -- (1.4,0.4) -- (2.6,0.9) -- (3.4,0.6) -- (3.5,1.8) -- (2.6,2.5) -- (1.3,2.4) -- (0.5,1.6) -- cycle;
+			\node[pp, label=left:$P_1$] at (0.6,0.5) {};
+			\node[pp, label=right:$P_2$] at (3.4,0.6) {};
+			\node[pp, label=above:$P_3$] at (2.6,2.5) {};
+			\draw[->] (0,0) -- (4.4,0) node[right] {$u$};
+			\draw[->] (0,0) -- (0,3.4) node[above] {$v$};
+			\node[above] at (2,3.4) {gescannte Karte (Pixel)};
+		\end{scope}
+		\draw[->, thick, akzentblau] (4.8,1.5) -- node[above, align=center] {affine\\Abbildung} (6.6,1.5);
+		\begin{scope}[shift={(7.5,0.1)}, xslant=0.15, rotate=-8, xscale=1.15]   % echte Koordinaten
+			\draw[black!30, fill=akzentblau!4] (0,0) rectangle (4,3);
+			\draw[akzentorange!80!black, thick, fill=akzentorange!15, line join=round]
+				(0.6,0.5) -- (1.4,0.4) -- (2.6,0.9) -- (3.4,0.6) -- (3.5,1.8) -- (2.6,2.5) -- (1.3,2.4) -- (0.5,1.6) -- cycle;
+			\node[pp, label=left:$P_1'$] at (0.6,0.5) {};
+			\node[pp, label=right:$P_2'$] at (3.4,0.6) {};
+			\node[pp, label=above:$P_3'$] at (2.6,2.5) {};
+		\end{scope}
+		\node at (9.9,3.6) {echte Koordinaten (Länge, Breite)};
+	\end{tikzpicture}
+\end{ausgabe}
+
+\begin{hinweis}[Urheberrecht]
+	Gedruckte und digitale Karten (Atlas, Schulbuch, Web-Karten) sind als Kartenwerke urheberrechtlich geschützt; auch abgezeichnete Umrisse können darunter fallen. Mit gemeinfreien Daten wie Natural Earth ist man auf der sicheren Seite. Alte Karten sind gemeinfrei, wenn der Urheber vor mehr als 70 Jahren gestorben ist; typische Vorlagen zum Georeferenzieren sind daher Atlanten des 19.\ und frühen 20.\ Jahrhunderts.
+\end{hinweis}
+
+
+
+%%%%  KAPITEL 12  %%%%
+\section{Ideen für den Unterricht}\label{sec:unterricht}
+
+\paragraph{Mathematik: Maßstab und Flächeninhalt.}
+Die Schülerinnen und Schüler legen die grobe Sachsen-Karte aus Kapitel~1 auf Karopapier, lesen die elf Eckpunkte ab und berechnen den Flächeninhalt mit der \textbf{Gaußschen Trapezformel}
+\[
+	A = \frac12 \left|\sum_{i=1}^{n} \bigl(x_i\,y_{i+1} - x_{i+1}\,y_i\bigr)\right|,
+	\qquad (x_{n+1},y_{n+1}) = (x_1,y_1).
+\]
+Ergebnis: $A \approx 9{,}6\,\mathrm{cm}^2$. Mit dem Maßstab $1\,\mathrm{cm} \,\hat{=}\, 43{,}1\,\mathrm{km}$ folgt $A \approx 9{,}6 \cdot 43{,}1^2\,\mathrm{km}^2 \approx 17\,900\,\mathrm{km}^2$, nur etwa 3\,\% weniger als der amtliche Wert. Anschließend lässt sich diskutieren, warum die Fläche mit mehr Punkten nicht \textit{immer} größer wird (vgl.\ die Werte in Kapitel~\ref{sec:dp}).
+
+\paragraph{Mathematik: Analysis und Lineare Algebra.}
+Die Mercator-Projektion ist eine Anwendung von $\ln$, $\tan$ und der Kettenregel: Aus $y = R\ln\tan\bigl(\frac{\pi}{4}+\frac{\varphi}{2}\bigr)$ folgt $y'(\varphi) = \frac{R}{\cos\varphi}$ und damit die Flächenverzerrung $\frac{1}{\cos^2\varphi}$ (Kapitel~\ref{sec:welt}). Höhenlinien sind Niveaulinien einer Funktion $f(x,y)$. Beim Georeferenzieren werden aus drei Passpunkten zwei lineare Gleichungssysteme, ein echter Anwendungsfall für LGS.
+
+\paragraph{Informatik: Algorithmen.}
+Der Douglas-Peucker-Algorithmus ist ein anschauliches Beispiel für \textit{Rekursion} und \textit{Teile und herrsche}; er lässt sich in Python in rund 15 Zeilen umsetzen. Die Einfärbung der Bundesländer führt auf das \textit{Graphfärbungsproblem}: Länder sind Knoten, gemeinsame Grenzen sind Kanten. Reichen immer vier Farben? Das DSatur-Verfahren aus Kapitel~\ref{sec:welt} ist ein gieriger (greedy) Algorithmus und lässt sich gut nachspielen: Karte auf Papier, Buntstifte, Regel befolgen. Auch \textit{Marching Squares} (Höhenlinien) eignet sich zum Nachvollziehen auf Karopapier, und GeoJSON ist ein gutes Beispiel für ein strukturiertes Datenformat.
+
+\paragraph{Fächerübergreifend: Geschichte und Geografie.}
+Die historischen Karten (Kapitel~\ref{sec:geschichte}) laden zur Quellenkritik ein: Woher stammen die Grenzen, für welchen Stichtag gelten sie, was ist vereinfacht? Schülerinnen und Schüler können eine alte Karte selbst georeferenzieren und nachzeichnen und das Ergebnis mit dem Datensatz vergleichen. Stumme Karten (Kapitel~6.6) eignen sich für Topografie-Tests.
+
+
+
+%%%%  KAPITEL 13  %%%%
+\section{Datenquellen-Katalog}\label{sec:katalog}
+
+Alle hier genannten Quellen liefern Daten, die sich mit \texttt{geo2tikz.py} (bzw.\ nach einem Export als GeoJSON) in Ti\textit{k}Z-Karten verwandeln lassen. Die Lizenz steht jeweils unter dem Namen; \enquote{Namensnennung} heißt: Die Quelle muss unter der Karte genannt werden. Wo die Bedingungen je Datensatz unterschiedlich sind, steht \enquote{Bedingungen prüfen}.
+
+{\small
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}p{12cm}@{}}
+	\toprule
+	\multicolumn{2}{@{}l}{\textbf{Grenzen und Verwaltung}} \\
+	\midrule
+	\textbf{Natural Earth}\newline{\footnotesize\color{black!60}gemeinfrei} & Staaten, Bundesländer und Provinzen weltweit, Städte, Zeitzonen; drei Detailstufen.\newline \url{https://www.naturalearthdata.com}\newline GeoJSON: \url{https://github.com/nvkelso/natural-earth-vector} \\ \addlinespace
+	\textbf{BKG Geodatenzentrum}\newline{\footnotesize\color{black!60}DL-DE/BY-2.0} & Amtliche Verwaltungsgrenzen Deutschlands bis zur Gemeinde (VG250, VG2500).\newline \url{https://gdz.bkg.bund.de} \\ \addlinespace
+	\textbf{Eurostat GISCO}\newline{\footnotesize\color{black!60}Bedingungen prüfen} & Statistische Regionen Europas (NUTS), passend zu Eurostat-Statistiken; ideal für eingefärbte Karten.\newline \url{https://ec.europa.eu/eurostat/web/gisco} \\ \addlinespace
+	\textbf{Die Bundeswahlleiterin}\newline{\footnotesize\color{black!60}Bedingungen prüfen} & Wahlkreise zur Bundestagswahl als Geodaten.\newline \url{https://bundeswahlleiterin.de} \\ \addlinespace
+	\textbf{Open Data Leipzig}\newline{\footnotesize\color{black!60}Bedingungen prüfen} & Kleinräumige Daten der Stadt Leipzig, z.\,B.\ Wahlbezirke, Einwohnerdichte. Viele Städte haben ähnliche Portale.\newline \url{https://opendata.leipzig.de} \\ \addlinespace
+	\textbf{GADM}\newline{\footnotesize\color{black!60}nur nicht-kommerziell} & Verwaltungsgrenzen aller Staaten bis zur Kreisebene.\newline \url{https://gadm.org} \\
+	\midrule
+	\multicolumn{2}{@{}l}{\textbf{Gewässer, Relief, Natur}} \\
+	\midrule
+	\textbf{Natural Earth}\newline{\footnotesize\color{black!60}gemeinfrei} & Flüsse, Seen, Küsten, Gebirge (Flächen), Gipfel, Meerestiefen-Stufen, Gletscher.\newline \url{https://www.naturalearthdata.com} \\ \addlinespace
+	\textbf{Copernicus DEM}\newline{\footnotesize\color{black!60}frei, Namensnennung} & Höhenmodell der ganzen Erde mit 30\,m Auflösung, für Höhenlinien von Harz, Erzgebirge \& Co.\ (Registrierung nötig).\newline \url{https://dataspace.copernicus.eu} \\ \addlinespace
+	\textbf{ETOPO (NOAA)}\newline{\footnotesize\color{black!60}gemeinfrei} & Weltweites Höhen- und Tiefenmodell (Land und Meer).\newline \url{https://www.ncei.noaa.gov/products/etopo-global-relief-model} \\ \addlinespace
+	\textbf{fatiando-data}\newline{\footnotesize\color{black!60}frei} & ETOPO1, auf 10 Bogenminuten gemittelt, als kleine Datei (2,7\,MB); so in dieser Handreichung verwendet.\newline \url{https://github.com/fatiando-data/earth-topography-10arcmin} \\ \addlinespace
+	\textbf{Tektonische Platten}\newline{\footnotesize\color{black!60}frei, Namensnennung} & Plattengrenzen nach Bird (2003) als GeoJSON.\newline \url{https://github.com/fraxen/tectonicplates} \\ \addlinespace
+	\textbf{USGS Erdbeben}\newline{\footnotesize\color{black!60}gemeinfrei} & Aktuelle Erdbeben weltweit als GeoJSON-Feed (stündlich bis monatlich).\newline \url{https://earthquake.usgs.gov/earthquakes/feed/} \\
+	\midrule
+	\multicolumn{2}{@{}l}{\textbf{Verkehr und Alltag}} \\
+	\midrule
+	\textbf{Natural Earth}\newline{\footnotesize\color{black!60}gemeinfrei} & Hauptstraßen mit Nummern, Bahnstrecken, Flughäfen, Häfen.\newline \url{https://www.naturalearthdata.com} \\ \addlinespace
+	\textbf{OpenStreetMap}\newline{\footnotesize\color{black!60}ODbL, Namensnennung} & Alles bis ins Detail: jede Straße, Straßenbahnlinie, Schule, jeder Bach.\newline \url{https://www.openstreetmap.org} \\ \addlinespace
+	\textbf{Geofabrik}\newline{\footnotesize\color{black!60}ODbL} & Fertige OSM-Auszüge je Land und Bundesland zum Herunterladen.\newline \url{https://download.geofabrik.de} \\ \addlinespace
+	\textbf{Overpass Turbo}\newline{\footnotesize\color{black!60}ODbL} & Gezielte Abfrage einzelner OSM-Objekte (z.\,B.\ alle Straßenbahnlinien einer Stadt) mit Export als GeoJSON.\newline \url{https://overpass-turbo.eu} \\
+	\midrule
+	\multicolumn{2}{@{}l}{\textbf{Geschichte}} \\
+	\midrule
+	\textbf{historical-basemaps}\newline{\footnotesize\color{black!60}GPL-3.0} & Weltgrenzen zu über 50 Zeitpunkten (123\,000 v.\,Chr.\ bis 2010), z.\,B.\ 200, 1500, 1914, 1938, 1945.\newline \url{https://github.com/aourednik/historical-basemaps} \\ \addlinespace
+	\textbf{CShapes 2.0}\newline{\footnotesize\color{black!60}Bedingungen prüfen} & Staatsgrenzen Jahr für Jahr, 1886--2019 (ETH Zürich), als R-Paket.\newline \url{https://cran.r-project.org/package=cshapes} \\ \addlinespace
+	\textbf{Ancient World Mapping Center}\newline{\footnotesize\color{black!60}ODbL, Namensnennung} & Antike: Römisches Reich (60 v.\,Chr., 117 und 200 n.\,Chr., nach Diokletian), Provinzen, Straßen, Aquädukte, Reich Alexanders, Perserreich.\newline \url{https://awmc.unc.edu/gis-data/}\newline GeoJSON: \url{https://github.com/AWMC/geodata} \\ \addlinespace
+	\textbf{Itiner-e}\newline{\footnotesize\color{black!60}Bedingungen prüfen} & Digitaler Atlas der Römerstraßen (ca.\ 300\,000\,km).\newline \url{https://itiner-e.org} \\ \addlinespace
+	\textbf{Pleiades}\newline{\footnotesize\color{black!60}CC BY} & Antike Orte mit Koordinaten.\newline \url{https://pleiades.stoa.org} \\ \addlinespace
+	\textbf{David Rumsey Map Collection}\newline{\footnotesize\color{black!60}Lizenz je Karte} & Zehntausende historische Karten als Vorlage zum Georeferenzieren.\newline \url{https://www.davidrumsey.com} \\ \addlinespace
+	\textbf{Wikimedia Commons}\newline{\footnotesize\color{black!60}Lizenz je Datei} & Historische und aktuelle Karten, viele als SVG.\newline \url{https://commons.wikimedia.org} \\
+	\midrule
+	\multicolumn{2}{@{}l}{\textbf{Werkzeuge}} \\
+	\midrule
+	\textbf{QGIS}\newline{\footnotesize\color{black!60}frei (GPL)} & Das Standardprogramm für Geodaten: anschauen, zuschneiden, georeferenzieren, nachzeichnen, als GeoJSON exportieren.\newline \url{https://qgis.org} \\ \addlinespace
+	\textbf{mapshaper}\newline{\footnotesize\color{black!60}frei} & Im Browser: Geodaten öffnen, vereinfachen, umwandeln (Shapefile $\leftrightarrow$ GeoJSON $\leftrightarrow$ SVG).\newline \url{https://mapshaper.org} \\ \addlinespace
+	\textbf{geojson.io}\newline{\footnotesize\color{black!60}frei} & GeoJSON im Browser ansehen und von Hand zeichnen.\newline \url{https://geojson.io} \\ \addlinespace
+	\textbf{svg2tikz}\newline{\footnotesize\color{black!60}frei (GPL)} & SVG-Grafiken in Ti\textit{k}Z-Code umwandeln.\newline \url{https://github.com/xyz2tex/svg2tikz} \\
+	\bottomrule
+\end{longtable}
+}
+
+
+
+%%%%  KAPITEL 14  %%%%
+\section{Tipps und Stolpersteine}
+
+\begin{itemize}
+	\item \textbf{Alle Ebenen in einem Aufruf.} Bei \texttt{geo2tikz.py} haben getrennte Aufrufe verschiedene Maßstäbe; dann liegen Flüsse neben den Ländern.
+	\item \textbf{Kompilierzeit:} Die Deutschland-Datendatei des Atlas enthält mit allen Ebenen rund 15\,000 Punkte und kompiliert in wenigen Sekunden. Wird es zu langsam, die Toleranz erhöhen oder die Karte einmal als \texttt{standalone}-PDF erzeugen und mit \texttt{\textbackslash includegraphics} einbinden.
+	\item \textbf{Umlaute in Namen:} Namen von Gebieten, Flüssen und Punkten sind bewusst ohne Umlaute (\texttt{Muenchen}, \texttt{Mueritz}), weil Umlaute in \texttt{\textbackslash csname} mit \texttt{pdflatex} Ärger machen.
+	\item \textbf{Ränder:} Flüsse und Nachbarländer reichen über den Kartenrand hinaus; \texttt{\textbackslash clip \textbackslash Rahmen;} bzw.\ \texttt{\textbackslash clip (0,0) rectangle (Breite,Höhe);} als erste Zeile schneidet sauber ab.
+	\item \textbf{Füllen mit Löchern:} Hat ein Gebiet ein Loch (z.\,B.\ Brandenburg um Berlin), hilft \texttt{\textbackslash fill[even odd rule]}. \texttt{geo2tikz.py} setzt die Option selbst.
+	\item \textbf{Makronamen ohne Ziffern:} \texttt{\textbackslash Gebiete1938} geht nicht, weil TeX-Befehlsnamen nur aus Buchstaben bestehen. Ziffern sind nur in Namen erlaubt, die über \texttt{\textbackslash csname} laufen, also etwa \texttt{\textbackslash Gebiet\{1938-Reich\}} oder \texttt{\textbackslash Hoehe\{500\}}. Aus demselben Grund bestehen die Ebenennamen von \texttt{geo2tikz.py} nur aus Buchstaben.
+	\item \textbf{Verkleinerte Teilkarten:} Bei \texttt{\textbackslash begin\{scope\}[scale=0.46]} muss \texttt{\textbackslash GeoKoordinaten} \textit{innerhalb} des Scopes aufgerufen werden, sonst liegen die benannten Punkte an der unverkleinerten Stelle.
+	\item \textbf{Mehrere Datendateien in einem Dokument:} jede in einer Gruppe (\texttt{\textbackslash begingroup} \dots\ \texttt{\textbackslash endgroup}) laden, siehe die Weltkarten in Kapitel~\ref{sec:welt}. Bei \texttt{geo2tikz.py} verschiedene Ebenennamen wählen.
+	\item \textbf{Mercator und Flächen über die Datumsgrenze:} Nach der Projektion können Flächen ungültig werden. \texttt{geo2tikz.py} repariert sie selbst; ältere Fassungen brachen hier mit \enquote{TopologyException: side location conflict} ab.
+	\item \textbf{Detailkarten} (z.\,B.\ Landkreise Sachsens) gibt Natural Earth nicht her; dafür die BKG-Daten (VG250) nehmen und mit \texttt{geo2tikz.py} umrechnen.
+\end{itemize}
+
+
+
+%%%%  KAPITEL 15  %%%%
+\section{Zusammenfassung}
+
+\begin{itemize}
+	\item Karten nicht von Hand zeichnen, sondern freie Geodaten umrechnen: \texttt{geo2tikz.py} für eigene Ausschnitte, \texttt{karten\_beispiele.py} für den fertigen Atlas.
+	\item Drei Zutaten: Koordinaten, Projektion, Vereinfachung (Douglas-Peucker).
+	\item \texttt{geo2tikz.py}: jede Ebene hat einen Befehl (\texttt{\textbackslash geolaender}), einen Stil (\texttt{geo laender}) und Stile für jedes Objekt (\texttt{geo laender/DE-SN}); Punkte wie \texttt{(laender-DE-SN)} zum Beschriften.
+	\item Atlas: \texttt{\textbackslash Gebiet\{\dots\}}, \texttt{\textbackslash Fluss\{\dots\}}, \texttt{\textbackslash See\{\dots\}}, \texttt{\textbackslash GeoKoordinaten}, dazu Höhen, Gebirge, Autobahnen und Bahn.
+	\item Ebenen von unten nach oben zeichnen und am Kartenrand abschneiden.
+	\item Projektion nach Zweck wählen und auf jede Karte eine Quellenzeile setzen; bei historischen Daten die Lizenz (GPL-3.0, ODbL) und die Quellenkritik beachten.
+\end{itemize}
+
+\vfill
+{\footnotesize\raggedright Kartendaten: Natural Earth (gemeinfrei), \url{https://www.naturalearthdata.com}; Höhen: ETOPO1, NOAA (gemeinfrei), über fatiando-data; Römisches Reich: \textcopyright\ Ancient World Mapping Center (ODbL); Deutschland 1938/1945: historical-basemaps, A.~Ourednik (GPL-3.0).}
 
 \end{document}

@@ -1,0 +1,79 @@
+% ===================================================================
+%  Karte: Deutschland physisch – Höhenschichten, Gebirge, Gipfel, Flüsse
+%  Daten: Natural Earth (gemeinfrei); Höhen: ETOPO1 (NOAA), 10'-Raster
+%  Kompilieren: pdflatex (deutschland_daten.tex im selben Ordner)
+% ===================================================================
+\documentclass[border=0.1mm]{standalone}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc}
+
+\input{deutschland_daten.tex}
+
+\definecolor{akzentblau}{HTML}{2563EB}
+\colorlet{wasser}{akzentblau!55!cyan!80!black}
+\colorlet{meer}{akzentblau!7}
+% Höhenschichten-Farben wie im Atlas: grün (tief) -> braun (hoch)
+\definecolor{h0}{HTML}{BFE0B0}   % unter 100 m
+\definecolor{h100}{HTML}{DCEBB5}
+\definecolor{h200}{HTML}{EEEDB4}
+\definecolor{h300}{HTML}{EDDDA2}
+\definecolor{h500}{HTML}{E4C58D}
+\definecolor{h750}{HTML}{D4A877}
+\definecolor{h1000}{HTML}{C08D63}
+\definecolor{h1500}{HTML}{A6735A}
+
+\begin{document}
+\begin{tikzpicture}[
+    fluss/.style  = {draw=wasser, line width=0.5pt, line join=round, line cap=round},
+    gebirge/.style = {font=\sffamily\scriptsize\itshape, text=black!75},
+  ]
+  \GeoKoordinaten
+  \clip \Rahmen;
+  \fill[meer] \Rahmen;
+  \foreach \staat in {DNK,POL,CZE,AUT,CHE,LIE,FRA,LUX,BEL,NLD}
+    \fill[black!7, draw=white, line width=0.8pt] \Gebiet{\staat};
+
+  % --- Höhenschichten: von unten nach oben übereinander malen -----------
+  \fill[h0] \Gebiet{DEU};
+  \foreach \h in \HoeheListe
+    \fill[h\h] \Hoehe{\h};
+
+  % --- Länder- und Bundesgrenzen, Gewässer -----------------------------
+  \foreach \land in {SH,HH,NI,HB,MV,BB,BE,ST,SN,TH,HE,NW,RP,SL,BW,BY}
+    \draw[white, line width=0.35pt, line join=round] \Gebiet{DE-\land};
+  \draw[black!65, line width=0.9pt, line join=round] \Gebiet{DEU};
+  \foreach \f in {Rhein,Elbe,Donau,Weser,Main,Oder,Mosel,Ems,Inn,Neckar,Saale,
+                  Spree,Isar,Havel,Fulda,Werra,Aller,Lech,Neisse,WeisseElster,Mulde}
+    \draw[fluss] \Fluss{\f};
+  \foreach \s in {Bodensee,Mueritz,SchwerinerSee,Chiemsee,StarnbergerSee,Ammersee}
+    \fill[wasser] \See{\s};
+
+  % --- Gebirgsnamen (nur die in bzw. an Deutschland) --------------------
+  \node[gebirge] at ($(Gebirge-Harz)+(0,-0.25)$) {Harz};
+  \node[gebirge, rotate=28] at ($(Gebirge-Erzgebirge)+(0.2,-0.3)$) {Erzgebirge};
+  \node[gebirge, rotate=-38] at (Gebirge-Boehmerwald) {Böhmerwald};
+  \node[gebirge] at (10.3,0.45) {Alpen};
+
+  % --- Gipfel mit Höhe: Dreieck aus der Liste, Beschriftung von Hand ------
+  \foreach \g/\name/\h in \GipfelListe
+    \fill[black] (\g) ++(0,0.1) -- ++(-0.08,-0.14) -- ++(0.16,0) -- cycle;
+  \begin{scope}[font=\sffamily\tiny, inner sep=1.5pt]
+    \node[above=1pt]       at (Brocken)     {Brocken 1141};
+    \node[right=2pt]       at (Fichtelberg) {Fichtelberg 1215};
+    \node[left=2pt]        at (HoheAcht)    {Hohe Acht 747};
+    \node[above left=1pt]  at (Feldberg)    {Feldberg 1493};
+    \node[above left=1pt]  at (Zugspitze)   {Zugspitze 2962};
+  \end{scope}
+
+  % --- Legende ----------------------------------------------------------
+  \begin{scope}[shift={(1.0,13.75)}, font=\sffamily\tiny]
+    \foreach \farbe/\text [count=\i] in {h0/{0}, h100/{100}, h200/{200}, h300/{300},
+                                         h500/{500}, h750/{750}, h1000/{1000}, h1500/{1500\,m}}
+      \fill[\farbe, draw=black!40, line width=0.2pt] (0.6*\i-0.6,0) rectangle ++(0.6,0.22)
+        node[above, inner sep=1pt] at (0.6*\i-0.6,0.22) {\text};
+    \node[left, inner sep=1pt] at (0,0.11) {Höhe:};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

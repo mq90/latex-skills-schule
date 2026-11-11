@@ -105,9 +105,12 @@ def main():
                 continue  # Schnipsel, keine eigenständige Datei
             with tempfile.TemporaryDirectory() as t:
                 t = pathlib.Path(t)
-                for f in tex.parent.iterdir():
-                    if f.is_file():
-                        shutil.copy(f, t)
+                # Handreichungen dürfen Datendateien aus assets/ desselben Skills laden
+                ordner = [sdir / "assets", tex.parent] if tex.parent.name == "references" else [tex.parent]
+                for o in ordner:
+                    for f in o.iterdir() if o.is_dir() else []:
+                        if f.is_file():
+                            shutil.copy(f, t)
                 if "\\input{header.tex}" in q:
                     for f in ("header.tex", "newcommands.tex"):
                         shutil.copy(STIL / f, t)
