@@ -14,14 +14,14 @@ passt – deshalb ist jedes Thema ein eigener Skill.
 
 ```
 skills/
-├── grundlagen/        Grundstil, LaTeX- und TikZ-Grundlagen, Multiple-Choice, PDF-Formulare
-├── mathematik/        Funktionsgraphen, Geometrie, Stochastik, Venn-Diagramme
-├── informatik/        Automaten, Schaltungen, Programmablaufpläne, UML, Quellcode
-├── sprache-musik/     Lautschrift (IPA), Notensatz (MusiXTeX)
-├── illustration/      tikzpeople-Figuren, Sprechblasen
-├── geografie/         Landkarten aus Geodaten
-└── raetsel-spiele/    Sudoku, Schach
-werkzeuge/             Prüf- und Hilfsskripte für das Repository
+├── grundlagen/                Grundstil, LaTeX- und TikZ-Grundlagen, Multiple-Choice
+├── mathematik/                Funktionsgraphen, Geometrie, Stochastik, Venn-Diagramme
+├── informatik/                Automaten, Schaltungen, Programmablaufpläne, UML, Quellcode, PDF-Formulare
+├── sprache-musik/             Lautschrift (IPA), Notensatz (MusiXTeX)
+├── illustration/              tikzpeople-Figuren, Sprechblasen
+├── gesellschaftswissenschaft/ Landkarten aus Geodaten
+└── raetsel-spiele/            Sudoku, Schach
+werkzeuge/                     Prüf- und Hilfsskripte für das Repository
 ```
 
 ## Die Skills
@@ -32,7 +32,6 @@ werkzeuge/             Prüf- und Hilfsskripte für das Repository
 | | [`latex-grundlagen`](skills/grundlagen/latex-grundlagen) | Präambel, Formelsatz, Tabellen, eigene Befehle | 4 Nachschlagewerke |
 | | [`latex-tikz-grundlagen`](skills/grundlagen/latex-tikz-grundlagen) | Zeichnen mit TikZ allgemein | Nachschlagewerk + Handreichung |
 | | [`latex-multiple-choice`](skills/grundlagen/latex-multiple-choice) | Ankreuzaufgaben horizontal/vertikal | Handreichung |
-| | [`latex-pdf-formulare`](skills/grundlagen/latex-pdf-formulare) | ausfüllbare PDFs, digitale Leistungskontrollen | Handreichung, Vorlage, Beispiel-LK, Skripte zum Einsammeln und Testen |
 | Mathematik | [`latex-funktionsgraphen`](skills/mathematik/latex-funktionsgraphen) | Koordinatensysteme und Graphen im festen Stil | `\koordinatensystem`, 13 Vorlagen |
 | | [`latex-geometrie`](skills/mathematik/latex-geometrie) | Dreiecke, Winkel, Konstruktionen, Körper | 14 Vorlagen |
 | | [`latex-stochastik-diagramme`](skills/mathematik/latex-stochastik-diagramme) | Baumdiagramme, Vierfeldertafeln, Binomialverteilungen | Stil `baumdiagramm`, Skript für Säulendiagramme |
@@ -42,11 +41,12 @@ werkzeuge/             Prüf- und Hilfsskripte für das Repository
 | | [`latex-programmablaufplaene`](skills/informatik/latex-programmablaufplaene) | PAP/Flussdiagramme | Stile `input`, `operation`, `condition`, `output` |
 | | [`latex-uml-klassendiagramme`](skills/informatik/latex-uml-klassendiagramme) | Klassen und Beziehungen | Stile `umlclass`, `inherit` … |
 | | [`latex-quellcode-listings`](skills/informatik/latex-quellcode-listings) | Programmcode mit listings | Handreichung |
+| | [`latex-pdf-formulare`](skills/informatik/latex-pdf-formulare) | interaktive, ausfüllbare PDFs, digitale Leistungskontrollen | Handreichung, Vorlage, Beispiel-LK, Skripte zum Einsammeln und Testen |
 | Sprache & Musik | [`latex-lautschrift`](skills/sprache-musik/latex-lautschrift) | IPA mit tipa oder Unicode | Lauttabellen, Vokalviereck |
 | | [`latex-musixtex`](skills/sprache-musik/latex-musixtex) | Notensatz | Musik-Kürzel |
 | Illustration | [`latex-tikzpeople`](skills/illustration/latex-tikzpeople) | Personen-Figuren, Alice/Bob/Eve | Galerie |
 | | [`latex-sprechblasen`](skills/illustration/latex-sprechblasen) | Sprech- und Gedankenblasen | `\lehrerblase`, `\schuelerblase` |
-| Geografie | [`latex-geodaten-karten`](skills/geografie/latex-geodaten-karten) | echte Karten aus freien Geodaten | `geo2tikz.py` |
+| Gesellschaftswissenschaft | [`latex-geodaten-karten`](skills/gesellschaftswissenschaft/latex-geodaten-karten) | echte Karten aus freien Geodaten | `geo2tikz.py` |
 | Rätsel & Spiele | [`latex-sudoku`](skills/raetsel-spiele/latex-sudoku) | Sudoku-Arbeitsblätter | Generator mit eindeutiger Lösung |
 | | [`latex-schach`](skills/raetsel-spiele/latex-schach) | Bretter, Partien, Mattaufgaben | Prüfskript für FEN |
 
