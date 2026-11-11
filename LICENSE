@@ -11,8 +11,18 @@ Dieses Repository steht unter zwei Lizenzen:
    Rechtsverbindlicher Text: https://creativecommons.org/licenses/by/4.0/legalcode.de
    Namensnennung z. B.: „latex-skills-schule von Martin Quandt, CC BY 4.0“
 
-Nicht enthalten sind Geodaten. Die Skills beschreiben nur, wo man sie lädt;
-dort gelten die Lizenzen der jeweiligen Quelle (siehe latex-geodaten-karten).
+Ausnahmen (abgeleitete Geodaten in skills/gesellschaftswissenschaft/
+latex-geodaten-karten/):
+   - *_daten.tex, sachsen_stufen.tex, beispiel_deutschland.tex aus Natural Earth
+     (gemeinfrei) und ETOPO1 (NOAA, gemeinfrei): wie die übrigen Inhalte CC BY 4.0.
+   - rom_daten.tex: abgeleitet aus Daten des Ancient World Mapping Center,
+     Open Database License (ODbL) 1.0, https://opendatacommons.org/licenses/odbl/
+     – Weitergabe nur unter ODbL, Quelle nennen.
+   - historisch_daten.tex: abgeleitet aus historical-basemaps (A. Ourednik),
+     GNU GPL 3.0, https://www.gnu.org/licenses/gpl-3.0.html
+     – Weitergabe nur unter GPL-3.0, Quelle nennen.
+Die Rohdaten (GeoJSON, Höhenmodell) sind nicht enthalten; karten_beispiele.py
+lädt sie mit „download“ herunter.
 
 -------------------------------------------------------------------------------
 

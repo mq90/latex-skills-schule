@@ -19,7 +19,7 @@ import sys
 import tempfile
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
-from alles_kompilieren import ROOT, STIL, kompiliere  # noqa: E402
+from alles_kompilieren import ROOT, STIL, kompiliere, vorlagen_vorbauen  # noqa: E402
 
 ZIEL = ROOT / "handreichungen"
 
@@ -65,6 +65,7 @@ def main():
                         shutil.copy(f, d)
             for f in ("header.tex", "newcommands.tex"):
                 shutil.copy(STIL / f, d)
+            vorlagen_vorbauen(d / tex.name, d)
             ok, msg = kompiliere(d / tex.name, d)
             if ok:
                 ziel = ZIEL / bereich / dateiname(t)

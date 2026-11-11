@@ -1,0 +1,207 @@
+\input{header.tex}
+\input{newcommands.tex}
+
+
+\title{Sitzpläne automatisch erstellen}
+\author{Fortbildungsmaterial für Lehrkräfte}
+\date{\today}
+\pagestyle{plain}
+\setlength{\parskip}{1.5em} % Abstand zwischen Absätzen (Handreichungen)
+\setlength{\emergencystretch}{4em} % lange \texttt-Wörter umbrechen statt über den Rand
+
+
+\begin{document}
+
+\maketitle
+
+Ein Sitzplan muss mehr können als Namen in Kästchen: Zwei Schüler sollen nicht nebeneinandersitzen, eine Schülerin braucht einen Platz vorn, ein Schüler arbeitet besser allein, und nach dem Halbjahr soll neu gemischt werden. Das Python-Skript \texttt{sitzplan.py} baut den Raum aus einer kurzen Beschreibung, verteilt die Namen per Zufall, bis alle Regeln erfüllt sind, und schreibt einen \hologo{LaTeX}-Plan in Lehrer- und Klassensicht. Ohne Namensliste entsteht ein leerer Plan zum Ausfüllen.
+
+\begin{merke}
+	\textbf{Datenschutz:} Schülernamen, Fotos mit Schülern und Noten gehören nicht in eine KI. Deshalb stehen die Namen in einer \textbf{eigenen CSV-Datei auf dem eigenen Rechner}. Eine KI darf beim Beschreiben des Raums helfen; die Namen setzt das Skript lokal ein. Die Beispieldateien enthalten nur Namen berühmter Mathematikerinnen, Mathematiker und Informatiker.
+\end{merke}
+
+\tableofcontents
+
+
+
+%%%%  KAPITEL 1  %%%%
+\section{Das Prinzip}
+
+\begin{center}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{4.6cm}>{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}p{6.6cm}@{}}
+	\toprule
+	\textbf{Du änderst} & \textbf{Werkzeug} & \textbf{Ergebnis} \\
+	\midrule
+	\texttt{sitzplan\_\dots.toml} (Raum, Anordnung, Regeln) und eine CSV mit Namen & \texttt{sitzplan.py} & \texttt{sitzplan\_\dots.tex}, daraus mit \texttt{pdflatex} der Plan im Querformat \\
+	\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{lstlisting}[style=latex]
+python3 sitzplan.py sitzplan_10b.toml
+pdflatex sitzplan_10b.tex
+\end{lstlisting}
+
+Benötigt wird Python ab Version~3.11, weitere Pakete sind nicht nötig. Das Skript meldet im Terminal, wie viele Namen und Plätze es gibt und ob Regeln verletzt werden mussten:
+
+\begin{lstlisting}[style=latex]
+geschrieben: sitzplan_10b.tex  (22 Namen, 24 Plätze, 0 Regelverstöße)
+\end{lstlisting}
+
+
+
+%%%%  KAPITEL 2  %%%%
+\section{Die Namensliste}
+
+Die Namen stehen in einer CSV-Datei mit den Spalten \texttt{Vorname;Nachname}, wie man sie aus der Schulverwaltung exportieren kann:
+
+\begin{lstlisting}[style=latex]
+Vorname;Nachname
+Ada;Lovelace
+Alan;Turing
+Grace;Hopper
+Konrad;Zuse
+...
+\end{lstlisting}
+
+In den Regeln heißen die Personen dann \texttt{"Vorname Nachname"}, zum Beispiel \texttt{"Ada Lovelace"}.
+
+
+
+%%%%  KAPITEL 3  %%%%
+\section{Der Raum}
+
+
+%%%%  UNTERKAPITEL 3.1  %%%%
+\subsection{Allgemeine Angaben}
+
+\begin{lstlisting}[style=latex]
+titel = "Klasse 10b – Informatik"
+stand = "November 2026"
+
+[raum]
+name        = "Raum 2.14"
+ansichten   = ["lehrer", "schueler"]   # eine Seite je Ansicht
+tafelbreite = 8
+pult        = "links"                  # aus Klassensicht; "" = keins
+fenster     = "links"
+tuer        = "rechts"
+\end{lstlisting}
+
+\texttt{ansichten} legt fest, welche Seiten entstehen: \texttt{"lehrer"} mit der Tafel unten (für das Pult), \texttt{"schueler"} mit der Tafel oben (zum Aushängen).
+
+
+%%%%  UNTERKAPITEL 3.2  %%%%
+\subsection{Anordnungen}
+
+Drei Anordnungen sind fertig eingebaut:
+
+\begin{lstlisting}[style=latex]
+[layout]                         # Reihen
+typ               = "reihen"
+reihen            = 4
+tische_pro_reihe  = 3
+plaetze_pro_tisch = 2
+
+[layout]                         # Gruppentische
+typ                = "gruppen"
+gruppen_reihen     = 2
+gruppen_pro_reihe  = 3
+plaetze_pro_gruppe = 4           # 4 oder 6
+
+[layout]                         # U-Form
+typ    = "u_form"
+links  = 4
+hinten = 5
+rechts = 4
+\end{lstlisting}
+
+Zusätzlich lassen sich einzelne Tische frei setzen; \texttt{x} und \texttt{y} sind in cm, $y = 0$ ist die Tafel:
+
+\begin{lstlisting}[style=latex]
+[[tisch]]
+x = 20.5
+y = 9
+plaetze = 1
+\end{lstlisting}
+
+
+
+%%%%  KAPITEL 4  %%%%
+\section{Namen verteilen und Regeln}
+
+\begin{lstlisting}[style=latex]
+[namen]
+csv        = "klasse_beispiel.csv"   # bleibt auf deinem Rechner
+verteilung = "zufall"                # "liste" = in CSV-Reihenfolge
+seed       = 7                       # gleiche Zahl = gleicher Plan
+
+[regeln]
+nicht_neben  = [ ["Alan Turing", "Konrad Zuse"], ["Isaac Newton", "Gottfried Wilhelm Leibniz"] ]
+neben        = [ ["Ada Lovelace", "Grace Hopper"] ]
+vorne        = [ "Blaise Pascal" ]   # muss in die vorderste Reihe
+vorne_reihen = 1
+allein       = [ "Donald Knuth" ]    # Tisch für sich allein
+[regeln.fest]
+"Marie Curie" = 12                    # feste Platznummer
+\end{lstlisting}
+
+Das Skript mischt so lange, bis alle Regeln erfüllt sind, und meldet, wenn das nicht geht. Mit einem anderen \texttt{seed} entsteht eine neue Mischung, die wieder alle Regeln erfüllt; mit demselben \texttt{seed} entsteht immer derselbe Plan.
+
+Das Ergebnis, links die Lehrersicht, rechts die Klassensicht:
+
+\begin{ausgabe}
+	\centering
+	\fbox{\includegraphics[page=1, width=0.47\linewidth]{sitzplan_10b.pdf}}\hfill
+	\fbox{\includegraphics[page=2, width=0.47\linewidth]{sitzplan_10b.pdf}}
+\end{ausgabe}
+
+
+
+%%%%  KAPITEL 5  %%%%
+\section{Weitere Beispiele}
+
+\texttt{sitzplan\_u\_form.toml} setzt einen Kurs mit 13 Personen in U-Form, in der Reihenfolge der CSV (\texttt{verteilung = "liste"}). \texttt{sitzplan\_gruppen\_leer.toml} hat keine CSV (\texttt{csv = ""}) und erzeugt einen leeren Plan mit Gruppentischen zum Ausfüllen von Hand:
+
+\begin{ausgabe}
+	\centering
+	\fbox{\includegraphics[page=1, width=0.47\linewidth]{sitzplan_u_form.pdf}}\hfill
+	\fbox{\includegraphics[page=1, width=0.47\linewidth]{sitzplan_gruppen_leer.pdf}}
+\end{ausgabe}
+
+
+
+%%%%  KAPITEL 6  %%%%
+\section{Den Raum mit einer KI beschreiben}
+
+Den Raum kann eine KI aus einem Foto beschreiben, sofern darauf \textbf{keine Personen} zu sehen sind. Die Namen bleiben dabei auf dem eigenen Rechner.
+
+\begin{hinweis}[Beispiel-Prompt]
+	\itshape Im Anhang ist ein Foto meines Klassenraums ohne Personen. Beschreibe den Raum als sitzplan.toml im Format der angehängten Vorlage: Tische als Layout oder einzelne [[tisch]]-Einträge (x, y in cm, y = 0 an der Tafel), Fenster, Tür und Lehrertisch. Keine Namen.
+\end{hinweis}
+
+
+
+%%%%  KAPITEL 7  %%%%
+\section{Stolpersteine}
+
+\begin{itemize}
+	\item \textbf{Regel greift nicht?} Die Namen in den Regeln müssen genau wie in der CSV geschrieben sein, als \texttt{"Vorname Nachname"}.
+	\item \textbf{\enquote{Regeln ließen sich nicht erfüllen}:} Die Regeln widersprechen sich oder es gibt zu wenige passende Plätze (etwa mehr Personen für \texttt{vorne} als Plätze in der vordersten Reihe). Der Plan wird trotzdem geschrieben und enthält einen roten Hinweis.
+	\item \textbf{Mehr Namen als Plätze?} Weitere Tische mit \texttt{[[tisch]]} ergänzen oder die Anordnung vergrößern.
+	\item \textbf{CSV mit Umlauten falsch?} Die Datei als UTF-8 speichern (in Tabellenkalkulationen beim Export wählbar).
+\end{itemize}
+
+
+
+%%%%  KAPITEL 8  %%%%
+\section{Zusammenfassung}
+
+\begin{itemize}
+	\item Eine TOML-Datei beschreibt Raum, Anordnung und Regeln, eine CSV enthält die Namen.
+	\item \texttt{python3 sitzplan.py plan.toml}, dann \texttt{pdflatex}: Plan in Lehrer- und Klassensicht.
+	\item Regeln: \texttt{nicht\_neben}, \texttt{neben}, \texttt{vorne}, \texttt{allein}, \texttt{fest}; ein neuer \texttt{seed} ergibt eine neue Mischung.
+	\item Namen gehören nie in eine KI; das Skript setzt sie lokal ein.
+\end{itemize}
+
+\end{document}

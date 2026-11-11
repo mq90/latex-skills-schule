@@ -1,0 +1,424 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[ngerman]{babel}
+\usepackage[a4paper,margin=2cm,bottom=2.2cm]{geometry}
+\usepackage{microtype}
+\usepackage[table]{xcolor}
+\usepackage{booktabs,longtable,array,tabularx}
+\usepackage{tikz}
+\usetikzlibrary{patterns}
+\usepackage{amssymb}
+\usepackage[hidelinks]{hyperref}
+\definecolor{akzentblau}{HTML}{2563EB}
+\definecolor{akzentrot}{HTML}{DC2626}
+\definecolor{akzentgruen}{HTML}{16A34A}
+\definecolor{akzentlila}{HTML}{7C3AED}
+\definecolor{akzentorange}{HTML}{EA580C}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\renewcommand\arraystretch{1.25}
+\newcommand\note{\textcolor{akzentrot}{\,$\blacktriangleright$\,\textsf{\footnotesize Note}}}
+\newcommand\lbmarke[2]{\textcolor{#1}{\rule[-0.3ex]{0.9ex}{1.9ex}}\,\textsf{\footnotesize #2}}
+\newcommand\abschnitt[1]{\par\medskip{\sffamily\bfseries\Large #1}\par\smallskip}
+\newcommand\unterabschnitt[1]{\par\medskip{\sffamily\bfseries\large #1}\par}
+\begin{document}
+
+\begin{center}
+{\sffamily\bfseries\LARGE Stoffverteilungsplan Informatik Klasse 10}\\[4pt]
+{\sffamily\large Schuljahr 2026/27}\\[4pt]
+{\small N. N. \textbullet\ Musterschule \textbullet\ geplant 17.08.2026--09.07.2027}
+\end{center}
+\abschnitt{Teil A: Aufteilung der Lernbereiche}
+Pflichtumfang: 26 Ustd. $=$ 13 Termine à 2 Ustd. Weitere Termine gehören zum Wahlbereich.
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{4.4cm}cp{1.3cm}p{9cm}@{}}
+\toprule \textsf{Lernbereich} & \textsf{Ustd.} & \textsf{Termin} & \textsf{Stundenthema}\\ \midrule \endhead
+\lbmarke{akzentblau}{LB 1}\ \small Algorithmen & 12 & 1 & Daten im Programm\\
+ &  & 2 & Datentypen\\
+ &  & 3 & Auswahl\\
+ &  & 4 & Wiederholung\\
+ &  & 5 & Funktionen\note\\
+ &  & 6 & Maschinelles Lernen\\
+\midrule
+\lbmarke{akzentgruen}{LB 2}\ \small Sprachen & 8 & 7 & Sprachen und Grammatiken\\
+ &  & 8 & Syntax und Semantik\\
+ &  & 9 & Anwendung und Übung\note\\
+ &  & 10 & Fortsetzung: Anwendung und Übung\\
+\midrule
+\lbmarke{akzentorange}{LB 3}\ \small Lernbereich 3 (Titel laut Lehrplan) & 6 & 11 & Einstieg\\
+ &  & 12 & Projekt\note\\
+ &  & 13 & Fortsetzung: Projekt\\
+\midrule
+\lbmarke{akzentlila}{WB}\ \small Wahlbereich & -- & ab 14 & Wahlbereich\\
+\bottomrule\end{longtable}
+\abschnitt{Übersicht}
+\begin{tikzpicture}[font=\sffamily\scriptsize, x=1cm, y=1cm]
+\node[anchor=south west, font=\sffamily\footnotesize\bfseries] at (0.000,0.75) {Aug};
+\draw[black!40] (0.000,0.75) -- (0.000,-2.200);
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (0.166,0.05) {17.08.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (0.498,0.05) {24.08.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (0.830,0.05) {31.08.};
+\node[anchor=south west, font=\sffamily\footnotesize\bfseries] at (0.996,0.75) {Sep};
+\draw[black!40] (0.996,0.75) -- (0.996,-2.200);
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (1.162,0.05) {07.09.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (1.494,0.05) {14.09.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (1.826,0.05) {21.09.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (2.157,0.05) {28.09.};
+\node[anchor=south west, font=\sffamily\footnotesize\bfseries] at (2.323,0.75) {Okt};
+\draw[black!40] (2.323,0.75) -- (2.323,-2.200);
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (2.489,0.05) {05.10.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (2.821,0.05) {12.10.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (3.153,0.05) {19.10.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (3.485,0.05) {26.10.};
+\node[anchor=south west, font=\sffamily\footnotesize\bfseries] at (3.651,0.75) {Nov};
+\draw[black!40] (3.651,0.75) -- (3.651,-2.200);
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (3.817,0.05) {02.11.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (4.149,0.05) {09.11.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (4.481,0.05) {16.11.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (4.813,0.05) {23.11.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (5.145,0.05) {30.11.};
+\node[anchor=south west, font=\sffamily\footnotesize\bfseries] at (5.311,0.75) {Dez};
+\draw[black!40] (5.311,0.75) -- (5.311,-2.200);
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (5.477,0.05) {07.12.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (5.809,0.05) {14.12.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (6.140,0.05) {21.12.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (6.472,0.05) {28.12.};
+\node[anchor=south west, font=\sffamily\footnotesize\bfseries] at (6.638,0.75) {Jan};
+\draw[black!40] (6.638,0.75) -- (6.638,-2.200);
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (6.804,0.05) {04.01.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (7.136,0.05) {11.01.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (7.468,0.05) {18.01.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (7.800,0.05) {25.01.};
+\node[anchor=south west, font=\sffamily\footnotesize\bfseries] at (7.966,0.75) {Feb};
+\draw[black!40] (7.966,0.75) -- (7.966,-2.200);
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (8.132,0.05) {01.02.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (8.464,0.05) {08.02.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (8.796,0.05) {15.02.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (9.128,0.05) {22.02.};
+\node[anchor=south west, font=\sffamily\footnotesize\bfseries] at (9.294,0.75) {Mär};
+\draw[black!40] (9.294,0.75) -- (9.294,-2.200);
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (9.460,0.05) {01.03.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (9.791,0.05) {08.03.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (10.123,0.05) {15.03.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (10.455,0.05) {22.03.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (10.787,0.05) {29.03.};
+\node[anchor=south west, font=\sffamily\footnotesize\bfseries] at (10.953,0.75) {Apr};
+\draw[black!40] (10.953,0.75) -- (10.953,-2.200);
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (11.119,0.05) {05.04.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (11.451,0.05) {12.04.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (11.783,0.05) {19.04.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (12.115,0.05) {26.04.};
+\node[anchor=south west, font=\sffamily\footnotesize\bfseries] at (12.281,0.75) {Mai};
+\draw[black!40] (12.281,0.75) -- (12.281,-2.200);
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (12.447,0.05) {03.05.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (12.779,0.05) {10.05.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (13.111,0.05) {17.05.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (13.443,0.05) {24.05.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (13.774,0.05) {31.05.};
+\node[anchor=south west, font=\sffamily\footnotesize\bfseries] at (13.940,0.75) {Jun};
+\draw[black!40] (13.940,0.75) -- (13.940,-2.200);
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (14.106,0.05) {07.06.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (14.438,0.05) {14.06.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (14.770,0.05) {21.06.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (15.102,0.05) {28.06.};
+\node[anchor=south west, font=\sffamily\footnotesize\bfseries] at (15.268,0.75) {Jul};
+\draw[black!40] (15.268,0.75) -- (15.268,-2.200);
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (15.434,0.05) {05.07.};
+\fill[black!12] (2.655,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (2.722,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (2.788,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (2.854,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (2.921,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (2.987,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (3.054,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (3.120,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (3.186,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (3.253,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (4.448,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (6.107,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (6.174,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (6.240,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (6.306,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (6.373,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (6.439,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (6.506,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (6.572,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (8.298,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (8.364,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (8.431,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (8.497,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (8.563,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (8.630,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (8.696,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (8.763,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (8.829,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (8.895,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (10.555,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (10.621,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (10.688,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (10.754,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (10.820,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (10.887,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (12.480,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (12.945,0) rectangle ++(0.066,-2.200);
+\fill[black!12] (13.011,0) rectangle ++(0.066,-2.200);
+\node[anchor=east, font=\sffamily\footnotesize\bfseries] at (-0.1,-0.275) {10b};
+\fill[akzentblau!70] (0.040,-0.060) rectangle (0.292,-0.490);
+\fill[akzentblau!70] (0.704,-0.060) rectangle (0.956,-0.490);
+\fill[akzentblau!70] (1.368,-0.060) rectangle (1.620,-0.490);
+\node[black!60] at (2.157,-0.275) {$\times$};
+\fill[pattern=north east lines, pattern color=black!45] (3.359,-0.060) rectangle (3.611,-0.490);
+\draw[black!45] (3.359,-0.060) rectangle (3.611,-0.490);
+\fill[pattern=north east lines, pattern color=black!45] (4.023,-0.060) rectangle (4.275,-0.490);
+\draw[black!45] (4.023,-0.060) rectangle (4.275,-0.490);
+\fill[pattern=north east lines, pattern color=black!45] (4.687,-0.060) rectangle (4.939,-0.490);
+\draw[black!45] (4.687,-0.060) rectangle (4.939,-0.490);
+\fill[pattern=north east lines, pattern color=black!45] (5.351,-0.060) rectangle (5.603,-0.490);
+\draw[black!45] (5.351,-0.060) rectangle (5.603,-0.490);
+\fill[akzentblau!70] (6.014,-0.060) rectangle (6.266,-0.490);
+\fill[akzentblau!70] (7.010,-0.060) rectangle (7.262,-0.490);
+\node[akzentrot, font=\tiny] at (7.136,-0.275) {$\blacktriangleright$};
+\fill[akzentblau!70] (7.674,-0.060) rectangle (7.926,-0.490);
+\fill[akzentgruen!70] (9.002,-0.060) rectangle (9.254,-0.490);
+\fill[akzentgruen!70] (9.666,-0.060) rectangle (9.917,-0.490);
+\fill[akzentgruen!70] (10.329,-0.060) rectangle (10.581,-0.490);
+\node[akzentrot, font=\tiny] at (10.455,-0.275) {$\blacktriangleright$};
+\fill[akzentgruen!70] (11.325,-0.060) rectangle (11.577,-0.490);
+\fill[akzentorange!70] (11.989,-0.060) rectangle (12.241,-0.490);
+\fill[akzentorange!70] (12.653,-0.060) rectangle (12.905,-0.490);
+\node[akzentrot, font=\tiny] at (12.779,-0.275) {$\blacktriangleright$};
+\fill[akzentorange!70] (13.317,-0.060) rectangle (13.569,-0.490);
+\fill[akzentlila!70] (13.980,-0.060) rectangle (14.232,-0.490);
+\fill[akzentlila!70] (14.644,-0.060) rectangle (14.896,-0.490);
+\fill[akzentlila!70] (15.308,-0.060) rectangle (15.560,-0.490);
+\draw[black!20] (0,-0.550) -- (15.600,-0.550);
+\node[anchor=east, font=\sffamily\footnotesize\bfseries] at (-0.1,-0.825) {10d};
+\fill[akzentblau!70] (0.040,-0.610) rectangle (0.292,-1.040);
+\fill[akzentblau!70] (0.704,-0.610) rectangle (0.956,-1.040);
+\fill[akzentblau!70] (1.368,-0.610) rectangle (1.620,-1.040);
+\node[black!60] at (2.157,-0.825) {$\times$};
+\fill[pattern=north east lines, pattern color=black!45] (3.359,-0.610) rectangle (3.611,-1.040);
+\draw[black!45] (3.359,-0.610) rectangle (3.611,-1.040);
+\fill[pattern=north east lines, pattern color=black!45] (4.023,-0.610) rectangle (4.275,-1.040);
+\draw[black!45] (4.023,-0.610) rectangle (4.275,-1.040);
+\fill[pattern=north east lines, pattern color=black!45] (4.687,-0.610) rectangle (4.939,-1.040);
+\draw[black!45] (4.687,-0.610) rectangle (4.939,-1.040);
+\fill[pattern=north east lines, pattern color=black!45] (5.351,-0.610) rectangle (5.603,-1.040);
+\draw[black!45] (5.351,-0.610) rectangle (5.603,-1.040);
+\fill[akzentblau!70] (6.014,-0.610) rectangle (6.266,-1.040);
+\fill[akzentblau!70] (7.010,-0.610) rectangle (7.262,-1.040);
+\node[akzentrot, font=\tiny] at (7.136,-0.825) {$\blacktriangleright$};
+\fill[akzentblau!70] (7.674,-0.610) rectangle (7.926,-1.040);
+\fill[akzentgruen!70] (9.002,-0.610) rectangle (9.254,-1.040);
+\fill[akzentgruen!70] (9.666,-0.610) rectangle (9.917,-1.040);
+\fill[akzentgruen!70] (10.329,-0.610) rectangle (10.581,-1.040);
+\node[akzentrot, font=\tiny] at (10.455,-0.825) {$\blacktriangleright$};
+\fill[akzentgruen!70] (11.325,-0.610) rectangle (11.577,-1.040);
+\fill[akzentorange!70] (11.989,-0.610) rectangle (12.241,-1.040);
+\fill[akzentorange!70] (12.653,-0.610) rectangle (12.905,-1.040);
+\node[akzentrot, font=\tiny] at (12.779,-0.825) {$\blacktriangleright$};
+\fill[akzentorange!70] (13.317,-0.610) rectangle (13.569,-1.040);
+\fill[akzentlila!70] (13.980,-0.610) rectangle (14.232,-1.040);
+\fill[akzentlila!70] (14.644,-0.610) rectangle (14.896,-1.040);
+\fill[akzentlila!70] (15.308,-0.610) rectangle (15.560,-1.040);
+\draw[black!20] (0,-1.100) -- (15.600,-1.100);
+\node[anchor=east, font=\sffamily\footnotesize\bfseries] at (-0.1,-1.375) {10c};
+\fill[akzentblau!70] (0.372,-1.160) rectangle (0.624,-1.590);
+\fill[akzentblau!70] (1.036,-1.160) rectangle (1.288,-1.590);
+\fill[akzentblau!70] (1.700,-1.160) rectangle (1.951,-1.590);
+\fill[akzentblau!70] (2.363,-1.160) rectangle (2.615,-1.590);
+\fill[pattern=north east lines, pattern color=black!45] (3.691,-1.160) rectangle (3.943,-1.590);
+\draw[black!45] (3.691,-1.160) rectangle (3.943,-1.590);
+\fill[pattern=north east lines, pattern color=black!45] (4.355,-1.160) rectangle (4.607,-1.590);
+\draw[black!45] (4.355,-1.160) rectangle (4.607,-1.590);
+\fill[pattern=north east lines, pattern color=black!45] (5.019,-1.160) rectangle (5.271,-1.590);
+\draw[black!45] (5.019,-1.160) rectangle (5.271,-1.590);
+\fill[pattern=north east lines, pattern color=black!45] (5.683,-1.160) rectangle (5.934,-1.590);
+\draw[black!45] (5.683,-1.160) rectangle (5.934,-1.590);
+\fill[akzentblau!70] (6.678,-1.160) rectangle (6.930,-1.590);
+\node[akzentrot, font=\tiny] at (6.804,-1.375) {$\blacktriangleright$};
+\fill[akzentblau!70] (7.342,-1.160) rectangle (7.594,-1.590);
+\fill[akzentgruen!70] (8.006,-1.160) rectangle (8.258,-1.590);
+\fill[akzentgruen!70] (9.334,-1.160) rectangle (9.586,-1.590);
+\fill[akzentgruen!70] (9.997,-1.160) rectangle (10.249,-1.590);
+\node[akzentrot, font=\tiny] at (10.123,-1.375) {$\blacktriangleright$};
+\fill[akzentgruen!70] (10.993,-1.160) rectangle (11.245,-1.590);
+\fill[akzentorange!70] (11.657,-1.160) rectangle (11.909,-1.590);
+\fill[akzentorange!70] (12.321,-1.160) rectangle (12.573,-1.590);
+\node[akzentrot, font=\tiny] at (12.447,-1.375) {$\blacktriangleright$};
+\fill[akzentorange!70] (13.649,-1.160) rectangle (13.900,-1.590);
+\fill[akzentlila!70] (14.312,-1.160) rectangle (14.564,-1.590);
+\fill[akzentlila!70] (14.976,-1.160) rectangle (15.228,-1.590);
+\draw[black!20] (0,-1.650) -- (15.600,-1.650);
+\node[anchor=east, font=\sffamily\footnotesize\bfseries] at (-0.1,-1.925) {10e};
+\fill[akzentblau!70] (0.372,-1.710) rectangle (0.624,-2.140);
+\fill[akzentblau!70] (1.036,-1.710) rectangle (1.288,-2.140);
+\fill[akzentblau!70] (1.700,-1.710) rectangle (1.951,-2.140);
+\fill[akzentblau!70] (2.363,-1.710) rectangle (2.615,-2.140);
+\fill[pattern=north east lines, pattern color=black!45] (3.691,-1.710) rectangle (3.943,-2.140);
+\draw[black!45] (3.691,-1.710) rectangle (3.943,-2.140);
+\fill[pattern=north east lines, pattern color=black!45] (4.355,-1.710) rectangle (4.607,-2.140);
+\draw[black!45] (4.355,-1.710) rectangle (4.607,-2.140);
+\fill[pattern=north east lines, pattern color=black!45] (5.019,-1.710) rectangle (5.271,-2.140);
+\draw[black!45] (5.019,-1.710) rectangle (5.271,-2.140);
+\fill[pattern=north east lines, pattern color=black!45] (5.683,-1.710) rectangle (5.934,-2.140);
+\draw[black!45] (5.683,-1.710) rectangle (5.934,-2.140);
+\fill[akzentblau!70] (6.678,-1.710) rectangle (6.930,-2.140);
+\node[akzentrot, font=\tiny] at (6.804,-1.925) {$\blacktriangleright$};
+\fill[akzentblau!70] (7.342,-1.710) rectangle (7.594,-2.140);
+\fill[akzentgruen!70] (8.006,-1.710) rectangle (8.258,-2.140);
+\fill[akzentgruen!70] (9.334,-1.710) rectangle (9.586,-2.140);
+\fill[akzentgruen!70] (9.997,-1.710) rectangle (10.249,-2.140);
+\node[akzentrot, font=\tiny] at (10.123,-1.925) {$\blacktriangleright$};
+\fill[akzentgruen!70] (10.993,-1.710) rectangle (11.245,-2.140);
+\fill[akzentorange!70] (11.657,-1.710) rectangle (11.909,-2.140);
+\node[black!60] at (12.447,-1.925) {$\times$};
+\fill[akzentorange!70] (12.985,-1.710) rectangle (13.237,-2.140);
+\node[akzentrot, font=\tiny] at (13.111,-1.925) {$\blacktriangleright$};
+\fill[akzentorange!70] (13.649,-1.710) rectangle (13.900,-2.140);
+\fill[akzentlila!70] (14.312,-1.710) rectangle (14.564,-2.140);
+\fill[akzentlila!70] (14.976,-1.710) rectangle (15.228,-2.140);
+\draw[black!20] (0,-2.200) -- (15.600,-2.200);
+\draw[akzentrot, line width=1.2pt] (8.298,0.7) -- (8.298,-2.250);
+\node[akzentrot, anchor=north west, font=\sffamily\tiny\bfseries, inner sep=1pt, fill=white] at (8.298,0.7) {Übergabe};
+\node[anchor=north west, inner sep=0pt, text width=15.60cm] at (0,-2.45) {\textcolor{akzentblau!70}{\rule{0.8em}{0.8em}}\,LB 1: Algorithmen \quad \textcolor{akzentgruen!70}{\rule{0.8em}{0.8em}}\,LB 2: Sprachen \quad \textcolor{akzentorange!70}{\rule{0.8em}{0.8em}}\,LB 3: Lernbereich 3 (Titel laut Lehrplan) \quad \textcolor{akzentlila!70}{\rule{0.8em}{0.8em}}\,WB: Wahlbereich};
+\end{tikzpicture}
+\par\smallskip{\footnotesize Grau: Ferien \quad schraffiert: Puffer (kein neuer Stoff) \quad $\times$: Termin entfällt \quad \textcolor{akzentrot}{$\blacktriangleright$}: sonstige Note}
+\par\medskip
+\begin{tabular}{@{}lccccc@{}}\toprule \textsf{Klasse} & \textsf{Termine mit Stoff} & \textsf{Puffer} & \textsf{Noten} & \textsf{bis Übergabe} & \textsf{Pflicht nicht untergebracht}\\ \midrule
+10b & 16 & 4 & 3 & 6 Termine & 0\\
+10d & 16 & 4 & 3 & 6 Termine & 0\\
+10c & 15 & 4 & 3 & 7 Termine & 0\\
+10e & 15 & 4 & 3 & 7 Termine & 0\\
+\bottomrule\end{tabular}
+\clearpage\abschnitt{Teil B: Verteilung auf die Klassen}
+\unterabschnitt{Klasse 10b}{\small Di 08:00–09:30 (A-Woche)}
+\begin{longtable}{@{}p{1.75cm}p{1.25cm}cp{1.1cm}p{9.9cm}@{}}
+\toprule \textsf{Datum} & \textsf{Ustd.} & \textsf{Wo.} & \textsf{LB} & \textsf{Thema / Bemerkung}\\ \midrule \endhead \bottomrule \endfoot
+Di 18.08. & 1/2 & A & \lbmarke{akzentblau}{LB 1} & Daten im Programm\\
+Di 01.09. & 3/4 & A & \lbmarke{akzentblau}{LB 1} & Datentypen\\
+Di 15.09. & 5/6 & A & \lbmarke{akzentblau}{LB 1} & Auswahl\\
+\textcolor{black!45}{Di 29.09.} & & A & & \textcolor{black!55}{$\times$ entfällt: Klassenfahrt}\\
+\rowcolor{black!8}\multicolumn{5}{@{}l}{\textit{Herbstferien} \quad 12.10.--24.10.2026}\\
+Di 27.10. & & A & & \textit{Übung und Vertiefung (Ausfall möglich)} {\footnotesize\color{black!55}(Prüfungszeitraum)}\\
+Di 10.11. & & A & & \textit{Übung und Vertiefung (Ausfall möglich)} {\footnotesize\color{black!55}(Prüfungszeitraum)}\\
+Di 24.11. & & A & & \textit{Übung und Vertiefung (Ausfall möglich)} {\footnotesize\color{black!55}(Prüfungszeitraum)}\\
+Di 08.12. & & A & & \textit{Übung und Vertiefung (Ausfall möglich)} {\footnotesize\color{black!55}(Prüfungszeitraum)}\\
+Di 22.12. & 7/8 & A & \lbmarke{akzentblau}{LB 1} & Wiederholung\\
+\rowcolor{black!8}\multicolumn{5}{@{}l}{\textit{Weihnachtsferien} \quad 23.12.--02.01.2027}\\
+Di 12.01. & 9/10 & A & \lbmarke{akzentblau}{LB 1} & Funktionen\note\\
+Di 26.01. & 11/12 & A & \lbmarke{akzentblau}{LB 1} & Maschinelles Lernen\\
+\arrayrulecolor{akzentrot}\specialrule{1.2pt}{2pt}{0pt}\arrayrulecolor{black}\multicolumn{5}{@{}l}{\small\color{akzentrot}\textbf{Übergabe an den Fachkollegen am 05.02.2027: zuletzt LB 1 „Maschinelles Lernen“ (Ustd. 11/12)}}\\\arrayrulecolor{akzentrot}\specialrule{1.2pt}{0pt}{2pt}\arrayrulecolor{black}
+\rowcolor{black!8}\multicolumn{5}{@{}l}{\textit{Winterferien} \quad 08.02.--19.02.2027}\\
+Di 23.02. & 13/14 & A & \lbmarke{akzentgruen}{LB 2} & Sprachen und Grammatiken\\
+Di 09.03. & 15/16 & A & \lbmarke{akzentgruen}{LB 2} & Syntax und Semantik\\
+Di 23.03. & 17/18 & A & \lbmarke{akzentgruen}{LB 2} & Anwendung und Übung\note\\
+\rowcolor{black!8}\multicolumn{5}{@{}l}{\textit{Osterferien} \quad 26.03.--02.04.2027}\\
+Di 13.04. & 19/20 & A & \lbmarke{akzentgruen}{LB 2} & Fortsetzung: Anwendung und Übung\\
+Di 27.04. & 21/22 & A & \lbmarke{akzentorange}{LB 3} & Einstieg\\
+Di 11.05. & 23/24 & A & \lbmarke{akzentorange}{LB 3} & Projekt\note\\
+\rowcolor{black!8}\multicolumn{5}{@{}l}{\textit{Pfingstferien} \quad 15.05.--18.05.2027}\\
+Di 25.05. & 25/26 & A & \lbmarke{akzentorange}{LB 3} & Fortsetzung: Projekt\\
+Di 08.06. & 27/28 & A & \lbmarke{akzentlila}{WB} & Wahlbereich\\
+Di 22.06. & 29/30 & A & \lbmarke{akzentlila}{WB} & Wahlbereich\\
+Di 06.07. & 31/32 & A & \lbmarke{akzentlila}{WB} & Wahlbereich\\
+\midrule
+\multicolumn{5}{@{}p{\linewidth}@{}}{\small \textbf{Pflichtumfang vollständig untergebracht.}}\\
+\end{longtable}
+\unterabschnitt{Klasse 10d}{\small Di 12:30–14:00 (A-Woche)}
+\begin{longtable}{@{}p{1.75cm}p{1.25cm}cp{1.1cm}p{9.9cm}@{}}
+\toprule \textsf{Datum} & \textsf{Ustd.} & \textsf{Wo.} & \textsf{LB} & \textsf{Thema / Bemerkung}\\ \midrule \endhead \bottomrule \endfoot
+Di 18.08. & 1/2 & A & \lbmarke{akzentblau}{LB 1} & Daten im Programm\\
+Di 01.09. & 3/4 & A & \lbmarke{akzentblau}{LB 1} & Datentypen\\
+Di 15.09. & 5/6 & A & \lbmarke{akzentblau}{LB 1} & Auswahl\\
+\textcolor{black!45}{Di 29.09.} & & A & & \textcolor{black!55}{$\times$ entfällt: Klassenfahrt}\\
+\rowcolor{black!8}\multicolumn{5}{@{}l}{\textit{Herbstferien} \quad 12.10.--24.10.2026}\\
+Di 27.10. & & A & & \textit{Übung und Vertiefung (Ausfall möglich)} {\footnotesize\color{black!55}(Prüfungszeitraum)}\\
+Di 10.11. & & A & & \textit{Übung und Vertiefung (Ausfall möglich)} {\footnotesize\color{black!55}(Prüfungszeitraum)}\\
+Di 24.11. & & A & & \textit{Übung und Vertiefung (Ausfall möglich)} {\footnotesize\color{black!55}(Prüfungszeitraum)}\\
+Di 08.12. & & A & & \textit{Übung und Vertiefung (Ausfall möglich)} {\footnotesize\color{black!55}(Prüfungszeitraum)}\\
+Di 22.12. & 7/8 & A & \lbmarke{akzentblau}{LB 1} & Wiederholung\\
+\rowcolor{black!8}\multicolumn{5}{@{}l}{\textit{Weihnachtsferien} \quad 23.12.--02.01.2027}\\
+Di 12.01. & 9/10 & A & \lbmarke{akzentblau}{LB 1} & Funktionen\note\\
+Di 26.01. & 11/12 & A & \lbmarke{akzentblau}{LB 1} & Maschinelles Lernen\\
+\arrayrulecolor{akzentrot}\specialrule{1.2pt}{2pt}{0pt}\arrayrulecolor{black}\multicolumn{5}{@{}l}{\small\color{akzentrot}\textbf{Übergabe an den Fachkollegen am 05.02.2027: zuletzt LB 1 „Maschinelles Lernen“ (Ustd. 11/12)}}\\\arrayrulecolor{akzentrot}\specialrule{1.2pt}{0pt}{2pt}\arrayrulecolor{black}
+\rowcolor{black!8}\multicolumn{5}{@{}l}{\textit{Winterferien} \quad 08.02.--19.02.2027}\\
+Di 23.02. & 13/14 & A & \lbmarke{akzentgruen}{LB 2} & Sprachen und Grammatiken\\
+Di 09.03. & 15/16 & A & \lbmarke{akzentgruen}{LB 2} & Syntax und Semantik\\
+Di 23.03. & 17/18 & A & \lbmarke{akzentgruen}{LB 2} & Anwendung und Übung\note\\
+\rowcolor{black!8}\multicolumn{5}{@{}l}{\textit{Osterferien} \quad 26.03.--02.04.2027}\\
+Di 13.04. & 19/20 & A & \lbmarke{akzentgruen}{LB 2} & Fortsetzung: Anwendung und Übung\\
+Di 27.04. & 21/22 & A & \lbmarke{akzentorange}{LB 3} & Einstieg\\
+Di 11.05. & 23/24 & A & \lbmarke{akzentorange}{LB 3} & Projekt\note\\
+\rowcolor{black!8}\multicolumn{5}{@{}l}{\textit{Pfingstferien} \quad 15.05.--18.05.2027}\\
+Di 25.05. & 25/26 & A & \lbmarke{akzentorange}{LB 3} & Fortsetzung: Projekt\\
+Di 08.06. & 27/28 & A & \lbmarke{akzentlila}{WB} & Wahlbereich\\
+Di 22.06. & 29/30 & A & \lbmarke{akzentlila}{WB} & Wahlbereich\\
+Di 06.07. & 31/32 & A & \lbmarke{akzentlila}{WB} & Wahlbereich\\
+\midrule
+\multicolumn{5}{@{}p{\linewidth}@{}}{\small \textbf{Pflichtumfang vollständig untergebracht.}}\\
+\end{longtable}
+\unterabschnitt{Klasse 10c}{\small Di 08:00–09:30 (B-Woche)}
+\begin{longtable}{@{}p{1.75cm}p{1.25cm}cp{1.1cm}p{9.9cm}@{}}
+\toprule \textsf{Datum} & \textsf{Ustd.} & \textsf{Wo.} & \textsf{LB} & \textsf{Thema / Bemerkung}\\ \midrule \endhead \bottomrule \endfoot
+Di 25.08. & 1/2 & B & \lbmarke{akzentblau}{LB 1} & Daten im Programm\\
+Di 08.09. & 3/4 & B & \lbmarke{akzentblau}{LB 1} & Datentypen\\
+Di 22.09. & 5/6 & B & \lbmarke{akzentblau}{LB 1} & Auswahl\\
+Di 06.10. & 7/8 & B & \lbmarke{akzentblau}{LB 1} & Wiederholung\\
+\rowcolor{black!8}\multicolumn{5}{@{}l}{\textit{Herbstferien} \quad 12.10.--24.10.2026}\\
+Di 03.11. & & B & & \textit{Übung und Vertiefung (Ausfall möglich)} {\footnotesize\color{black!55}(Prüfungszeitraum)}\\
+Di 17.11. & & B & & \textit{Übung und Vertiefung (Ausfall möglich)} {\footnotesize\color{black!55}(Prüfungszeitraum)}\\
+Di 01.12. & & B & & \textit{Übung und Vertiefung (Ausfall möglich)} {\footnotesize\color{black!55}(Prüfungszeitraum)}\\
+Di 15.12. & & B & & \textit{Übung und Vertiefung (Ausfall möglich)} {\footnotesize\color{black!55}(Prüfungszeitraum)}\\
+\rowcolor{black!8}\multicolumn{5}{@{}l}{\textit{Weihnachtsferien} \quad 23.12.--02.01.2027}\\
+Di 05.01. & 9/10 & B & \lbmarke{akzentblau}{LB 1} & Funktionen\note\\
+Di 19.01. & 11/12 & B & \lbmarke{akzentblau}{LB 1} & Maschinelles Lernen\\
+Di 02.02. & 13/14 & B & \lbmarke{akzentgruen}{LB 2} & Sprachen und Grammatiken\\
+\arrayrulecolor{akzentrot}\specialrule{1.2pt}{2pt}{0pt}\arrayrulecolor{black}\multicolumn{5}{@{}l}{\small\color{akzentrot}\textbf{Übergabe an den Fachkollegen am 05.02.2027: zuletzt LB 2 „Sprachen und Grammatiken“ (Ustd. 13/14)}}\\\arrayrulecolor{akzentrot}\specialrule{1.2pt}{0pt}{2pt}\arrayrulecolor{black}
+\rowcolor{black!8}\multicolumn{5}{@{}l}{\textit{Winterferien} \quad 08.02.--19.02.2027}\\
+Di 02.03. & 15/16 & B & \lbmarke{akzentgruen}{LB 2} & Syntax und Semantik\\
+Di 16.03. & 17/18 & B & \lbmarke{akzentgruen}{LB 2} & Anwendung und Übung\note\\
+\rowcolor{black!8}\multicolumn{5}{@{}l}{\textit{Osterferien} \quad 26.03.--02.04.2027}\\
+Di 06.04. & 19/20 & B & \lbmarke{akzentgruen}{LB 2} & Fortsetzung: Anwendung und Übung\\
+Di 20.04. & 21/22 & B & \lbmarke{akzentorange}{LB 3} & Einstieg\\
+Di 04.05. & 23/24 & B & \lbmarke{akzentorange}{LB 3} & Projekt\note\\
+\rowcolor{black!8}\multicolumn{5}{@{}l}{\textit{Pfingstferien} \quad 15.05.--18.05.2027}\\
+Di 01.06. & 25/26 & B & \lbmarke{akzentorange}{LB 3} & Fortsetzung: Projekt\\
+Di 15.06. & 27/28 & B & \lbmarke{akzentlila}{WB} & Wahlbereich\\
+Di 29.06. & 29/30 & B & \lbmarke{akzentlila}{WB} & Wahlbereich\\
+\midrule
+\multicolumn{5}{@{}p{\linewidth}@{}}{\small \textbf{Pflichtumfang vollständig untergebracht.}}\\
+\end{longtable}
+\unterabschnitt{Klasse 10e}{\small Do 08:00–09:30 (B-Woche)}
+\begin{longtable}{@{}p{1.75cm}p{1.25cm}cp{1.1cm}p{9.9cm}@{}}
+\toprule \textsf{Datum} & \textsf{Ustd.} & \textsf{Wo.} & \textsf{LB} & \textsf{Thema / Bemerkung}\\ \midrule \endhead \bottomrule \endfoot
+Do 27.08. & 1/2 & B & \lbmarke{akzentblau}{LB 1} & Daten im Programm\\
+Do 10.09. & 3/4 & B & \lbmarke{akzentblau}{LB 1} & Datentypen\\
+Do 24.09. & 5/6 & B & \lbmarke{akzentblau}{LB 1} & Auswahl\\
+Do 08.10. & 7/8 & B & \lbmarke{akzentblau}{LB 1} & Wiederholung\\
+\rowcolor{black!8}\multicolumn{5}{@{}l}{\textit{Herbstferien} \quad 12.10.--24.10.2026}\\
+Do 05.11. & & B & & \textit{Übung und Vertiefung (Ausfall möglich)} {\footnotesize\color{black!55}(Prüfungszeitraum)}\\
+Do 19.11. & & B & & \textit{Übung und Vertiefung (Ausfall möglich)} {\footnotesize\color{black!55}(Prüfungszeitraum)}\\
+Do 03.12. & & B & & \textit{Übung und Vertiefung (Ausfall möglich)} {\footnotesize\color{black!55}(Prüfungszeitraum)}\\
+Do 17.12. & & B & & \textit{Übung und Vertiefung (Ausfall möglich)} {\footnotesize\color{black!55}(Prüfungszeitraum)}\\
+\rowcolor{black!8}\multicolumn{5}{@{}l}{\textit{Weihnachtsferien} \quad 23.12.--02.01.2027}\\
+Do 07.01. & 9/10 & B & \lbmarke{akzentblau}{LB 1} & Funktionen\note\\
+Do 21.01. & 11/12 & B & \lbmarke{akzentblau}{LB 1} & Maschinelles Lernen\\
+Do 04.02. & 13/14 & B & \lbmarke{akzentgruen}{LB 2} & Sprachen und Grammatiken\\
+\arrayrulecolor{akzentrot}\specialrule{1.2pt}{2pt}{0pt}\arrayrulecolor{black}\multicolumn{5}{@{}l}{\small\color{akzentrot}\textbf{Übergabe an den Fachkollegen am 05.02.2027: zuletzt LB 2 „Sprachen und Grammatiken“ (Ustd. 13/14)}}\\\arrayrulecolor{akzentrot}\specialrule{1.2pt}{0pt}{2pt}\arrayrulecolor{black}
+\rowcolor{black!8}\multicolumn{5}{@{}l}{\textit{Winterferien} \quad 08.02.--19.02.2027}\\
+Do 04.03. & 15/16 & B & \lbmarke{akzentgruen}{LB 2} & Syntax und Semantik\\
+Do 18.03. & 17/18 & B & \lbmarke{akzentgruen}{LB 2} & Anwendung und Übung\note\\
+\rowcolor{black!8}\multicolumn{5}{@{}l}{\textit{Osterferien} \quad 26.03.--02.04.2027}\\
+Do 08.04. & 19/20 & B & \lbmarke{akzentgruen}{LB 2} & Fortsetzung: Anwendung und Übung\\
+Do 22.04. & 21/22 & B & \lbmarke{akzentorange}{LB 3} & Einstieg\\
+\textcolor{black!45}{Do 06.05.} & & B & & \textcolor{black!55}{$\times$ entfällt: Christi Himmelfahrt}\\
+\rowcolor{black!8}\multicolumn{5}{@{}l}{\textit{Pfingstferien} \quad 15.05.--18.05.2027}\\
+Do 20.05. & 23/24 & B & \lbmarke{akzentorange}{LB 3} & Projekt\note\\
+Do 03.06. & 25/26 & B & \lbmarke{akzentorange}{LB 3} & Fortsetzung: Projekt\\
+Do 17.06. & 27/28 & B & \lbmarke{akzentlila}{WB} & Wahlbereich\\
+Do 01.07. & 29/30 & B & \lbmarke{akzentlila}{WB} & Wahlbereich\\
+\midrule
+\multicolumn{5}{@{}p{\linewidth}@{}}{\small \textbf{Pflichtumfang vollständig untergebracht.}}\\
+\end{longtable}
+\end{document}

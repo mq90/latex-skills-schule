@@ -1,0 +1,16 @@
+titel = "LK Mathematik 11"
+stand = "November 2026"
+[raum]
+name      = "Raum 1.08"
+ansichten = ["lehrer"]
+pult      = ""
+fenster   = "links"
+tuer      = "rechts"
+[layout]
+typ    = "u_form"
+links  = 4
+hinten = 5
+rechts = 4
+[namen]
+csv = "kurs_beispiel.csv"
+verteilung = "liste"

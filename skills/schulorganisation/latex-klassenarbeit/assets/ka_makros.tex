@@ -1,0 +1,145 @@
+% ===================================================================
+%  ka_makros.tex – Makros für Klassenarbeiten / Leistungskontrollen
+%  Einbinden mit \input{ka_makros} nach \documentclass – oder nach
+%  \input{header.tex} und \input{newcommands.tex} (universaler Stil).
+%
+%  \BE{2}            Bewertungseinheiten an eine (Teil-)Aufgabe hängen,
+%                    halbe BE gehen auch: \BE{1.5}
+%  \Kopf             Name/Klasse/Datum-Zeile + Angaben aus \Arbeit{...}
+%  \Punktetabelle    Tabelle Aufgabe | BE | erreicht  (automatisch)
+%  \Notenschluessel  Notentabelle nach \Grenzen (automatisch)
+%  \loesungtrue      Lösungsteil mit ausgeben (\loesungfalse: ohne)
+%
+%  Alle Summen stehen erst nach dem ZWEITEN pdflatex-Lauf richtig da
+%  (beim ersten Lauf erscheinen ??).
+% ===================================================================
+\makeatletter
+% Pakete nur laden, wenn sie fehlen: so funktioniert die Datei allein
+% (\documentclass + \input{ka_makros}) und nach der universalen header.tex
+\@ifpackageloaded{fontenc}{}{\usepackage[T1]{fontenc}}
+\@ifpackageloaded{lmodern}{}{\usepackage{lmodern}}
+\@ifpackageloaded{babel}{}{\usepackage[ngerman]{babel}}
+\@ifpackageloaded{geometry}{}{\usepackage[a4paper,margin=2cm]{geometry}}
+\@ifpackageloaded{amsmath}{}{\usepackage{amsmath,amssymb}}
+\@ifpackageloaded{xcolor}{}{\usepackage{xcolor}}
+\@ifpackageloaded{enumitem}{}{\usepackage{enumitem}}
+\@ifpackageloaded{multicol}{}{\usepackage{multicol}}
+\@ifpackageloaded{booktabs}{}{\usepackage{array,booktabs}}
+\@ifpackageloaded{etoolbox}{}{\usepackage{etoolbox}}
+\@ifpackageloaded{tikz}{}{\usepackage{tikz}}
+% Kein siunitx (kollidiert mit units aus der universalen header.tex):
+% Zahlen mit Dezimalkomma über \KAzahl{1.5} -> 1,5
+\newcommand\KAzahl[1]{\pgfmathprintnumber[use comma]{#1}}
+\pagestyle{empty}                 % keine Kopf-/Fußzeilen
+\setlength{\parindent}{0pt}
+
+
+% --- Aufgabennummerierung (1), (2) … mit (a), (b) … ------------------
+\setlist[enumerate,1]{label=(\arabic*), leftmargin=2.2em, itemsep=8pt}
+\setlist[enumerate,2]{label=(\alph*), leftmargin=1.8em, itemsep=3pt}
+
+% --- Schwierigkeitsstufen (falls nicht schon in newcommands.tex) ----
+\providecommand\stufe[1]{%
+  \ifcase#1\or
+    \rule{1.3pt}{0.8ex}\,\textcolor{lightgray}{\rule{1.3pt}{1.3ex}\,\rule{1.3pt}{1.8ex}}\or
+    \rule{1.3pt}{0.8ex}\,\rule{1.3pt}{1.3ex}\,\textcolor{lightgray}{\rule{1.3pt}{1.8ex}}\or
+    \rule{1.3pt}{0.8ex}\,\rule{1.3pt}{1.3ex}\,\rule{1.3pt}{1.8ex}\fi\enspace}
+\providecommand\leicht{\stufe{1}}
+\providecommand\mittel{\stufe{2}}
+\providecommand\schwer{\stufe{3}}
+
+% --- Lösungsschalter --------------------------------------------------
+\newif\ifloesung
+
+% --- Bewertungseinheiten zählen ---------------------------------------
+\gdef\BE@gesamt{0}
+\gdef\BE@max{0}
+\newcommand\BE[1]{%
+  \edef\BE@nr{\arabic{enumi}}%
+  \ifcsundef{BE@a\BE@nr}{\csgdef{BE@a\BE@nr}{0}}{}%
+  \csxdef{BE@a\BE@nr}{\fpeval{\csuse{BE@a\BE@nr}+#1}}%
+  \xdef\BE@gesamt{\fpeval{\BE@gesamt+#1}}%
+  \ifnum\BE@nr>\BE@max\relax\xdef\BE@max{\BE@nr}\fi
+  \unskip\nobreak\hfill\mbox{\enspace\textcolor{black!60}{\small[\KAzahl{#1}\,BE]}}}
+% Am Ende in die .aux schreiben, damit der Kopf die Summe kennt
+\AtEndDocument{%
+  \immediate\write\@auxout{\string\gdef\string\BEsumme{\BE@gesamt}}%
+  \immediate\write\@auxout{\string\gdef\string\BEanzahl{\BE@max}}%
+  \@tempcnta=1\relax
+  \loop\ifnum\@tempcnta>\BE@max\relax\else
+    \immediate\write\@auxout{\string\csgdef{BEaufg\the\@tempcnta}{%
+      \ifcsdef{BE@a\the\@tempcnta}{\csuse{BE@a\the\@tempcnta}}{0}}}%
+    \advance\@tempcnta 1\relax\repeat}
+\providecommand\BEsumme{0}  % erster Lauf: 0, ab dem zweiten Lauf korrekt
+\providecommand\BEanzahl{0}
+
+% --- Angaben zur Arbeit ------------------------------------------------
+\newcommand\Arbeit[1]{\pgfkeys{/ka/.cd,#1}}
+\pgfkeys{/ka/.cd,
+  titel/.store in=\KAtitel,       titel=Klassenarbeit,
+  fach/.store in=\KAfach,         fach=,
+  klasse/.store in=\KAklasse,     klasse=,
+  thema/.store in=\KAthema,       thema=,
+  datum/.store in=\KAdatum,       datum=,
+  zeit/.store in=\KAzeit,         zeit=,
+  hilfsmittel/.store in=\KAhilfsmittel, hilfsmittel=,
+  gruppe/.store in=\KAgruppe,     gruppe=}
+
+\newcommand\Kopf{%
+  {\sffamily\bfseries\Large \KAtitel\ \KAfach\ \KAklasse
+   \ifx\KAgruppe\empty\else\hfill Gruppe \KAgruppe\fi}\par\smallskip
+  {\sffamily\large \KAthema}\par\medskip
+  \begin{tabular}{@{}p{0.52\linewidth}p{0.42\linewidth}@{}}
+    Name: \hrulefill & Datum: \KAdatum \\[4pt]
+    Arbeitszeit: \KAzeit & Hilfsmittel: \KAhilfsmittel \\[4pt]
+    Erreichbar: \KAzahl{\BEsumme}\,BE & Erreicht: \rule{1.6cm}{0.4pt}\,BE
+      \quad Note: \rule{1.2cm}{0.4pt}
+  \end{tabular}\par
+  \smallskip\hrule\medskip}
+
+% --- Punktetabelle ---------------------------------------------------
+\newcommand\Punktetabelle{%
+  \gdef\PTkopf{}\gdef\PTbe{}\gdef\PTleer{}%
+  \ifnum\BEanzahl>0
+  \foreach \i in {1,...,\BEanzahl}{%
+    \xappto\PTkopf{& (\i)}%
+    \xappto\PTbe{& \noexpand\KAzahl{\csuse{BEaufg\i}}}%
+    \gappto\PTleer{&}}%
+  \fi
+  \begin{tabular}{@{}l*{\BEanzahl}{>{\centering\arraybackslash}p{1cm}}|>{\centering\arraybackslash}p{1.3cm}@{}}
+    Aufgabe \PTkopf & $\Sigma$ \\ \hline
+    BE \PTbe & \KAzahl{\BEsumme} \\[3pt] \hline
+    erreicht \PTleer & \rule{0pt}{16pt}\\ \hline
+  \end{tabular}}
+
+% --- Notenschlüssel ----------------------------------------------------
+% \Grenzen{95,80,60,40,20}: Mindestprozent für die Noten 1 bis 5.
+% Die BE-Grenze wird auf halbe BE AUFgerundet.
+\newcommand\Grenzen[1]{\def\KAgrenzen{#1}}
+\Grenzen{95,80,60,40,20}
+\newcommand\abBE[1]{\fpeval{ceil(#1/100*\BEsumme*2)/2}}
+\newcommand\Notenschluessel{%
+  \edef\@g{\KAgrenzen}%
+  \expandafter\KA@noten\@g\relax}
+\def\KA@noten#1,#2,#3,#4,#5\relax{%
+  \begingroup\small
+  \begin{tabular}{@{}l*{6}{>{\centering\arraybackslash}p{1.45cm}}@{}}
+    Note & 1 & 2 & 3 & 4 & 5 & 6 \\ \hline
+    ab \% & \KAzahl{#1} & \KAzahl{#2} & \KAzahl{#3} & \KAzahl{#4} & \KAzahl{#5} & 0 \\
+    BE & \KA@bereich{\abBE{#1}}{\BEsumme}
+       & \KA@bereich{\abBE{#2}}{\fpeval{\abBE{#1}-0.5}}
+       & \KA@bereich{\abBE{#3}}{\fpeval{\abBE{#2}-0.5}}
+       & \KA@bereich{\abBE{#4}}{\fpeval{\abBE{#3}-0.5}}
+       & \KA@bereich{\abBE{#5}}{\fpeval{\abBE{#4}-0.5}}
+       & \KA@bereich{0}{\fpeval{\abBE{#5}-0.5}} \\[2pt] \hline
+    Anzahl & & & & & & \rule{0pt}{14pt}\\
+  \end{tabular}\endgroup}
+\def\KA@bereich#1#2{\KAzahl{#1}\,--\,\KAzahl{#2}}
+
+% --- Lösungsteil -------------------------------------------------------
+% Lösungen parallel zum Aufgabenteil, \scriptsize, Ergebnisse in \boxed{}
+\newenvironment{loesungsteil}{%
+  \clearpage\scriptsize\raggedright
+  {\sffamily\bfseries\normalsize Lösungen \KAtitel\ \KAfach\ \KAklasse}\par\smallskip
+  \hrule\medskip}{}
+\makeatother

@@ -58,6 +58,11 @@ etwas Gleichwertiges gibt.
 | `Farbe sunrise` | Custom made colors |
 | `Farbe lightblue` | Custom made colors |
 | `Farbe carolina` | Custom made colors |
+| `Farbe akzentblau` | Akzentfarben für Grafiken, Karten und Diagramme (kräftig, gut unterscheidbar; aufgehellt z.B. akzentblau!18) |
+| `Farbe akzentrot` | Akzentfarben für Grafiken, Karten und Diagramme (kräftig, gut unterscheidbar; aufgehellt z.B. akzentblau!18) |
+| `Farbe akzentgruen` | Akzentfarben für Grafiken, Karten und Diagramme (kräftig, gut unterscheidbar; aufgehellt z.B. akzentblau!18) |
+| `Farbe akzentorange` | Akzentfarben für Grafiken, Karten und Diagramme (kräftig, gut unterscheidbar; aufgehellt z.B. akzentblau!18) |
+| `Farbe akzentlila` | Akzentfarben für Grafiken, Karten und Diagramme (kräftig, gut unterscheidbar; aufgehellt z.B. akzentblau!18) |
 
 ## Kopfzeilen für Leistungsüberprüfungen
 
@@ -82,6 +87,7 @@ etwas Gleichwertiges gibt.
 | `\begin{solution}` | Colorboxes für Lösungen mit \begin{solution}<Text>\end{solution} |
 | `\begin{todo}` | Colorboxes für das chronologische Vorgehen |
 | `\begin{merke}` | Colorboxes für Merksätze |
+| `\begin{hinweis}` | Hinweis-Box mit frei wählbarem Titel: \begin{hinweis}[Lizenz] ... \end{hinweis} (Standardtitel: Hinweis) |
 | `\begin{merke}` | Colorbox2 für Merksätze |
 
 ## MC-Fragen
@@ -105,6 +111,8 @@ etwas Gleichwertiges gibt.
 | Befehl | Zweck |
 |---|---|
 | `\TikZ` | Schriftzug TikZ im Fließtext (Leerzeichen danach ist eingebaut) |
+| `\oz{…}{…}` | Oxidationszahl über ein Elementsymbol: $\oz{+II}{Cu}$, in \ce{...} zwischen Dollarzeichen: \ce{$\oz{0}{Zn}$ + ...} |
+| `\begin{passend}` | Ist er schmaler, bleibt er unverändert. \begin{passend} ... \end{passend} (Inhalt nicht als Argument, # erlaubt) |
 | `\begin{ausgabe}` | Box für die Ausgabe unter einem Code-Beispiel: erst lstlisting[style=latex], darunter \begin{ausgabe} ... \end{ausgabe} |
 
 ## Lautschrift
@@ -211,7 +219,12 @@ etwas Gleichwertiges gibt.
 | `sudoku` | Sudoku-Gitter mit \begin{sudoku} \|5\|3\| \| ... \|. \end{sudoku} |
 | `tikzpeople` | Personen-Figuren als TikZ-Knoten, z.B. \node[alice, minimum size=2cm]{}; |
 | `tipa` | Lautschrift mit \textipa{...}; [safe], weil tipa sonst \; \: \! \* \s umdefiniert (bricht z.B. \(\;\)) – Langformen sieh |
+| `circuitikz` | Schaltpläne mit deutschen Symbolen: \begin{circuitikz} \draw (0,0) to[lamp] (2,0); \end{circuitikz} |
+| `mhchem` | Reaktionsgleichungen mit \ce{2 H2 + O2 -> 2 H2O} |
+| `chemfig` | Strukturformeln mit \chemfig{H-C(-[2]H)(-[6]H)-H}, freie Elektronenpaare mit \charge |
+| `pgf-PeriodicTable` | Periodensystem mit \pgfPT[...], deutsche Namen mit \pgfPTsetLanguage{de} |
+| `genealogytree` | Stammbäume mit \begin{genealogypicture} ... \end{genealogypicture} |
 
-**TikZ-Bibliotheken:** `arrows`, `calc`, `angles`, `plotmarks`, `quotes`, `babel`, `intersections`, `shapes.geometric`, `decorations.pathreplacing`, `automata`, `positioning`, `shadows`, `patterns`, `patterns.meta`, `fit`, `shapes.multipart`, `arrows.meta`, `shapes.callouts`, `circuits.logic.US`, `circuits.logic.IEC`
+**TikZ-Bibliotheken:** `arrows`, `calc`, `angles`, `plotmarks`, `quotes`, `babel`, `intersections`, `shapes.geometric`, `decorations.pathreplacing`, `decorations.pathmorphing`, `automata`, `positioning`, `shadows`, `patterns`, `patterns.meta`, `fit`, `shapes.multipart`, `arrows.meta`, `shapes.callouts`, `circuits.logic.US`, `circuits.logic.IEC`
 
 **Bewusst nicht geladen:** `musixtex` – nur für Musik-Dokumente in der header.tex einkommentieren, weil es `\cup` als Achtelnote umdefiniert (bricht `$A \cup B$`).

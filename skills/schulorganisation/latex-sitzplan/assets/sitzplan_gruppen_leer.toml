@@ -1,0 +1,16 @@
+# Leere Vorlage zum Ausfüllen per Hand: Gruppentische, keine Namen
+titel = "Klasse ____"
+stand = "__________"
+[raum]
+name      = "Raum ____"
+ansichten = ["lehrer"]
+pult      = "rechts"
+fenster   = "links"
+tuer      = ""
+[layout]
+typ                = "gruppen"
+gruppen_reihen     = 2
+gruppen_pro_reihe  = 3
+plaetze_pro_gruppe = 4
+[namen]
+csv = ""

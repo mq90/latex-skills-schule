@@ -1,0 +1,86 @@
+% ================================================================
+%  Multiple-Choice-Fragen – Format:
+%    ? Frage            (Folgezeilen ohne Zeichen gehören zur Frage)
+%    + richtige Antwort  (mehrere + = Mehrfachauswahl)
+%    - falsche Antwort
+%    > Erklärung (optional)     @ tags (optional)
+%  Leerzeile trennt die Fragen. Zeilen mit % sind Kommentare.
+% ================================================================
+
+? Welche Gleichung gehört zu einer linearen Funktion mit dem Anstieg $2$, deren Graph die $y$-Achse im Punkt $(0 \mid -3)$ schneidet?
++ $f(x) = 2x - 3$
+- $f(x) = -3x + 2$
+- $f(x) = 2x + 3$
+- $f(x) = x^2 - 3$
+> $f(x) = mx + n$ mit $m = 2$ und $n = -3$.
+@ lineare_funktionen
+
+? Gib die Lösungen der Gleichung $x^2 - 5x + 6 = 0$ an.
++ $x_1 = 2;\ x_2 = 3$
+- $x_1 = -2;\ x_2 = -3$
+- $x_1 = 1;\ x_2 = 6$
+- keine reelle Lösung
+> p-q-Formel mit $p = -5$, $q = 6$: $x = 2{,}5 \pm 0{,}5$.
+@ quadratische_gleichungen
+
+? Ein Artikel kostet 80 €. Der Preis wird um 15 % gesenkt. Wie viel kostet er danach?
++ 68 €
+- 65 €
+- 72 €
+- 92 €
+> $80 \cdot 0{,}85 = 68$, also 68 €.
+@ prozentrechnung
+
+? Ein Zylinder hat den Radius $r = 3\,\text{cm}$ und die Höhe $h = 10\,\text{cm}$. Wie groß ist sein Volumen (gerundet)?
++ $283\,\text{cm}^3$
+- $94\,\text{cm}^3$
+- $188\,\text{cm}^3$
+- $90\,\text{cm}^3$
+> $V = \pi r^2 h = \pi \cdot 9 \cdot 10\,\text{cm}^3 \approx 282{,}7\,\text{cm}^3$
+@ koerper
+
+? Gegeben ist $f(x) = -(x-1)^2 + 4$. Welche Aussagen sind wahr?
++ Der Scheitelpunkt ist $S(1 \mid 4)$.
++ Die Parabel ist nach unten geöffnet.
++ Die Nullstellen sind $x_1 = -1$ und $x_2 = 3$.
+- Der Graph schneidet die $y$-Achse im Punkt $(0 \mid 4)$.
+> $f(0) = -1 + 4 = 3$, also Schnittpunkt $(0 \mid 3)$.
+@ quadratische_funktionen
+
+? Welchen Wert hat $\sin 30^\circ$?
++ $0{,}5$
+- $\frac{\sqrt3}{2}$
+- $1$
+- $\frac{\sqrt2}{2}$
+@ trigonometrie
+
+? Es wird zweimal gewürfelt. Wie groß ist die Wahrscheinlichkeit für die Augensumme 12?
++ $\frac{1}{36}$
+- $\frac{1}{12}$
+- $\frac{1}{6}$
+- $\frac{2}{36}$
+> Nur das Ergebnis $(6;6)$ von 36 gleich wahrscheinlichen Ergebnissen.
+@ wahrscheinlichkeit
+
+? Ein rechtwinkliges Dreieck hat die Katheten $6\,\text{cm}$ und $8\,\text{cm}$. Wie lang ist die Hypotenuse?
++ $10\,\text{cm}$
+- $14\,\text{cm}$
+- $48\,\text{cm}$
+- $7\,\text{cm}$
+> $\sqrt{36 + 64} = \sqrt{100} = 10$
+@ geometrie
+
+? Eine Bakterienkultur verdoppelt sich jede Stunde. Am Anfang sind es 100 Bakterien. Wie viele sind es nach 5 Stunden?
++ 3200
+- 1000
+- 500
+- 1600
+> $100 \cdot 2^5 = 3200$
+@ wachstum
+
+? Welche Darstellung ist gleich $0{,}00042$?
++ $4{,}2 \cdot 10^{-4}$
+- $4{,}2 \cdot 10^{4}$
+- $4{,}2 \cdot 10^{-3}$
+- $4{,}2 \cdot 10^{-5}$
+@ zahlen

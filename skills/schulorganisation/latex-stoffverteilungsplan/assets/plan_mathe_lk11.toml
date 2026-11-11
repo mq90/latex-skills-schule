@@ -1,0 +1,43 @@
+# Zweites Beispiel: Kurs mit wöchentlichen Stunden + 14-tägiger Zusatzstunde
+[plan]
+titel      = "Stoffverteilungsplan Mathematik Leistungskurs 11"
+schuljahr  = "2026/27"
+lehrkraft  = "N. N."
+schule     = "Musterschule"
+beginn     = 2026-11-02
+ende       = 2027-02-05
+ferien     = "ferien_sachsen_2026_27.toml"
+woche_bei_beginn = "A"           # Woche ab 02.11.2026 – bitte prüfen
+ab_zaehlung = "schulwochen"
+ustd_pro_termin = 2
+
+[[gruppe]]
+name    = "LK 11"
+termine = [
+  { tag = "Mo", woche = "AB", zeit = "10:00–11:30" },
+  { tag = "Di", woche = "AB", zeit = "10:00–11:30" },
+  { tag = "Fr", woche = "B",  zeit = "12:30–14:00", bemerkung = "14-täglich" },
+]
+
+[[lernbereich]]
+kurz  = "LB 1"
+name  = "Differentialrechnung (Ausschnitt)"
+ustd  = 30
+farbe = "akzentblau"
+themen = [
+  "Eigenschaften ganzrationaler Funktionen",
+  "Notwendige und hinreichende Bedingungen",
+  "Sattelpunkte",
+  "Funktionsuntersuchung: Übung",
+  "Funktionen mit Parameter",
+  { thema = "Leistungskontrolle", note = true },
+  "Geraden und Winkel",
+  "Schnittwinkel von Geraden und Funktionsgraphen",
+]
+
+[[lernbereich]]
+kurz  = "WB"
+name  = "Vertiefung / Puffer"
+wahl  = true
+farbe = "akzentlila"
+themen = [ "Vertiefung" ]

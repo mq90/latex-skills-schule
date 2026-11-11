@@ -1,0 +1,22 @@
+% ===================================================================
+%  Erzeugt 16 Seiten: je ein Bundesland hervorgehoben (Bilder für die
+%  Anki-Karten in bilder/). Braucht deutschland_daten.tex aus dem Skill
+%  latex-geodaten-karten (assets/) im selben Ordner.
+%    pdflatex vorlage_bundeslaender_bilder.tex
+%    pdftoppm -r 110 -png vorlage_bundeslaender_bilder.pdf land
+%  Danach land-01.png … land-16.png in der Reihenfolge der Liste unten
+%  umbenennen (sh.png, hh.png, ni.png, …).
+% ===================================================================
+\documentclass[tikz,border=2mm]{standalone}
+\input{deutschland_daten.tex}
+\definecolor{akzentorange}{HTML}{EA580C}
+\begin{document}
+\foreach \hier in {SH,HH,NI,HB,MV,BB,BE,ST,SN,TH,HE,NW,RP,SL,BW,BY}{
+\begin{tikzpicture}[scale=0.55]
+  \GeoKoordinaten
+  \foreach \land in {SH,HH,NI,HB,MV,BB,BE,ST,SN,TH,HE,NW,RP,SL,BW,BY}
+    \fill[black!10, draw=white, line width=0.4pt] \Gebiet{DE-\land};
+  \fill[akzentorange!55, draw=akzentorange!80!black, line width=0.6pt] \Gebiet{DE-\hier};
+  \draw[black!60, line width=0.6pt] \Gebiet{DEU};
+\end{tikzpicture}}
+\end{document}

@@ -1,0 +1,167 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[ngerman]{babel}
+\usepackage[a4paper,margin=2cm,bottom=2.2cm]{geometry}
+\usepackage{microtype}
+\usepackage[table]{xcolor}
+\usepackage{booktabs,longtable,array,tabularx}
+\usepackage{tikz}
+\usetikzlibrary{patterns}
+\usepackage{amssymb}
+\usepackage[hidelinks]{hyperref}
+\definecolor{akzentblau}{HTML}{2563EB}
+\definecolor{akzentrot}{HTML}{DC2626}
+\definecolor{akzentgruen}{HTML}{16A34A}
+\definecolor{akzentlila}{HTML}{7C3AED}
+\definecolor{akzentorange}{HTML}{EA580C}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\renewcommand\arraystretch{1.25}
+\newcommand\note{\textcolor{akzentrot}{\,$\blacktriangleright$\,\textsf{\footnotesize Note}}}
+\newcommand\lbmarke[2]{\textcolor{#1}{\rule[-0.3ex]{0.9ex}{1.9ex}}\,\textsf{\footnotesize #2}}
+\newcommand\abschnitt[1]{\par\medskip{\sffamily\bfseries\Large #1}\par\smallskip}
+\newcommand\unterabschnitt[1]{\par\medskip{\sffamily\bfseries\large #1}\par}
+\begin{document}
+
+\begin{center}
+{\sffamily\bfseries\LARGE Stoffverteilungsplan Mathematik Leistungskurs 11}\\[4pt]
+{\sffamily\large Schuljahr 2026/27}\\[4pt]
+{\small N. N. \textbullet\ Musterschule \textbullet\ geplant 02.11.2026--05.02.2027}
+\end{center}
+\abschnitt{Teil A: Aufteilung der Lernbereiche}
+Pflichtumfang: 30 Ustd. $=$ 15 Termine à 2 Ustd. Weitere Termine gehören zum Wahlbereich.
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{4.4cm}cp{1.3cm}p{9cm}@{}}
+\toprule \textsf{Lernbereich} & \textsf{Ustd.} & \textsf{Termin} & \textsf{Stundenthema}\\ \midrule \endhead
+\lbmarke{akzentblau}{LB 1}\ \small Differentialrechnung (Ausschnitt) & 30 & 1 & Eigenschaften ganzrationaler Funktionen\\
+ &  & 2 & Notwendige und hinreichende Bedingungen\\
+ &  & 3 & Sattelpunkte\\
+ &  & 4 & Funktionsuntersuchung: Übung\\
+ &  & 5 & Funktionen mit Parameter\\
+ &  & 6 & Leistungskontrolle\note\\
+ &  & 7 & Geraden und Winkel\\
+ &  & 8 & Schnittwinkel von Geraden und Funktionsgraphen\\
+ &  & 9 & Fortsetzung: Schnittwinkel von Geraden…\\
+ &  & 10 & Fortsetzung: Schnittwinkel von Geraden…\\
+ &  & 11 & Fortsetzung: Schnittwinkel von Geraden…\\
+ &  & 12 & Fortsetzung: Schnittwinkel von Geraden…\\
+ &  & 13 & Fortsetzung: Schnittwinkel von Geraden…\\
+ &  & 14 & Fortsetzung: Schnittwinkel von Geraden…\\
+ &  & 15 & Fortsetzung: Schnittwinkel von Geraden…\\
+\midrule
+\lbmarke{akzentlila}{WB}\ \small Vertiefung / Puffer & -- & ab 16 & Vertiefung\\
+\bottomrule\end{longtable}
+\abschnitt{Übersicht}
+\begin{tikzpicture}[font=\sffamily\scriptsize, x=1cm, y=1cm]
+\node[anchor=south west, font=\sffamily\footnotesize\bfseries] at (0.000,0.75) {Nov};
+\draw[black!40] (0.000,0.75) -- (0.000,-0.550);
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (0.310,0.05) {02.11.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (0.930,0.05) {09.11.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (1.550,0.05) {16.11.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (2.170,0.05) {23.11.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (2.790,0.05) {30.11.};
+\node[anchor=south west, font=\sffamily\footnotesize\bfseries] at (3.100,0.75) {Dez};
+\draw[black!40] (3.100,0.75) -- (3.100,-0.550);
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (3.410,0.05) {07.12.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (4.030,0.05) {14.12.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (4.650,0.05) {21.12.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (5.270,0.05) {28.12.};
+\node[anchor=south west, font=\sffamily\footnotesize\bfseries] at (5.580,0.75) {Jan};
+\draw[black!40] (5.580,0.75) -- (5.580,-0.550);
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (5.890,0.05) {04.01.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (6.510,0.05) {11.01.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (7.130,0.05) {18.01.};
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (7.750,0.05) {25.01.};
+\node[anchor=south west, font=\sffamily\footnotesize\bfseries] at (8.060,0.75) {Feb};
+\draw[black!40] (8.060,0.75) -- (8.060,-0.550);
+\node[rotate=90, anchor=west, font=\sffamily\tiny, black!60] at (8.370,0.05) {01.02.};
+\fill[black!12] (1.488,0) rectangle ++(0.124,-0.550);
+\fill[black!12] (4.588,0) rectangle ++(0.124,-0.550);
+\fill[black!12] (4.712,0) rectangle ++(0.124,-0.550);
+\fill[black!12] (4.836,0) rectangle ++(0.124,-0.550);
+\fill[black!12] (4.960,0) rectangle ++(0.124,-0.550);
+\fill[black!12] (5.084,0) rectangle ++(0.124,-0.550);
+\fill[black!12] (5.208,0) rectangle ++(0.124,-0.550);
+\fill[black!12] (5.332,0) rectangle ++(0.124,-0.550);
+\fill[black!12] (5.456,0) rectangle ++(0.124,-0.550);
+\node[anchor=east, font=\sffamily\footnotesize\bfseries] at (-0.1,-0.275) {LK 11};
+\fill[akzentblau!70] (0.040,-0.060) rectangle (0.580,-0.490);
+\fill[akzentblau!70] (0.040,-0.060) rectangle (0.580,-0.490);
+\fill[akzentblau!70] (0.660,-0.060) rectangle (1.200,-0.490);
+\fill[akzentblau!70] (0.660,-0.060) rectangle (1.200,-0.490);
+\fill[akzentblau!70] (0.660,-0.060) rectangle (1.200,-0.490);
+\fill[akzentblau!70] (1.280,-0.060) rectangle (1.820,-0.490);
+\node[akzentrot, font=\tiny] at (1.550,-0.275) {$\blacktriangleright$};
+\fill[akzentblau!70] (1.280,-0.060) rectangle (1.820,-0.490);
+\fill[akzentblau!70] (1.900,-0.060) rectangle (2.440,-0.490);
+\fill[akzentblau!70] (1.900,-0.060) rectangle (2.440,-0.490);
+\fill[akzentblau!70] (1.900,-0.060) rectangle (2.440,-0.490);
+\fill[akzentblau!70] (2.520,-0.060) rectangle (3.060,-0.490);
+\fill[akzentblau!70] (2.520,-0.060) rectangle (3.060,-0.490);
+\fill[akzentblau!70] (3.140,-0.060) rectangle (3.680,-0.490);
+\fill[akzentblau!70] (3.140,-0.060) rectangle (3.680,-0.490);
+\fill[akzentblau!70] (3.140,-0.060) rectangle (3.680,-0.490);
+\fill[akzentlila!70] (3.760,-0.060) rectangle (4.300,-0.490);
+\fill[akzentlila!70] (3.760,-0.060) rectangle (4.300,-0.490);
+\fill[akzentlila!70] (4.380,-0.060) rectangle (4.920,-0.490);
+\fill[akzentlila!70] (4.380,-0.060) rectangle (4.920,-0.490);
+\fill[akzentlila!70] (5.620,-0.060) rectangle (6.160,-0.490);
+\fill[akzentlila!70] (5.620,-0.060) rectangle (6.160,-0.490);
+\fill[akzentlila!70] (6.240,-0.060) rectangle (6.780,-0.490);
+\fill[akzentlila!70] (6.240,-0.060) rectangle (6.780,-0.490);
+\fill[akzentlila!70] (6.240,-0.060) rectangle (6.780,-0.490);
+\fill[akzentlila!70] (6.860,-0.060) rectangle (7.400,-0.490);
+\fill[akzentlila!70] (6.860,-0.060) rectangle (7.400,-0.490);
+\fill[akzentlila!70] (7.480,-0.060) rectangle (8.020,-0.490);
+\fill[akzentlila!70] (7.480,-0.060) rectangle (8.020,-0.490);
+\fill[akzentlila!70] (7.480,-0.060) rectangle (8.020,-0.490);
+\fill[akzentlila!70] (8.100,-0.060) rectangle (8.640,-0.490);
+\fill[akzentlila!70] (8.100,-0.060) rectangle (8.640,-0.490);
+\draw[black!20] (0,-0.550) -- (8.680,-0.550);
+\node[anchor=north west, inner sep=0pt, text width=8.68cm] at (0,-0.80) {\textcolor{akzentblau!70}{\rule{0.8em}{0.8em}}\,LB 1: Differentialrechnung (Ausschnitt) \quad \textcolor{akzentlila!70}{\rule{0.8em}{0.8em}}\,WB: Vertiefung / Puffer};
+\end{tikzpicture}
+\par\smallskip{\footnotesize Grau: Ferien \quad schraffiert: Puffer (kein neuer Stoff) \quad $\times$: Termin entfällt \quad \textcolor{akzentrot}{$\blacktriangleright$}: sonstige Note}
+\par\medskip
+\begin{tabular}{@{}lcccc@{}}\toprule \textsf{Klasse} & \textsf{Termine mit Stoff} & \textsf{Puffer} & \textsf{Noten} & \textsf{Pflicht nicht untergebracht}\\ \midrule
+LK 11 & 31 & 0 & 1 & 0\\
+\bottomrule\end{tabular}
+\clearpage\abschnitt{Teil B: Verteilung auf die Klassen}
+\unterabschnitt{Klasse LK 11}{\small Mo 10:00–11:30 (wöchentlich), Di 10:00–11:30 (wöchentlich), Fr 12:30–14:00 (B-Woche)}
+\begin{longtable}{@{}p{1.75cm}p{1.25cm}cp{1.1cm}p{9.9cm}@{}}
+\toprule \textsf{Datum} & \textsf{Ustd.} & \textsf{Wo.} & \textsf{LB} & \textsf{Thema / Bemerkung}\\ \midrule \endhead \bottomrule \endfoot
+Mo 02.11. & 1/2 & A & \lbmarke{akzentblau}{LB 1} & Eigenschaften ganzrationaler Funktionen\\
+Di 03.11. & 3/4 & A & \lbmarke{akzentblau}{LB 1} & Notwendige und hinreichende Bedingungen\\
+Mo 09.11. & 5/6 & B & \lbmarke{akzentblau}{LB 1} & Sattelpunkte\\
+Di 10.11. & 7/8 & B & \lbmarke{akzentblau}{LB 1} & Funktionsuntersuchung: Übung\\
+Fr 13.11. & 9/10 & B & \lbmarke{akzentblau}{LB 1} & Funktionen mit Parameter {\footnotesize\color{black!55}(14-täglich)}\\
+Mo 16.11. & 11/12 & A & \lbmarke{akzentblau}{LB 1} & Leistungskontrolle\note\\
+Di 17.11. & 13/14 & A & \lbmarke{akzentblau}{LB 1} & Geraden und Winkel\\
+Mo 23.11. & 15/16 & B & \lbmarke{akzentblau}{LB 1} & Schnittwinkel von Geraden und Funktionsgraphen\\
+Di 24.11. & 17/18 & B & \lbmarke{akzentblau}{LB 1} & Fortsetzung: Schnittwinkel von Geraden…\\
+Fr 27.11. & 19/20 & B & \lbmarke{akzentblau}{LB 1} & Fortsetzung: Schnittwinkel von Geraden… {\footnotesize\color{black!55}(14-täglich)}\\
+Mo 30.11. & 21/22 & A & \lbmarke{akzentblau}{LB 1} & Fortsetzung: Schnittwinkel von Geraden…\\
+Di 01.12. & 23/24 & A & \lbmarke{akzentblau}{LB 1} & Fortsetzung: Schnittwinkel von Geraden…\\
+Mo 07.12. & 25/26 & B & \lbmarke{akzentblau}{LB 1} & Fortsetzung: Schnittwinkel von Geraden…\\
+Di 08.12. & 27/28 & B & \lbmarke{akzentblau}{LB 1} & Fortsetzung: Schnittwinkel von Geraden…\\
+Fr 11.12. & 29/30 & B & \lbmarke{akzentblau}{LB 1} & Fortsetzung: Schnittwinkel von Geraden… {\footnotesize\color{black!55}(14-täglich)}\\
+Mo 14.12. & 31/32 & A & \lbmarke{akzentlila}{WB} & Vertiefung\\
+Di 15.12. & 33/34 & A & \lbmarke{akzentlila}{WB} & Vertiefung\\
+Mo 21.12. & 35/36 & B & \lbmarke{akzentlila}{WB} & Vertiefung\\
+Di 22.12. & 37/38 & B & \lbmarke{akzentlila}{WB} & Vertiefung\\
+\rowcolor{black!8}\multicolumn{5}{@{}l}{\textit{Weihnachtsferien} \quad 23.12.--02.01.2027}\\
+Mo 04.01. & 39/40 & A & \lbmarke{akzentlila}{WB} & Vertiefung\\
+Di 05.01. & 41/42 & A & \lbmarke{akzentlila}{WB} & Vertiefung\\
+Mo 11.01. & 43/44 & B & \lbmarke{akzentlila}{WB} & Vertiefung\\
+Di 12.01. & 45/46 & B & \lbmarke{akzentlila}{WB} & Vertiefung\\
+Fr 15.01. & 47/48 & B & \lbmarke{akzentlila}{WB} & Vertiefung {\footnotesize\color{black!55}(14-täglich)}\\
+Mo 18.01. & 49/50 & A & \lbmarke{akzentlila}{WB} & Vertiefung\\
+Di 19.01. & 51/52 & A & \lbmarke{akzentlila}{WB} & Vertiefung\\
+Mo 25.01. & 53/54 & B & \lbmarke{akzentlila}{WB} & Vertiefung\\
+Di 26.01. & 55/56 & B & \lbmarke{akzentlila}{WB} & Vertiefung\\
+Fr 29.01. & 57/58 & B & \lbmarke{akzentlila}{WB} & Vertiefung {\footnotesize\color{black!55}(14-täglich)}\\
+Mo 01.02. & 59/60 & A & \lbmarke{akzentlila}{WB} & Vertiefung\\
+Di 02.02. & 61/62 & A & \lbmarke{akzentlila}{WB} & Vertiefung\\
+\midrule
+\multicolumn{5}{@{}p{\linewidth}@{}}{\small \textbf{Pflichtumfang vollständig untergebracht.}}\\
+\end{longtable}
+\end{document}

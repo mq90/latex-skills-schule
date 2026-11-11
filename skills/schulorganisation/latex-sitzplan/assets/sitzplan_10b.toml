@@ -1,0 +1,44 @@
+# ===================================================================
+#  Sitzplan – Eingabedatei.  Danach:
+#     python3 sitzplan.py sitzplan_10b.toml
+#     pdflatex sitzplan_10b.tex
+# ===================================================================
+titel = "Klasse 10b – Informatik"
+stand = "November 2026"
+
+[raum]
+name        = "Raum 2.14"
+ansichten   = ["lehrer", "schueler"]   # eine Seite je Ansicht
+tafelbreite = 8
+pult        = "links"                  # aus Klassensicht; "" = keins
+fenster     = "links"
+tuer        = "rechts"
+
+# --- Anordnung: "reihen", "gruppen" oder "u_form" -------------------
+[layout]
+typ               = "reihen"
+reihen            = 4
+tische_pro_reihe  = 3
+plaetze_pro_tisch = 2
+
+# Einzelne Tische zusätzlich (x, y in cm; y = 0 ist die Tafel):
+# [[tisch]]
+# x = 20.5
+# y = 9
+# plaetze = 1
+
+# --- Namen: bleiben auf deinem Rechner! -----------------------------
+[namen]
+csv        = "klasse_beispiel.csv"   # Spalten: Vorname;Nachname
+verteilung = "zufall"                # "liste" = in CSV-Reihenfolge
+seed       = 7                       # gleiche Zahl = gleicher Plan
+
+# --- Regeln (Namen wie in der CSV: "Vorname Nachname") --------------
+[regeln]
+nicht_neben  = [ ["Alan Turing", "Konrad Zuse"], ["Isaac Newton", "Gottfried Wilhelm Leibniz"] ]
+neben        = [ ["Ada Lovelace", "Grace Hopper"] ]
+vorne        = [ "Blaise Pascal" ]           # muss in die vorderste Reihe
+vorne_reihen = 1
+allein       = [ "Donald Knuth" ]            # Tisch für sich allein
+[regeln.fest]
+"Marie Curie" = 12                            # feste Platznummer

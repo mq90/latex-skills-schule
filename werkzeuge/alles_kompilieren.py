@@ -30,7 +30,8 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 STIL = ROOT / "skills" / "grundlagen" / "latex-grundstil" / "assets"
 BEISPIEL = re.compile(r"\\begin\{(tikzpicture|lstlisting|mcquestion[hv]|sudoku|ausgabe|music)\}|\\chessboard|\\lehrerblase|\\koordinatensystem")
 # Dateien, die Eingabedaten brauchen, die erst ein Skript erzeugt
-BRAUCHT = {"vorlage_sudoku_arbeitsblatt.tex": "sudokus.tex", "vorlage_karte.tex": "karte_daten.tex"}
+BRAUCHT = {"vorlage_sudoku_arbeitsblatt.tex": "sudokus.tex", "vorlage_karte.tex": "karte_daten.tex",
+           "vorlage_bundeslaender_bilder.tex": "deutschland_daten.tex"}
 
 
 def kompiliere(tex: pathlib.Path, arbeitsordner: pathlib.Path) -> tuple[bool, str]:
@@ -38,7 +39,9 @@ def kompiliere(tex: pathlib.Path, arbeitsordner: pathlib.Path) -> tuple[bool, st
     # xelatex nur, wenn fontspec wirklich geladen wird (nicht, wenn es nur in einem Listing steht)
     ohne_listings = re.sub(r"\\begin\{lstlisting\}.*?\\end\{lstlisting\}", "", quelle, flags=re.S)
     prog = "xelatex" if re.search(r"^[^%\n]*\\usepackage(\[[^]]*\])?\{fontspec\}", ohne_listings, re.M) else "pdflatex"
-    for _ in range(2):
+    for lauf in range(3):
+        if lauf == 2 and "Rerun to get" not in (arbeitsordner / tex.with_suffix(".log").name).read_text(errors="replace"):
+            break  # dritter Lauf nur, wenn LaTeX ihn verlangt (Verzeichnis, longtable)
         r = subprocess.run([prog, "-interaction=nonstopmode", "-halt-on-error", tex.name],
                            cwd=arbeitsordner, capture_output=True, text=True, errors="replace")
         mx1 = arbeitsordner / tex.with_suffix(".mx1").name
@@ -47,6 +50,17 @@ def kompiliere(tex: pathlib.Path, arbeitsordner: pathlib.Path) -> tuple[bool, st
     log = (arbeitsordner / tex.with_suffix(".log").name).read_text(errors="replace")
     fehler = [z for z in log.splitlines() if z.startswith("!")]
     return (r.returncode == 0 and not fehler), (fehler[0] if fehler else "")
+
+
+def vorlagen_vorbauen(tex: pathlib.Path, arbeitsordner: pathlib.Path) -> None:
+    """Bindet eine Handreichung PDFs ein (\\includegraphics{name.pdf} außerhalb von
+    Listings), werden vorher alle Vorlagen im Arbeitsordner kompiliert."""
+    quelle = re.sub(r"\\begin\{lstlisting\}.*?\\end\{lstlisting\}", "", tex.read_text(encoding="utf-8"), flags=re.S)
+    gesucht = set(re.findall(r"\\includegraphics(?:\[[^]]*\])?\{([^}]+?)(?:\.pdf)?\}", quelle))
+    for v in sorted(arbeitsordner.glob("*.tex")):
+        if v.name == tex.name or v.stem not in gesucht:
+            continue
+        kompiliere(v, arbeitsordner)
 
 
 def bloecke(skill_md: pathlib.Path):
@@ -101,8 +115,9 @@ def main():
             q = tex.read_text(encoding="utf-8")
             if tex.name in ("header.tex", "newcommands.tex"):
                 continue
-            if "\\documentclass" not in q and "\\input{header.tex}" not in q:
-                continue  # Schnipsel, keine eigenständige Datei
+            ohne_kommentare = "\n".join(z.split("%", 1)[0] for z in q.splitlines())
+            if "\\documentclass" not in ohne_kommentare and "\\input{header.tex}" not in ohne_kommentare:
+                continue  # Schnipsel (z. B. ka_makros.tex), keine eigenständige Datei
             with tempfile.TemporaryDirectory() as t:
                 t = pathlib.Path(t)
                 # Handreichungen dürfen Datendateien aus assets/ desselben Skills laden
@@ -120,6 +135,8 @@ def main():
                 if tex.name in BRAUCHT and not (t / BRAUCHT[tex.name]).exists():
                     print(f"skip    {tex.relative_to(ROOT)} (braucht {BRAUCHT[tex.name]})")
                     continue
+                if tex.parent.name == "references":
+                    vorlagen_vorbauen(t / tex.name, t)
                 ok, msg = kompiliere(t / tex.name, t)
                 if ok and a.pdf:
                     ziel = pathlib.Path(a.pdf)

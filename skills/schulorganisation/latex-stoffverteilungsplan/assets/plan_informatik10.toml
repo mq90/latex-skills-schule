@@ -1,0 +1,111 @@
+# ===================================================================
+#  Stoffverteilungsplan Informatik Klasse 10 – Eingabedatei
+#  Nur diese Datei bearbeiten, dann:
+#      python3 stoffverteilungsplan.py plan_informatik10.toml
+#      pdflatex plan_informatik10.tex
+# ===================================================================
+
+[plan]
+titel      = "Stoffverteilungsplan Informatik Klasse 10"
+schuljahr  = "2026/27"
+lehrkraft  = "N. N."
+schule     = "Musterschule"
+beginn     = 2026-08-17        # erster Unterrichtstag, der geplant wird
+ende       = 2027-07-09        # letzter Schultag vor den Sommerferien
+uebergabe_am = 2027-02-05      # bis hier plane ich selbst (Linie im Plan); weglassen = keine Übergabe
+ferien     = "ferien_sachsen_2026_27.toml"
+woche_bei_beginn = "A"         # welche Woche ist die Woche von "beginn"?
+# A/B-Zählung: "schulwochen" = Ferienwochen zählen nicht mit,
+#              "kalenderwochen" = A/B wechselt stur jede Woche
+ab_zaehlung = "schulwochen"
+ustd_pro_termin = 2            # Doppelstunde
+uebergabe  = "Übergabe an den Fachkollegen"
+
+# ------------------------------------------------------------------
+#  Klassen / Halbgruppen.  woche = "A", "B" oder "AB" (jede Woche)
+# ------------------------------------------------------------------
+[[gruppe]]
+name    = "10b"
+termine = [ { tag = "Di", woche = "A", zeit = "08:00–09:30" } ]
+
+[[gruppe]]
+name    = "10d"
+termine = [ { tag = "Di", woche = "A", zeit = "12:30–14:00" } ]
+
+[[gruppe]]
+name    = "10c"
+termine = [ { tag = "Di", woche = "B", zeit = "08:00–09:30" } ]
+
+[[gruppe]]
+name    = "10e"
+termine = [ { tag = "Do", woche = "B", zeit = "08:00–09:30" } ]
+
+# ------------------------------------------------------------------
+#  Gesperrte Zeiträume
+#    modus = "ausfall": Termin fällt weg (Klassenfahrt, Projektwoche)
+#    modus = "puffer":  Termin bleibt, bekommt aber keinen neuen Stoff
+#                       (z. B. Prüfungszeitraum – Ausfall möglich)
+#  nur = ["10b"] beschränkt eine Sperre auf einzelne Gruppen.
+# ------------------------------------------------------------------
+[[sperre]]
+grund = "Klassenfahrt"
+von   = 2026-09-28
+bis   = 2026-10-02
+modus = "ausfall"
+
+[[sperre]]
+grund = "Prüfungszeitraum"
+von   = 2026-10-26
+bis   = 2026-12-18
+modus = "puffer"
+thema = "Übung und Vertiefung (Ausfall möglich)"
+
+# ------------------------------------------------------------------
+#  Lernbereiche in der Reihenfolge des Unterrichts.
+#  ustd = Unterrichtsstunden laut Lehrplan.  Jeder Eintrag in "themen"
+#  ist ein Termin (hier: eine Doppelstunde).  Zu wenige Themen? Dann
+#  wird mit „Fortsetzung“ aufgefüllt.  { thema = "...", note = true }
+#  markiert eine sonstige Note.  wahl = true: füllt den Rest auf.
+#  TITEL UND USTD BITTE MIT DEM LEHRPLAN ABGLEICHEN – Beispielwerte!
+# ------------------------------------------------------------------
+[[lernbereich]]
+kurz  = "LB 1"
+name  = "Algorithmen"
+ustd  = 12
+farbe = "akzentblau"
+themen = [
+  "Daten im Programm",
+  "Datentypen",
+  "Auswahl",
+  "Wiederholung",
+  { thema = "Funktionen", note = true },
+  "Maschinelles Lernen",
+]
+
+[[lernbereich]]
+kurz  = "LB 2"
+name  = "Sprachen"
+ustd  = 8
+farbe = "akzentgruen"
+themen = [
+  "Sprachen und Grammatiken",
+  "Syntax und Semantik",
+  { thema = "Anwendung und Übung", note = true },
+]
+
+[[lernbereich]]
+kurz  = "LB 3"
+name  = "Lernbereich 3 (Titel laut Lehrplan)"
+ustd  = 6
+farbe = "akzentorange"
+themen = [
+  "Einstieg",
+  { thema = "Projekt", note = true },
+]
+
+[[lernbereich]]
+kurz  = "WB"
+name  = "Wahlbereich"
+wahl  = true
+farbe = "akzentlila"
+themen = [ "Wahlbereich" ]

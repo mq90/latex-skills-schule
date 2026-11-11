@@ -1,0 +1,130 @@
+% ===================================================================
+%  Klassenarbeit – Vorlage
+%  Zweimal kompilieren (pdflatex), damit alle Summen stimmen.
+%  Aufgabe:  \item \leicht Text ... \BE{2}
+%  Teilaufgaben: enumerate in multicols, je \item ... \BE{..}
+%  Universaler Stil: header.tex, newcommands.tex und ka_makros.tex im
+%  selben Ordner. Ohne universalen Stil: \documentclass[11pt]{article}
+%  und nur \input{ka_makros} (dann \koordinatensystem selbst zeichnen).
+% ===================================================================
+\input{header.tex}
+\input{newcommands.tex}
+\input{ka_makros.tex}
+
+% ======================= HIER ÄNDERN ===============================
+\loesungtrue                         % \loesungfalse = Schülerfassung
+\Arbeit{
+  titel       = Klassenarbeit,
+  fach        = Mathematik,
+  klasse      = LK 11,
+  thema       = Eigenschaften ganzrationaler Funktionen,
+  datum       = 24.11.2026,
+  zeit        = 90 Minuten,
+  hilfsmittel = Tafelwerk; Taschenrechner,
+  gruppe      = ,                    % z. B. A oder B; leer = keine
+}
+\Grenzen{95,80,60,40,20}             % Mindestprozent für Note 1 bis 5
+% ===================================================================
+
+\begin{document}
+\Kopf
+
+\begin{enumerate}
+  % ---------------------------------------------------------------
+  \item \leicht Bilde die erste Ableitung.
+  \begin{multicols}{2}
+  \begin{enumerate}
+    \item $f(x) = 2x^3 - 5x^2 + x - 7$ \BE{2}
+    \item $f(x) = \frac14 x^4 - 3x$ \BE{2}
+    \item $f(x) = \frac13 x^3 + 2x$ \BE{1}
+  \end{enumerate}
+  \end{multicols}
+
+  % ---------------------------------------------------------------
+  \item \mittel Gegeben ist die Funktion $f$ mit $f(x) = x^3 - 3x$.
+  \begin{multicols}{2}
+  \begin{enumerate}
+    \item Gib die Achsenschnittpunkte an. \BE{3}
+    \item Untersuche den Graphen von $f$ auf Symmetrie. \BE{2}
+    \item Bestimme die Extrempunkte. \BE{4}
+    \item Gib die Monotonieintervalle an. \BE{2}
+    \item Bestimme den Wendepunkt. \BE{2}
+    \item Skizziere den Graphen von $f$ im Intervall $-2 \le x \le 2$. \BE{2}
+  \end{enumerate}
+  \end{multicols}
+  \begin{center}
+  \begin{tikzpicture}[scale=0.6]
+    \koordinatensystem[1]{-3}{3}{-3}{3}
+  \end{tikzpicture}
+  \end{center}
+
+  % ---------------------------------------------------------------
+  \item \schwer
+  \begin{enumerate}
+    \item Bestimme die Gleichung der Tangente an den Graphen von $f$ mit
+          $f(x) = x^3 - 3x$ im Punkt $P(2 \mid f(2))$. \BE{3}
+    \item Zeige, dass der Graph der Funktion $g$ mit $g(x) = x^3 + 3x$ keine
+          Extrempunkte besitzt. \BE{2}
+  \end{enumerate}
+\end{enumerate}
+
+\vfill
+\Punktetabelle
+
+\bigskip
+\Notenschluessel
+
+% ======================= LÖSUNGEN =================================
+\ifloesung
+\begin{loesungsteil}
+\begin{enumerate}
+  \item
+  \begin{multicols}{3}
+  \begin{enumerate}
+    \item $\boxed{f'(x) = 6x^2 - 10x + 1}$
+    \item $\boxed{f'(x) = x^3 - 3}$
+    \item $\boxed{f'(x) = x^2 + 2}$
+  \end{enumerate}
+  \end{multicols}
+
+  \item
+  \begin{multicols}{2}
+  \begin{enumerate}
+    \item $f(x) = x(x^2 - 3) = 0 \Rightarrow x_1 = -\sqrt3,\ x_2 = 0,\ x_3 = \sqrt3$\\
+          $\boxed{N_1(-\sqrt3 \mid 0),\ N_2(0 \mid 0),\ N_3(\sqrt3 \mid 0)}$;
+          $\boxed{S_y(0 \mid 0)}$
+    \item $f(-x) = -x^3 + 3x = -f(x)$\\
+          $\Rightarrow$ \boxed{\text{punktsymmetrisch zum Koordinatenursprung}}
+    \item $f'(x) = 3x^2 - 3 = 0 \Rightarrow x = \pm 1$;\quad $f''(x) = 6x$\\
+          $f''(-1) = -6 < 0$: $\boxed{H(-1 \mid 2)}$\quad
+          $f''(1) = 6 > 0$: $\boxed{T(1 \mid -2)}$
+    \item steigend: $\boxed{-\infty < x \le -1}$,\ fallend: $\boxed{-1 \le x \le 1}$,\\
+          steigend: $\boxed{1 \le x < \infty}$
+    \item $f''(x) = 6x = 0 \Rightarrow x = 0$;\ $f'''(0) = 6 \ne 0$\\
+          $\boxed{W(0 \mid 0)}$
+    \item siehe Skizze
+  \end{enumerate}
+  \end{multicols}
+  \begin{center}
+  \begin{tikzpicture}[scale=0.55]
+    \koordinatensystem[1]{-3}{3}{-3}{3}
+    \begin{scope}
+      \clip (-3,-3) rectangle (3,3);
+      \draw[akzentblau, very thick, domain=-2:2, samples=60] plot (\x, {\x^3 - 3*\x});
+    \end{scope}
+    \foreach \p in {(-1,2), (1,-2), (0,0)} \fill[akzentrot] \p circle (4pt);
+  \end{tikzpicture}
+  \end{center}
+
+  \item
+  \begin{enumerate}
+    \item $f(2) = 2$,\ $f'(x) = 3x^2 - 3 \Rightarrow m = f'(2) = 9$\\
+          $t(x) = 9x + n$,\ $2 = 9 \cdot 2 + n \Rightarrow n = -16$\qquad
+          $\boxed{t(x) = 9x - 16}$
+    \item $g'(x) = 3x^2 + 3 \ge 3 > 0$ für alle $x$ $\Rightarrow$ $g'$ hat keine
+          Nullstellen $\Rightarrow$ \boxed{\text{keine Extrempunkte}}
+  \end{enumerate}
+\end{enumerate}
+\end{loesungsteil}
+\fi
+\end{document}

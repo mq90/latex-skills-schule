@@ -17,3 +17,6 @@ karte_daten.tex
 __pycache__/
 # Rohdaten für karten_beispiele.py (python3 karten_beispiele.py download)
 geodaten/
+# erzeugte Anki-Stapel und Testpakete
+*.apkg
+*_qti21.zip

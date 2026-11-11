@@ -1,0 +1,259 @@
+\input{header.tex}
+\input{newcommands.tex}
+
+
+\title{Stoffverteilungspläne automatisch erstellen}
+\author{Fortbildungsmaterial für Lehrkräfte}
+\date{\today}
+\pagestyle{plain}
+\setlength{\parskip}{1.5em} % Abstand zwischen Absätzen (Handreichungen)
+\setlength{\emergencystretch}{4em} % lange \texttt-Wörter umbrechen statt über den Rand
+
+
+\begin{document}
+
+\maketitle
+
+Ein Stoffverteilungsplan beantwortet eine einfache Frage mit viel Rechenarbeit: Welches Thema behandle ich an welchem Tag in welcher Klasse? Dazwischen liegen Ferien, Feiertage, A- und B-Wochen, Klassenfahrten und Prüfungszeiträume. Das Python-Skript \texttt{stoffverteilungsplan.py} übernimmt diese Arbeit. Man beschreibt Klassen, Termine, Sperren und Lernbereiche in einer kurzen Textdatei; das Skript verteilt die Lernbereiche \textbf{strikt nach Unterrichtsstunden} auf die echten Termine jeder Klasse und schreibt einen fertigen \hologo{LaTeX}-Plan. Im Terminal meldet es, ob der Pflichtumfang bis zum Schuljahresende in jede Klasse passt.
+
+\tableofcontents
+
+
+
+%%%%  KAPITEL 1  %%%%
+\section{Das Prinzip}
+
+\begin{center}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{4.3cm}>{\raggedright\arraybackslash}p{5.3cm}>{\raggedright\arraybackslash}p{5.4cm}@{}}
+	\toprule
+	\textbf{Du änderst} & \textbf{Werkzeug} & \textbf{Ergebnis} \\
+	\midrule
+	\texttt{plan\_\dots.toml} (Klassen, Termine, Lernbereiche) & \texttt{stoffverteilungsplan.py} & \texttt{plan\_\dots.tex}, daraus mit \texttt{pdflatex} der Plan \\
+	\texttt{ferien\_\dots.toml} (einmal pro Schuljahr) & & \\
+	\bottomrule
+\end{tabular}
+\end{center}
+
+Man muss den Code des Skripts nicht verstehen: Eingabedatei ändern, Skript starten, PDF übersetzen. Gestartet wird im Terminal im Ordner der Dateien:
+
+\begin{lstlisting}[style=latex]
+python3 stoffverteilungsplan.py plan_informatik10.toml
+pdflatex plan_informatik10.tex
+\end{lstlisting}
+
+\textbf{Einmalig einrichten:} Python ab Version~3.11 (wegen des eingebauten TOML-Lesers) und eine \hologo{LaTeX}-Installation. Weitere Python-Pakete sind nicht nötig.
+
+\begin{hinweis}[TOML]
+	Die Eingabedateien sind \textit{TOML}-Dateien: reiner Text, mit jedem Editor zu öffnen. \texttt{\#} leitet einen Kommentar ein, Texte stehen in Anführungszeichen, Datumsangaben schreibt man \texttt{2026-08-17}. Ein Block, der mehrfach vorkommen darf, steht in doppelten eckigen Klammern: \texttt{[[gruppe]]}.
+\end{hinweis}
+
+
+
+%%%%  KAPITEL 2  %%%%
+\section{Die Eingabedatei}
+
+
+%%%%  UNTERKAPITEL 2.1  %%%%
+\subsection{Allgemeine Angaben}
+
+\begin{lstlisting}[style=latex]
+[plan]
+titel      = "Stoffverteilungsplan Informatik Klasse 10"
+schuljahr  = "2026/27"
+lehrkraft  = "N. N."
+schule     = "Musterschule"
+beginn     = 2026-08-17        # erster Unterrichtstag, der geplant wird
+ende       = 2027-07-09        # letzter Schultag vor den Sommerferien
+uebergabe_am = 2027-02-05      # bis hier plane ich selbst (Linie im Plan); weglassen = keine Übergabe
+ferien     = "ferien_sachsen_2026_27.toml"
+woche_bei_beginn = "A"         # welche Woche ist die Woche von "beginn"?
+ab_zaehlung = "schulwochen"    # Ferienwochen zählen nicht mit; sonst "kalenderwochen"
+ustd_pro_termin = 2            # Doppelstunde
+uebergabe  = "Übergabe an den Fachkollegen"
+\end{lstlisting}
+
+Mit \texttt{uebergabe\_am} zieht das Skript eine rote Linie in den Plan, etwa wenn eine Referendarin oder ein Referendar die Klasse zum Halbjahr abgibt.
+
+
+%%%%  UNTERKAPITEL 2.2  %%%%
+\subsection{Klassen und Termine}
+
+Jede Klasse oder Halbgruppe ist ein Block \texttt{[[gruppe]]}. Ein Termin hat einen Wochentag, eine Woche (\texttt{"A"}, \texttt{"B"} oder \texttt{"AB"} für jede Woche) und eine Uhrzeit:
+
+\begin{lstlisting}[style=latex]
+[[gruppe]]
+name    = "10b"
+termine = [ { tag = "Di", woche = "A", zeit = "08:00–09:30" } ]
+
+[[gruppe]]
+name    = "10c"
+termine = [ { tag = "Di", woche = "B", zeit = "08:00–09:30" } ]
+\end{lstlisting}
+
+
+%%%%  UNTERKAPITEL 2.3  %%%%
+\subsection{Gesperrte Zeiträume}
+
+\begin{lstlisting}[style=latex]
+[[sperre]]
+grund = "Klassenfahrt"
+von   = 2026-09-28
+bis   = 2026-10-02
+modus = "ausfall"            # Termin fällt weg
+
+[[sperre]]
+grund = "Prüfungszeitraum"
+von   = 2026-10-26
+bis   = 2026-12-18
+modus = "puffer"             # Termin bleibt, bekommt aber keinen neuen Stoff
+thema = "Übung und Vertiefung (Ausfall möglich)"
+\end{lstlisting}
+
+Mit \texttt{nur = ["10b"]} gilt eine Sperre nur für einzelne Gruppen.
+
+
+%%%%  UNTERKAPITEL 2.4  %%%%
+\subsection{Lernbereiche}
+
+Die Lernbereiche stehen in der Reihenfolge des Unterrichts. \texttt{ustd} sind die Unterrichtsstunden laut Lehrplan; bei Doppelstunden ergeben 12~Ustd.\ sechs Termine. Jeder Eintrag in \texttt{themen} ist ein Termin. Sind es weniger Themen als Termine, füllt das Skript mit \enquote{Fortsetzung} auf. \texttt{\{ thema = "\dots", note = true \}} markiert eine sonstige Note, \texttt{wahl = true} einen Wahlbereich, der den Rest des Schuljahres auffüllt.
+
+\begin{lstlisting}[style=latex]
+[[lernbereich]]
+kurz  = "LB 1"
+name  = "Algorithmen"
+ustd  = 12
+farbe = "akzentblau"
+themen = [
+  "Daten im Programm",
+  "Datentypen",
+  "Auswahl",
+  "Wiederholung",
+  { thema = "Funktionen", note = true },
+  "Maschinelles Lernen",
+]
+
+[[lernbereich]]
+kurz  = "WB"
+name  = "Wahlbereich"
+wahl  = true
+farbe = "akzentlila"
+themen = [ "Wahlbereich" ]
+\end{lstlisting}
+
+Die Farben sind die Akzentfarben der universalen \texttt{newcommands.tex} (\texttt{akzentblau}, \texttt{akzentgruen}, \texttt{akzentorange}, \texttt{akzentlila}, \texttt{akzentrot}).
+
+
+%%%%  UNTERKAPITEL 2.5  %%%%
+\subsection{Ferien und Feiertage}
+
+Die Ferien stehen in einer eigenen Datei, die man einmal pro Schuljahr anlegt und an das ganze Kollegium weitergeben kann. Ein Eintrag ohne \texttt{bis} ist ein einzelner Tag:
+
+\begin{lstlisting}[style=latex]
+[[frei]]
+name = "Herbstferien"
+von  = 2026-10-12
+bis  = 2026-10-24
+
+[[frei]]
+name = "Buß- und Bettag"
+von  = 2026-11-18
+\end{lstlisting}
+
+
+
+%%%%  KAPITEL 3  %%%%
+\section{Das Ergebnis}
+
+Das Skript schreibt \texttt{plan\_informatik10.tex}. Nach dem Übersetzen enthält der Plan drei Teile: \textit{Teil A} mit der allgemeinen Aufteilung der Lernbereiche, eine \textit{Halbjahresübersicht} als Zeitleiste und \textit{Teil B} mit jeder Klasse, jedem Datum und der Übergabelinie. Im Terminal steht zusätzlich eine Bilanz:
+
+\begin{lstlisting}[style=latex]
+geschrieben: plan_informatik10.tex
+  10b: 16 Termine mit Stoff, 4 Puffer, 0 Pflicht-Termine offen
+  10d: 16 Termine mit Stoff, 4 Puffer, 0 Pflicht-Termine offen
+  10c: 15 Termine mit Stoff, 4 Puffer, 0 Pflicht-Termine offen
+  10e: 15 Termine mit Stoff, 4 Puffer, 0 Pflicht-Termine offen
+\end{lstlisting}
+
+\begin{ausgabe}
+	\centering
+	\fbox{\includegraphics[page=1, width=0.47\linewidth]{plan_informatik10.pdf}}\hfill
+	\fbox{\includegraphics[page=3, width=0.47\linewidth]{plan_informatik10.pdf}}
+\end{ausgabe}
+
+\enquote{0 Pflicht-Termine offen} heißt: Alle Lernbereiche passen in jede Klasse. Passt etwas nicht, steht im Plan ein roter Hinweis, was bis zum Schuljahresende nicht untergebracht ist.
+
+
+
+%%%%  KAPITEL 4  %%%%
+\section{Was das Skript rechnet}
+
+\begin{itemize}
+	\item \textbf{Termine:} Für jede Gruppe alle Tage zwischen \texttt{beginn} und \texttt{ende}, an denen sie Unterricht hat, ohne Ferien, Feiertage und Sperren mit \texttt{modus = "ausfall"}.
+	\item \textbf{A- und B-Wochen:} Ab \texttt{woche\_bei\_beginn} wechselt die Woche jede Schulwoche. Mit \texttt{ab\_zaehlung = "kalenderwochen"} wechselt sie auch in den Ferien.
+	\item \textbf{Verteilung nach Stunden:} Jeder Lernbereich bekommt genau so viele Termine, wie seine Unterrichtsstunden ergeben (\texttt{ustd / ustd\_pro\_termin}). Puffer-Termine zählen nicht mit.
+	\item \textbf{Wahlbereich:} Was nach dem Pflichtumfang übrig bleibt, füllt der Bereich mit \texttt{wahl = true}.
+\end{itemize}
+
+
+
+%%%%  KAPITEL 5  %%%%
+\section{Zweites Beispiel: wöchentliche und 14-tägliche Stunden}
+
+\texttt{plan\_mathe\_lk11.toml} plant einen Kurs mit zwei wöchentlichen Doppelstunden und einer zusätzlichen Doppelstunde nur in B-Wochen:
+
+\begin{lstlisting}[style=latex]
+[[gruppe]]
+name    = "LK 11"
+termine = [
+  { tag = "Mo", woche = "AB", zeit = "10:00–11:30" },
+  { tag = "Di", woche = "AB", zeit = "10:00–11:30" },
+  { tag = "Fr", woche = "B",  zeit = "12:30–14:00", bemerkung = "14-täglich" },
+]
+\end{lstlisting}
+
+\begin{ausgabe}
+	\centering
+	\fbox{\includegraphics[page=1, width=0.47\linewidth]{plan_mathe_lk11.pdf}}\hfill
+	\fbox{\includegraphics[page=2, width=0.47\linewidth]{plan_mathe_lk11.pdf}}
+\end{ausgabe}
+
+Die \texttt{bemerkung} erscheint im Plan neben dem Termin, etwa für eine Stunde, die eine andere Lehrkraft übernimmt.
+
+
+
+%%%%  KAPITEL 6  %%%%
+\section{Mit einer KI eine neue Eingabedatei erstellen}
+
+Weil die Eingabedatei kurz und streng gegliedert ist, kann eine KI sie gut nach Muster erstellen. Ein Beispiel-Prompt:
+
+\begin{hinweis}[Beispiel-Prompt]
+	\itshape Hier ist meine Datei plan\_informatik10.toml als Muster. Erstelle mir im exakt gleichen Format eine neue Datei für Mathematik Klasse 9 (zwei Klassen: 9a Mo und Do, 9c Di und Fr, jeweils wöchentlich eine Doppelstunde). Lernbereiche nach dem sächsischen Lehrplan mit Ustd., Themen kurz und allgemein, nach jedem Lernbereich eine Note. Sperre: Projektwoche 15.--19.03.2027.
+\end{hinweis}
+
+Titel und Unterrichtsstunden der Lernbereiche sollte man danach mit dem Lehrplan abgleichen.
+
+
+
+%%%%  KAPITEL 7  %%%%
+\section{Bitte prüfen}
+
+\begin{itemize}
+	\item \textbf{A/B-Zählung:} Voreingestellt zählen Ferienwochen nicht mit (\texttt{ab\_zaehlung = "schulwochen"}). Wechselt der A/B-Rhythmus an der eigenen Schule auch in den Ferien, auf \texttt{"kalenderwochen"} umstellen. Die Woche von \texttt{beginn} muss zu \texttt{woche\_bei\_beginn} passen.
+	\item \textbf{Lernbereiche:} Titel und Ustd.\ in den Beispielen sind Platzhalter und müssen mit dem Lehrplan abgeglichen werden.
+	\item \textbf{Bewegliche Ferientage:} Der 07.05.2027 (Freitag nach Himmelfahrt) ist in der Ferien-Datei auskommentiert. Ist er an der eigenen Schule beweglicher Ferientag, die drei Zeilen aktivieren.
+	\item \textbf{Ferien:} Die Datei gilt für Sachsen im Schuljahr 2026/27 (Quelle: Sächsische Ferienverordnung, \url{https://www.revosax.sachsen.de}). Für andere Länder oder Jahre eine eigene Datei im selben Format anlegen.
+\end{itemize}
+
+
+
+%%%%  KAPITEL 8  %%%%
+\section{Zusammenfassung}
+
+\begin{itemize}
+	\item Eine TOML-Datei beschreibt Klassen, Termine, Sperren und Lernbereiche; eine zweite die Ferien.
+	\item \texttt{python3 stoffverteilungsplan.py plan.toml} schreibt den Plan, \texttt{pdflatex} übersetzt ihn.
+	\item Die Bilanz im Terminal zeigt sofort, ob der Pflichtumfang passt.
+	\item Ändert sich etwas (Klassenfahrt, Ausfall, neuer Stundenplan), ändert man eine Zeile und erzeugt den Plan neu.
+\end{itemize}
+
+\end{document}

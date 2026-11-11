@@ -1,7 +1,8 @@
 # latex-skills-schule
 
 Skills für Claude rund um LaTeX im Schulalltag: Arbeitsblätter,
-Leistungskontrollen, Handreichungen, Grafiken und Rätsel – mit einer
+Leistungskontrollen, Klassenarbeiten, Handreichungen, Grafiken, Landkarten,
+Naturwissenschaften, Schulorganisation und Rätsel – mit einer
 universalen `header.tex`/`newcommands.tex`, getesteten Vorlagen,
 Befehlsreferenzen und Hilfsskripten. Alles mit **pdflatex** und reinem
 **TikZ** (kein pgfplots).
@@ -18,8 +19,10 @@ skills/
 ├── mathematik/                Funktionsgraphen, Geometrie, Stochastik, Venn-Diagramme
 ├── informatik/                Automaten, Schaltungen, Programmablaufpläne, UML, Quellcode, PDF-Formulare
 ├── sprache-musik/             Lautschrift (IPA), Notensatz (MusiXTeX)
+├── naturwissenschaften/       Physik, Chemie, Biologie
 ├── illustration/              tikzpeople-Figuren, Sprechblasen
-├── gesellschaftswissenschaft/ Landkarten aus Geodaten
+├── gesellschaftswissenschaft/ Landkarten aus Geodaten (Atlas mit 10 Karten)
+├── schulorganisation/         Stoffverteilungsplan, Sitzplan, Klassenarbeit, Anki-Karten
 └── raetsel-spiele/            Sudoku, Schach
 handreichungen/                fertige PDFs aller Handreichungen
 werkzeuge/                     Prüf- und Hilfsskripte für das Repository
@@ -45,9 +48,16 @@ werkzeuge/                     Prüf- und Hilfsskripte für das Repository
 | | [`latex-pdf-formulare`](skills/informatik/latex-pdf-formulare) | interaktive, ausfüllbare PDFs, digitale Leistungskontrollen | Handreichung, Vorlage, Beispiel-LK, Skripte zum Einsammeln und Testen |
 | Sprache & Musik | [`latex-lautschrift`](skills/sprache-musik/latex-lautschrift) | IPA mit tipa oder Unicode | Handreichung, Lauttabellen, Vokalviereck |
 | | [`latex-musixtex`](skills/sprache-musik/latex-musixtex) | Notensatz | Musik-Kürzel |
+| Naturwissenschaften | [`latex-physik`](skills/naturwissenschaften/latex-physik) | Einheiten, Messwerttabellen, Ausgleichsgerade, Schaltpläne (circuitikz), Strahlengänge | Handreichung; Vorlagen Federdehnung (Regression in TikZ), Schaltpläne, Sammellinse |
+| | [`latex-chemie`](skills/naturwissenschaften/latex-chemie) | Reaktionsgleichungen (mhchem), Oxidationszahlen, Strukturformeln (chemfig), Periodensystem, Titrationskurve, Energiediagramm | Handreichung; 3 Vorlagen, pH-Kurve wird berechnet statt gezeichnet |
+| | [`latex-biologie`](skills/naturwissenschaften/latex-biologie) | Kreuzungsschemata, Stammbäume (genealogytree), Codesonne, Nahrungsnetz, Wachstumskurven | Handreichung; 5 Vorlagen |
 | Illustration | [`latex-tikzpeople`](skills/illustration/latex-tikzpeople) | Personen-Figuren, Alice/Bob/Eve | Handreichung, Galerie |
 | | [`latex-sprechblasen`](skills/illustration/latex-sprechblasen) | Sprech- und Gedankenblasen | `\lehrerblase`, `\schuelerblase` |
-| Gesellschaftswissenschaft | [`latex-geodaten-karten`](skills/gesellschaftswissenschaft/latex-geodaten-karten) | echte Karten aus freien Geodaten | Handreichung, `geo2tikz.py`, Beispieldaten |
+| Gesellschaftswissenschaft | [`latex-geodaten-karten`](skills/gesellschaftswissenschaft/latex-geodaten-karten) | echte Karten aus freien Geodaten: Lagekarte, Bundesländer, physische Karte mit Höhenschichten, Verkehr, USA, Europa, Weltprojektionen, Römisches Reich, Deutschland 1871–1990, Generalisierung | Handreichung (37 S.), Atlas mit 10 fertigen Karten, `geo2tikz.py`, `karten_beispiele.py` (lädt Rohdaten und erzeugt alle Kartendaten neu) |
+| Schulorganisation | [`latex-stoffverteilungsplan`](skills/schulorganisation/latex-stoffverteilungsplan) | Stoffverteilungsplan aus einer TOML-Datei: Termine, A/B-Wochen, Ferien, Sperrzeiten, Lernbereiche | Handreichung, `stoffverteilungsplan.py`, 2 Beispielpläne, Ferien Sachsen 2026/27 |
+| | [`latex-sitzplan`](skills/schulorganisation/latex-sitzplan) | Sitzpläne (Reihen, U-Form, Gruppentische) aus TOML + Namensliste | Handreichung, `sitzplan.py`, 3 Beispiele mit Platzhalternamen |
+| | [`latex-klassenarbeit`](skills/schulorganisation/latex-klassenarbeit) | Klassenarbeiten, bei denen LaTeX die Bewertungseinheiten zählt: Kopf, Punktetabelle, Notenschlüssel, Lösungsteil | Handreichung, `ka_makros.tex`, Vorlage |
+| | [`latex-anki-karten`](skills/schulorganisation/latex-anki-karten) | Anki-Stapel (Vokabeln, Formeln, Bilder, Multiple Choice), dazu Papiertest und QTI-Paket aus derselben Liste | Handreichung, `anki_karten.py`, Beispiel-CSVs, Bundesländer-Bilder |
 | Rätsel & Spiele | [`latex-sudoku`](skills/raetsel-spiele/latex-sudoku) | Sudoku-Arbeitsblätter | Handreichung, Generator mit eindeutiger Lösung |
 | | [`latex-schach`](skills/raetsel-spiele/latex-schach) | Bretter, Partien, Mattaufgaben | Handreichung, Prüfskript für FEN |
 
@@ -107,8 +117,15 @@ auch ohne LaTeX-Installation. Die Quelltexte stehen in den
 | Illustration | [Sprechblasen mit TikZ in LaTeX](handreichungen/illustration/Sprechblasen-mit-TikZ-in-LaTeX.pdf) | 5 |
 |  | [Figuren mit tikzpeople zeichnen](handreichungen/illustration/Figuren-mit-tikzpeople-zeichnen.pdf) | 7 |
 | Sprache & Musik | [Notensätze mit MusiXTeX erstellen](handreichungen/sprache-musik/Notens%C3%A4tze-mit-MusiXTeX-erstellen.pdf) | 3 |
-|  | [Lautschrift mit LaTeX setzen](handreichungen/sprache-musik/Lautschrift-mit-LaTeX-setzen.pdf) | 9 |
-| Gesellschaftswissenschaft | [Landkarten aus Geodaten mit TikZ zeichnen](handreichungen/gesellschaftswissenschaft/Landkarten-aus-Geodaten-mit-TikZ-zeichnen.pdf) | 9 |
+|  | [Lautschrift mit LaTeX setzen](handreichungen/sprache-musik/Lautschrift-mit-LaTeX-setzen.pdf) | 12 |
+| Gesellschaftswissenschaft | [Landkarten aus Geodaten mit TikZ zeichnen](handreichungen/gesellschaftswissenschaft/Landkarten-aus-Geodaten-mit-TikZ-zeichnen.pdf) | 37 |
+| Naturwissenschaften | [Biologie mit LaTeX: Erbgänge, Stammbäume, Codesonne und Wachstum](handreichungen/naturwissenschaften/Biologie-mit-LaTeX-Erbg%C3%A4nge-Stammb%C3%A4ume-Codesonne-und-Wachstum.pdf) | 9 |
+|  | [Chemie mit LaTeX: Reaktionsgleichungen, Strukturformeln und Diagramme](handreichungen/naturwissenschaften/Chemie-mit-LaTeX-Reaktionsgleichungen-Strukturformeln-und-Diagramme.pdf) | 10 |
+|  | [Physik mit LaTeX: Einheiten, Messwerte, Schaltpläne und Optik](handreichungen/naturwissenschaften/Physik-mit-LaTeX-Einheiten-Messwerte-Schaltpl%C3%A4ne-und-Optik.pdf) | 9 |
+| Schulorganisation | [Anki-Karteikarten, Multiple-Choice-Tests und QTI aus einer Liste](handreichungen/schulorganisation/Anki-Karteikarten-Multiple-Choice-Tests-und-QTI-aus-einer-Liste.pdf) | 7 |
+|  | [Klassenarbeiten mit automatischer Punktzählung](handreichungen/schulorganisation/Klassenarbeiten-mit-automatischer-Punktz%C3%A4hlung.pdf) | 5 |
+|  | [Sitzpläne automatisch erstellen](handreichungen/schulorganisation/Sitzpl%C3%A4ne-automatisch-erstellen.pdf) | 6 |
+|  | [Stoffverteilungspläne automatisch erstellen](handreichungen/schulorganisation/Stoffverteilungspl%C3%A4ne-automatisch-erstellen.pdf) | 8 |
 | Rätsel & Spiele | [Schach mit skak, xskak und chessboard](handreichungen/raetsel-spiele/Schach-mit-skak-xskak-und-chessboard.pdf) | 9 |
 |  | [Sudokus mit dem Paket sudoku setzen](handreichungen/raetsel-spiele/Sudokus-mit-dem-Paket-sudoku-setzen.pdf) | 7 |
 
@@ -128,6 +145,23 @@ auch ohne LaTeX-Installation. Die Quelltexte stehen in den
 | `werkzeuge/makros_auflisten.py` | erzeugt `makros.md` neu aus header/newcommands |
 | `werkzeuge/handreichungen_bauen.py` | baut alle Handreichungen neu als PDF in `handreichungen/` |
 
+Handreichungen dürfen Datendateien aus dem `assets/`-Ordner ihres Skills
+laden und PDFs von Vorlagen einbinden (`\includegraphics{vorlage.pdf}`); beide
+Skripte kompilieren solche Vorlagen vorher selbst.
+
+Skripte in den Skills:
+
+| Skript | Zweck |
+|---|---|
+| `latex-geodaten-karten/scripts/geo2tikz.py` | GeoJSON/Shapefile → TikZ-Pfade mit Projektion und Vereinfachung |
+| `latex-geodaten-karten/scripts/karten_beispiele.py` | lädt die Rohdaten und erzeugt alle Kartendaten des Atlas neu |
+| `latex-stoffverteilungsplan/scripts/stoffverteilungsplan.py` | TOML → Stoffverteilungsplan als LaTeX |
+| `latex-sitzplan/scripts/sitzplan.py` | TOML + Namensliste → Sitzplan als LaTeX |
+| `latex-anki-karten/scripts/anki_karten.py` | CSV/Fragenliste → Anki-Stapel, Papiertest, QTI-Paket |
+| `latex-sudoku/scripts/` | Sudoku-Generator mit Eindeutigkeitsprüfung |
+| `latex-schach/scripts/` | FEN-Prüfung |
+| `latex-pdf-formulare/scripts/` | ausgefüllte Formulare einsammeln und testen |
+
 Nach jeder Änderung an `header.tex` oder `newcommands.tex` alle drei Skripte
 ausführen, nach Änderungen an einer Handreichung `handreichungen_bauen.py`.
 
@@ -137,7 +171,17 @@ ausführen, nach Änderungen an einer Handreichung `handreichungen_bauen.py`.
   `texlive-games`, `texlive-plain-generic`, `texlive-fonts-extra`,
   `texlive-lang-german`, `texlive-music`; für Unicode-Lautschrift
   `texlive-xetex` und die Schrift Charis SIL
-- Python 3; je nach Skill `pip install chess`, `pip install shapely pyproj` bzw. `pip install pypdf pypdfium2 pymupdf`
+  sowie `circuitikz`, `mhchem`, `chemfig`, `pgf-periodictable`,
+  `genealogytree`, `units` (alle in TeX Live enthalten)
+- Python 3.11 oder neuer (für `tomllib`); je nach Skill:
+
+  | Skill | Pakete |
+  |---|---|
+  | latex-schach | `pip install chess` |
+  | latex-geodaten-karten | `pip install shapely pyproj` (geo2tikz), zusätzlich `h5py contourpy scipy` für `karten_beispiele.py` |
+  | latex-pdf-formulare | `pip install pypdf pypdfium2 pymupdf` |
+  | latex-anki-karten | `pip install genanki` |
+  | latex-stoffverteilungsplan, latex-sitzplan | keine (nur Standardbibliothek) |
 
 ## Grundsätze
 
@@ -145,10 +189,23 @@ ausführen, nach Änderungen an einer Handreichung `handreichungen_bauen.py`.
 - Stolpersteine stehen in jeder `SKILL.md` mit der echten Fehlermeldung.
 - Rätsel werden maschinell auf eindeutige Lösbarkeit geprüft, Wahrscheinlichkeiten
   exakt berechnet statt in TikZ.
-- Geodaten-Rohdaten (GeoJSON) liegen nicht im Repository – nur kleine, daraus
-  erzeugte Beispieldateien aus gemeinfreien Natural-Earth-Daten für die Handreichung.
+- Grafiken in reinem TikZ, **kein pgfplots** – auch Messwertdiagramme,
+  Ausgleichsgeraden und Titrationskurven rechnet TikZ selbst.
+- **Kein siunitx**: Es kollidiert mit `units` aus der universalen
+  `header.tex`. Einheiten mit `\unit[10]{cm}`, Zahlen mit
+  `\pgfmathprintnumber[use comma]`.
+- Farben schulunabhängig: `akzentblau`, `akzentrot`, `akzentgruen`,
+  `akzentorange`, `akzentlila`.
+- Beispieldateien enthalten keine echten Namen (Platzhalter wie „N. N.“,
+  „Musterschule“, erfundene Schülernamen). Echte Klassenlisten, Noten und
+  Fotos gehören nicht in eine KI und nicht ins Repository.
+- Geodaten-Rohdaten (GeoJSON, Höhenmodell) liegen nicht im Repository – nur die
+  daraus erzeugten, vereinfachten `*_daten.tex`-Dateien. `karten_beispiele.py
+  download` lädt die Rohdaten, `karten_beispiele.py` ohne Argument erzeugt alles neu.
 
 ## Lizenz
 
 Skripte (`*.py`): MIT. Alle übrigen Inhalte: CC BY 4.0 –
-Namensnennung „latex-skills-schule von Martin Quandt“. Details in [LICENSE](LICENSE).
+Namensnennung „latex-skills-schule von Martin Quandt“. Ausnahmen bei zwei
+Kartendatensätzen: `rom_daten.tex` (ODbL 1.0) und `historisch_daten.tex`
+(GPL-3.0). Details in [LICENSE](LICENSE).

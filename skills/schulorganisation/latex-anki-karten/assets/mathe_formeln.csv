@@ -1,0 +1,9 @@
+Vorderseite;Rückseite;Zusatz;Tags
+Ableitung von $x^n$;$n\cdot x^{n-1}$;Potenzregel;ableitung
+Ableitung von $\sin x$;$\cos x$;;ableitung
+Ableitung von $e^x$;$e^x$;;ableitung
+Lösungsformel für $x^2+px+q=0$;$x_{1,2}=-\frac p2\pm\sqrt{\left(\frac p2\right)^2-q}$;p-q-Formel;gleichungen
+Satz des Pythagoras (Hypotenuse $c$);$a^2+b^2=c^2$;nur im rechtwinkligen Dreieck;geometrie
+Kreisfläche;$A=\pi r^2$;;geometrie
+Notwendige Bedingung für Extrempunkte;$f'(x_E)=0$;;funktionsuntersuchung
+Hinreichende Bedingung für einen Tiefpunkt;$f'(x_E)=0$ und $f''(x_E)>0$;;funktionsuntersuchung

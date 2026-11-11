@@ -1,0 +1,77 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[ngerman]{babel}
+\usepackage[a4paper,landscape,margin=1.3cm]{geometry}
+\usepackage{xcolor}
+\usepackage{tikz}
+\pagestyle{empty}
+\definecolor{akzentblau}{HTML}{2563EB}
+\definecolor{akzentrot}{HTML}{DC2626}
+\definecolor{akzentorange}{HTML}{EA580C}
+\setlength{\parindent}{0pt}
+\begin{document}
+\begin{center}
+{\sffamily\bfseries\LARGE Sitzplan LK Mathematik 11}\hfill{\sffamily\large Raum 1.08 \quad Stand: November 2026}\par
+{\sffamily\small\color{black!55} Ansicht vom Lehrertisch}
+\par\vfill
+\begin{tikzpicture}[scale=1.244, every node/.style={transform shape}]
+\draw[black!35, line width=1pt, rounded corners=2pt] (19.10,-0.20) rectangle (-1.00,11.75);
+\fill[black!70] (5.05,-0.32) rectangle (13.05,-0.08);
+\node[font=\sffamily\small] at (9.05,-0.65) {Tafel};
+\draw[akzentblau, line width=2.5pt] (19.10,0.80) -- (19.10,10.75);
+\node[akzentblau, font=\sffamily\footnotesize, anchor=east, rotate=90, anchor=south] at (18.85,5.78) {Fenster};
+\draw[akzentrot, line width=2.5pt] (-1.00,0.80) -- ++(0,1.5);
+\node[akzentrot, font=\sffamily\footnotesize, anchor=west, rotate=0, ] at (-0.75,1.55) {Tür};
+\fill[black!6, rounded corners=3pt] (18.10,2.50) rectangle (15.70,4.20);
+\fill[black!6, rounded corners=3pt] (18.10,4.20) rectangle (15.70,5.90);
+\fill[black!6, rounded corners=3pt] (18.10,5.90) rectangle (15.70,7.60);
+\fill[black!6, rounded corners=3pt] (18.10,7.60) rectangle (15.70,9.30);
+\fill[black!6, rounded corners=3pt] (2.40,2.50) rectangle (0.00,4.20);
+\fill[black!6, rounded corners=3pt] (2.40,4.20) rectangle (0.00,5.90);
+\fill[black!6, rounded corners=3pt] (2.40,5.90) rectangle (0.00,7.60);
+\fill[black!6, rounded corners=3pt] (2.40,7.60) rectangle (0.00,9.30);
+\fill[black!6, rounded corners=3pt] (15.30,9.70) rectangle (2.80,10.95);
+\draw[black!45, fill=white, rounded corners=2pt] (15.76,2.56) rectangle (18.04,4.14);
+\node[font=\sffamily\tiny, black!40, anchor=north west, inner sep=1.5pt] at (15.76,4.14) {1};
+\node[font=\sffamily\footnotesize, align=center, text width=2.18cm, inner sep=0pt] at (16.90,3.30) {\textbf{Ada}\\[-1pt]{\scriptsize Lovelace}};
+\draw[black!45, fill=white, rounded corners=2pt] (0.06,2.56) rectangle (2.34,4.14);
+\node[font=\sffamily\tiny, black!40, anchor=north west, inner sep=1.5pt] at (0.06,4.14) {2};
+\node[font=\sffamily\footnotesize, align=center, text width=2.18cm, inner sep=0pt] at (1.20,3.30) {\textbf{Alan}\\[-1pt]{\scriptsize Turing}};
+\draw[black!45, fill=white, rounded corners=2pt] (15.76,4.26) rectangle (18.04,5.84);
+\node[font=\sffamily\tiny, black!40, anchor=north west, inner sep=1.5pt] at (15.76,5.84) {3};
+\node[font=\sffamily\footnotesize, align=center, text width=2.18cm, inner sep=0pt] at (16.90,5.00) {\textbf{Grace}\\[-1pt]{\scriptsize Hopper}};
+\draw[black!45, fill=white, rounded corners=2pt] (0.06,4.26) rectangle (2.34,5.84);
+\node[font=\sffamily\tiny, black!40, anchor=north west, inner sep=1.5pt] at (0.06,5.84) {4};
+\node[font=\sffamily\footnotesize, align=center, text width=2.18cm, inner sep=0pt] at (1.20,5.00) {\textbf{Konrad}\\[-1pt]{\scriptsize Zuse}};
+\draw[black!45, fill=white, rounded corners=2pt] (15.76,5.96) rectangle (18.04,7.54);
+\node[font=\sffamily\tiny, black!40, anchor=north west, inner sep=1.5pt] at (15.76,7.54) {5};
+\node[font=\sffamily\footnotesize, align=center, text width=2.18cm, inner sep=0pt] at (16.90,6.70) {\textbf{Emmy}\\[-1pt]{\scriptsize Noether}};
+\draw[black!45, fill=white, rounded corners=2pt] (0.06,5.96) rectangle (2.34,7.54);
+\node[font=\sffamily\tiny, black!40, anchor=north west, inner sep=1.5pt] at (0.06,7.54) {6};
+\node[font=\sffamily\footnotesize, align=center, text width=2.18cm, inner sep=0pt] at (1.20,6.70) {\textbf{Carl Friedrich}\\[-1pt]{\scriptsize Gauß}};
+\draw[black!45, fill=white, rounded corners=2pt] (15.76,7.66) rectangle (18.04,9.24);
+\node[font=\sffamily\tiny, black!40, anchor=north west, inner sep=1.5pt] at (15.76,9.24) {7};
+\node[font=\sffamily\footnotesize, align=center, text width=2.18cm, inner sep=0pt] at (16.90,8.40) {\textbf{Leonhard}\\[-1pt]{\scriptsize Euler}};
+\draw[black!45, fill=white, rounded corners=2pt] (0.06,7.66) rectangle (2.34,9.24);
+\node[font=\sffamily\tiny, black!40, anchor=north west, inner sep=1.5pt] at (0.06,9.24) {8};
+\node[font=\sffamily\footnotesize, align=center, text width=2.18cm, inner sep=0pt] at (1.20,8.40) {\textbf{Sofja}\\[-1pt]{\scriptsize Kowalewskaja}};
+\draw[black!45, fill=white, rounded corners=2pt] (12.86,9.76) rectangle (15.24,10.89);
+\node[font=\sffamily\tiny, black!40, anchor=north west, inner sep=1.5pt] at (12.86,10.89) {9};
+\node[font=\sffamily\footnotesize, align=center, text width=2.28cm, inner sep=0pt] at (14.05,10.28) {\textbf{Gottfried Wilhelm}\\[-1pt]{\scriptsize Leibniz}};
+\draw[black!45, fill=white, rounded corners=2pt] (10.36,9.76) rectangle (12.74,10.89);
+\node[font=\sffamily\tiny, black!40, anchor=north west, inner sep=1.5pt] at (10.36,10.89) {10};
+\node[font=\sffamily\footnotesize, align=center, text width=2.28cm, inner sep=0pt] at (11.55,10.28) {\textbf{Hedy}\\[-1pt]{\scriptsize Lamarr}};
+\draw[black!45, fill=white, rounded corners=2pt] (7.86,9.76) rectangle (10.24,10.89);
+\node[font=\sffamily\tiny, black!40, anchor=north west, inner sep=1.5pt] at (7.86,10.89) {11};
+\node[font=\sffamily\footnotesize, align=center, text width=2.28cm, inner sep=0pt] at (9.05,10.28) {\textbf{Tim}\\[-1pt]{\scriptsize Berners-Lee}};
+\draw[black!45, fill=white, rounded corners=2pt] (5.36,9.76) rectangle (7.74,10.89);
+\node[font=\sffamily\tiny, black!40, anchor=north west, inner sep=1.5pt] at (5.36,10.89) {12};
+\node[font=\sffamily\footnotesize, align=center, text width=2.28cm, inner sep=0pt] at (6.55,10.28) {\textbf{Margaret}\\[-1pt]{\scriptsize Hamilton}};
+\draw[black!45, fill=white, rounded corners=2pt] (2.86,9.76) rectangle (5.24,10.89);
+\node[font=\sffamily\tiny, black!40, anchor=north west, inner sep=1.5pt] at (2.86,10.89) {13};
+\node[font=\sffamily\footnotesize, align=center, text width=2.28cm, inner sep=0pt] at (4.05,10.28) {\textbf{Edsger}\\[-1pt]{\scriptsize Dijkstra}};
+\end{tikzpicture}
+\par\vfill
+\end{center}\clearpage
+\end{document}

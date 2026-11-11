@@ -1,0 +1,54 @@
+# ===================================================================
+#  Ferien und Feiertage Sachsen, Schuljahr 2026/27
+#  Quellen: revosax (Sächsische Ferienverordnung), kalenderpedia.de
+#  Jedes Jahr neu eintragen (oder Datei vom Kollegium übernehmen).
+#  Ein Eintrag ohne "bis" ist ein einzelner Tag.
+# ===================================================================
+
+[[frei]]
+name = "Herbstferien"
+von  = 2026-10-12
+bis  = 2026-10-24
+
+[[frei]]
+name = "Reformationstag"
+von  = 2026-10-31          # Samstag – stört nicht, steht der Vollständigkeit halber da
+
+[[frei]]
+name = "Buß- und Bettag"
+von  = 2026-11-18
+
+[[frei]]
+name = "Weihnachtsferien"
+von  = 2026-12-23
+bis  = 2027-01-02
+
+[[frei]]
+name = "Winterferien"
+von  = 2027-02-08
+bis  = 2027-02-19
+
+[[frei]]
+name = "Osterferien"
+von  = 2027-03-26          # inkl. Karfreitag und Ostermontag
+bis  = 2027-04-02
+
+[[frei]]
+name = "Christi Himmelfahrt"
+von  = 2027-05-06
+
+# Freitag nach Himmelfahrt (07.05.2027): an vielen Schulen beweglicher
+# Ferientag – bei Bedarf die Raute vor den drei Zeilen entfernen.
+# [[frei]]
+# name = "beweglicher Ferientag"
+# von  = 2027-05-07
+
+[[frei]]
+name = "Pfingstferien"
+von  = 2027-05-15
+bis  = 2027-05-18
+
+[[frei]]
+name = "Sommerferien"
+von  = 2027-07-10
+bis  = 2027-08-20

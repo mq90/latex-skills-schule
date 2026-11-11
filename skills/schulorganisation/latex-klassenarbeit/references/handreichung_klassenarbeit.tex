@@ -1,0 +1,190 @@
+\input{header.tex}
+\input{newcommands.tex}
+
+
+\title{Klassenarbeiten mit automatischer Punktzählung}
+\author{Fortbildungsmaterial für Lehrkräfte}
+\date{\today}
+\pagestyle{plain}
+\setlength{\parskip}{1.5em} % Abstand zwischen Absätzen (Handreichungen)
+\setlength{\emergencystretch}{4em} % lange \texttt-Wörter umbrechen statt über den Rand
+
+
+\begin{document}
+
+\maketitle
+
+Bei einer Klassenarbeit oder Leistungskontrolle passieren die ärgerlichsten Fehler beim Zählen: Die Summe der Bewertungseinheiten im Kopf stimmt nicht mit den Aufgaben überein, der Notenschlüssel passt nach einer kurzfristigen Änderung nicht mehr, und die Lösung gehört zu einer älteren Fassung. Die Makrodatei \texttt{ka\_makros.tex} lässt \hologo{LaTeX} die Bewertungseinheiten (BE) selbst zusammenrechnen. Kopf, Punktetabelle und Notenschlüssel stimmen deshalb immer, und Aufgabe und Lösung stehen in derselben Datei.
+
+\tableofcontents
+
+
+
+%%%%  KAPITEL 1  %%%%
+\section{Aufbau}
+
+Die Vorlage hält sich an die gewohnten Konventionen für Arbeitsblätter: Aufgaben (1), (2) mit Teilaufgaben (a), (b), Schwierigkeitsstufe mit \texttt{\textbackslash leicht}, \texttt{\textbackslash mittel} oder \texttt{\textbackslash schwer} vor dem Aufgabentext, keine Kästen, keine Kopf- und Fußzeilen, Lösungsteil auf einer neuen Seite in \texttt{\textbackslash scriptsize} mit Ergebnissen in \texttt{\textbackslash boxed\{\dots\}}. Im Ordner \texttt{assets} des Skills liegen:
+
+\begin{itemize}
+	\item \texttt{ka\_makros.tex}: die Makros (Bewertungseinheiten, Kopf, Tabellen, Lösungsteil),
+	\item \texttt{vorlage\_klassenarbeit.tex}: eine vollständige Beispielarbeit Mathematik LK~11 mit Lösung.
+\end{itemize}
+
+Die Vorlage beginnt im universalen Stil:
+
+\begin{lstlisting}[style=latex]
+\input{header.tex}
+\input{newcommands.tex}
+\input{ka_makros.tex}
+\end{lstlisting}
+
+Die Makrodatei funktioniert auch ohne den universalen Stil. Dann steht in der ersten Zeile \texttt{\textbackslash documentclass[11pt]\{article\}} und in der zweiten nur \texttt{\textbackslash input\{ka\_makros.tex\}}. Pakete lädt die Datei nur, wenn sie noch fehlen, und Befehle wie \texttt{\textbackslash leicht} aus der eigenen \texttt{newcommands.tex} haben Vorrang.
+
+
+
+%%%%  KAPITEL 2  %%%%
+\section{Angaben zur Arbeit}
+
+Ganz oben in der Vorlage stehen alle Angaben, die sich von Arbeit zu Arbeit ändern:
+
+\begin{lstlisting}[style=latex]
+\loesungtrue                         % \loesungfalse = Schülerfassung
+\Arbeit{
+  titel       = Klassenarbeit,
+  fach        = Mathematik,
+  klasse      = LK 11,
+  thema       = Eigenschaften ganzrationaler Funktionen,
+  datum       = 24.11.2026,
+  zeit        = 90 Minuten,
+  hilfsmittel = Tafelwerk; Taschenrechner,
+  gruppe      = ,                    % z. B. A oder B; leer = keine
+}
+\Grenzen{95,80,60,40,20}             % Mindestprozent für Note 1 bis 5
+\end{lstlisting}
+
+\texttt{\textbackslash loesungtrue} gibt den Lösungsteil mit aus, \texttt{\textbackslash loesungfalse} erzeugt die Schülerfassung. Für Gruppe A und B kopiert man die Datei, trägt \texttt{gruppe = A} bzw.\ \texttt{B} ein und ändert die Zahlen.
+
+
+
+%%%%  KAPITEL 3  %%%%
+\section{Aufgaben mit Bewertungseinheiten}
+
+Jede Teilaufgabe bekommt am Ende ihre Bewertungseinheiten mit \texttt{\textbackslash BE\{\dots\}}. Halbe BE gehen auch: \texttt{\textbackslash BE\{1.5\}} (mit Punkt). Die BE erscheinen rechtsbündig in Grau und werden für jede Aufgabe und insgesamt gezählt:
+
+\begin{lstlisting}[style=latex]
+\begin{document}
+\Kopf
+
+\begin{enumerate}
+  \item \leicht Bilde die erste Ableitung.
+  \begin{multicols}{2}
+  \begin{enumerate}
+    \item $f(x) = 2x^3 - 5x^2 + x - 7$ \BE{2}
+    \item $f(x) = \frac14 x^4 - 3x$ \BE{2}
+    \item $f(x) = \frac13 x^3 + 2x$ \BE{1}
+  \end{enumerate}
+  \end{multicols}
+
+  \item \mittel Gegeben ist die Funktion $f$ mit $f(x) = x^3 - 3x$.
+  ...
+\end{enumerate}
+
+\vfill
+\Punktetabelle
+
+\bigskip
+\Notenschluessel
+\end{lstlisting}
+
+\begin{center}
+\begin{tabular}{@{}l>{\raggedright\arraybackslash}p{11cm}@{}}
+	\toprule
+	\textbf{Befehl} & \textbf{Wirkung} \\
+	\midrule
+	\texttt{\textbackslash BE\{3\}} & hängt 3 Bewertungseinheiten an eine Teilaufgabe \\
+	\texttt{\textbackslash Kopf} & Titel, Thema, Name-, Datums- und Notenzeile, erreichbare BE \\
+	\texttt{\textbackslash Punktetabelle} & Tabelle Aufgabe -- BE -- erreicht, automatisch aus allen \texttt{\textbackslash BE} \\
+	\texttt{\textbackslash Notenschluessel} & BE-Grenzen je Note nach \texttt{\textbackslash Grenzen}, auf halbe BE aufgerundet, mit Zeile für den Notenspiegel \\
+	\texttt{loesungsteil} & Umgebung für die Lösungen: neue Seite, kleine Schrift, Überschrift \\
+	\bottomrule
+\end{tabular}
+\end{center}
+
+
+
+%%%%  KAPITEL 4  %%%%
+\section{Das Ergebnis}
+
+Links die erste Seite der Arbeit, rechts der Lösungsteil. Alle Summen (25~BE), die Punktetabelle und die BE-Grenzen im Notenschlüssel hat \hologo{LaTeX} selbst berechnet:
+
+\begin{ausgabe}
+	\centering
+	\fbox{\includegraphics[page=1, width=0.47\linewidth]{vorlage_klassenarbeit.pdf}}\hfill
+	\fbox{\includegraphics[page=2, width=0.47\linewidth]{vorlage_klassenarbeit.pdf}}
+\end{ausgabe}
+
+\begin{merke}
+	\textbf{Zweimal übersetzen:} Beim ersten Lauf sammelt \hologo{LaTeX} die Punkte und schreibt sie in die \texttt{.aux}-Datei, beim zweiten Lauf stehen sie im Kopf, in der Punktetabelle und im Notenschlüssel. Nach jeder Änderung an den BE also zweimal \texttt{pdflatex}.
+\end{merke}
+
+
+
+%%%%  KAPITEL 5  %%%%
+\section{Der Lösungsteil}
+
+Der Lösungsteil steht am Ende der Datei zwischen \texttt{\textbackslash ifloesung} und \texttt{\textbackslash fi}. Er ist parallel zum Aufgabenteil aufgebaut, Ergebnisse stehen in \texttt{\textbackslash boxed\{\dots\}}:
+
+\begin{lstlisting}[style=latex]
+\ifloesung
+\begin{loesungsteil}
+\begin{enumerate}
+  \item
+  \begin{multicols}{3}
+  \begin{enumerate}
+    \item $\boxed{f'(x) = 6x^2 - 10x + 1}$
+    \item $\boxed{f'(x) = x^3 - 3}$
+    \item $\boxed{f'(x) = x^2 + 2}$
+  \end{enumerate}
+  \end{multicols}
+  ...
+\end{enumerate}
+\end{loesungsteil}
+\fi
+\end{lstlisting}
+
+Koordinatensysteme zeichnet man wie auf Arbeitsblättern mit \texttt{\textbackslash koordinatensystem} aus der universalen \texttt{newcommands.tex}, also mit reinem \TikZ.
+
+
+
+%%%%  KAPITEL 6  %%%%
+\section{Mit einer KI eine neue Arbeit erstellen}
+
+\begin{hinweis}[Beispiel-Prompt]
+	\itshape Erstelle eine Klassenarbeit Mathematik Klasse 8 zu linearen Funktionen (45 Minuten, ca.\ 30 BE) als Datei im Format von vorlage\_klassenarbeit.tex. Drei Aufgaben, sortiert nach leicht, mittel, schwer, jede Teilaufgabe mit \textbackslash BE\{\}. Lineare Funktionen immer als f(x) = mx + n. Lösungsteil parallel aufbauen, Ergebnisse in \textbackslash boxed\{\}.
+\end{hinweis}
+
+Aufgaben und Lösungen einer KI muss man fachlich prüfen; die Punktsummen stimmen dagegen automatisch.
+
+
+
+%%%%  KAPITEL 7  %%%%
+\section{Stolpersteine}
+
+\begin{itemize}
+	\item \textbf{Im Kopf steht 0 BE?} Nur einmal übersetzt. Ein zweiter \texttt{pdflatex}-Lauf trägt die Summen ein.
+	\item \textbf{\enquote{Package 'units' incompatible}:} Eine ältere Fassung von \texttt{ka\_makros.tex} lud \texttt{siunitx}. Die aktuelle setzt Zahlen mit \texttt{\textbackslash KAzahl} und verträgt sich mit der universalen \texttt{header.tex}.
+\end{itemize}
+
+
+
+%%%%  KAPITEL 8  %%%%
+\section{Zusammenfassung}
+
+\begin{itemize}
+	\item \texttt{\textbackslash input\{ka\_makros.tex\}} nach dem universalen Stil oder direkt nach \texttt{\textbackslash documentclass}.
+	\item \texttt{\textbackslash Arbeit\{\dots\}} und \texttt{\textbackslash Grenzen\{\dots\}} oben, \texttt{\textbackslash BE\{\dots\}} an jeder Teilaufgabe.
+	\item \texttt{\textbackslash Kopf}, \texttt{\textbackslash Punktetabelle} und \texttt{\textbackslash Notenschluessel} rechnen selbst; zweimal übersetzen.
+	\item \texttt{\textbackslash loesungtrue} / \texttt{\textbackslash loesungfalse} schalten den Lösungsteil.
+\end{itemize}
+
+\end{document}

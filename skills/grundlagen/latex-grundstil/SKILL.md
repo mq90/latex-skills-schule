@@ -160,7 +160,9 @@ Kopfzeile in der Präambel: `\lk{Klasse}{Thema}`, `\ka{…}{…}`, `\kl{…}{…
 `\tu{…}{…}` (Tägliche Übung). `\clearfancyheader` entfernt sie (z. B. ab
 der Lösungsseite). Diese Makros setzen Name/Punkte/Note und Typ/Klasse/Datum.
 Für eine digital ausfüllbare Fassung (Felder statt Kästchen und Linien):
-Skill `latex-pdf-formulare`.
+Skill `latex-pdf-formulare`. Klassenarbeiten, bei denen LaTeX die
+Bewertungseinheiten zählt (Kopf, Punktetabelle, Notenschlüssel): Skill
+`latex-klassenarbeit`.
 
 ## Mathematische Schreibweise
 
@@ -198,6 +200,17 @@ festen Vorlagen, damit alles gleich aussieht:
 | Lautschrift, Noten | `latex-lautschrift`, `latex-musixtex` |
 | Karten | `latex-geodaten-karten` |
 | Sudoku, Schach | `latex-sudoku`, `latex-schach` |
+| Physik, Chemie, Biologie | `latex-physik`, `latex-chemie`, `latex-biologie` |
+| Stoffverteilungsplan, Sitzplan, Klassenarbeit, Anki | `latex-stoffverteilungsplan`, `latex-sitzplan`, `latex-klassenarbeit`, `latex-anki-karten` |
+
+Farben für Grafiken: die Akzentfarben `akzentblau`, `akzentrot`,
+`akzentgruen`, `akzentorange`, `akzentlila` (aufgehellt z. B. `akzentblau!18`).
+Große Grafiken in Handreichungen in `\begin{passend} … \end{passend}`
+(verkleinert nur, wenn breiter als die Zeile). Hinweiskasten mit eigenem
+Titel: `\begin{hinweis}[Lizenz] … \end{hinweis}`.
+
+**Kein `siunitx`:** kollidiert mit `units` (`\unit[10]{cm}`) und bricht mit
+„Package 'units' incompatible“ ab.
 
 ## Checkliste vor dem Ausliefern
 
