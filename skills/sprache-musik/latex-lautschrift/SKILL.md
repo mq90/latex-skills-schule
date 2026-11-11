@@ -115,6 +115,9 @@ fehlende Zeichen (Schrift), stimmlos (`\textsubring`) statt silbisch
 
 ## Für eine Handreichung
 
+Fertige Handreichung zu diesem Skill: `references/handreichung_lautschrift.tex`
+(tipa-Weg mit pdflatex, Unicode-Weg als Code). Für eine neue Handreichung:
+
 Aufbau und Listing-Stil aus `latex-grundstil` (Code in
 `lstlisting[style=latex]`, Ausgabe direkt darunter in `ausgabe`). Für den
 Unicode-Weg muss die Handreichung mit xelatex laufen – dann ein eigenes

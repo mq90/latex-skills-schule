@@ -180,7 +180,10 @@ def main():
             g = g.intersection(auswahl)
             if g.is_empty:
                 continue
-            g = shapely.transform(g, in_cm).intersection(karte)
+            g = shapely.transform(g, in_cm)
+            if not g.is_valid:  # Projektion kann Flächen verdrehen (z. B. Mercator)
+                g = make_valid(g)
+            g = g.intersection(karte)
             if g.is_empty:
                 continue
             if a.toleranz > 0 and g.geom_type != "Point":

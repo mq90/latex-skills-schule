@@ -43,13 +43,13 @@ werkzeuge/                     Prüf- und Hilfsskripte für das Repository
 | | [`latex-uml-klassendiagramme`](skills/informatik/latex-uml-klassendiagramme) | Klassen und Beziehungen | Stile `umlclass`, `inherit` … |
 | | [`latex-quellcode-listings`](skills/informatik/latex-quellcode-listings) | Programmcode mit listings | Handreichung |
 | | [`latex-pdf-formulare`](skills/informatik/latex-pdf-formulare) | interaktive, ausfüllbare PDFs, digitale Leistungskontrollen | Handreichung, Vorlage, Beispiel-LK, Skripte zum Einsammeln und Testen |
-| Sprache & Musik | [`latex-lautschrift`](skills/sprache-musik/latex-lautschrift) | IPA mit tipa oder Unicode | Lauttabellen, Vokalviereck |
+| Sprache & Musik | [`latex-lautschrift`](skills/sprache-musik/latex-lautschrift) | IPA mit tipa oder Unicode | Handreichung, Lauttabellen, Vokalviereck |
 | | [`latex-musixtex`](skills/sprache-musik/latex-musixtex) | Notensatz | Musik-Kürzel |
-| Illustration | [`latex-tikzpeople`](skills/illustration/latex-tikzpeople) | Personen-Figuren, Alice/Bob/Eve | Galerie |
+| Illustration | [`latex-tikzpeople`](skills/illustration/latex-tikzpeople) | Personen-Figuren, Alice/Bob/Eve | Handreichung, Galerie |
 | | [`latex-sprechblasen`](skills/illustration/latex-sprechblasen) | Sprech- und Gedankenblasen | `\lehrerblase`, `\schuelerblase` |
-| Gesellschaftswissenschaft | [`latex-geodaten-karten`](skills/gesellschaftswissenschaft/latex-geodaten-karten) | echte Karten aus freien Geodaten | `geo2tikz.py` |
-| Rätsel & Spiele | [`latex-sudoku`](skills/raetsel-spiele/latex-sudoku) | Sudoku-Arbeitsblätter | Generator mit eindeutiger Lösung |
-| | [`latex-schach`](skills/raetsel-spiele/latex-schach) | Bretter, Partien, Mattaufgaben | Prüfskript für FEN |
+| Gesellschaftswissenschaft | [`latex-geodaten-karten`](skills/gesellschaftswissenschaft/latex-geodaten-karten) | echte Karten aus freien Geodaten | Handreichung, `geo2tikz.py`, Beispieldaten |
+| Rätsel & Spiele | [`latex-sudoku`](skills/raetsel-spiele/latex-sudoku) | Sudoku-Arbeitsblätter | Handreichung, Generator mit eindeutiger Lösung |
+| | [`latex-schach`](skills/raetsel-spiele/latex-schach) | Bretter, Partien, Mattaufgaben | Handreichung, Prüfskript für FEN |
 
 ## Die universalen Stildateien
 
@@ -105,7 +105,12 @@ auch ohne LaTeX-Installation. Die Quelltexte stehen in den
 |  | [Quellcode mit dem listings-Paket darstellen](handreichungen/informatik/Quellcode-mit-dem-listings-Paket-darstellen.pdf) | 6 |
 |  | [UML-Klassendiagramme mit TikZ erstellen](handreichungen/informatik/UML-Klassendiagramme-mit-TikZ-erstellen.pdf) | 9 |
 | Illustration | [Sprechblasen mit TikZ in LaTeX](handreichungen/illustration/Sprechblasen-mit-TikZ-in-LaTeX.pdf) | 5 |
+|  | [Figuren mit tikzpeople zeichnen](handreichungen/illustration/Figuren-mit-tikzpeople-zeichnen.pdf) | 7 |
 | Sprache & Musik | [Notensätze mit MusiXTeX erstellen](handreichungen/sprache-musik/Notens%C3%A4tze-mit-MusiXTeX-erstellen.pdf) | 3 |
+|  | [Lautschrift mit LaTeX setzen](handreichungen/sprache-musik/Lautschrift-mit-LaTeX-setzen.pdf) | 9 |
+| Gesellschaftswissenschaft | [Landkarten aus Geodaten mit TikZ zeichnen](handreichungen/gesellschaftswissenschaft/Landkarten-aus-Geodaten-mit-TikZ-zeichnen.pdf) | 9 |
+| Rätsel & Spiele | [Schach mit skak, xskak und chessboard](handreichungen/raetsel-spiele/Schach-mit-skak-xskak-und-chessboard.pdf) | 9 |
+|  | [Sudokus mit dem Paket sudoku setzen](handreichungen/raetsel-spiele/Sudokus-mit-dem-Paket-sudoku-setzen.pdf) | 7 |
 
 ## Installieren
 
@@ -140,7 +145,8 @@ ausführen, nach Änderungen an einer Handreichung `handreichungen_bauen.py`.
 - Stolpersteine stehen in jeder `SKILL.md` mit der echten Fehlermeldung.
 - Rätsel werden maschinell auf eindeutige Lösbarkeit geprüft, Wahrscheinlichkeiten
   exakt berechnet statt in TikZ.
-- Fremde Daten (Geodaten) liegen nicht im Repository.
+- Geodaten-Rohdaten (GeoJSON) liegen nicht im Repository – nur kleine, daraus
+  erzeugte Beispieldateien aus gemeinfreien Natural-Earth-Daten für die Handreichung.
 
 ## Lizenz
 

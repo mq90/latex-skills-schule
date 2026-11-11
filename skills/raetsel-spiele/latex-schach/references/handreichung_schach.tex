@@ -1,0 +1,326 @@
+\input{header.tex}
+\input{newcommands.tex}
+
+
+\title{Schach mit \texttt{skak}, \texttt{xskak} und \texttt{chessboard}}
+\author{Fortbildungsmaterial für MINT-Lehrkräfte}
+\date{\today}
+\pagestyle{plain}
+\setlength{\parskip}{1.5em} % Abstand zwischen Absätzen (Handreichungen)
+\setlength{\emergencystretch}{2em} % lange \texttt-Wörter umbrechen statt über den Rand
+
+
+\begin{document}
+
+\maketitle
+
+Schach bietet viele Anknüpfungspunkte für den Unterricht: Felder benennen wie Punkte im Koordinatensystem, Springerwege als Graph, das Acht-Damen-Problem als Beispiel für Backtracking oder Mattaufgaben für die Vertretungsstunde. Drei Pakete arbeiten dafür zusammen: \texttt{skak} setzt die Figuren und prüft Züge, \texttt{xskak} speichert Partien und \texttt{chessboard} zeichnet Bretter mit Pfeilen und Markierungen. Diese Handreichung führt vom ersten Brett über Partien und Stellungen bis zu fertigen Rätselblättern.
+
+
+
+%%%%  KAPITEL 1  %%%%
+\section{Grundlagen und benötigte Pakete}
+
+In der universalen \texttt{header.tex} sind beide Pakete bereits geladen. \texttt{xskak} lädt \texttt{skak} selbst mit. In einem eigenständigen Dokument genügt:
+
+\begin{lstlisting}[style=latex]
+\usepackage{xskak}
+\usepackage{chessboard}
+\end{lstlisting}
+
+In MiK\TeX\ und in der vollständigen TeX-Live-Installation unter Windows und macOS ist alles enthalten. Unter Linux installiert man zusätzlich \texttt{texlive-games} und \texttt{texlive-plain-generic}.
+
+
+%%%%  UNTERKAPITEL 1.1  %%%%
+\subsection{Das erste Brett}
+
+\texttt{\textbackslash newchessgame} beginnt eine neue Partie in der Grundstellung, \texttt{\textbackslash chessboard} zeichnet sie:
+
+\begin{lstlisting}[style=latex]
+\newchessgame
+\chessboard[smallboard]
+\end{lstlisting}
+
+\begin{ausgabe}
+	\centering
+	\newchessgame
+	\chessboard[smallboard]
+\end{ausgabe}
+
+Die Koordinaten a--h und 1--8 stehen am Rand. Das kleine Quadrat rechts unten zeigt, wer am Zug ist: weiß für Weiß, schwarz für Schwarz. Mit \texttt{showmover=false} verschwindet es, mit \texttt{label=false} verschwinden die Koordinaten. Für die Größe gibt es \texttt{tinyboard}, \texttt{smallboard}, \texttt{normalboard} und \texttt{largeboard}.
+
+
+
+%%%%  KAPITEL 2  %%%%
+\section{Partien notieren}
+
+
+%%%%  UNTERKAPITEL 2.1  %%%%
+\subsection{Züge ausführen und drucken}
+
+\texttt{\textbackslash mainline} führt Züge aus und druckt sie gleichzeitig in Figurenschrift. Danach zeigt \texttt{\textbackslash chessboard} die Stellung nach dem letzten Zug:
+
+\begin{lstlisting}[style=latex]
+\newchessgame
+\mainline{1. e4 e5 2. Nf3 Nc6 3. Bb5 a6}
+
+\chessboard[smallboard]
+\end{lstlisting}
+
+\begin{ausgabe}
+	\newchessgame
+	\mainline{1. e4 e5 2. Nf3 Nc6 3. Bb5 a6}
+
+	\centering
+	\chessboard[smallboard]
+\end{ausgabe}
+
+Die Figuren werden mit ihren \textbf{englischen} Buchstaben eingegeben: K (König), Q (Dame), R (Turm), B (Läufer) und N (Springer); Bauernzüge haben keinen Buchstaben. Gedruckt werden ohnehin Figurensymbole, deshalb ist die Ausgabe sprachneutral. Die deutsche Eingabe mit \texttt{\textbackslash skaklanguage[german]} bricht dagegen mit einer Fehlermeldung ab. Dass die Zugnummern ohne Punkt gedruckt werden, ist der normale Stil von \texttt{skak}.
+
+Weitere Schreibweisen: Schlagen mit \texttt{x} (\texttt{Bxc6}), Schach mit \texttt{+}, Matt mit \texttt{\#}, Rochade mit \texttt{O-O} und \texttt{O-O-O}, Umwandlung mit \texttt{e8=Q}. Ein Zug von Schwarz am Anfang einer Zeile bekommt drei Punkte: \texttt{3... a6}.
+
+
+%%%%  UNTERKAPITEL 2.2  %%%%
+\subsection{Züge prüfen lassen}
+
+\texttt{skak} spielt jeden Zug auf einem inneren Brett mit und prüft ihn. Ein Tippfehler wie \texttt{Nf4} statt \texttt{Nf3} führt deshalb zu einer Fehlermeldung, statt unbemerkt ins Arbeitsblatt zu gelangen. Mit \texttt{\textbackslash hidemoves} werden Züge ausgeführt, aber nicht gedruckt. So kommt man schnell zu einer Stellung aus einer bekannten Partie:
+
+\begin{lstlisting}[style=latex]
+\newchessgame
+\hidemoves{1. e4 e5 2. Bc4 Nc6 3. Qh5 Nf6}
+Weiß zieht und setzt matt:
+
+\chessboard[smallboard]
+\end{lstlisting}
+
+\begin{ausgabe}
+	\newchessgame
+	\hidemoves{1. e4 e5 2. Bc4 Nc6 3. Qh5 Nf6}
+	Weiß zieht und setzt matt:
+
+	\centering
+	\chessboard[smallboard]
+\end{ausgabe}
+
+Die Lösung ist \symqueen xf7\#, das Schäfermatt. Figurensymbole im Fließtext entstehen mit \texttt{\textbackslash symking}, \texttt{\textbackslash symqueen}, \texttt{\textbackslash symrook}, \texttt{\textbackslash symbishop}, \texttt{\textbackslash symknight} und \texttt{\textbackslash sympawn}.
+
+
+
+%%%%  KAPITEL 3  %%%%
+\section{Stellungen aufbauen}
+
+
+%%%%  UNTERKAPITEL 3.1  %%%%
+\subsection{Stellung aus der FEN-Notation}
+
+Die FEN-Notation beschreibt eine Stellung als Zeichenkette. Sie beginnt mit der 8.~Reihe; Großbuchstaben sind weiße, Kleinbuchstaben schwarze Figuren, Ziffern zählen leere Felder. Danach folgt, wer am Zug ist (\texttt{w} oder \texttt{b}). Stellungen lassen sich zum Beispiel auf \texttt{lichess.org/editor} zusammenklicken und als FEN kopieren.
+
+\begin{lstlisting}[style=latex]
+\chessboard[smallboard, setfen={6k1/5ppp/8/8/8/8/5PPP/3R2K1 w - - 0 1}]
+\end{lstlisting}
+
+\begin{ausgabe}
+	\centering
+	\chessboard[smallboard, setfen={6k1/5ppp/8/8/8/8/5PPP/3R2K1 w - - 0 1}]
+\end{ausgabe}
+
+
+%%%%  UNTERKAPITEL 3.2  %%%%
+\subsection{Einzelne Figuren setzen und Ausschnitte}
+
+Für wenige Figuren ist \texttt{setpieces} kürzer: Großbuchstaben sind wieder Weiß, Kleinbuchstaben Schwarz, ein \texttt{P} ist ein Bauer. Mit \texttt{printarea} zeigt man nur einen Teil des Bretts, \texttt{inverse} dreht das Brett auf die Sicht von Schwarz:
+
+\begin{lstlisting}[style=latex]
+\chessboard[tinyboard, showmover=false, setpieces={Kg1,Rf1,Pf2,Pg2,Ph2,kg8,pf7,pg7,ph7}]
+\hspace{1cm}
+\chessboard[tinyboard, showmover=false, printarea=e1-h4, setpieces={Kg1,Rf1,Pf2,Pg2,Ph2}]
+\hspace{1cm}
+\chessboard[tinyboard, showmover=false, inverse, setpieces={Kg1,Rf1,Pf2,Pg2,Ph2,kg8,pf7,pg7,ph7}]
+\end{lstlisting}
+
+\begin{ausgabe}
+	\centering
+	\chessboard[tinyboard, showmover=false, setpieces={Kg1,Rf1,Pf2,Pg2,Ph2,kg8,pf7,pg7,ph7}]
+	\hspace{1cm}
+	\chessboard[tinyboard, showmover=false, printarea=e1-h4, setpieces={Kg1,Rf1,Pf2,Pg2,Ph2}]
+	\hspace{1cm}
+	\chessboard[tinyboard, showmover=false, inverse, setpieces={Kg1,Rf1,Pf2,Pg2,Ph2,kg8,pf7,pg7,ph7}]
+\end{ausgabe}
+
+Ein leeres Brett erhält man mit \texttt{setpieces=\{\}}. Eine Option \texttt{emptyboard} gibt es nicht.
+
+
+
+%%%%  KAPITEL 4  %%%%
+\section{Pfeile und Markierungen}
+
+Markierungen werden in drei Schritten angegeben: erst der Stil mit \texttt{pgfstyle}, dann die Farbe, dann die Felder oder Züge. Mehrere Markierungen dürfen in einem \texttt{\textbackslash chessboard} hintereinander stehen.
+
+
+%%%%  UNTERKAPITEL 4.1  %%%%
+\subsection{Die Züge eines Springers}
+
+Kreise mit \texttt{pgfstyle=circle} und \texttt{markfields} zeigen, welche Felder ein Springer erreicht:
+
+\begin{lstlisting}[style=latex]
+\chessboard[smallboard, showmover=false, setpieces={Ne4},
+	pgfstyle=circle, color=green!60!black, markfields={c3,c5,d2,d6,f2,f6,g3,g5}]
+\end{lstlisting}
+
+\begin{ausgabe}
+	\centering
+	\chessboard[smallboard, showmover=false, setpieces={Ne4},
+		pgfstyle=circle, color=green!60!black, markfields={c3,c5,d2,d6,f2,f6,g3,g5}]
+\end{ausgabe}
+
+
+%%%%  UNTERKAPITEL 4.2  %%%%
+\subsection{Pfeile und farbige Felder}
+
+Gerade Pfeile entstehen mit \texttt{pgfstyle=straightmove} und \texttt{markmoves}, farbige Felder mit \texttt{pgfstyle=color} und \texttt{colorbackfields}. Das Beispiel zeigt die Idee des Schäfermatts:
+
+\begin{lstlisting}[style=latex]
+\chessboard[smallboard, showmover=false,
+	setfen={r1bqkb1r/pppp1ppp/2n2n2/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 4 4},
+	pgfstyle=color, color=red!30, colorbackfields={f7},
+	pgfstyle=straightmove, color=red, markmoves={h5-f7,c4-f7}]
+\end{lstlisting}
+
+\begin{ausgabe}
+	\centering
+	\chessboard[smallboard, showmover=false,
+		setfen={r1bqkb1r/pppp1ppp/2n2n2/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 4 4},
+		pgfstyle=color, color=red!30, colorbackfields={f7},
+		pgfstyle=straightmove, color=red, markmoves={h5-f7,c4-f7}]
+\end{ausgabe}
+
+Weitere Stile sind \texttt{curvemove} für gebogene Pfeile und \texttt{cross} für ein Kreuz auf einem Feld.
+
+
+
+%%%%  KAPITEL 5  %%%%
+\section{Kommentarzeichen}
+
+Fragezeichen und Ausrufezeichen hängt man direkt an den Zug. Für die Bewertung einer Stellung gibt es die üblichen Kommentarzeichen als Befehle:
+
+\begin{lstlisting}[style=latex]
+\newchessgame
+\mainline{1. e4 e5 2. Qh5?! Nc6 3. Bc4 g6! 4. Qf3 Nf6}
+
+\begin{tabular}{cl@{\hspace{1cm}}cl}
+	\wbetter    & Weiß steht etwas besser    & \bbetter    & Schwarz steht etwas besser\\
+	\wupperhand & Weiß steht deutlich besser & \bupperhand & Schwarz steht deutlich besser\\
+	\wdecisive  & Weiß steht auf Gewinn      & \bdecisive  & Schwarz steht auf Gewinn\\
+	\equal      & ausgeglichen               & \unclear    & unklar
+\end{tabular}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\newchessgame
+	\mainline{1. e4 e5 2. Qh5?! Nc6 3. Bc4 g6! 4. Qf3 Nf6}
+
+	\begin{tabular}{cl@{\hspace{1cm}}cl}
+		\wbetter    & Weiß steht etwas besser    & \bbetter    & Schwarz steht etwas besser\\
+		\wupperhand & Weiß steht deutlich besser & \bupperhand & Schwarz steht deutlich besser\\
+		\wdecisive  & Weiß steht auf Gewinn      & \bdecisive  & Schwarz steht auf Gewinn\\
+		\equal      & ausgeglichen               & \unclear    & unklar
+	\end{tabular}
+\end{ausgabe}
+
+Die vollständige Liste der Kommentarzeichen steht in der Datei \texttt{befehle.md} im Ordner \texttt{references} des Skills.
+
+
+
+%%%%  KAPITEL 6  %%%%
+\section{Mattaufgaben für ein Arbeitsblatt}
+
+
+%%%%  UNTERKAPITEL 6.1  %%%%
+\subsection{Stellungen vorher prüfen}
+
+Selbst ausgedachte Mattaufgaben haben erstaunlich oft eine zweite Lösung oder sind gar keine regelgerechte Stellung. Das Python-Skript \texttt{pruefe\_stellung.py} aus dem Ordner \texttt{scripts} des Skills prüft beides. Es braucht das Python-Paket \texttt{chess}:
+
+\begin{lstlisting}[style=latex]
+pip install chess
+python3 pruefe_stellung.py "6rk/6pp/8/6N1/8/8/8/6K1 w - - 0 1"
+\end{lstlisting}
+
+Die Ausgabe meldet, ob die Stellung regelgerecht ist, wer am Zug ist und ob es genau einen Mattzug gibt, hier \texttt{Nf7\# (eindeutig)}. Mit \texttt{-{}-matt 2} sucht das Skript ein Matt in zwei Zügen, mit \texttt{-{}-datei} prüft es viele Stellungen aus einer Textdatei auf einmal.
+
+
+%%%%  UNTERKAPITEL 6.2  %%%%
+\subsection{Ein Befehl für alle Aufgaben}
+
+Damit alle Aufgaben eines Blatts gleich aussehen, lohnt sich ein eigener Befehl. \texttt{\textbackslash setchessboard} legt die Einstellungen für alle folgenden Bretter fest:
+
+\begin{lstlisting}[style=latex]
+\setchessboard{smallboard, showmover=true}
+\newcommand\Mattaufgabe[3]{%
+	\begin{minipage}[t]{0.48\linewidth}\centering
+		\textbf{Aufgabe #1}\par\smallskip
+		\chessboard[setfen={#2}]\par
+		{\small #3}\par\smallskip
+		Lösung: \rule{3cm}{0.4pt}
+	\end{minipage}}
+
+\Mattaufgabe{1}{6rk/6pp/8/6N1/8/8/8/6K1 w - - 0 1}{Der König erstickt.}\hfill
+\Mattaufgabe{2}{1k6/ppp5/8/8/8/8/8/K6R w - - 0 1}{Die letzte Reihe.}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\setchessboard{smallboard, showmover=true}
+	\newcommand\Mattaufgabe[3]{%
+		\begin{minipage}[t]{0.48\linewidth}\centering
+			\textbf{Aufgabe #1}\par\smallskip
+			\chessboard[setfen={#2}]\par
+			{\small #3}\par\smallskip
+			Lösung: \rule{3cm}{0.4pt}
+		\end{minipage}}
+
+	\Mattaufgabe{1}{6rk/6pp/8/6N1/8/8/8/6K1 w - - 0 1}{Der König erstickt.}\hfill
+	\Mattaufgabe{2}{1k6/ppp5/8/8/8/8/8/K6R w - - 0 1}{Die letzte Reihe.}
+\end{ausgabe}
+
+Lösungen: 1)~\symknight f7\#, 2)~\symrook h8\#. Ein vollständiges Arbeitsblatt mit vier Aufgaben und Lösungsteil liegt im Ordner \texttt{assets} des Skills. Die Datei heißt \texttt{vorlage\_matt\_in\_eins.tex}.
+
+
+
+%%%%  KAPITEL 7  %%%%
+\section{Das Acht-Damen-Problem}
+
+Acht Damen sollen so auf das Brett gestellt werden, dass keine eine andere schlagen kann. Die Aufgabe ist ein klassisches Beispiel für Backtracking im Informatikunterricht. Eine der 92 Lösungen:
+
+\begin{lstlisting}[style=latex]
+\chessboard[smallboard, showmover=false,
+	setpieces={Qa1,Qb5,Qc8,Qd6,Qe3,Qf7,Qg2,Qh4},
+	pgfstyle=straightmove, color=blue!60, markmoves={a1-a8,a1-h1,a1-h8}]
+\end{lstlisting}
+
+\begin{ausgabe}
+	\centering
+	\chessboard[smallboard, showmover=false,
+		setpieces={Qa1,Qb5,Qc8,Qd6,Qe3,Qf7,Qg2,Qh4},
+		pgfstyle=straightmove, color=blue!60, markmoves={a1-a8,a1-h1,a1-h8}]
+\end{ausgabe}
+
+Die Pfeile zeigen, welche Linien die Dame auf a1 kontrolliert. Für den Unterricht kann man das leere Brett austeilen und die Schülerinnen und Schüler selbst probieren lassen, bevor der Algorithmus besprochen wird.
+
+
+
+%%%%  KAPITEL 8  %%%%
+\section{Zusammenfassung}
+
+Die wichtigsten Techniken im Überblick:
+
+\begin{itemize}
+	\item \texttt{\textbackslash newchessgame} beginnt eine Partie, \texttt{\textbackslash mainline\{\dots\}} führt Züge aus und druckt sie, \texttt{\textbackslash hidemoves\{\dots\}} führt sie nur aus.
+	\item Züge immer mit englischen Buchstaben eingeben: K, Q, R, B, N.
+	\item \texttt{\textbackslash chessboard} zeichnet die aktuelle Stellung; \texttt{setfen} und \texttt{setpieces} bauen eine eigene Stellung auf.
+	\item \texttt{printarea}, \texttt{inverse}, \texttt{showmover} und \texttt{label} verändern die Darstellung.
+	\item Markierungen in drei Schritten: erst der Stil mit \texttt{pgfstyle}, dann die Farbe mit \texttt{color}, dann die Felder mit \texttt{markfields} oder \texttt{colorbackfields} bzw. die Züge mit \texttt{markmoves}.
+	\item Rätselstellungen vor dem Austeilen mit \texttt{pruefe\_stellung.py} prüfen.
+\end{itemize}
+
+Neben Mattaufgaben für Vertretungsstunden passt Schach gut in die Mathematik (Felder als Koordinaten in Klasse 5/6, Springerwege, die Weizenkornlegende mit Zweierpotenzen) und in die Informatik (FEN als Datenformat, Acht-Damen-Problem, ein eigener Zuggenerator als Projekt).
+
+\end{document}

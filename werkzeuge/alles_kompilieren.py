@@ -35,7 +35,9 @@ BRAUCHT = {"vorlage_sudoku_arbeitsblatt.tex": "sudokus.tex", "vorlage_karte.tex"
 
 def kompiliere(tex: pathlib.Path, arbeitsordner: pathlib.Path) -> tuple[bool, str]:
     quelle = tex.read_text(encoding="utf-8")
-    prog = "xelatex" if "fontspec" in quelle else "pdflatex"
+    # xelatex nur, wenn fontspec wirklich geladen wird (nicht, wenn es nur in einem Listing steht)
+    ohne_listings = re.sub(r"\\begin\{lstlisting\}.*?\\end\{lstlisting\}", "", quelle, flags=re.S)
+    prog = "xelatex" if re.search(r"^[^%\n]*\\usepackage(\[[^]]*\])?\{fontspec\}", ohne_listings, re.M) else "pdflatex"
     for _ in range(2):
         r = subprocess.run([prog, "-interaction=nonstopmode", "-halt-on-error", tex.name],
                            cwd=arbeitsordner, capture_output=True, text=True, errors="replace")

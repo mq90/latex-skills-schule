@@ -74,6 +74,10 @@ In der universalen `header.tex` ist `sudoku` schon geladen.
 
 ## Für eine Handreichung
 
+Fertige Handreichung zu diesem Skill: `references/handreichung_sudoku.tex` (PDF im Ordner
+`handreichungen/` des Repositorys). Sie ist die Vorlagen-Sammlung für
+neue Beispiele. Für eine neue Handreichung:
+
 Aufbau und Listing-Stil aus `latex-grundstil` übernehmen
 (`assets/vorlage_handreichung.tex` dort): `\input{header.tex}` und
 `\input{newcommands.tex}`, Titel/Autor/Datum mit `\maketitle`, Kapitel mit

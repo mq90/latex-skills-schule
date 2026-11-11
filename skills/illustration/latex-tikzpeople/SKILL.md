@@ -87,6 +87,10 @@ Szenen mit mehreren Personen bewusst mischen, damit nicht alle gleich aussehen.
 
 ## Für eine Handreichung
 
+Fertige Handreichung zu diesem Skill: `references/handreichung_tikzpeople.tex` (PDF im Ordner
+`handreichungen/` des Repositorys). Sie ist die Vorlagen-Sammlung für
+neue Beispiele. Für eine neue Handreichung:
+
 Aufbau und Listing-Stil aus `latex-grundstil` übernehmen
 (`assets/vorlage_handreichung.tex` dort): `\input{header.tex}` und
 `\input{newcommands.tex}`, Titel/Autor/Datum mit `\maketitle`, Kapitel mit

@@ -74,7 +74,11 @@ Leerzeichen zu `-`, mehrfach vorkommende IDs bekommen `-2`, `-3` (Rhein, Rhein-2
 | AWMC geodata (github.com/AWMC/geodata) | Antike, z. B. Römisches Reich (`Cultural-Data/political_shading/`) | ODbL: Quelle nennen, Datenbank-Weitergabe unter ODbL |
 
 Rohdaten **nicht** in ein öffentliches Repo oder Material-Paket legen
-(Größe, Lizenzpflichten). Besser: Download-Befehl dokumentieren. Auf jede
+(Größe, Lizenzpflichten). Besser: Download-Befehl dokumentieren. Ausnahme:
+die kleinen, daraus erzeugten Beispieldateien `references/beispiel_*.tex`
+(Natural Earth, gemeinfrei) für die Handreichung – Deutschland mit Ländern,
+Flüssen, Seen und Städten, Sachsen in drei Vereinfachungsstufen, Welt in
+Mercator und Equal Earth. Sie eignen sich auch zum schnellen Ausprobieren. Auf jede
 Karte eine Quellenzeile setzen (in der Vorlage enthalten).
 
 ## Stolpersteine (getestet)
@@ -106,6 +110,10 @@ Karte eine Quellenzeile setzen (in der Vorlage enthalten).
 - **Geografie/Geschichte:** stumme Karten zum Beschriften, Grenzen 1938/1945/1990.
 
 ## Für eine Handreichung
+
+Fertige Handreichung zu diesem Skill: `references/handreichung_landkarten.tex` (PDF im Ordner
+`handreichungen/` des Repositorys). Sie ist die Vorlagen-Sammlung für
+neue Beispiele. Für eine neue Handreichung:
 
 Aufbau und Listing-Stil aus `latex-grundstil` übernehmen
 (`assets/vorlage_handreichung.tex` dort): `\input{header.tex}` und

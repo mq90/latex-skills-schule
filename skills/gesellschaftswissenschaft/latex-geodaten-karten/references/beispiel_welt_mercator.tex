@@ -1,0 +1,539 @@
+% Kartendaten: Natural Earth (gemeinfrei), naturalearthdata.com – Beispieldaten für die Handreichung
+% Erzeugt mit geo2tikz.py
+% Ausschnitt -180,-58,180,84, Projektion mercator, Breite 7.6 cm, Höhe 5.08 cm
+% Quelle der Daten im Dokument angeben (siehe Datenlizenz).
+\makeatletter
+% ---- Ebene weltmercator (ne_110m_admin_0_countries.geojson) ----
+\tikzset{geo weltmercator/.style={},
+  geo weltmercator/FJI/.style={},
+  geo weltmercator/TZA/.style={},
+  geo weltmercator/SAH/.style={},
+  geo weltmercator/CAN/.style={},
+  geo weltmercator/USA/.style={},
+  geo weltmercator/KAZ/.style={},
+  geo weltmercator/UZB/.style={},
+  geo weltmercator/PNG/.style={},
+  geo weltmercator/IDN/.style={},
+  geo weltmercator/ARG/.style={},
+  geo weltmercator/CHL/.style={},
+  geo weltmercator/COD/.style={},
+  geo weltmercator/SOM/.style={},
+  geo weltmercator/KEN/.style={},
+  geo weltmercator/SDN/.style={},
+  geo weltmercator/TCD/.style={},
+  geo weltmercator/HTI/.style={},
+  geo weltmercator/DOM/.style={},
+  geo weltmercator/RUS/.style={},
+  geo weltmercator/BHS/.style={},
+  geo weltmercator/FLK/.style={},
+  geo weltmercator/NOR/.style={},
+  geo weltmercator/GRL/.style={},
+  geo weltmercator/ATF/.style={},
+  geo weltmercator/TLS/.style={},
+  geo weltmercator/ZAF/.style={},
+  geo weltmercator/LSO/.style={},
+  geo weltmercator/MEX/.style={},
+  geo weltmercator/URY/.style={},
+  geo weltmercator/BRA/.style={},
+  geo weltmercator/BOL/.style={},
+  geo weltmercator/PER/.style={},
+  geo weltmercator/COL/.style={},
+  geo weltmercator/PAN/.style={},
+  geo weltmercator/CRI/.style={},
+  geo weltmercator/NIC/.style={},
+  geo weltmercator/HND/.style={},
+  geo weltmercator/SLV/.style={},
+  geo weltmercator/GTM/.style={},
+  geo weltmercator/BLZ/.style={},
+  geo weltmercator/VEN/.style={},
+  geo weltmercator/GUY/.style={},
+  geo weltmercator/SUR/.style={},
+  geo weltmercator/FRA/.style={},
+  geo weltmercator/ECU/.style={},
+  geo weltmercator/PRI/.style={},
+  geo weltmercator/JAM/.style={},
+  geo weltmercator/CUB/.style={},
+  geo weltmercator/ZWE/.style={},
+  geo weltmercator/BWA/.style={},
+  geo weltmercator/NAM/.style={},
+  geo weltmercator/SEN/.style={},
+  geo weltmercator/MLI/.style={},
+  geo weltmercator/MRT/.style={},
+  geo weltmercator/BEN/.style={},
+  geo weltmercator/NER/.style={},
+  geo weltmercator/NGA/.style={},
+  geo weltmercator/CMR/.style={},
+  geo weltmercator/TGO/.style={},
+  geo weltmercator/GHA/.style={},
+  geo weltmercator/CIV/.style={},
+  geo weltmercator/GIN/.style={},
+  geo weltmercator/GNB/.style={},
+  geo weltmercator/LBR/.style={},
+  geo weltmercator/SLE/.style={},
+  geo weltmercator/BFA/.style={},
+  geo weltmercator/CAF/.style={},
+  geo weltmercator/COG/.style={},
+  geo weltmercator/GAB/.style={},
+  geo weltmercator/GNQ/.style={},
+  geo weltmercator/ZMB/.style={},
+  geo weltmercator/MWI/.style={},
+  geo weltmercator/MOZ/.style={},
+  geo weltmercator/SWZ/.style={},
+  geo weltmercator/AGO/.style={},
+  geo weltmercator/BDI/.style={},
+  geo weltmercator/ISR/.style={},
+  geo weltmercator/LBN/.style={},
+  geo weltmercator/MDG/.style={},
+  geo weltmercator/PSX/.style={},
+  geo weltmercator/GMB/.style={},
+  geo weltmercator/TUN/.style={},
+  geo weltmercator/DZA/.style={},
+  geo weltmercator/JOR/.style={},
+  geo weltmercator/ARE/.style={},
+  geo weltmercator/QAT/.style={},
+  geo weltmercator/KWT/.style={},
+  geo weltmercator/IRQ/.style={},
+  geo weltmercator/OMN/.style={},
+  geo weltmercator/VUT/.style={},
+  geo weltmercator/KHM/.style={},
+  geo weltmercator/THA/.style={},
+  geo weltmercator/LAO/.style={},
+  geo weltmercator/MMR/.style={},
+  geo weltmercator/VNM/.style={},
+  geo weltmercator/PRK/.style={},
+  geo weltmercator/KOR/.style={},
+  geo weltmercator/MNG/.style={},
+  geo weltmercator/IND/.style={},
+  geo weltmercator/BGD/.style={},
+  geo weltmercator/BTN/.style={},
+  geo weltmercator/NPL/.style={},
+  geo weltmercator/PAK/.style={},
+  geo weltmercator/AFG/.style={},
+  geo weltmercator/TJK/.style={},
+  geo weltmercator/KGZ/.style={},
+  geo weltmercator/TKM/.style={},
+  geo weltmercator/IRN/.style={},
+  geo weltmercator/SYR/.style={},
+  geo weltmercator/ARM/.style={},
+  geo weltmercator/SWE/.style={},
+  geo weltmercator/BLR/.style={},
+  geo weltmercator/UKR/.style={},
+  geo weltmercator/POL/.style={},
+  geo weltmercator/AUT/.style={},
+  geo weltmercator/HUN/.style={},
+  geo weltmercator/MDA/.style={},
+  geo weltmercator/ROU/.style={},
+  geo weltmercator/LTU/.style={},
+  geo weltmercator/LVA/.style={},
+  geo weltmercator/EST/.style={},
+  geo weltmercator/DEU/.style={},
+  geo weltmercator/BGR/.style={},
+  geo weltmercator/GRC/.style={},
+  geo weltmercator/TUR/.style={},
+  geo weltmercator/ALB/.style={},
+  geo weltmercator/HRV/.style={},
+  geo weltmercator/CHE/.style={},
+  geo weltmercator/LUX/.style={},
+  geo weltmercator/BEL/.style={},
+  geo weltmercator/NLD/.style={},
+  geo weltmercator/PRT/.style={},
+  geo weltmercator/ESP/.style={},
+  geo weltmercator/IRL/.style={},
+  geo weltmercator/NCL/.style={},
+  geo weltmercator/SLB/.style={},
+  geo weltmercator/NZL/.style={},
+  geo weltmercator/AUS/.style={},
+  geo weltmercator/LKA/.style={},
+  geo weltmercator/CHN/.style={},
+  geo weltmercator/TWN/.style={},
+  geo weltmercator/ITA/.style={},
+  geo weltmercator/DNK/.style={},
+  geo weltmercator/GBR/.style={},
+  geo weltmercator/ISL/.style={},
+  geo weltmercator/AZE/.style={},
+  geo weltmercator/GEO/.style={},
+  geo weltmercator/PHL/.style={},
+  geo weltmercator/MYS/.style={},
+  geo weltmercator/BRN/.style={},
+  geo weltmercator/SVN/.style={},
+  geo weltmercator/FIN/.style={},
+  geo weltmercator/SVK/.style={},
+  geo weltmercator/CZE/.style={},
+  geo weltmercator/ERI/.style={},
+  geo weltmercator/JPN/.style={},
+  geo weltmercator/PRY/.style={},
+  geo weltmercator/YEM/.style={},
+  geo weltmercator/SAU/.style={},
+  geo weltmercator/CYN/.style={},
+  geo weltmercator/CYP/.style={},
+  geo weltmercator/MAR/.style={},
+  geo weltmercator/EGY/.style={},
+  geo weltmercator/LBY/.style={},
+  geo weltmercator/ETH/.style={},
+  geo weltmercator/DJI/.style={},
+  geo weltmercator/SOL/.style={},
+  geo weltmercator/UGA/.style={},
+  geo weltmercator/RWA/.style={},
+  geo weltmercator/BIH/.style={},
+  geo weltmercator/MKD/.style={},
+  geo weltmercator/SRB/.style={},
+  geo weltmercator/MNE/.style={},
+  geo weltmercator/KOS/.style={},
+  geo weltmercator/TTO/.style={},
+  geo weltmercator/SDS/.style={}}
+\newcommand\geoweltmercator{%
+\path[geo weltmercator, geo weltmercator/FJI, even odd rule] (7.60,1.16) -- (7.57,1.15) -- (7.60,1.17) -- cycle (7.55,1.14) -- (7.57,1.12) -- (7.54,1.12) -- cycle (0.00,1.16) -- (0.00,1.17) -- (0.00,1.17) -- cycle;
+\path[geo weltmercator, geo weltmercator/TZA, even odd rule] (4.60,1.45) -- (4.65,1.29) -- (4.53,1.27) -- (4.43,1.37) -- (4.44,1.49) -- cycle;
+\path[geo weltmercator, geo weltmercator/SAH, even odd rule] (3.62,2.11) -- (3.62,2.08) -- (3.55,2.08) -- (3.53,1.97) -- (3.44,1.96) -- (3.56,2.10) -- cycle;
+\path[geo weltmercator, geo weltmercator/CAN, even odd rule] (1.93,2.68) -- (1.15,2.75) -- (1.11,2.76) -- (1.06,2.94) -- (0.94,3.09) -- (0.90,3.06) -- (0.82,3.12) -- (0.82,3.59) -- (0.92,3.54) -- (1.09,3.64) -- (1.15,3.58) -- (1.17,3.62) -- (1.18,3.57) -- (1.24,3.60) -- (1.37,3.54) -- (1.40,3.47) -- (1.50,3.46) -- (1.56,3.54) -- (1.66,3.47) -- (1.74,3.53) -- (1.77,3.45) -- (1.81,3.55) -- (1.76,3.62) -- (1.79,3.73) -- (1.96,3.45) -- (1.99,3.60) -- (2.08,3.56) -- (2.08,3.44) -- (1.99,3.41) -- (1.81,3.14) -- (1.85,2.99) -- (2.06,2.91) -- (2.11,2.77) -- (2.11,2.89) -- (2.18,2.96) -- (2.15,3.21) -- (2.24,3.21) -- (2.33,3.15) -- (2.37,3.03) -- (2.44,3.12) -- (2.50,2.96) -- (2.62,2.84) -- (2.59,2.78) -- (2.40,2.74) -- (2.30,2.63) -- (2.43,2.71) -- (2.44,2.61) -- (2.47,2.60) -- (2.50,2.60) -- (2.52,2.64) -- (2.51,2.58) -- (2.40,2.54) -- (2.44,2.59) -- (2.38,2.58) -- (2.34,2.65) -- (2.29,2.58) -- (2.06,2.48) -- (2.06,2.59) -- cycle (2.04,3.23) -- (2.05,3.20) -- (2.03,3.20) -- cycle (2.09,3.86) -- (2.15,3.86) -- (2.19,3.80) -- (2.12,3.79) -- cycle (2.10,3.19) -- (2.13,3.20) -- (2.12,3.17) -- cycle (1.82,3.96) -- (1.76,3.96) -- (1.80,4.02) -- cycle (1.81,4.19) -- (1.76,4.22) -- (1.82,4.20) -- cycle (1.78,4.24) -- (1.73,4.24) -- (1.72,4.33) -- (1.76,4.32) -- cycle (1.85,3.95) -- (1.76,4.15) -- (1.87,4.12) -- (1.92,4.01) -- (2.09,4.02) -- (2.11,3.96) -- (1.94,3.91) -- cycle (1.47,4.21) -- (1.43,4.18) -- (1.40,4.21) -- (1.45,4.25) -- cycle (1.48,4.30) -- (1.42,4.28) -- (1.45,4.33) -- cycle (2.60,2.73) -- (2.67,2.71) -- (2.68,2.63) -- (2.55,2.66) -- (2.63,2.79) -- cycle (1.99,3.37) -- (2.09,3.26) -- (2.05,3.29) -- (1.99,3.24) -- (1.96,3.26) -- cycle (2.16,3.79) -- (2.37,3.62) -- (2.39,3.56) -- (2.35,3.53) -- (2.49,3.43) -- (2.45,3.33) -- (2.36,3.40) -- (2.43,3.26) -- (2.43,3.22) -- (2.35,3.27) -- (2.40,3.19) -- (2.22,3.32) -- (2.14,3.31) -- (2.24,3.36) -- (2.27,3.45) -- (2.17,3.60) -- (1.91,3.66) -- (1.91,3.82) -- (1.99,3.87) -- (1.99,3.78) -- (2.06,3.87) -- (2.10,3.74) -- cycle (1.89,3.87) -- (1.81,3.74) -- (1.79,3.74) -- (1.78,3.87) -- cycle (1.21,4.06) -- (1.29,4.19) -- (1.35,4.20) -- (1.33,4.09) -- (1.24,4.04) -- cycle (0.99,2.88) -- (1.03,2.81) -- (0.99,2.85) -- cycle (1.67,4.32) -- (1.70,4.23) -- (1.58,4.28) -- (1.57,4.38) -- cycle (1.19,2.69) -- (1.10,2.73) -- (1.09,2.76) -- cycle (1.32,3.90) -- (1.36,3.84) -- (1.20,3.67) -- (1.14,3.73) -- (1.16,3.91) -- cycle (1.56,4.05) -- (1.56,3.96) -- (1.43,3.92) -- (1.40,3.94) -- (1.44,3.98) -- (1.32,3.98) -- (1.36,4.09) -- (1.46,4.01) -- (1.50,4.00) -- (1.49,4.12) -- (1.52,4.03) -- cycle (1.53,3.83) -- (1.67,3.61) -- (1.64,3.54) -- (1.56,3.56) -- (1.41,3.52) -- (1.32,3.61) -- (1.43,3.63) -- (1.31,3.64) -- (1.35,3.69) -- (1.28,3.71) -- (1.37,3.83) -- (1.38,3.79) -- (1.46,3.77) -- (1.48,3.81) -- (1.52,3.72) -- cycle (1.68,3.87) -- (1.75,3.84) -- (1.72,3.69) -- (1.64,3.78) -- (1.68,3.79) -- cycle (1.58,3.86) -- (1.58,3.79) -- (1.54,3.84) -- cycle (1.74,4.03) -- (1.69,3.96) -- (1.63,4.08) -- (1.72,4.11) -- cycle (1.77,4.42) -- (1.85,4.62) -- (1.99,4.38) -- (1.92,4.27) -- (1.84,4.27) -- (1.83,4.38) -- cycle (1.87,4.71) -- (2.00,4.83) -- (2.04,4.78) -- (2.06,4.87) -- (2.13,4.91) -- (2.26,4.93) -- (2.49,4.83) -- (2.37,4.66) -- (2.42,4.66) -- (2.30,4.43) -- (2.18,4.38) -- (2.21,4.29) -- (2.10,4.06) -- (1.91,4.09) -- (1.94,4.23) -- (2.01,4.19) -- (1.94,4.27) -- (2.00,4.38) -- (1.96,4.49) -- (2.04,4.47) -- (2.07,4.52) -- (1.95,4.52) -- (1.91,4.57) -- cycle (2.17,3.44) -- (2.18,3.50) -- (2.20,3.51) -- (2.21,3.46) -- cycle (1.78,3.56) -- (1.69,3.57) -- (1.73,3.62) -- cycle (2.45,2.73) -- (2.50,2.70) -- (2.44,2.73) -- cycle (2.44,2.63) -- (2.49,2.62) -- (2.47,2.61) -- cycle;
+\path[geo weltmercator, geo weltmercator/USA, even odd rule] (0.50,1.95) -- (0.50,1.96) -- (0.51,1.96) -- cycle (0.49,1.97) -- (0.48,1.97) -- (0.49,1.97) -- cycle (0.46,1.97) -- (0.46,1.98) -- (0.47,1.97) -- cycle (0.44,1.99) -- (0.43,1.98) -- (0.43,1.99) -- cycle (0.29,3.12) -- (0.29,3.09) -- (0.26,3.11) -- cycle (0.24,3.25) -- (0.18,3.25) -- (0.17,3.27) -- cycle (0.53,1.93) -- (0.51,1.94) -- (0.51,1.95) -- cycle (1.21,2.70) -- (1.93,2.68) -- (2.06,2.59) -- (2.05,2.48) -- (2.37,2.64) -- (2.39,2.57) -- (2.21,2.42) -- (2.22,2.39) -- (2.20,2.36) -- (2.19,2.41) -- (2.20,2.31) -- (2.08,2.21) -- (2.10,2.06) -- (2.02,2.18) -- (1.80,2.16) -- (1.74,2.08) -- (1.55,2.22) -- (1.33,2.24) -- (1.25,2.29) -- (1.17,2.44) -- (1.17,2.68) -- (1.21,2.64) -- cycle (0.55,2.97) -- (0.57,3.02) -- (0.59,3.01) -- cycle (0.92,3.08) -- (1.06,2.94) -- (1.04,2.90) -- (0.97,3.03) -- (0.92,3.03) -- (0.79,3.11) -- (0.69,3.14) -- (0.60,3.07) -- (0.62,3.16) -- (0.46,2.94) -- (0.32,2.89) -- (0.48,3.06) -- (0.38,3.05) -- (0.31,3.13) -- (0.30,3.19) -- (0.41,3.27) -- (0.41,3.32) -- (0.32,3.31) -- (0.25,3.37) -- (0.33,3.41) -- (0.39,3.39) -- (0.29,3.54) -- (0.49,3.70) -- (0.82,3.59) -- (0.82,3.12) -- cycle (0.82,3.59) -- (0.82,3.59) -- (0.82,3.59) -- cycle;
+\path[geo weltmercator, geo weltmercator/KAZ, even odd rule] (5.63,2.73) -- (5.49,2.57) -- (5.49,2.50) -- (5.37,2.53) -- (5.24,2.45) -- (5.17,2.54) -- (5.04,2.59) -- (4.98,2.58) -- (4.98,2.47) -- (4.91,2.48) -- (4.86,2.57) -- (4.92,2.58) -- (4.92,2.63) -- (4.84,2.62) -- (4.78,2.68) -- (4.87,2.79) -- (5.09,2.76) -- (5.10,2.87) -- (5.26,2.92) -- (5.35,2.85) -- (5.42,2.89) -- (5.49,2.76) -- cycle;
+\path[geo weltmercator, geo weltmercator/UZB, even odd rule] (4.98,2.58) -- (5.17,2.54) -- (5.21,2.47) -- (5.30,2.50) -- (5.34,2.46) -- (5.26,2.45) -- (5.20,2.36) -- (5.04,2.51) -- (4.98,2.47) -- cycle;
+\path[geo weltmercator, geo weltmercator/PNG, even odd rule] (6.78,1.46) -- (6.92,1.38) -- (6.98,1.29) -- (6.86,1.35) -- (6.78,1.32) -- cycle (7.01,1.44) -- (7.03,1.41) -- (6.98,1.45) -- cycle (7.01,1.40) -- (6.93,1.40) -- (7.02,1.42) -- cycle (7.06,1.40) -- (7.08,1.36) -- (7.06,1.40) -- cycle;
+\path[geo weltmercator, geo weltmercator/IDN, even odd rule] (6.78,1.32) -- (6.71,1.33) -- (6.71,1.40) -- (6.61,1.42) -- (6.62,1.46) -- (6.56,1.49) -- (6.63,1.49) -- (6.66,1.44) -- (6.78,1.46) -- cycle (6.42,1.31) -- (6.43,1.30) -- (6.41,1.29) -- cycle (6.63,1.38) -- (6.64,1.38) -- (6.63,1.37) -- cycle (6.29,1.56) -- (6.25,1.43) -- (6.13,1.45) -- (6.12,1.55) -- (6.22,1.54) -- (6.25,1.60) -- cycle (6.53,1.45) -- (6.54,1.44) -- (6.50,1.44) -- cycle (6.48,1.43) -- (6.48,1.44) -- (6.49,1.44) -- cycle (6.49,1.53) -- (6.52,1.52) -- (6.50,1.49) -- cycle (6.33,1.52) -- (6.43,1.52) -- (6.34,1.52) -- (6.40,1.50) -- (6.37,1.47) -- (6.40,1.40) -- (6.35,1.46) -- (6.32,1.40) -- cycle (6.31,1.31) -- (6.35,1.30) -- (6.35,1.29) -- cycle (6.35,1.34) -- (6.39,1.33) -- (6.33,1.32) -- cycle (6.29,1.34) -- (6.28,1.32) -- (6.26,1.32) -- cycle (6.02,1.37) -- (6.18,1.36) -- (6.24,1.33) -- cycle (5.96,1.54) -- (6.03,1.39) -- (5.81,1.63) -- cycle;
+\path[geo weltmercator, geo weltmercator/ARG, even odd rule] (2.35,0.20) -- (2.43,0.13) -- (2.42,0.11) -- (2.35,0.12) -- cycle (2.57,0.80) -- (2.60,0.67) -- (2.43,0.56) -- (2.46,0.52) -- (2.38,0.43) -- (2.41,0.38) -- (2.34,0.26) -- (2.36,0.21) -- (2.28,0.22) -- (2.25,0.31) -- (2.31,0.81) -- (2.40,1.04) -- (2.58,0.96) -- (2.56,0.92) -- (2.67,0.94) -- cycle;
+\path[geo weltmercator, geo weltmercator/CHL, even odd rule] (2.37,0.12) -- (2.30,0.11) -- (2.22,0.19) -- (2.30,0.15) -- (2.35,0.20) -- cycle (2.33,1.13) -- (2.39,1.01) -- (2.31,0.81) -- (2.25,0.31) -- (2.28,0.22) -- (2.35,0.21) -- (2.29,0.16) -- (2.22,0.21) -- (2.24,0.39) -- (2.20,0.39) -- (2.25,0.46) -- (2.25,0.66) -- cycle;
+\path[geo weltmercator, geo weltmercator/COD, even odd rule] (4.45,1.59) -- (4.43,1.23) -- (4.27,1.28) -- (4.26,1.36) -- (4.17,1.34) -- (4.14,1.39) -- (4.06,1.39) -- (4.14,1.44) -- (4.20,1.61) -- (4.34,1.62) -- cycle;
+\path[geo weltmercator, geo weltmercator/SOM, even odd rule] (4.67,1.57) -- (4.75,1.62) -- (4.88,1.77) -- (4.83,1.62) -- (4.68,1.48) -- cycle;
+\path[geo weltmercator, geo weltmercator/KEN, even odd rule] (4.63,1.41) -- (4.52,1.49) -- (4.55,1.63) -- (4.68,1.59) -- (4.68,1.48) -- cycle;
+\path[geo weltmercator, geo weltmercator/SDN, even odd rule] (4.30,1.69) -- (4.32,1.69) -- (4.30,1.69) -- cycle (4.52,1.71) -- (4.52,1.70) -- (4.52,1.71) -- cycle (4.30,1.69) -- (4.33,1.99) -- (4.58,1.99) -- (4.61,1.90) -- (4.52,1.71) -- (4.50,1.77) -- (4.46,1.72) -- (4.34,1.73) -- cycle;
+\path[geo weltmercator, geo weltmercator/TCD, even odd rule] (4.30,1.93) -- (4.28,1.75) -- (4.12,1.67) -- (4.09,1.82) -- (4.14,1.95) -- (4.11,2.01) -- cycle;
+\path[geo weltmercator, geo weltmercator/HTI, even odd rule] (2.25,1.94) -- (2.29,1.90) -- (2.23,1.90) -- (2.27,1.91) -- cycle;
+\path[geo weltmercator, geo weltmercator/DOM, even odd rule] (2.29,1.89) -- (2.29,1.94) -- (2.36,1.91) -- cycle;
+\path[geo weltmercator, geo weltmercator/RUS, even odd rule] (7.60,3.66) -- (7.57,3.68) -- (7.60,3.71) -- cycle (4.84,2.62) -- (4.81,2.47) -- (4.59,2.57) -- (4.65,2.72) -- (4.47,2.80) -- (4.45,2.93) -- (4.39,2.95) -- (4.39,3.13) -- (4.47,3.23) -- (4.40,3.55) -- (4.48,3.60) -- (4.65,3.49) -- (4.64,3.40) -- (4.50,3.42) -- (4.58,3.28) -- (4.58,3.34) -- (4.64,3.31) -- (4.69,3.41) -- (4.73,3.39) -- (4.72,3.52) -- (4.78,3.51) -- (4.78,3.42) -- (4.93,3.54) -- (4.93,3.50) -- (5.04,3.54) -- (5.07,3.51) -- (5.08,3.60) -- (5.25,3.50) -- (5.21,3.68) -- (5.28,3.81) -- (5.33,3.79) -- (5.33,3.39) -- (5.38,3.48) -- (5.34,3.70) -- (5.38,3.80) -- (5.41,3.68) -- (5.44,3.76) -- (5.52,3.72) -- (5.50,3.86) -- (5.63,3.88) -- (5.64,3.97) -- (5.93,4.09) -- (6.00,4.21) -- (6.06,4.09) -- (6.14,4.11) -- (6.21,4.03) -- (6.11,3.90) -- (6.19,3.88) -- (6.20,3.83) -- (6.31,3.85) -- (6.31,3.82) -- (6.48,3.85) -- (6.57,3.66) -- (6.59,3.73) -- (6.75,3.71) -- (6.77,3.80) -- (6.96,3.75) -- (7.03,3.66) -- (7.16,3.66) -- (7.20,3.58) -- (7.34,3.58) -- (7.38,3.53) -- (7.40,3.62) -- (7.60,3.55) -- (7.60,3.33) -- (7.55,3.31) -- (7.58,3.20) -- (7.47,3.18) -- (7.40,3.10) -- (7.25,3.10) -- (7.22,2.90) -- (7.11,2.77) -- (7.09,2.97) -- (7.27,3.22) -- (7.18,3.13) -- (7.16,3.18) -- (7.11,3.17) -- (7.07,3.07) -- (6.80,3.06) -- (6.65,2.90) -- (6.75,2.88) -- (6.78,2.81) -- (6.76,2.68) -- (6.62,2.51) -- (6.56,2.50) -- (6.57,2.58) -- (6.61,2.58) -- (6.65,2.68) -- (6.57,2.66) -- (6.41,2.85) -- (6.34,2.83) -- (6.29,2.72) -- (6.09,2.71) -- (5.89,2.80) -- (5.85,2.72) -- (5.75,2.76) -- (5.64,2.71) -- (5.49,2.76) -- (5.42,2.89) -- (5.35,2.85) -- (5.26,2.92) -- (5.10,2.87) -- (5.09,2.76) -- (4.87,2.79) -- (4.80,2.75) -- (4.78,2.68) -- cycle (5.83,4.62) -- (5.92,4.43) -- (5.91,4.33) -- (5.86,4.32) -- (5.77,4.39) -- (5.72,4.50) -- cycle (6.02,4.27) -- (5.90,4.23) -- (5.96,4.38) -- (6.02,4.31) -- cycle (6.86,4.01) -- (6.85,3.95) -- (6.73,3.93) -- (6.69,3.99) -- (6.73,4.06) -- cycle (6.96,3.94) -- (6.88,3.98) -- (6.89,4.00) -- (6.98,3.97) -- cycle (6.77,3.87) -- (6.83,3.83) -- (6.75,3.84) -- cycle (4.82,4.56) -- (4.82,4.52) -- (4.86,4.57) -- (4.89,4.55) -- (4.80,4.46) -- (4.79,4.53) -- (4.75,4.53) -- cycle (4.22,2.89) -- (4.25,2.91) -- (4.28,2.90) -- (4.28,2.88) -- cycle (4.97,3.97) -- (5.24,4.13) -- (5.24,4.07) -- (5.03,3.91) -- (4.97,3.77) -- (5.00,3.65) -- (4.89,3.70) -- cycle (6.81,2.88) -- (6.85,2.70) -- (6.82,2.71) -- (6.80,2.61) -- cycle (0.12,3.40) -- (0.11,3.44) -- (0.17,3.43) -- (0.21,3.38) -- (0.15,3.30) -- (0.03,3.39) -- (0.00,3.33) -- (0.00,3.55) -- cycle (0.00,3.66) -- (0.02,3.71) -- (0.05,3.68) -- cycle (4.49,2.59) -- (4.57,2.59) -- (4.52,2.56) -- cycle;
+\path[geo weltmercator, geo weltmercator/BHS, even odd rule] (2.13,2.10) -- (2.16,2.09) -- (2.13,2.09) -- cycle (2.17,2.09) -- (2.17,2.09) -- (2.16,2.10) -- cycle (2.16,2.06) -- (2.16,2.03) -- (2.15,2.06) -- cycle;
+\path[geo weltmercator, geo weltmercator/FLK, even odd rule] (2.53,0.25) -- (2.58,0.24) -- (2.51,0.23) -- cycle;
+\path[geo weltmercator, geo weltmercator/NOR, even odd rule] (4.16,4.46) -- (4.25,4.34) -- (4.14,4.12) -- (4.02,4.42) -- cycle (4.40,3.55) -- (4.39,3.62) -- (4.32,3.53) -- (4.25,3.57) -- (4.22,3.52) -- (4.18,3.52) -- (4.07,3.29) -- (4.03,3.06) -- (3.92,3.05) -- (3.91,3.19) -- (4.20,3.60) -- (4.39,3.69) -- (4.46,3.64) -- cycle (4.29,4.39) -- (4.22,4.41) -- (4.17,4.50) -- (4.28,4.54) -- (4.34,4.51) -- (4.38,4.46) -- cycle (4.24,4.20) -- (4.24,4.26) -- (4.28,4.28) -- (4.32,4.22) -- cycle;
+\path[geo weltmercator, geo weltmercator/GRL, even odd rule] (2.96,4.92) -- (2.98,4.99) -- (3.06,5.01) -- (3.23,4.98) -- (3.36,4.84) -- (3.32,4.78) -- (3.14,4.73) -- (3.21,4.75) -- (3.28,4.70) -- (3.32,4.74) -- (3.31,4.61) -- (3.47,4.72) -- (3.53,4.69) -- (3.54,4.63) -- (3.38,4.48) -- (3.43,4.47) -- (3.38,4.31) -- (3.41,4.14) -- (3.34,4.10) -- (3.39,3.91) -- (3.30,3.83) -- (3.33,3.75) -- (3.28,3.76) -- (3.34,3.65) -- (3.30,3.64) -- (3.26,3.70) -- (3.24,3.62) -- (3.33,3.62) -- (2.96,3.36) -- (2.85,3.11) -- (2.76,3.16) -- (2.67,3.39) -- (2.73,3.61) -- (2.65,3.59) -- (2.65,3.66) -- (2.72,3.65) -- (2.62,3.72) -- (2.64,3.78) -- (2.56,4.01) -- (2.51,4.06) -- (2.35,4.05) -- (2.29,4.14) -- (2.39,4.17) -- (2.25,4.24) -- (2.41,4.39) -- (2.36,4.47) -- (2.49,4.63) -- (2.48,4.69) -- (2.59,4.76) -- (2.66,4.76) -- (2.68,4.71) -- (2.74,4.80) -- (2.86,4.68) -- (2.81,4.83) -- (2.88,4.93) -- cycle;
+\path[geo weltmercator, geo weltmercator/ATF, even odd rule] (5.26,0.33) -- (5.28,0.30) -- (5.25,0.30) -- cycle;
+\path[geo weltmercator, geo weltmercator/TLS, even odd rule] (6.44,1.31) -- (6.48,1.34) -- (6.49,1.33) -- cycle;
+\path[geo weltmercator, geo weltmercator/ZAF, even odd rule] (4.16,0.89) -- (4.22,0.88) -- (4.22,0.97) -- (4.26,0.93) -- (4.42,1.03) -- (4.47,0.98) -- (4.45,0.92) -- (4.49,0.92) -- (4.40,0.78) -- (4.22,0.73) -- cycle (4.42,0.86) -- (4.37,0.85) -- (4.39,0.83) -- cycle;
+\path[geo weltmercator, geo weltmercator/LSO, even odd rule] (4.40,0.88) -- (4.39,0.83) -- (4.37,0.85) -- cycle;
+\path[geo weltmercator, geo weltmercator/MEX, even odd rule] (1.33,2.24) -- (1.65,2.17) -- (1.75,2.08) -- (1.78,1.92) -- (1.96,1.98) -- (1.95,1.90) -- (1.88,1.89) -- (1.85,1.82) -- (1.61,1.90) -- (1.38,2.22) -- (1.49,2.01) -- (1.37,2.12) -- cycle;
+\path[geo weltmercator, geo weltmercator/URY, even odd rule] (2.58,0.84) -- (2.68,0.78) -- (2.64,0.72) -- (2.57,0.75) -- cycle;
+\path[geo weltmercator, geo weltmercator/BRA, even odd rule] (2.68,0.78) -- (2.58,0.84) -- (2.67,0.94) -- (2.58,1.03) -- (2.57,1.16) -- (2.42,1.30) -- (2.31,1.28) -- (2.24,1.35) -- (2.32,1.42) -- (2.33,1.55) -- (2.42,1.53) -- (2.46,1.56) -- (2.43,1.60) -- (2.52,1.62) -- (2.55,1.54) -- (2.72,1.60) -- (2.74,1.51) -- (2.96,1.45) -- (3.07,1.36) -- (2.98,1.23) -- (2.94,1.04) -- (2.79,0.97) -- cycle;
+\path[geo weltmercator, geo weltmercator/BOL, even odd rule] (2.36,1.28) -- (2.42,1.30) -- (2.42,1.27) -- (2.52,1.22) -- (2.58,1.08) -- (2.50,1.09) -- (2.48,1.03) -- (2.37,1.01) -- (2.33,1.13) -- cycle;
+\path[geo weltmercator, geo weltmercator/PER, even odd rule] (2.32,1.45) -- (2.24,1.35) -- (2.35,1.24) -- (2.31,1.12) -- (2.20,1.20) -- (2.08,1.41) -- (2.14,1.41) -- (2.21,1.51) -- cycle;
+\path[geo weltmercator, geo weltmercator/COL, even odd rule] (2.38,1.55) -- (2.33,1.55) -- (2.32,1.42) -- (2.17,1.52) -- (2.13,1.55) -- (2.16,1.69) -- (2.29,1.77) -- (2.25,1.70) -- (2.38,1.64) -- cycle;
+\path[geo weltmercator, geo weltmercator/PAN, even odd rule] (2.17,1.68) -- (2.12,1.70) -- (2.09,1.66) -- (2.05,1.71) -- (2.14,1.71) -- cycle;
+\path[geo weltmercator, geo weltmercator/CRI, even odd rule] (2.03,1.74) -- (2.05,1.69) -- (1.99,1.74) -- cycle;
+\path[geo weltmercator, geo weltmercator/NIC, even odd rule] (2.03,1.74) -- (1.95,1.79) -- (2.04,1.83) -- cycle;
+\path[geo weltmercator, geo weltmercator/HND, even odd rule] (2.03,1.83) -- (1.96,1.79) -- (1.91,1.82) -- (1.94,1.85) -- cycle;
+\path[geo weltmercator, geo weltmercator/SLV, even odd rule] (1.90,1.80) -- (1.95,1.80) -- (1.94,1.79) -- cycle;
+\path[geo weltmercator, geo weltmercator/GTM, even odd rule] (1.86,1.83) -- (1.88,1.89) -- (1.92,1.89) -- (1.91,1.81) -- cycle;
+\path[geo weltmercator, geo weltmercator/BLZ, even odd rule] (1.92,1.90) -- (1.94,1.91) -- (1.92,1.85) -- cycle;
+\path[geo weltmercator, geo weltmercator/VEN, even odd rule] (2.51,1.61) -- (2.43,1.60) -- (2.46,1.56) -- (2.40,1.53) -- (2.38,1.64) -- (2.28,1.66) -- (2.26,1.73) -- (2.28,1.76) -- (2.29,1.76) -- (2.28,1.72) -- (2.30,1.70) -- (2.32,1.77) -- (2.49,1.74) -- (2.54,1.69) -- cycle;
+\path[geo weltmercator, geo weltmercator/GUY, even odd rule] (2.59,1.55) -- (2.54,1.55) -- (2.50,1.64) -- (2.54,1.69) -- (2.59,1.64) -- cycle;
+\path[geo weltmercator, geo weltmercator/SUR, even odd rule] (2.63,1.56) -- (2.57,1.60) -- (2.59,1.64) -- (2.66,1.63) -- cycle;
+\path[geo weltmercator, geo weltmercator/FRA, even odd rule] (2.71,1.61) -- (2.65,1.56) -- (2.66,1.63) -- cycle (3.97,2.70) -- (3.93,2.63) -- (3.96,2.54) -- (3.77,2.52) -- (3.77,2.61) -- (3.70,2.69) -- (3.77,2.69) -- (3.76,2.73) -- (3.85,2.77) -- cycle (4.00,2.49) -- (3.99,2.48) -- (4.00,2.52) -- cycle;
+\path[geo weltmercator, geo weltmercator/ECU, even odd rule] (2.21,1.48) -- (2.13,1.41) -- (2.10,1.42) -- (2.11,1.53) -- cycle;
+\path[geo weltmercator, geo weltmercator/PRI, even odd rule] (2.40,1.91) -- (2.38,1.90) -- (2.38,1.91) -- cycle;
+\path[geo weltmercator, geo weltmercator/JAM, even odd rule] (2.16,1.91) -- (2.17,1.89) -- (2.15,1.90) -- cycle;
+\path[geo weltmercator, geo weltmercator/CUB, even odd rule] (2.01,1.98) -- (2.15,2.00) -- (2.23,1.94) -- cycle;
+\path[geo weltmercator, geo weltmercator/ZWE, even odd rule] (4.44,1.03) -- (4.33,1.13) -- (4.44,1.18) -- (4.49,1.15) -- cycle;
+\path[geo weltmercator, geo weltmercator/BWA, even odd rule] (4.42,1.03) -- (4.24,0.92) -- (4.24,1.12) -- (4.33,1.13) -- cycle;
+\path[geo weltmercator, geo weltmercator/NAM, even odd rule] (4.20,0.87) -- (4.13,0.90) -- (4.05,1.14) -- (4.33,1.13) -- (4.24,1.12) -- cycle;
+\path[geo weltmercator, geo weltmercator/SEN, even odd rule] (3.43,1.83) -- (3.49,1.87) -- (3.56,1.78) -- (3.45,1.77) -- (3.51,1.80) -- cycle;
+\path[geo weltmercator, geo weltmercator/MLI, even odd rule] (3.56,1.79) -- (3.55,1.84) -- (3.68,1.84) -- (3.66,2.06) -- (3.89,1.92) -- (3.88,1.84) -- (3.72,1.80) -- (3.67,1.73) -- cycle;
+\path[geo weltmercator, geo weltmercator/MRT, even odd rule] (3.53,1.97) -- (3.55,2.08) -- (3.62,2.08) -- (3.62,2.11) -- (3.70,2.06) -- (3.66,2.06) -- (3.68,1.84) -- (3.45,1.86) -- (3.44,1.97) -- cycle;
+\path[geo weltmercator, geo weltmercator/BEN, even odd rule] (3.83,1.66) -- (3.82,1.73) -- (3.86,1.77) -- (3.88,1.72) -- cycle;
+\path[geo weltmercator, geo weltmercator/NER, even odd rule] (4.13,1.97) -- (4.10,1.78) -- (3.82,1.78) -- (3.81,1.83) -- (3.88,1.84) -- (3.89,1.92) -- (4.05,2.02) -- cycle;
+\path[geo weltmercator, geo weltmercator/NGA, even odd rule] (3.86,1.64) -- (3.89,1.80) -- (4.11,1.77) -- (3.96,1.60) -- cycle;
+\path[geo weltmercator, geo weltmercator/CMR, even odd rule] (4.10,1.78) -- (4.14,1.55) -- (4.00,1.56) -- (3.99,1.65) -- (4.05,1.66) -- cycle;
+\path[geo weltmercator, geo weltmercator/TGO, even odd rule] (3.80,1.75) -- (3.84,1.64) -- (3.82,1.64) -- cycle;
+\path[geo weltmercator, geo weltmercator/GHA, even odd rule] (3.81,1.73) -- (3.82,1.64) -- (3.74,1.62) -- (3.74,1.74) -- cycle;
+\path[geo weltmercator, geo weltmercator/CIV, even odd rule] (3.64,1.73) -- (3.74,1.72) -- (3.74,1.62) -- (3.64,1.60) -- cycle;
+\path[geo weltmercator, geo weltmercator/GIN, even odd rule] (3.49,1.73) -- (3.61,1.77) -- (3.63,1.67) -- cycle;
+\path[geo weltmercator, geo weltmercator/GNB, even odd rule] (3.47,1.78) -- (3.51,1.78) -- (3.51,1.76) -- (3.48,1.75) -- cycle;
+\path[geo weltmercator, geo weltmercator/LBR, even odd rule] (3.59,1.69) -- (3.64,1.60) -- (3.56,1.65) -- cycle;
+\path[geo weltmercator, geo weltmercator/SLE, even odd rule] (3.53,1.72) -- (3.58,1.69) -- (3.56,1.65) -- (3.52,1.68) -- cycle;
+\path[geo weltmercator, geo weltmercator/BFA, even odd rule] (3.69,1.75) -- (3.79,1.83) -- (3.85,1.78) -- (3.74,1.72) -- cycle;
+\path[geo weltmercator, geo weltmercator/CAF, even odd rule] (4.36,1.62) -- (4.21,1.62) -- (4.14,1.56) -- (4.11,1.63) -- (4.28,1.75) -- cycle;
+\path[geo weltmercator, geo weltmercator/COG, even odd rule] (4.18,1.56) -- (4.13,1.43) -- (4.05,1.40) -- (4.04,1.45) -- (4.10,1.48) -- (4.08,1.56) -- cycle;
+\path[geo weltmercator, geo weltmercator/GAB, even odd rule] (4.06,1.56) -- (4.10,1.47) -- (4.03,1.43) -- (3.99,1.49) -- cycle;
+\path[geo weltmercator, geo weltmercator/GNQ, even odd rule] (4.04,1.56) -- (4.00,1.53) -- (4.00,1.56) -- cycle;
+\path[geo weltmercator, geo weltmercator/ZMB, even odd rule] (4.47,1.33) -- (4.50,1.21) -- (4.37,1.13) -- (4.29,1.14) -- (4.26,1.24) -- (4.31,1.24) -- (4.30,1.28) -- (4.43,1.23) -- (4.40,1.32) -- cycle;
+\path[geo weltmercator, geo weltmercator/MWI, even odd rule] (4.52,1.31) -- (4.55,1.20) -- (4.54,1.15) -- (4.49,1.22) -- cycle;
+\path[geo weltmercator, geo weltmercator/MOZ, even odd rule] (4.52,1.25) -- (4.65,1.29) -- (4.66,1.20) -- (4.53,1.08) -- (4.55,0.99) -- (4.48,0.92) -- (4.49,1.15) -- (4.44,1.20) -- (4.50,1.21) -- (4.54,1.15) -- cycle;
+\path[geo weltmercator, geo weltmercator/SWZ, even odd rule] (4.48,0.92) -- (4.45,0.93) -- (4.46,0.95) -- cycle;
+\path[geo weltmercator, geo weltmercator/AGO, even odd rule] (4.07,1.41) -- (4.06,1.39) -- (4.07,1.42) -- cycle (4.07,1.38) -- (4.26,1.36) -- (4.27,1.28) -- (4.31,1.27) -- (4.26,1.24) -- (4.29,1.14) -- (4.05,1.14) -- cycle;
+\path[geo weltmercator, geo weltmercator/BDI, even odd rule] (4.41,1.45) -- (4.44,1.42) -- (4.42,1.42) -- cycle;
+\path[geo weltmercator, geo weltmercator/ISR, even odd rule] (4.56,2.26) -- (4.55,2.20) -- (4.54,2.16) -- (4.52,2.21) -- (4.54,2.25) -- cycle;
+\path[geo weltmercator, geo weltmercator/LBN, even odd rule] (4.57,2.28) -- (4.55,2.27) -- (4.57,2.29) -- cycle;
+\path[geo weltmercator, geo weltmercator/MDG, even odd rule] (4.84,1.25) -- (4.79,0.97) -- (4.76,0.95) -- (4.72,1.02) -- (4.73,1.14) -- cycle;
+\path[geo weltmercator, geo weltmercator/PSX, even odd rule] (4.55,2.22) -- (4.54,2.22) -- (4.54,2.24) -- cycle;
+\path[geo weltmercator, geo weltmercator/GMB, even odd rule] (3.45,1.80) -- (3.51,1.80) -- (3.44,1.79) -- cycle;
+\path[geo weltmercator, geo weltmercator/TUN, even odd rule] (4.00,2.18) -- (3.98,2.35) -- (4.03,2.36) -- (4.04,2.23) -- cycle;
+\path[geo weltmercator, geo weltmercator/DZA, even odd rule] (3.62,2.12) -- (3.77,2.23) -- (3.77,2.32) -- (3.98,2.35) -- (4.00,2.08) -- (4.05,2.02) -- (3.87,1.92) -- cycle;
+\path[geo weltmercator, geo weltmercator/JOR, even odd rule] (4.55,2.24) -- (4.63,2.23) -- (4.54,2.16) -- cycle;
+\path[geo weltmercator, geo weltmercator/ARE, even odd rule] (4.89,2.03) -- (4.94,2.04) -- (4.99,2.07) -- (4.96,2.00) -- cycle;
+\path[geo weltmercator, geo weltmercator/QAT, even odd rule] (4.87,2.07) -- (4.89,2.08) -- (4.88,2.05) -- cycle;
+\path[geo weltmercator, geo weltmercator/KWT, even odd rule] (4.80,2.18) -- (4.82,2.14) -- (4.78,2.15) -- cycle;
+\path[geo weltmercator, geo weltmercator/IRQ, even odd rule] (4.63,2.23) -- (4.69,2.36) -- (4.75,2.36) -- (4.83,2.17) -- (4.74,2.16) -- cycle;
+\path[geo weltmercator, geo weltmercator/OMN, even odd rule] (4.96,1.94) -- (4.99,2.05) -- (5.06,1.99) -- (4.92,1.87) -- (4.90,1.92) -- cycle (4.98,2.08) -- (4.99,2.09) -- (4.99,2.07) -- cycle;
+\path[geo weltmercator, geo weltmercator/VUT, even odd rule] (7.34,1.16) -- (7.33,1.17) -- (7.33,1.17) -- cycle (7.32,1.18) -- (7.33,1.19) -- (7.33,1.17) -- cycle;
+\path[geo weltmercator, geo weltmercator/KHM, even odd rule] (5.97,1.81) -- (6.07,1.81) -- (6.07,1.77) -- (5.98,1.74) -- cycle;
+\path[geo weltmercator, geo weltmercator/THA, even odd rule] (6.03,1.83) -- (5.97,1.77) -- (5.91,1.80) -- (5.89,1.72) -- (5.96,1.64) -- (5.94,1.63) -- (5.87,1.69) -- (5.87,1.94) -- (6.01,1.88) -- cycle;
+\path[geo weltmercator, geo weltmercator/LAO, even odd rule] (6.04,1.81) -- (5.99,1.90) -- (5.93,1.89) -- (5.95,1.99) -- (6.07,1.85) -- cycle;
+\path[geo weltmercator, geo weltmercator/MMR, even odd rule] (5.94,1.98) -- (5.86,1.91) -- (5.90,1.76) -- (5.88,1.72) -- (5.85,1.87) -- (5.79,1.85) -- (5.75,1.98) -- (5.87,2.14) -- (5.86,2.03) -- cycle;
+\path[geo weltmercator, geo weltmercator/VNM, even odd rule] (6.00,1.73) -- (6.07,1.84) -- (5.96,2.00) -- (6.02,2.02) -- (6.08,1.98) -- (6.03,1.92) -- (6.11,1.80) -- (6.02,1.69) -- cycle;
+\path[geo weltmercator, geo weltmercator/PRK, even odd rule] (6.56,2.50) -- (6.56,2.50) -- (6.56,2.50) -- cycle (6.56,2.50) -- (6.51,2.39) -- (6.43,2.38) -- (6.48,2.48) -- cycle;
+\path[geo weltmercator, geo weltmercator/KOR, even odd rule] (6.47,2.28) -- (6.51,2.40) -- (6.53,2.32) -- cycle;
+\path[geo weltmercator, geo weltmercator/MNG, even odd rule] (5.65,2.71) -- (5.85,2.72) -- (5.89,2.80) -- (6.09,2.71) -- (6.26,2.73) -- (6.24,2.66) -- (6.33,2.64) -- (6.02,2.48) -- (5.83,2.51) -- (5.72,2.59) -- cycle;
+\path[geo weltmercator, geo weltmercator/IND, even odd rule] (5.85,2.12) -- (5.76,1.99) -- (5.75,2.06) -- (5.67,2.09) -- (5.68,1.98) -- (5.50,1.85) -- (5.44,1.68) -- (5.33,1.97) -- (5.29,1.96) -- (5.24,2.03) -- (5.30,2.04) -- (5.27,2.10) -- (5.39,2.23) -- (5.36,2.28) -- (5.44,2.31) -- (5.49,2.15) -- (5.56,2.11) -- (5.74,2.10) -- (5.83,2.16) -- cycle;
+\path[geo weltmercator, geo weltmercator/BGD, even odd rule] (5.75,1.98) -- (5.68,1.99) -- (5.67,2.09) -- (5.75,2.06) -- cycle;
+\path[geo weltmercator, geo weltmercator/BTN, even odd rule] (5.74,2.10) -- (5.69,2.10) -- (5.67,2.11) -- (5.70,2.13) -- cycle;
+\path[geo weltmercator, geo weltmercator/NPL, even odd rule] (5.66,2.10) -- (5.60,2.10) -- (5.49,2.15) -- (5.52,2.19) -- cycle;
+\path[geo weltmercator, geo weltmercator/PAK, even odd rule] (5.44,2.31) -- (5.36,2.28) -- (5.39,2.23) -- (5.27,2.10) -- (5.30,2.04) -- (5.10,2.06) -- (5.14,2.10) -- (5.09,2.17) -- (5.20,2.17) -- (5.32,2.34) -- (5.39,2.36) -- cycle;
+\path[geo weltmercator, geo weltmercator/AFG, even odd rule] (5.09,2.32) -- (5.29,2.39) -- (5.32,2.35) -- (5.39,2.36) -- (5.30,2.33) -- (5.20,2.17) -- (5.09,2.17) -- cycle;
+\path[geo weltmercator, geo weltmercator/TJK, even odd rule] (5.24,2.35) -- (5.23,2.42) -- (5.29,2.46) -- (5.27,2.42) -- (5.36,2.42) -- (5.38,2.36) -- (5.32,2.35) -- (5.29,2.39) -- cycle;
+\path[geo weltmercator, geo weltmercator/KGZ, even odd rule] (5.29,2.48) -- (5.37,2.53) -- (5.49,2.50) -- (5.36,2.42) -- (5.27,2.42) -- (5.34,2.46) -- cycle;
+\path[geo weltmercator, geo weltmercator/TKM, even odd rule] (4.91,2.48) -- (5.01,2.47) -- (5.04,2.51) -- (5.20,2.36) -- (5.11,2.31) -- (5.01,2.38) -- (4.94,2.36) -- (4.91,2.43) -- (4.96,2.46) -- cycle;
+\path[geo weltmercator, geo weltmercator/IRN, even odd rule] (4.93,2.10) -- (4.76,2.27) -- (4.75,2.43) -- (4.81,2.42) -- (4.87,2.35) -- (5.00,2.38) -- (5.09,2.34) -- (5.09,2.17) -- (5.14,2.10) -- (5.10,2.06) -- cycle;
+\path[geo weltmercator, geo weltmercator/SYR, even odd rule] (4.56,2.25) -- (4.58,2.35) -- (4.69,2.36) -- (4.67,2.29) -- cycle;
+\path[geo weltmercator, geo weltmercator/ARM, even odd rule] (4.77,2.42) -- (4.72,2.44) -- (4.72,2.46) -- (4.76,2.46) -- cycle;
+\path[geo weltmercator, geo weltmercator/SWE, even odd rule] (4.03,3.06) -- (4.07,3.29) -- (4.15,3.49) -- (4.24,3.56) -- (4.30,3.49) -- (4.30,3.38) -- (4.18,3.23) -- (4.20,3.11) -- (4.10,2.92) -- cycle;
+\path[geo weltmercator, geo weltmercator/BLR, even odd rule] (4.42,2.93) -- (4.49,2.85) -- (4.47,2.80) -- (4.30,2.79) -- (4.30,2.87) -- cycle;
+\path[geo weltmercator, geo weltmercator/UKR, even odd rule] (4.48,2.81) -- (4.65,2.72) -- (4.64,2.67) -- (4.54,2.60) -- (4.47,2.63) -- (4.41,2.59) -- (4.41,2.67) -- (4.27,2.68) -- (4.30,2.79) -- cycle;
+\path[geo weltmercator, geo weltmercator/POL, even odd rule] (4.29,2.88) -- (4.28,2.70) -- (4.22,2.71) -- (4.12,2.77) -- (4.10,2.86) -- (4.17,2.90) -- cycle;
+\path[geo weltmercator, geo weltmercator/AUT, even odd rule] (4.12,2.70) -- (4.11,2.62) -- (4.00,2.64) -- cycle;
+\path[geo weltmercator, geo weltmercator/HUN, even odd rule] (4.28,2.67) -- (4.19,2.60) -- (4.14,2.63) -- (4.16,2.67) -- cycle;
+\path[geo weltmercator, geo weltmercator/MDA, even odd rule] (4.36,2.68) -- (4.43,2.62) -- (4.40,2.59) -- cycle;
+\path[geo weltmercator, geo weltmercator/ROU, even odd rule] (4.36,2.68) -- (4.40,2.54) -- (4.28,2.54) -- (4.23,2.61) -- cycle;
+\path[geo weltmercator, geo weltmercator/LTU, even odd rule] (4.34,2.90) -- (4.30,2.87) -- (4.24,2.95) -- (4.32,2.96) -- cycle;
+\path[geo weltmercator, geo weltmercator/LVA, even odd rule] (4.39,2.97) -- (4.36,2.93) -- (4.24,2.95) -- (4.28,3.01) -- cycle;
+\path[geo weltmercator, geo weltmercator/EST, even odd rule] (4.39,3.07) -- (4.38,3.00) -- (4.29,3.05) -- (4.32,3.08) -- cycle;
+\path[geo weltmercator, geo weltmercator/DEU, even odd rule] (4.10,2.83) -- (4.07,2.65) -- (3.96,2.66) -- (3.93,2.80) -- (3.98,2.91) -- cycle;
+\path[geo weltmercator, geo weltmercator/BGR, even odd rule] (4.29,2.54) -- (4.40,2.54) -- (4.39,2.49) -- (4.28,2.47) -- cycle;
+\path[geo weltmercator, geo weltmercator/GRC, even odd rule] (4.35,2.30) -- (4.30,2.32) -- (4.36,2.31) -- cycle (4.23,2.42) -- (4.36,2.48) -- (4.28,2.44) -- (4.31,2.37) -- (4.27,2.34) -- cycle;
+\path[geo weltmercator, geo weltmercator/TUR, even odd rule] (4.73,2.36) -- (4.43,2.33) -- (4.35,2.42) -- (4.51,2.49) -- (4.70,2.48) -- (4.75,2.43) -- cycle (4.35,2.48) -- (4.41,2.46) -- (4.36,2.44) -- cycle;
+\path[geo weltmercator, geo weltmercator/ALB, even odd rule] (4.23,2.50) -- (4.21,2.44) -- (4.22,2.51) -- cycle;
+\path[geo weltmercator, geo weltmercator/HRV, even odd rule] (4.17,2.61) -- (4.20,2.57) -- (4.13,2.57) -- (4.19,2.50) -- (4.09,2.58) -- cycle;
+\path[geo weltmercator, geo weltmercator/CHE, even odd rule] (4.00,2.64) -- (3.99,2.61) -- (3.93,2.62) -- (3.94,2.65) -- cycle;
+\path[geo weltmercator, geo weltmercator/LUX, even odd rule] (3.93,2.73) -- (3.92,2.72) -- (3.92,2.74) -- cycle;
+\path[geo weltmercator, geo weltmercator/BEL, even odd rule] (3.91,2.78) -- (3.89,2.73) -- (3.85,2.77) -- cycle;
+\path[geo weltmercator, geo weltmercator/NLD, even odd rule] (3.93,2.85) -- (3.93,2.76) -- (3.87,2.78) -- cycle;
+\path[geo weltmercator, geo weltmercator/PRT, even odd rule] (3.63,2.50) -- (3.67,2.47) -- (3.63,2.35) -- (3.60,2.40) -- cycle;
+\path[geo weltmercator, geo weltmercator/ESP, even odd rule] (3.68,2.33) -- (3.67,2.47) -- (3.60,2.52) -- (3.63,2.54) -- (3.86,2.50) -- (3.75,2.34) -- cycle;
+\path[geo weltmercator, geo weltmercator/IRL, even odd rule] (3.66,2.81) -- (3.59,2.79) -- (3.64,2.91) -- (3.67,2.87) -- cycle;
+\path[geo weltmercator, geo weltmercator/NCL, even odd rule] (7.33,1.03) -- (7.29,1.04) -- (7.26,1.08) -- (7.28,1.07) -- cycle;
+\path[geo weltmercator, geo weltmercator/SLB, even odd rule] (7.21,1.28) -- (7.21,1.29) -- (7.23,1.28) -- cycle (7.19,1.32) -- (7.19,1.33) -- (7.21,1.30) -- cycle (7.19,1.30) -- (7.17,1.31) -- (7.20,1.30) -- cycle (7.17,1.34) -- (7.16,1.34) -- (7.14,1.35) -- cycle (7.13,1.36) -- (7.10,1.37) -- (7.10,1.37) -- cycle;
+\path[geo weltmercator, geo weltmercator/NZL, even odd rule] (7.57,0.65) -- (7.49,0.55) -- (7.44,0.73) -- cycle (7.32,0.41) -- (7.47,0.56) -- (7.40,0.42) -- cycle;
+\path[geo weltmercator, geo weltmercator/AUS, even odd rule] (6.93,0.56) -- (6.88,0.49) -- (6.86,0.57) -- cycle (6.57,0.81) -- (6.29,0.72) -- (6.23,0.74) -- (6.21,1.04) -- (6.35,1.09) -- (6.45,1.21) -- (6.54,1.19) -- (6.59,1.27) -- (6.68,1.26) -- (6.66,1.19) -- (6.76,1.13) -- (6.81,1.28) -- (6.89,1.10) -- (7.03,0.94) -- (6.97,0.66) -- (6.89,0.61) -- (6.77,0.64) -- (6.72,0.74) -- (6.69,0.71) -- (6.71,0.77) -- (6.67,0.72) -- cycle;
+\path[geo weltmercator, geo weltmercator/LKA, even odd rule] (5.53,1.67) -- (5.49,1.65) -- (5.49,1.72) -- cycle;
+\path[geo weltmercator, geo weltmercator/CHN, even odd rule] (6.11,1.90) -- (6.13,1.94) -- (6.14,1.94) -- cycle (5.51,2.52) -- (5.49,2.57) -- (5.65,2.71) -- (5.72,2.59) -- (5.83,2.51) -- (6.11,2.50) -- (6.16,2.58) -- (6.33,2.63) -- (6.24,2.67) -- (6.38,2.85) -- (6.46,2.83) -- (6.57,2.66) -- (6.65,2.68) -- (6.56,2.50) -- (6.28,2.40) -- (6.38,2.36) -- (6.32,2.30) -- (6.37,2.22) -- (6.37,2.13) -- (6.13,1.95) -- (6.02,2.02) -- (5.95,1.97) -- (5.90,1.99) -- (5.86,2.03) -- (5.88,2.12) -- (5.83,2.16) -- (5.67,2.11) -- (5.46,2.21) -- (5.47,2.28) -- (5.36,2.42) -- cycle;
+\path[geo weltmercator, geo weltmercator/TWN, even odd rule] (6.35,1.99) -- (6.34,2.02) -- (6.36,2.06) -- (6.37,2.06) -- cycle;
+\path[geo weltmercator, geo weltmercator/ITA, even odd rule] (3.94,2.61) -- (4.09,2.62) -- (4.07,2.55) -- (4.19,2.44) -- (4.16,2.45) -- (4.14,2.38) -- (4.02,2.55) -- (3.95,2.55) -- cycle (4.13,2.39) -- (4.12,2.34) -- (4.06,2.37) -- cycle (3.97,2.46) -- (4.00,2.41) -- (3.99,2.40) -- cycle;
+\path[geo weltmercator, geo weltmercator/DNK, even odd rule] (4.01,2.91) -- (3.97,2.98) -- (4.02,3.01) -- cycle (4.06,2.90) -- (4.03,2.94) -- (4.06,2.95) -- (4.07,2.93) -- cycle;
+\path[geo weltmercator, geo weltmercator/GBR, even odd rule] (3.64,2.87) -- (3.64,2.91) -- (3.66,2.91) -- (3.68,2.89) -- cycle (3.74,2.87) -- (3.68,2.92) -- (3.69,3.05) -- (3.74,3.05) -- (3.73,2.94) -- (3.84,2.83) -- (3.81,2.76) -- (3.69,2.73) -- cycle;
+\path[geo weltmercator, geo weltmercator/ISL, even odd rule] (3.51,3.34) -- (3.41,3.26) -- (3.32,3.28) -- (3.29,3.33) -- (3.33,3.35) -- (3.29,3.36) -- (3.33,3.41) -- (3.37,3.37) -- (3.49,3.41) -- cycle;
+\path[geo weltmercator, geo weltmercator/AZE, even odd rule] (4.75,2.47) -- (4.86,2.44) -- (4.83,2.39) -- cycle (4.76,2.40) -- (4.77,2.42) -- (4.77,2.40) -- cycle;
+\path[geo weltmercator, geo weltmercator/GEO, even odd rule] (4.66,2.53) -- (4.76,2.50) -- (4.78,2.47) -- (4.68,2.48) -- cycle;
+\path[geo weltmercator, geo weltmercator/PHL, even odd rule] (6.34,1.80) -- (6.37,1.79) -- (6.36,1.77) -- cycle (6.38,1.72) -- (6.42,1.75) -- (6.40,1.70) -- cycle (6.45,1.72) -- (6.45,1.63) -- (6.37,1.66) -- cycle (6.27,1.69) -- (6.31,1.73) -- (6.32,1.75) -- (6.33,1.74) -- cycle (6.35,1.91) -- (6.37,1.82) -- (6.42,1.80) -- (6.42,1.78) -- (6.33,1.84) -- cycle (6.37,1.76) -- (6.40,1.75) -- (6.38,1.73) -- cycle (6.45,1.77) -- (6.43,1.73) -- (6.42,1.78) -- cycle;
+\path[geo weltmercator, geo weltmercator/MYS, even odd rule] (5.93,1.64) -- (5.97,1.63) -- (6.00,1.54) -- (5.94,1.57) -- cycle (6.32,1.63) -- (6.22,1.54) -- (6.12,1.54) -- (6.26,1.66) -- cycle;
+\path[geo weltmercator, geo weltmercator/BRN, even odd rule] (6.24,1.63) -- (6.22,1.60) -- (6.21,1.61) -- cycle;
+\path[geo weltmercator, geo weltmercator/SVN, even odd rule] (4.09,2.62) -- (4.15,2.62) -- (4.09,2.59) -- cycle;
+\path[geo weltmercator, geo weltmercator/FIN, even odd rule] (4.39,3.62) -- (4.46,3.21) -- (4.39,3.13) -- (4.28,3.10) -- (4.24,3.22) -- (4.34,3.34) -- (4.24,3.56) -- (4.32,3.53) -- cycle;
+\path[geo weltmercator, geo weltmercator/SVK, even odd rule] (4.27,2.68) -- (4.18,2.66) -- (4.16,2.68) -- (4.21,2.72) -- cycle;
+\path[geo weltmercator, geo weltmercator/CZE, even odd rule] (4.10,2.77) -- (4.20,2.72) -- (4.16,2.69) -- (4.06,2.72) -- cycle;
+\path[geo weltmercator, geo weltmercator/ERI, even odd rule] (4.57,1.82) -- (4.61,1.90) -- (4.71,1.78) -- cycle;
+\path[geo weltmercator, geo weltmercator/JPN, even odd rule] (6.78,2.36) -- (6.67,2.26) -- (6.65,2.29) -- (6.57,2.27) -- (6.55,2.21) -- (6.53,2.26) -- (6.60,2.31) -- (6.66,2.31) -- (6.78,2.47) -- cycle (6.87,2.53) -- (6.79,2.51) -- (6.75,2.48) -- (6.80,2.59) -- cycle (6.61,2.28) -- (6.65,2.27) -- (6.59,2.25) -- cycle;
+\path[geo weltmercator, geo weltmercator/PRY, even odd rule] (2.53,1.09) -- (2.65,0.99) -- (2.62,0.91) -- (2.56,0.92) -- (2.58,0.96) -- (2.48,1.03) -- cycle;
+\path[geo weltmercator, geo weltmercator/YEM, even odd rule] (4.92,1.87) -- (4.73,1.78) -- (4.70,1.84) -- (4.72,1.89) -- (4.84,1.91) -- (4.90,1.92) -- cycle;
+\path[geo weltmercator, geo weltmercator/SAU, even odd rule] (4.53,2.13) -- (4.63,2.23) -- (4.82,2.14) -- (4.90,2.01) -- (4.97,2.00) -- (4.96,1.94) -- (4.70,1.86) -- cycle;
+\path[geo weltmercator, geo weltmercator/CYN, even odd rule] (4.52,2.30) -- (4.51,2.31) -- (4.53,2.32) -- cycle;
+\path[geo weltmercator, geo weltmercator/CYP, even odd rule] (4.49,2.30) -- (4.52,2.30) -- (4.48,2.30) -- cycle;
+\path[geo weltmercator, geo weltmercator/MAR, even odd rule] (3.67,2.32) -- (3.77,2.23) -- (3.44,1.97) -- cycle;
+\path[geo weltmercator, geo weltmercator/EGY, even odd rule] (4.58,1.99) -- (4.33,1.99) -- (4.32,2.20) -- (4.52,2.21) -- (4.52,2.12) -- (4.48,2.17) -- cycle;
+\path[geo weltmercator, geo weltmercator/LBY, even odd rule] (4.30,1.94) -- (4.02,2.04) -- (4.00,2.18) -- (4.04,2.25) -- (4.20,2.18) -- (4.24,2.24) -- (4.33,2.22) -- cycle;
+\path[geo weltmercator, geo weltmercator/ETH, even odd rule] (4.81,1.68) -- (4.60,1.59) -- (4.50,1.68) -- (4.57,1.82) -- (4.66,1.81) -- (4.72,1.71) -- cycle;
+\path[geo weltmercator, geo weltmercator/DJI, even odd rule] (4.69,1.78) -- (4.70,1.74) -- (4.68,1.75) -- cycle;
+\path[geo weltmercator, geo weltmercator/SOL, even odd rule] (4.83,1.74) -- (4.81,1.68) -- (4.70,1.74) -- (4.71,1.75) -- cycle;
+\path[geo weltmercator, geo weltmercator/UGA, even odd rule] (4.45,1.49) -- (4.45,1.59) -- (4.52,1.60) -- (4.52,1.49) -- cycle;
+\path[geo weltmercator, geo weltmercator/RWA, even odd rule] (4.42,1.48) -- (4.43,1.45) -- (4.41,1.45) -- cycle;
+\path[geo weltmercator, geo weltmercator/BIH, even odd rule] (4.19,2.51) -- (4.14,2.58) -- (4.21,2.57) -- cycle;
+\path[geo weltmercator, geo weltmercator/MKD, even odd rule] (4.27,2.50) -- (4.24,2.46) -- (4.23,2.48) -- cycle;
+\path[geo weltmercator, geo weltmercator/SRB, even odd rule] (4.21,2.61) -- (4.28,2.56) -- (4.27,2.50) -- (4.21,2.53) -- cycle;
+\path[geo weltmercator, geo weltmercator/MNE, even odd rule] (4.21,2.53) -- (4.21,2.49) -- (4.19,2.50) -- cycle;
+\path[geo weltmercator, geo weltmercator/KOS, even odd rule] (4.24,2.49) -- (4.24,2.53) -- (4.26,2.51) -- cycle;
+\path[geo weltmercator, geo weltmercator/TTO, even odd rule] (2.50,1.74) -- (2.51,1.73) -- (2.49,1.73) -- cycle;
+\path[geo weltmercator, geo weltmercator/SDS, even odd rule] (4.43,1.61) -- (4.30,1.69) -- (4.34,1.73) -- (4.46,1.72) -- (4.50,1.77) -- (4.50,1.68) -- (4.55,1.63) -- cycle;
+\coordinate (weltmercator-FJI) at (7.59,1.16);
+\coordinate (weltmercator-TZA) at (4.52,1.41);
+\coordinate (weltmercator-SAH) at (3.51,2.02);
+\coordinate (weltmercator-CAN) at (1.33,3.11);
+\coordinate (weltmercator-USA) at (1.70,2.37);
+\coordinate (weltmercator-KAZ) at (5.21,2.70);
+\coordinate (weltmercator-UZB) at (5.15,2.47);
+\coordinate (weltmercator-PNG) at (6.85,1.37);
+\coordinate (weltmercator-IDN) at (6.20,1.50);
+\coordinate (weltmercator-ARG) at (2.40,0.62);
+\coordinate (weltmercator-CHL) at (2.34,0.17);
+\coordinate (weltmercator-COD) at (4.27,1.41);
+\coordinate (weltmercator-SOM) at (4.79,1.62);
+\coordinate (weltmercator-KEN) at (4.60,1.54);
+\coordinate (weltmercator-SDN) at (4.45,1.83);
+\coordinate (weltmercator-TCD) at (4.20,1.88);
+\coordinate (weltmercator-HTI) at (2.26,1.93);
+\coordinate (weltmercator-DOM) at (2.31,1.93);
+\coordinate (weltmercator-RUS) at (6.13,3.34);
+\coordinate (weltmercator-BHS) at (2.14,2.10);
+\coordinate (weltmercator-FLK) at (2.53,0.23);
+\coordinate (weltmercator-NOR) at (4.27,4.44);
+\coordinate (weltmercator-GRL) at (2.93,4.06);
+\coordinate (weltmercator-ATF) at (5.26,0.32);
+\coordinate (weltmercator-TLS) at (6.46,1.32);
+\coordinate (weltmercator-ZAF) at (4.31,0.87);
+\coordinate (weltmercator-LSO) at (4.39,0.86);
+\coordinate (weltmercator-MEX) at (1.63,2.05);
+\coordinate (weltmercator-URY) at (2.60,0.81);
+\coordinate (weltmercator-BRA) at (2.75,1.20);
+\coordinate (weltmercator-BOL) at (2.44,1.18);
+\coordinate (weltmercator-PER) at (2.22,1.30);
+\coordinate (weltmercator-COL) at (2.26,1.59);
+\coordinate (weltmercator-PAN) at (2.09,1.69);
+\coordinate (weltmercator-CRI) at (2.03,1.71);
+\coordinate (weltmercator-NIC) at (2.02,1.81);
+\coordinate (weltmercator-HND) at (1.97,1.82);
+\coordinate (weltmercator-SLV) at (1.93,1.80);
+\coordinate (weltmercator-GTM) at (1.89,1.86);
+\coordinate (weltmercator-BLZ) at (1.92,1.87);
+\coordinate (weltmercator-VEN) at (2.43,1.65);
+\coordinate (weltmercator-GUY) at (2.56,1.59);
+\coordinate (weltmercator-SUR) at (2.62,1.61);
+\coordinate (weltmercator-FRA) at (3.84,2.66);
+\coordinate (weltmercator-ECU) at (2.14,1.45);
+\coordinate (weltmercator-PRI) at (2.38,1.90);
+\coordinate (weltmercator-JAM) at (2.16,1.90);
+\coordinate (weltmercator-CUB) at (2.16,1.96);
+\coordinate (weltmercator-ZWE) at (4.42,1.08);
+\coordinate (weltmercator-BWA) at (4.29,0.98);
+\coordinate (weltmercator-NAM) at (4.16,1.01);
+\coordinate (weltmercator-SEN) at (3.50,1.81);
+\coordinate (weltmercator-MLI) at (3.78,1.88);
+\coordinate (weltmercator-MRT) at (3.60,2.01);
+\coordinate (weltmercator-BEN) at (3.84,1.69);
+\coordinate (weltmercator-NER) at (4.00,1.88);
+\coordinate (weltmercator-NGA) at (3.96,1.71);
+\coordinate (weltmercator-CMR) at (4.09,1.72);
+\coordinate (weltmercator-TGO) at (3.82,1.69);
+\coordinate (weltmercator-GHA) at (3.78,1.68);
+\coordinate (weltmercator-CIV) at (3.69,1.67);
+\coordinate (weltmercator-GIN) at (3.59,1.70);
+\coordinate (weltmercator-GNB) at (3.49,1.77);
+\coordinate (weltmercator-LBR) at (3.61,1.63);
+\coordinate (weltmercator-SLE) at (3.55,1.69);
+\coordinate (weltmercator-BFA) at (3.77,1.77);
+\coordinate (weltmercator-CAF) at (4.26,1.69);
+\coordinate (weltmercator-COG) at (4.11,1.47);
+\coordinate (weltmercator-GAB) at (4.05,1.48);
+\coordinate (weltmercator-GNQ) at (4.01,1.55);
+\coordinate (weltmercator-ZMB) at (4.38,1.22);
+\coordinate (weltmercator-MWI) at (4.52,1.26);
+\coordinate (weltmercator-MOZ) at (4.53,1.12);
+\coordinate (weltmercator-SWZ) at (4.46,0.94);
+\coordinate (weltmercator-AGO) at (4.17,1.25);
+\coordinate (weltmercator-BDI) at (4.42,1.44);
+\coordinate (weltmercator-ISR) at (4.54,2.23);
+\coordinate (weltmercator-LBN) at (4.57,2.29);
+\coordinate (weltmercator-MDG) at (4.77,1.08);
+\coordinate (weltmercator-PSX) at (4.54,2.23);
+\coordinate (weltmercator-GMB) at (3.46,1.79);
+\coordinate (weltmercator-TUN) at (4.01,2.29);
+\coordinate (weltmercator-DZA) at (3.84,2.18);
+\coordinate (weltmercator-JOR) at (4.56,2.19);
+\coordinate (weltmercator-ARE) at (4.95,2.03);
+\coordinate (weltmercator-QAT) at (4.88,2.06);
+\coordinate (weltmercator-KWT) at (4.80,2.17);
+\coordinate (weltmercator-IRQ) at (4.72,2.29);
+\coordinate (weltmercator-OMN) at (5.00,1.97);
+\coordinate (weltmercator-VUT) at (7.33,1.18);
+\coordinate (weltmercator-KHM) at (6.02,1.79);
+\coordinate (weltmercator-THA) at (5.96,1.78);
+\coordinate (weltmercator-LAO) at (6.01,1.89);
+\coordinate (weltmercator-MMR) at (5.83,1.94);
+\coordinate (weltmercator-VNM) at (6.05,1.88);
+\coordinate (weltmercator-PRK) at (6.49,2.44);
+\coordinate (weltmercator-KOR) at (6.51,2.36);
+\coordinate (weltmercator-MNG) at (5.99,2.65);
+\coordinate (weltmercator-IND) at (5.46,2.01);
+\coordinate (weltmercator-BGD) at (5.71,2.02);
+\coordinate (weltmercator-BTN) at (5.70,2.12);
+\coordinate (weltmercator-NPL) at (5.58,2.12);
+\coordinate (weltmercator-PAK) at (5.29,2.20);
+\coordinate (weltmercator-AFG) at (5.17,2.25);
+\coordinate (weltmercator-TJK) at (5.30,2.41);
+\coordinate (weltmercator-KGZ) at (5.38,2.47);
+\coordinate (weltmercator-TKM) at (5.04,2.41);
+\coordinate (weltmercator-IRN) at (4.95,2.22);
+\coordinate (weltmercator-SYR) at (4.62,2.32);
+\coordinate (weltmercator-ARM) at (4.75,2.43);
+\coordinate (weltmercator-SWE) at (4.13,3.26);
+\coordinate (weltmercator-BLR) at (4.39,2.86);
+\coordinate (weltmercator-UKR) at (4.46,2.70);
+\coordinate (weltmercator-POL) at (4.20,2.82);
+\coordinate (weltmercator-AUT) at (4.09,2.67);
+\coordinate (weltmercator-HUN) at (4.20,2.65);
+\coordinate (weltmercator-MDA) at (4.39,2.65);
+\coordinate (weltmercator-ROU) at (4.32,2.58);
+\coordinate (weltmercator-LTU) at (4.30,2.92);
+\coordinate (weltmercator-LVA) at (4.31,2.96);
+\coordinate (weltmercator-EST) at (4.36,3.02);
+\coordinate (weltmercator-DEU) at (4.01,2.73);
+\coordinate (weltmercator-BGR) at (4.34,2.51);
+\coordinate (weltmercator-GRC) at (4.27,2.40);
+\coordinate (weltmercator-TUR) at (4.56,2.39);
+\coordinate (weltmercator-ALB) at (4.22,2.47);
+\coordinate (weltmercator-HRV) at (4.15,2.54);
+\coordinate (weltmercator-CHE) at (3.96,2.63);
+\coordinate (weltmercator-LUX) at (3.92,2.72);
+\coordinate (weltmercator-BEL) at (3.88,2.75);
+\coordinate (weltmercator-NLD) at (3.91,2.82);
+\coordinate (weltmercator-PRT) at (3.63,2.44);
+\coordinate (weltmercator-ESP) at (3.73,2.41);
+\coordinate (weltmercator-IRL) at (3.64,2.84);
+\coordinate (weltmercator-NCL) at (7.29,1.06);
+\coordinate (weltmercator-SLB) at (7.21,1.29);
+\coordinate (weltmercator-NZL) at (7.50,0.60);
+\coordinate (weltmercator-AUS) at (6.60,0.99);
+\coordinate (weltmercator-LKA) at (5.50,1.69);
+\coordinate (weltmercator-CHN) at (5.84,2.41);
+\coordinate (weltmercator-TWN) at (6.36,2.04);
+\coordinate (weltmercator-ITA) at (4.09,2.50);
+\coordinate (weltmercator-DNK) at (4.00,2.94);
+\coordinate (weltmercator-GBR) at (3.74,2.89);
+\coordinate (weltmercator-ISL) at (3.40,3.33);
+\coordinate (weltmercator-AZE) at (4.83,2.41);
+\coordinate (weltmercator-GEO) at (4.72,2.49);
+\coordinate (weltmercator-PHL) at (6.43,1.69);
+\coordinate (weltmercator-MYS) at (6.22,1.58);
+\coordinate (weltmercator-BRN) at (6.23,1.62);
+\coordinate (weltmercator-SVN) at (4.11,2.61);
+\coordinate (weltmercator-FIN) at (4.36,3.43);
+\coordinate (weltmercator-SVK) at (4.21,2.70);
+\coordinate (weltmercator-CZE) at (4.12,2.74);
+\coordinate (weltmercator-ERI) at (4.62,1.86);
+\coordinate (weltmercator-JPN) at (6.72,2.34);
+\coordinate (weltmercator-PRY) at (2.57,1.01);
+\coordinate (weltmercator-YEM) at (4.80,1.85);
+\coordinate (weltmercator-SAU) at (4.72,2.07);
+\coordinate (weltmercator-CYN) at (4.52,2.31);
+\coordinate (weltmercator-CYP) at (4.50,2.30);
+\coordinate (weltmercator-MAR) at (3.57,2.10);
+\coordinate (weltmercator-EGY) at (4.44,2.05);
+\coordinate (weltmercator-LBY) at (4.16,2.11);
+\coordinate (weltmercator-ETH) at (4.64,1.69);
+\coordinate (weltmercator-DJI) at (4.69,1.76);
+\coordinate (weltmercator-SOL) at (4.79,1.71);
+\coordinate (weltmercator-UGA) at (4.48,1.54);
+\coordinate (weltmercator-RWA) at (4.42,1.47);
+\coordinate (weltmercator-BIH) at (4.18,2.54);
+\coordinate (weltmercator-MKD) at (4.26,2.49);
+\coordinate (weltmercator-SRB) at (4.24,2.55);
+\coordinate (weltmercator-MNE) at (4.20,2.52);
+\coordinate (weltmercator-KOS) at (4.24,2.50);
+\coordinate (weltmercator-TTO) at (2.50,1.73);
+\coordinate (weltmercator-SDS) at (4.41,1.68);
+}
+\makeatother
+% Kartenrahmen: (0,0) bis (7.60,5.08)

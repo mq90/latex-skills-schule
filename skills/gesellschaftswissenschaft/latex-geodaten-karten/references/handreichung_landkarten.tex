@@ -1,0 +1,373 @@
+\input{header.tex}
+\input{newcommands.tex}
+
+
+\title{Landkarten aus Geodaten mit \TikZ zeichnen}
+\author{Fortbildungsmaterial für Lehrkräfte}
+\date{\today}
+\pagestyle{plain}
+\setlength{\parskip}{1.5em} % Abstand zwischen Absätzen (Handreichungen)
+\setlength{\emergencystretch}{2em} % lange \texttt-Wörter umbrechen statt über den Rand
+
+% Beispieldaten, erzeugt mit geo2tikz.py aus Natural Earth (gemeinfrei)
+\input{beispiel_deutschland.tex}
+\input{beispiel_sachsen_A.tex}
+\input{beispiel_sachsen_B.tex}
+\input{beispiel_sachsen_C.tex}
+\input{beispiel_welt_mercator.tex}
+\input{beispiel_welt_equalearth.tex}
+
+
+\begin{document}
+
+\maketitle
+
+Stumme Karten zum Beschriften, eine Lagekarte für ein Projekt in Sachsen, Kartenprojektionen im Vergleich oder ein Algorithmus, der Umrisse vereinfacht: Karten sind in Geografie, Geschichte, Gemeinschaftskunde, Mathematik und Informatik nützlich. Eine Karte \enquote{aus dem Kopf} mit Ti\textit{k}Z-Koordinaten zu zeichnen, gelingt aber nie überzeugend. Diese Handreichung zeigt einen anderen Weg: Freie Geodaten werden mit einem kleinen Python-Skript in Ti\textit{k}Z-Pfade umgerechnet, danach lässt sich jedes Bundesland, jeder Fluss und jede Stadt einzeln gestalten.
+
+
+
+%%%%  KAPITEL 1  %%%%
+\section{Der Arbeitsablauf}
+
+Eine Karte entsteht in drei Schritten:
+
+\begin{enumerate}
+	\item \textbf{Daten holen.} Freie Geodaten im Format GeoJSON herunterladen, zum Beispiel Bundesländer, Flüsse und Seen.
+	\item \textbf{Umrechnen.} Das Skript \texttt{geo2tikz.py} aus dem Ordner \texttt{scripts} des Skills projiziert die Daten aufs Papier, vereinfacht die Umrisse, schneidet den Ausschnitt zu und schreibt eine \texttt{.tex}-Datei.
+	\item \textbf{Gestalten.} Die erzeugte Datei wird mit \texttt{\textbackslash input} geladen. Farben, Linien und Beschriftungen legt man wie gewohnt in \TikZ fest.
+\end{enumerate}
+
+Das Skript braucht Python~3 und zwei Zusatzpakete, die man einmalig installiert:
+
+\begin{lstlisting}[style=latex]
+pip install shapely pyproj
+\end{lstlisting}
+
+Für die Karte selbst genügt \TikZ und das ist in der universalen \texttt{header.tex} bereits geladen.
+
+
+
+%%%%  KAPITEL 2  %%%%
+\section{Geodaten besorgen}
+
+
+%%%%  UNTERKAPITEL 2.1  %%%%
+\subsection{Datenquellen und Lizenzen}
+
+\begin{center}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}p{7.4cm}>{\raggedright\arraybackslash}p{4.2cm}@{}}
+	\toprule
+	\textbf{Quelle} & \textbf{Inhalt} & \textbf{Lizenz} \\
+	\midrule
+	Natural Earth & Staaten, Bundesländer und Provinzen, Flüsse, Seen, Gebirgsregionen, Straßen, Bahnlinien, Städte & gemeinfrei; Quellenangabe ist trotzdem üblich \\
+	historical-basemaps & Weltgrenzen zu Stichjahren, etwa 1938 oder 1945 & GPL-3.0: Quelle nennen, abgeleitete Daten bleiben GPL \\
+	AWMC geodata & Antike, zum Beispiel das Römische Reich & ODbL: Quelle nennen \\
+	\bottomrule
+\end{tabular}
+\end{center}
+
+Alle drei Quellen liegen auf GitHub: \texttt{nvkelso/natural-earth-vector} (Ordner \texttt{geojson}), \texttt{aourednik/historical-basemaps} und \texttt{AWMC/geodata}. Die Rohdaten sind teilweise sehr groß (die Bundesländer der ganzen Welt umfassen 39\,MB). Man legt sie deshalb nicht in Materialsammlungen ab, sondern notiert den Download-Befehl. Auf jede Karte gehört eine Quellenzeile.
+
+
+%%%%  UNTERKAPITEL 2.2  %%%%
+\subsection{Herunterladen}
+
+Im Terminal lädt \texttt{curl} die Dateien direkt herunter. Für eine Deutschlandkarte mit Bundesländern, Nachbarstaaten, Flüssen, Seen und Städten:
+
+\begin{lstlisting}[style=latex]
+B=https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson
+curl -sSfLO $B/ne_10m_admin_1_states_provinces.geojson
+curl -sSfLO $B/ne_50m_admin_0_countries.geojson
+curl -sSfLO $B/ne_10m_rivers_lake_centerlines.geojson
+curl -sSfLO $B/ne_10m_lakes.geojson
+curl -sSfLO $B/ne_10m_populated_places_simple.geojson
+\end{lstlisting}
+
+Die Zahl im Dateinamen gibt die Genauigkeit an: \texttt{10m} ist der feinste Maßstab (1\,:\,10~Mio.), \texttt{50m} und \texttt{110m} sind gröber und reichen für Übersichtskarten von Europa oder der Welt.
+
+
+
+%%%%  KAPITEL 3  %%%%
+\section{Umrechnen mit \texttt{geo2tikz.py}}
+
+
+%%%%  UNTERKAPITEL 3.1  %%%%
+\subsection{Der Aufruf}
+
+Das Skript bekommt den Kartenausschnitt in Grad, die gewünschte Breite in Zentimetern, eine Projektion und eine oder mehrere Ebenen. Alle Ebenen einer Karte werden in \textbf{einem} Aufruf umgerechnet, sonst haben sie verschiedene Maßstäbe und die Flüsse liegen neben den Ländern. Mit diesem Aufruf entstand die Datei für die Beispiele dieser Handreichung:
+
+\begin{lstlisting}[style=latex]
+python3 geo2tikz.py --bbox 5.8,47.2,15.1,55.1 --breite 9 --proj EPSG:3035 --toleranz 0.03 \
+  --ebene "name=laender; datei=ne_10m_admin_1_states_provinces.geojson; filter=iso_a2=DE; id=iso_3166_2" \
+  --ebene "name=nachbarn; datei=ne_50m_admin_0_countries.geojson; filter=ISO_A2_EH=PL|CZ|AT|CH|FR|BE|NL|LU|DK; id=ISO_A2_EH" \
+  --ebene "name=fluesse; datei=ne_10m_rivers_lake_centerlines.geojson; id=name" \
+  --ebene "name=seen; datei=ne_10m_lakes.geojson; id=name" \
+  --ebene "name=staedte; datei=ne_10m_populated_places_simple.geojson; filter=adm0_a3=DEU; id=name" \
+  -o beispiel_deutschland.tex
+\end{lstlisting}
+
+Das Skript meldet danach, wie viele Objekte jede Ebene enthält und wie groß die Karte wird, hier 9,0\,×\,11,4\,cm.
+
+
+%%%%  UNTERKAPITEL 3.2  %%%%
+\subsection{Die Optionen}
+
+\begin{center}
+\begin{tabular}{@{}l>{\raggedright\arraybackslash}p{11.5cm}@{}}
+	\toprule
+	\textbf{Option} & \textbf{Bedeutung} \\
+	\midrule
+	\texttt{-{}-bbox} & Ausschnitt als Länge/Breite links unten und rechts oben in Grad. Bei negativen Werten mit Gleichheitszeichen schreiben: \texttt{-{}-bbox=-180,-58,180,84} \\
+	\texttt{-{}-breite} & Kartenbreite in cm; die Höhe ergibt sich aus der Projektion \\
+	\texttt{-{}-proj} & \texttt{plattkarte} (Standard), \texttt{mercator} oder ein EPSG-Code: \texttt{EPSG:3035} für Europa (flächentreu), \texttt{EPSG:25833} für Ostdeutschland, \texttt{EPSG:8857} (Equal Earth) für die Welt \\
+	\texttt{-{}-toleranz} & Vereinfachung der Umrisse in cm (Kapitel~6); \texttt{0} schaltet sie aus \\
+	\texttt{-{}-ebene} & eine Ebene: \texttt{name} (nur Buchstaben), \texttt{datei}, optional \texttt{filter} und \texttt{id} \\
+	\texttt{-o} & Name der erzeugten Datei \\
+	\bottomrule
+\end{tabular}
+\end{center}
+
+Zwei Fallstricke bei den Filtern: Bundesländer haben in Natural Earth die Kennung \texttt{iso\_3166\_2} (\texttt{DE-SN}, \texttt{DE-BY} \dots). Bei Staaten fehlen Frankreich und Norwegen, wenn man nach \texttt{ISO\_A2} filtert, weil dort \texttt{-99} eingetragen ist. Deshalb filtert man Staaten nach \texttt{ISO\_A2\_EH} oder \texttt{ADM0\_A3} (\texttt{DEU}, \texttt{FRA}).
+
+
+%%%%  UNTERKAPITEL 3.3  %%%%
+\subsection{Was in der erzeugten Datei steht}
+
+Für jede Ebene schreibt das Skript einen Befehl, der alle Objekte zeichnet, und einen leeren Stil für die Ebene und für jedes einzelne Objekt. Außerdem legt es für jedes Objekt einen Punkt an, der garantiert im Inneren liegt. Gekürzt sieht das so aus:
+
+\begin{lstlisting}[style=latex]
+\tikzset{geo laender/.style={},
+  geo laender/DE-SN/.style={},
+  geo laender/DE-BY/.style={}, ...}
+\newcommand\geolaender{%
+\path[geo laender, geo laender/DE-SN, even odd rule] (8.08,5.57) -- (7.90,5.56) -- ... -- cycle;
+...
+\coordinate (laender-DE-SN) at (7.17,5.32);
+...}
+\end{lstlisting}
+
+Daraus ergibt sich die Arbeitsweise:
+
+\begin{center}
+\begin{tabular}{@{}ll>{\raggedright\arraybackslash}p{5.2cm}@{}}
+	\toprule
+	\textbf{Element} & \textbf{Beispiel} & \textbf{Zweck} \\
+	\midrule
+	Befehl der Ebene & \texttt{\textbackslash geolaender} & zeichnet alle Objekte der Ebene \\
+	Stil der Ebene & \texttt{geo laender/.style=\{\dots\}} & Aussehen aller Objekte \\
+	Stil eines Objekts & \texttt{geo laender/DE-SN/.style=\{\dots\}} & ein Objekt hervorheben \\
+	Punkt im Objekt & \texttt{(laender-DE-SN)} & Beschriftung, Markierung \\
+	\bottomrule
+\end{tabular}
+\end{center}
+
+Weil alle Stile zunächst leer sind, zeichnet ein Befehl wie \texttt{\textbackslash geolaender} ohne eigenen Stil nichts. Erst ein Stil mit \texttt{fill} oder \texttt{draw} macht die Ebene sichtbar.
+
+
+
+%%%%  KAPITEL 4  %%%%
+\section{Die erste Karte}
+
+Die erzeugte Datei wird in der Präambel geladen:
+
+\begin{lstlisting}[style=latex]
+\input{beispiel_deutschland.tex}
+\end{lstlisting}
+
+Danach genügt ein Stil für die Ebene und der Befehl \texttt{\textbackslash geolaender}. Mit \texttt{scale} lässt sich die Karte verkleinern:
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}[scale=0.6,
+	geo laender/.style={fill=green!10, draw=gray!70, line width=0.4pt}]
+	\geolaender
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\centering
+	\begin{tikzpicture}[scale=0.6,
+		geo laender/.style={fill=green!10, draw=gray!70, line width=0.4pt}]
+		\geolaender
+	\end{tikzpicture}
+\end{ausgabe}
+
+Die Stile stehen hier in den Optionen der \texttt{tikzpicture}. Sie gelten dann nur für diese eine Karte, und dieselben Daten lassen sich im selben Dokument für eine zweite Karte mit anderem Aussehen verwenden.
+
+
+
+%%%%  KAPITEL 5  %%%%
+\section{Karten gestalten}
+
+
+%%%%  UNTERKAPITEL 5.1  %%%%
+\subsection{Mehrere Ebenen, Hervorhebungen und Städte}
+
+Die Ebenen werden von unten nach oben gezeichnet: erst die Nachbarstaaten, dann die Bundesländer, darüber Seen und Flüsse und zuletzt die Beschriftung. \texttt{\textbackslash clip} schneidet alles am Kartenrand ab; die Maße stehen in der letzten Zeile der erzeugten Datei. Die Ebene \texttt{staedte} zeichnet selbst nichts, legt aber die Punkte der Städte an.
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}[scale=0.85,
+	geo nachbarn/.style={fill=gray!12, draw=gray!50, line width=0.3pt},
+	geo laender/.style={fill=green!8, draw=gray!70, line width=0.4pt},
+	geo laender/DE-SN/.style={fill=orange!45},
+	geo seen/.style={fill=blue!25, draw=blue!50, line width=0.3pt},
+	geo fluesse/.style={draw=blue!60, line width=0.6pt, line cap=round, line join=round}]
+	\clip (0,0) rectangle (9,11.37);
+	\geonachbarn \geolaender \geoseen \geofluesse \geostaedte
+	\foreach \s/\n/\pos in {Berlin/Berlin/right, Hamburg/Hamburg/left, Leipzig/Leipzig/left,
+	                        Dresden/Dresden/right, Munich/München/right, Cologne/Köln/left}
+		\fill (staedte-\s) circle (1.5pt) node[\pos, font=\scriptsize] {\n};
+	\node[below right, font=\scriptsize\itshape, text=blue!70!black] at (fluesse-Elbe) {Elbe};
+	\node[anchor=south east, font=\tiny, fill=white, inner sep=1pt] at (9,0) {Kartendaten: Natural Earth (gemeinfrei)};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\centering
+	\begin{tikzpicture}[scale=0.85,
+		geo nachbarn/.style={fill=gray!12, draw=gray!50, line width=0.3pt},
+		geo laender/.style={fill=green!8, draw=gray!70, line width=0.4pt},
+		geo laender/DE-SN/.style={fill=orange!45},
+		geo seen/.style={fill=blue!25, draw=blue!50, line width=0.3pt},
+		geo fluesse/.style={draw=blue!60, line width=0.6pt, line cap=round, line join=round}]
+		\clip (0,0) rectangle (9,11.37);
+		\geonachbarn \geolaender \geoseen \geofluesse \geostaedte
+		\foreach \s/\n/\pos in {Berlin/Berlin/right, Hamburg/Hamburg/left, Leipzig/Leipzig/left,
+		                        Dresden/Dresden/right, Munich/München/right, Cologne/Köln/left}
+			\fill (staedte-\s) circle (1.5pt) node[\pos, font=\scriptsize] {\n};
+		\node[below right, font=\scriptsize\itshape, text=blue!70!black] at (fluesse-Elbe) {Elbe};
+		\node[anchor=south east, font=\tiny, fill=white, inner sep=1pt] at (9,0) {Kartendaten: Natural Earth (gemeinfrei)};
+	\end{tikzpicture}
+\end{ausgabe}
+
+Die Namen der Städte stammen aus Natural Earth und sind englisch (\texttt{Munich}, \texttt{Cologne}). Umlaute ersetzt das Skript in den Namen der Punkte, aus Düsseldorf wird \texttt{staedte-Duesseldorf}. Welche Namen es gibt, zeigt ein Blick in die erzeugte Datei. Bei Flüssen lohnt das besonders: Der Rhein heißt je nach Abschnitt \texttt{Rhein}, \texttt{Rhin} oder \texttt{Rhine}.
+
+
+%%%%  UNTERKAPITEL 5.2  %%%%
+\subsection{Eine stumme Karte}
+
+Für ein Arbeitsblatt bekommen die Bundesländer Nummern statt Namen. Die Schleife setzt an den Punkt jedes Landes einen kleinen Kreis mit seiner Nummer:
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}[scale=0.6,
+	geo laender/.style={fill=white, draw=black, line width=0.4pt}]
+	\geolaender
+	\foreach \l [count=\n] in {SH,HH,MV,HB,NI,BE,BB,ST,NW,HE,TH,SN,RP,SL,BW,BY}
+		\node[circle, fill=white, draw, inner sep=0.8pt, font=\tiny] at (laender-DE-\l) {\n};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\centering
+	\begin{tikzpicture}[scale=0.6,
+		geo laender/.style={fill=white, draw=black, line width=0.4pt}]
+		\geolaender
+		\foreach \l [count=\n] in {SH,HH,MV,HB,NI,BE,BB,ST,NW,HE,TH,SN,RP,SL,BW,BY}
+			\node[circle, fill=white, draw, inner sep=0.8pt, font=\tiny] at (laender-DE-\l) {\n};
+	\end{tikzpicture}
+\end{ausgabe}
+
+Die Lösung ergibt sich aus der Reihenfolge in der Liste: 1~Schleswig-Holstein, 2~Hamburg, 3~Mecklenburg-Vorpommern, 4~Bremen und so weiter. Wer die Reihenfolge der Liste ändert, bekommt eine neue Fassung für die Parallelklasse.
+
+
+
+%%%%  KAPITEL 6  %%%%
+\section{Umrisse vereinfachen}
+
+Echte Grenzen haben sehr viele Eckpunkte. Für eine kleine Karte sind die meisten davon unsichtbar, machen die Datei aber groß und \hologo{LaTeX} langsam. Das Skript vereinfacht die Umrisse deshalb mit dem Douglas-Peucker-Algorithmus: Ein Eckpunkt fällt weg, wenn er weniger als \texttt{-{}-toleranz} Zentimeter von der Linie zwischen seinen Nachbarn abweicht. Sachsen, dreimal mit verschiedener Toleranz umgerechnet:
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}[geo sachsenA/.style={fill=orange!40, draw=black, line width=0.4pt}]
+	\geosachsenA \node at (2.3,-0.4) {\small Toleranz 0: 645 Ecken};
+\end{tikzpicture}\hfill
+\begin{tikzpicture}[geo sachsenB/.style={fill=orange!40, draw=black, line width=0.4pt}]
+	\geosachsenB \node at (2.3,-0.4) {\small 0,05\,cm: 56 Ecken};
+\end{tikzpicture}\hfill
+\begin{tikzpicture}[geo sachsenC/.style={fill=orange!40, draw=black, line width=0.4pt}]
+	\geosachsenC \node at (2.3,-0.4) {\small 0,25\,cm: 14 Ecken};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\begin{tikzpicture}[geo sachsenA/.style={fill=orange!40, draw=black, line width=0.4pt}]
+		\geosachsenA \node at (2.3,-0.4) {\small Toleranz 0: 645 Ecken};
+	\end{tikzpicture}\hfill
+	\begin{tikzpicture}[geo sachsenB/.style={fill=orange!40, draw=black, line width=0.4pt}]
+		\geosachsenB \node at (2.3,-0.4) {\small 0,05\,cm: 56 Ecken};
+	\end{tikzpicture}\hfill
+	\begin{tikzpicture}[geo sachsenC/.style={fill=orange!40, draw=black, line width=0.4pt}]
+		\geosachsenC \node at (2.3,-0.4) {\small 0,25\,cm: 14 Ecken};
+	\end{tikzpicture}
+\end{ausgabe}
+
+Die Ebenen heißen hier \texttt{sachsenA}, \texttt{sachsenB} und \texttt{sachsenC}, weil jede Datei sonst denselben Befehl \texttt{\textbackslash geosachsen} anlegen würde. Mit dem Standardwert \texttt{0.02} sieht man bei normalen Kartengrößen keinen Unterschied zum Original. Bei großer Toleranz können zwischen benachbarten Ländern kleine Lücken entstehen, weil jedes Land für sich vereinfacht wird.
+
+
+
+%%%%  KAPITEL 7  %%%%
+\section{Projektionen vergleichen}
+
+Die Erde ist eine Kugel, die Karte ist flach. Jede Projektion verzerrt deshalb etwas: Winkel, Flächen oder Entfernungen. Die Mercator-Projektion ist winkeltreu, vergrößert aber Flächen zu den Polen hin sehr stark. Die Projektion \textit{Equal Earth} ist flächentreu. Beide Karten entstanden aus denselben Daten (\texttt{ne\_110m\_admin\_0\_countries}) mit \texttt{-{}-proj mercator} bzw. \texttt{-{}-proj EPSG:8857}. Hervorgehoben sind Grönland und die Demokratische Republik Kongo:
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}[scale=0.95,
+	geo weltmercator/.style={fill=gray!40, draw=white, line width=0.15pt},
+	geo weltmercator/GRL/.style={fill=red!60},
+	geo weltmercator/COD/.style={fill=blue!60}]
+	\geoweltmercator
+	\node[font=\small] at (3.8,-0.35) {Mercator};
+\end{tikzpicture}\hfill
+\begin{tikzpicture}[scale=0.95,
+	geo weltequal/.style={fill=gray!40, draw=white, line width=0.15pt},
+	geo weltequal/GRL/.style={fill=red!60},
+	geo weltequal/COD/.style={fill=blue!60}]
+	\geoweltequal
+	\node[font=\small] at (3.8,-0.35) {Equal Earth};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\begin{tikzpicture}[scale=0.95,
+		geo weltmercator/.style={fill=gray!40, draw=white, line width=0.15pt},
+		geo weltmercator/GRL/.style={fill=red!60},
+		geo weltmercator/COD/.style={fill=blue!60}]
+		\geoweltmercator
+		\node[font=\small] at (3.8,-0.35) {Mercator};
+	\end{tikzpicture}\hfill
+	\begin{tikzpicture}[scale=0.95,
+		geo weltequal/.style={fill=gray!40, draw=white, line width=0.15pt},
+		geo weltequal/GRL/.style={fill=red!60},
+		geo weltequal/COD/.style={fill=blue!60}]
+		\geoweltequal
+		\node[font=\small] at (3.8,-0.35) {Equal Earth};
+	\end{tikzpicture}
+\end{ausgabe}
+
+In der Mercator-Karte wirkt Grönland (rot) größer als der Kongo (blau). Tatsächlich ist der Kongo mit rund 2,34~Mio.\,km² sogar etwas größer als Grönland mit rund 2,17~Mio.\,km², wie die flächentreue Karte zeigt. Die Kennungen \texttt{GRL} und \texttt{COD} sind die dreistelligen Ländercodes aus dem Feld \texttt{ADM0\_A3}.
+
+
+
+%%%%  KAPITEL 8  %%%%
+\section{Historische Karten}
+
+Grenzen vergangener Zeiten gibt es ebenfalls als freie Geodaten. \textit{historical-basemaps} enthält Weltkarten zu Stichjahren wie 1938 oder 1945, \textit{AWMC geodata} unter anderem die Ausdehnung des Römischen Reichs. Der Arbeitsablauf ist derselbe: herunterladen, mit \texttt{geo2tikz.py} umrechnen, gestalten. Zwei Dinge sind dabei anders als bei Natural Earth: Die Lizenzen (GPL-3.0 bzw. ODbL) verlangen eine Quellenangabe auf der Karte, und historische Grenzen sind oft umstritten oder nur ungefähr bekannt. Darauf sollte das Material hinweisen.
+
+
+
+%%%%  KAPITEL 9  %%%%
+\section{Zusammenfassung}
+
+Die wichtigsten Techniken im Überblick:
+
+\begin{itemize}
+	\item Karten nicht von Hand zeichnen, sondern freie Geodaten mit \texttt{geo2tikz.py} umrechnen.
+	\item Alle Ebenen einer Karte in einem einzigen Aufruf umrechnen, damit sie zusammenpassen.
+	\item Die erzeugte Datei mit \texttt{\textbackslash input} laden; jede Ebene hat einen Befehl (\texttt{\textbackslash geolaender}), einen Stil (\texttt{geo laender}) und Stile für jedes Objekt (\texttt{geo laender/DE-SN}).
+	\item Ebenen von unten nach oben zeichnen und mit \texttt{\textbackslash clip} am Kartenrand abschneiden.
+	\item Beschriften über die Punkte im Inneren, etwa \texttt{(laender-DE-SN)} oder \texttt{(staedte-Leipzig)}.
+	\item Projektion nach Zweck wählen: \texttt{EPSG:3035} für Europa, \texttt{EPSG:25833} für Sachsen, \texttt{EPSG:8857} für flächentreue Weltkarten.
+	\item Auf jede Karte eine Quellenzeile setzen.
+\end{itemize}
+
+Die Karten lassen sich fächerübergreifend nutzen: stumme Karten in Geografie und Geschichte, Projektionen und Flächenberechnung in Mathematik (die Fläche des vereinfachten Sachsens lässt sich mit der Gaußschen Trapezformel berechnen), Douglas-Peucker als rekursiver Algorithmus und GeoJSON als Datenformat in Informatik. Eine passende Aufgabe für Fortgeschrittene ist das Färben einer Europakarte mit möglichst wenigen Farben, sodass Nachbarländer nie dieselbe Farbe haben.
+
+\end{document}

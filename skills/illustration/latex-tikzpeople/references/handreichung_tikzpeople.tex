@@ -1,0 +1,287 @@
+\input{header.tex}
+\input{newcommands.tex}
+
+
+\title{Figuren mit \texttt{tikzpeople} zeichnen}
+\author{Fortbildungsmaterial für MINT-Lehrkräfte}
+\date{\today}
+\pagestyle{plain}
+\setlength{\parskip}{1.5em} % Abstand zwischen Absätzen (Handreichungen)
+\setlength{\emergencystretch}{2em} % lange \texttt-Wörter umbrechen statt über den Rand
+
+
+\begin{document}
+
+\maketitle
+
+Viele Arbeitsblätter werden lebendiger, wenn Personen darauf vorkommen: Alice und Bob, die sich verschlüsselte Nachrichten schicken, ein Koch in einer Sachaufgabe oder eine Ärztin bei einer Wahrscheinlichkeitsaufgabe. Das Paket \texttt{tikzpeople} liefert dafür fertige Figuren, die sich wie gewöhnliche Ti\textit{k}Z-Knoten setzen, verbinden und beschriften lassen. Diese Handreichung zeigt alle Figuren, ihre wichtigsten Optionen, Pfeile und Sprechblasen und zum Schluss eine vollständige Szene für den Informatikunterricht.
+
+
+
+%%%%  KAPITEL 1  %%%%
+\section{Grundlagen und benötigte Pakete}
+
+In der universalen \texttt{header.tex} sind \texttt{tikzpeople} und die Bibliothek \texttt{shapes.callouts} (für Sprechblasen) bereits geladen. In einem eigenständigen Dokument gehören diese Zeilen in die Präambel:
+
+\begin{lstlisting}[style=latex]
+\usepackage{tikzpeople}
+\usetikzlibrary{shapes.callouts}
+\end{lstlisting}
+
+
+%%%%  UNTERKAPITEL 1.1  %%%%
+\subsection{Eine erste Figur}
+
+Eine Figur ist ein \texttt{\textbackslash node}, dessen Form der Name der Figur ist. Zwei Dinge sind dabei wichtig: Die Größe wird mit \texttt{minimum size} festgelegt, und der Inhalt des Knotens bleibt leer.
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+	\node[alice, minimum size=2cm] (A) at (0,0) {};
+	\node[below=1mm of A] {Alice};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\centering
+	\begin{tikzpicture}
+		\node[alice, minimum size=2cm] (A) at (0,0) {};
+		\node[below=1mm of A] {Alice};
+	\end{tikzpicture}
+\end{ausgabe}
+
+Ohne \texttt{minimum size} ist die Figur nur etwa einen halben Zentimeter groß. Text im Knoten selbst würde die Figur verschieben, deshalb steht der Name in einem eigenen Knoten darunter.
+
+
+
+%%%%  KAPITEL 2  %%%%
+\section{Alle Figuren im Überblick}
+
+Das Paket enthält 28 Figuren, die sich für Unterrichtsmaterial eignen. Mit \texttt{\textbackslash foreach} lassen sie sich in einer Schleife zeichnen, der Zähler \texttt{\textbackslash i} bestimmt die Position im Raster:
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+	\foreach \f [count=\i from 0] in {alice,bob,bride,builder,businessman,charlie,
+	  chef,conductor,cowboy,criminal,dave,devil,duck,graduate,groom,guard,jester,
+	  judge,maninblack,nun,nurse,physician,pilot,police,priest,sailor,santa,surgeon}{
+		\pgfmathsetmacro{\x}{mod(\i,7)*2.3}
+		\pgfmathsetmacro{\y}{-floor(\i/7)*2.8}
+		\node[\f, minimum size=1.5cm] at (\x,\y) {};
+		\node[font=\scriptsize\ttfamily] at (\x,\y-1.2) {\f};
+	}
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\centering
+	\begin{tikzpicture}
+		\foreach \f [count=\i from 0] in {alice,bob,bride,builder,businessman,charlie,
+		  chef,conductor,cowboy,criminal,dave,devil,duck,graduate,groom,guard,jester,
+		  judge,maninblack,nun,nurse,physician,pilot,police,priest,sailor,santa,surgeon}{
+			\pgfmathsetmacro{\x}{mod(\i,7)*2.3}
+			\pgfmathsetmacro{\y}{-floor(\i/7)*2.8}
+			\node[\f, minimum size=1.5cm] at (\x,\y) {};
+			\node[font=\scriptsize\ttfamily] at (\x,\y-1.2) {\f};
+		}
+	\end{tikzpicture}
+\end{ausgabe}
+
+Das Paket enthält noch eine 29.~Figur, \texttt{mexican}. Sie zeigt ein Klischee (Sombrero und Poncho) und gehört deshalb nicht auf Unterrichtsmaterial. Sie fehlt in dieser Übersicht absichtlich.
+
+
+
+%%%%  KAPITEL 3  %%%%
+\section{Optionen}
+
+
+%%%%  UNTERKAPITEL 3.1  %%%%
+\subsection{Blickrichtung, Rollen und Zubehör}
+
+Alle Figuren schauen zunächst nach rechts. \texttt{mirrored} dreht sie um. Weitere Optionen geben einer Figur eine Rolle: \texttt{evil} setzt Hörner auf (etwa für einen Angreifer), \texttt{good} einen Heiligenschein, \texttt{monitor} stellt einen Bildschirm vor die Figur, \texttt{shield} und \texttt{sword} rüsten sie aus.
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}[every node/.append style={minimum size=1.7cm}]
+	\node[alice, mirrored]      at (0,0)    {};
+	\node[charlie, evil]        at (2.6,0)  {};
+	\node[dave, good]           at (5.2,0)  {};
+	\node[bob, monitor]         at (7.8,0)  {};
+	\node[guard, shield, sword] at (10.4,0) {};
+	\foreach \x/\t in {0/mirrored, 2.6/evil, 5.2/good, 7.8/monitor, 10.4/{shield, sword}}
+		\node[font=\scriptsize\ttfamily, minimum size=0pt] at (\x,-1.35) {\t};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\centering
+	\begin{tikzpicture}[every node/.append style={minimum size=1.7cm}]
+		\node[alice, mirrored]      at (0,0)    {};
+		\node[charlie, evil]        at (2.6,0)  {};
+		\node[dave, good]           at (5.2,0)  {};
+		\node[bob, monitor]         at (7.8,0)  {};
+		\node[guard, shield, sword] at (10.4,0) {};
+		\foreach \x/\t in {0/mirrored, 2.6/evil, 5.2/good, 7.8/monitor, 10.4/{shield, sword}}
+			\node[font=\scriptsize\ttfamily, minimum size=0pt] at (\x,-1.35) {\t};
+	\end{tikzpicture}
+\end{ausgabe}
+
+Bei den Beschriftungen steht \texttt{minimum size=0pt}, weil \texttt{every node} sonst auch den Textknoten 1,7\,cm groß machen würde. Mit \texttt{female} gibt es bei einigen Figuren eine weibliche Variante, und \texttt{saturated} macht die Farben kräftiger.
+
+
+%%%%  UNTERKAPITEL 3.2  %%%%
+\subsection{Farben und Vielfalt}
+
+Kleidung, Haut, Haare und Hut lassen sich mit \texttt{shirt}, \texttt{undershirt}, \texttt{skin}, \texttt{hair} und \texttt{hat} umfärben. So sehen in einer Szene mit mehreren Personen nicht alle gleich aus. Farbmischungen wie \texttt{brown!60} müssen dafür vorher mit \texttt{\textbackslash colorlet} einen Namen bekommen:
+
+\begin{lstlisting}[style=latex]
+\colorlet{haut1}{brown!60}
+\colorlet{haut2}{brown!85!black}
+\colorlet{haar1}{black!80}
+\begin{tikzpicture}[every node/.append style={minimum size=1.8cm}]
+	\node[alice]                                    at (0,0)   {};
+	\node[alice, skin=haut1, hair=haar1]            at (2.6,0) {};
+	\node[bob, skin=haut2, hair=haar1, shirt=teal]  at (5.2,0) {};
+	\node[dave, shirt=orange, hair=brown]           at (7.8,0) {};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\centering
+	\colorlet{haut1}{brown!60}
+	\colorlet{haut2}{brown!85!black}
+	\colorlet{haar1}{black!80}
+	\begin{tikzpicture}[every node/.append style={minimum size=1.8cm}]
+		\node[alice]                                    at (0,0)   {};
+		\node[alice, skin=haut1, hair=haar1]            at (2.6,0) {};
+		\node[bob, skin=haut2, hair=haar1, shirt=teal]  at (5.2,0) {};
+		\node[dave, shirt=orange, hair=brown]           at (7.8,0) {};
+	\end{tikzpicture}
+\end{ausgabe}
+
+Schreibt man \texttt{skin=brown!60} direkt, bricht \hologo{LaTeX} mit der Meldung \enquote{Undefined color `40'} ab. Das Paket hängt intern selbst noch eine Mischung an, und zwei Mischungen hintereinander versteht \texttt{xcolor} nicht.
+
+
+
+%%%%  KAPITEL 4  %%%%
+\section{Pfeile und Sprechblasen}
+
+
+%%%%  UNTERKAPITEL 4.1  %%%%
+\subsection{Figuren verbinden}
+
+Weil jede Figur ein Knoten ist, hat sie Anker wie \texttt{east}, \texttt{west}, \texttt{north} und \texttt{south}. Pfeile zwischen Figuren werden deshalb genauso gezeichnet wie zwischen anderen Knoten. Der Bildschirm von \texttt{monitor} ragt über den Knoten hinaus, deshalb beginnen die Pfeile mit \texttt{xshift} ein Stück weiter außen. Das Beispiel zeigt einen Client und einen Server:
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+	\node[alice, monitor, minimum size=2cm] (C) at (0,0) {};
+	\node[bob, monitor, mirrored, minimum size=2cm] (S) at (8.5,0) {};
+	\node[below=1mm of C] {Client};
+	\node[below=1mm of S] {Server};
+	\draw[-Stealth, thick] ([xshift=8mm, yshift=3mm]C.east) -- node[above]{\small Anfrage} ([xshift=-8mm, yshift=3mm]S.west);
+	\draw[-Stealth, thick] ([xshift=-8mm, yshift=-3mm]S.west) -- node[below]{\small Antwort} ([xshift=8mm, yshift=-3mm]C.east);
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\centering
+	\begin{tikzpicture}
+		\node[alice, monitor, minimum size=2cm] (C) at (0,0) {};
+		\node[bob, monitor, mirrored, minimum size=2cm] (S) at (8.5,0) {};
+		\node[below=1mm of C] {Client};
+		\node[below=1mm of S] {Server};
+		\draw[-Stealth, thick] ([xshift=8mm, yshift=3mm]C.east) -- node[above]{\small Anfrage} ([xshift=-8mm, yshift=3mm]S.west);
+		\draw[-Stealth, thick] ([xshift=-8mm, yshift=-3mm]S.west) -- node[below]{\small Antwort} ([xshift=8mm, yshift=-3mm]C.east);
+	\end{tikzpicture}
+\end{ausgabe}
+
+
+%%%%  UNTERKAPITEL 4.2  %%%%
+\subsection{Sprech- und Gedankenblasen}
+
+Jede Figur hat zusätzlich den Anker \texttt{mouth}. Eine Sprechblase ist ein Knoten mit der Form \texttt{ellipse callout}, dessen Zipfel mit \texttt{callout absolute pointer} auf den Mund zeigt. Für Gedanken nimmt man \texttt{cloud callout}:
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+	\node[physician, female, minimum size=2.2cm] (P) at (0,0) {};
+	\node[ellipse callout, draw, fill=white, callout absolute pointer={(P.mouth)}]
+		at (2.4,1.6) {Wie geht es Ihnen?};
+	\node[builder, mirrored, minimum size=2.2cm] (B) at (7,0) {};
+	\node[cloud callout, draw, fill=white, aspect=2.5, callout absolute pointer={(B.north)}]
+		at (5.6,2.6) {\small Schon besser!};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\centering
+	\begin{tikzpicture}
+		\node[physician, female, minimum size=2.2cm] (P) at (0,0) {};
+		\node[ellipse callout, draw, fill=white, callout absolute pointer={(P.mouth)}]
+			at (2.4,1.6) {Wie geht es Ihnen?};
+		\node[builder, mirrored, minimum size=2.2cm] (B) at (7,0) {};
+		\node[cloud callout, draw, fill=white, aspect=2.5, callout absolute pointer={(B.north)}]
+			at (5.6,2.6) {\small Schon besser!};
+	\end{tikzpicture}
+\end{ausgabe}
+
+Sprechblasen im Stil der übrigen Materialien (abgerundetes Rechteck, Zipfel links oder rechts) gibt es mit \texttt{\textbackslash lehrerblase} und \texttt{\textbackslash schuelerblase}. Sie sind in der Handreichung \enquote{Sprechblasen mit \TikZ in \hologo{LaTeX}} beschrieben.
+
+
+
+%%%%  KAPITEL 5  %%%%
+\section{Eine Szene für die Kryptografie}
+
+Zum Schluss alles zusammen: Alice schickt Bob eine mit der Caesar-Verschiebung verschlüsselte Nachricht, Eve hört mit und grübelt. Die Szene passt als Einstieg zu Caesar, Vigenère oder zum Schlüsselaustausch.
+
+\begin{lstlisting}[style=latex]
+\begin{tikzpicture}
+	\node[alice, minimum size=2.2cm] (A) at (0,0) {};
+	\node[bob, mirrored, minimum size=2.2cm] (B) at (8,0) {};
+	\node[criminal, minimum size=1.6cm] (E) at (4,-2.6) {};
+	\node[below=1mm of A] {Alice};
+	\node[below=1mm of B] {Bob};
+	\node[below=1mm of E] {Eve};
+	\draw[-{Stealth[length=3mm]}, very thick] (A.east) -- node[above]{\texttt{KHOOR}} (B.west);
+	\draw[dashed, ->] (4,0) -- (E.north);
+	\node[ellipse callout, draw, fill=white, callout absolute pointer={(A.mouth)}]
+		at (1.2,2.1) {Hallo Bob!};
+	\node[cloud callout, draw, fill=white, aspect=2.5, callout absolute pointer={(E.north east)}]
+		at (6.6,-2.8) {\small KHOOR?};
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{ausgabe}
+	\centering
+	\begin{tikzpicture}
+		\node[alice, minimum size=2.2cm] (A) at (0,0) {};
+		\node[bob, mirrored, minimum size=2.2cm] (B) at (8,0) {};
+		\node[criminal, minimum size=1.6cm] (E) at (4,-2.6) {};
+		\node[below=1mm of A] {Alice};
+		\node[below=1mm of B] {Bob};
+		\node[below=1mm of E] {Eve};
+		\draw[-{Stealth[length=3mm]}, very thick] (A.east) -- node[above]{\texttt{KHOOR}} (B.west);
+		\draw[dashed, ->] (4,0) -- (E.north);
+		\node[ellipse callout, draw, fill=white, callout absolute pointer={(A.mouth)}]
+			at (1.2,2.1) {Hallo Bob!};
+		\node[cloud callout, draw, fill=white, aspect=2.5, callout absolute pointer={(E.north east)}]
+			at (6.6,-2.8) {\small KHOOR?};
+	\end{tikzpicture}
+\end{ausgabe}
+
+Ein vollständiges Arbeitsblatt mit dieser Szene und zwei Fragen liegt im Skill im Ordner \texttt{assets}. Die Datei heißt \texttt{vorlage\_alice\_bob\_eve.tex}.
+
+
+
+%%%%  KAPITEL 6  %%%%
+\section{Zusammenfassung}
+
+Die wichtigsten Techniken im Überblick:
+
+\begin{itemize}
+	\item Eine Figur ist ein Knoten: \texttt{\textbackslash node[alice, minimum size=2cm] (A) at (0,0) \{\};}, der Inhalt bleibt leer.
+	\item Namen stehen in einem eigenen Knoten darunter: \texttt{\textbackslash node[below=1mm of A] \{Alice\};}
+	\item \texttt{mirrored}, \texttt{evil}, \texttt{good}, \texttt{monitor}, \texttt{shield}, \texttt{sword}, \texttt{female} und \texttt{saturated} verändern Blickrichtung, Rolle und Aussehen.
+	\item Farben mit \texttt{shirt}, \texttt{skin}, \texttt{hair}, \texttt{hat}; gemischte Farben vorher mit \texttt{\textbackslash colorlet} benennen.
+	\item Pfeile laufen zwischen den Ankern \texttt{east}, \texttt{west}, \texttt{north}, \texttt{south}; Sprechblasen zeigen mit \texttt{callout absolute pointer} auf \texttt{mouth}.
+\end{itemize}
+
+Im Unterricht eignen sich die Figuren besonders für die Informatik (Alice, Bob und Eve in der Kryptografie, Client und Server, Angreifer mit \texttt{evil}, Firewall mit \texttt{shield}) und für Sachaufgaben in der Mathematik, in denen Personen handeln. Bei Szenen mit mehreren Personen lohnt es sich, Hautfarben und Haare bewusst zu mischen.
+
+\end{document}
