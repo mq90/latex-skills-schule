@@ -1,0 +1,64 @@
+% ===================================================================
+%  Vorlage: Liedsatz mit Text und Akkorden – „Hänschen klein“
+%  Volkslied (gemeinfrei), F-Dur. Melodie mit Liedtext (musixlyr) und
+%  Akkordsymbolen über den Noten.
+%
+%  Drei Durchläufe:  pdflatex … → musixflx … → pdflatex …
+%  (musixflx berechnet die Abstände; alles_kompilieren.py macht das selbst.)
+% ===================================================================
+\input{header.tex}
+\usepackage{musixtex}       % direkt nach der header.tex (definiert \cup um)
+\input{newcommands.tex}
+\input{musik-befehle.tex}
+\input musixlyr             % Liedtext unter den Noten (siehe Stolperstein in SKILL.md)
+\pagestyle{empty}
+
+\begin{document}
+\begin{center}
+{\Large\bfseries\sffamily Hänschen klein}\\[2pt]
+{\small Text: Franz Wiedemann \textbullet\ Melodie: Volksweise \textbullet\ F-Dur}
+\end{center}
+\vspace{1em}
+
+% \interstaff: mehr Luft zwischen System und Textzeile (gegen Kollisionen);
+% \lyrraise: Liedtext ein wenig tiefer. Beide aus musixlyr.
+\interstaff{11}
+
+\begin{music}
+\instrumentnumber{1}\setclef1\treble
+\generalmeter{\meterfrac44}\generalsignature{-1}\nobarnumbers
+\lyrraise1{-2pt}
+\setlyrics{strophe}{Häns-chen klein ging al-lein in die wei-te Welt hin-ein.
+Stock und Hut steht ihm gut, ist gar wohl-ge-mut.
+Doch die Mut-ter wei-net sehr, hat ja nun kein Häns-chen mehr!
+»Wünsch dir Glück«, sagt ihr Blick, »kehr nur bald zu-rück!«}
+\assignlyrics1{strophe}
+\startpiece
+% Akkorde über den Noten mit \zcharnote{Höhe}{Symbol} – nur an Harmoniewechseln.
+% Tonhöhen ohne Apostroph: MusiXTeX wählt die nächstliegende Oktave,
+% so bleibt die Melodie kompakt im System (nur die erste Note je Zeile anheben).
+% Zeile 1 --------------------------------------------------------------
+\Notes\zcharnote{10}{\bf F}\qu{'a}\qu f\hu f\en\bar
+\Notes\qu g\qu e\hu e\en\bar
+\Notes\zcharnote{10}{\bf C$^7$}\qu d\qu e\qu f\qu g\en\bar
+\Notes\zcharnote{10}{\bf F}\qu a\qu a\hu g\en\bar
+\alaligne
+% Zeile 2 --------------------------------------------------------------
+\Notes\zcharnote{10}{\bf F}\qu{'a}\qu f\hu f\en\bar
+\Notes\qu g\qu e\hu e\en\bar
+\Notes\zcharnote{10}{\bf C$^7$}\qu e\qu f\qu g\qu a\en\bar
+\Notes\zcharnote{10}{\bf F}\wh c\en\bar
+\Notes\zcharnote{10}{\bf F}\qu a\qu a\qu a\qu a\en\bar
+\Notes\zcharnote{10}{\bf C$^7$}\qu a\qu g\hu g\en\bar
+\Notes\qu a\qu a\qu a\qu a\en\bar
+\alaligne
+% Zeile 3 --------------------------------------------------------------
+\Notes\zcharnote{10}{\bf F}\qu{'a}\qu a\hu{'c}\en\bar
+\Notes\zcharnote{10}{\bf C$^7$}\qu a\qu g\hu f\en\bar
+\Notes\qu g\qu e\hu e\en\bar
+\Notes\zcharnote{10}{\bf C$^7$}\qu d\qu f\qu a\qu g\en\bar
+\Notes\zcharnote{10}{\bf F}\wh f\en
+\endpiece
+\end{music}
+
+\end{document}

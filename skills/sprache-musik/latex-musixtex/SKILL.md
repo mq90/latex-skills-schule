@@ -1,6 +1,6 @@
 ---
 name: latex-musixtex
-description: Noten in LaTeX setzen mit MusiXTeX – Notensysteme, Notenwerte, Oktaven, Taktarten, Taktstriche, Pausen, einfache Melodien, plus Musik-Kürzel für Intervalle, Tonnamen und Notenwerte im Text. Verwende diesen Skill, wenn Noten, Melodien, Notenbeispiele, Rhythmusübungen oder eine Handreichung zum Notensatz in einem LaTeX-Dokument gebraucht werden, auch fächerübergreifend (Mathe: Bruchrechnung mit Notenwerten, Physik: Frequenzen).
+description: Noten in LaTeX setzen mit MusiXTeX – Notensysteme, Notenwerte, Oktaven, Taktarten, Taktstriche, Pausen, Vorzeichen und Tonart, Akkorde, Liedtext mit musixlyr und Akkordsymbole über den Noten, komplette Liedsätze; dazu ein Quintenzirkel in reinem TikZ. Plus Musik-Kürzel für Intervalle, Tonnamen und Notenwerte im Text. Verwende diesen Skill, wenn Noten, Melodien, Liedsätze mit Text und Akkorden, ein Quintenzirkel, Notenbeispiele, Rhythmusübungen oder eine Handreichung zum Notensatz in einem LaTeX-Dokument gebraucht werden, auch fächerübergreifend (Mathe: Bruchrechnung mit Notenwerten, Physik: Frequenzen).
 ---
 
 # Notensatz mit MusiXTeX
@@ -65,11 +65,53 @@ im Text (`\viertel`, `\achtelpause`), Taktarten (`\dreivierteltakt`),
 Boxen `musiktheorie`, `uebung`, `repertoire`, Umgebungen `akkordfolge`,
 `tonleiter`, Befehle `\liedtitel`, `\tempo`, `\tonart`, `\taktart`.
 
+## Vorzeichen, Tonart und Akkorde
+
+Vorzeichen stehen **vor** der Note: `\sh` (Kreuz), `\fl` (Be), `\na`
+(Auflösung), z. B. `\qu{\sh f}` für fis. Eine durchgehende Tonart setzt
+`\generalsignature{n}` **vor** `\startextract` (positiv = Kreuze,
+negativ = Be): `-1` = F-Dur, `2` = D-Dur.
+
+Akkorde stapelt man mit `\zw` (ganze) oder `\zq` (Viertel) für die unteren
+Töne; die **oberste** Note trägt den Notenwert. Ein Vorzeichen gehört an die
+Zusatznote, nicht an die ganze Wertnote: `\notes\zw{c}\zw{e}\zw{\fl b}\wh{g}\en`
+ergibt C7 (c-e-g-b).
+
+## Liedtext und Akkordsymbole
+
+Liedtext unter den Noten mit `musixlyr` (Bibliothek, **nach** `\usepackage{musixtex}`
+per `\input musixlyr` laden). Text **vor** den Noten festlegen, Silben mit
+**einfachem** `-` trennen:
+
+```latex
+\setlyrics{strophe}{Häns-chen klein ging al-lein ...}
+\assignlyrics1{strophe}
+```
+
+Stößt der Text an tiefe Notenköpfe: `\interstaff{10}` (mehr Abstand, vor der
+`music`-Umgebung), `\lyrraise1{-2pt}` (Text tiefer) und bei tiefer Lage `\qu`
+(Hälse nach oben vom Text weg). **`\lyrraise`** ist der richtige Befehl, nicht
+`\setlyrraise`. Tonhöhen möglichst **ohne** Apostroph schreiben – MusiXTeX
+wählt die nächstliegende Oktave, so bleibt die Melodie kompakt im System; nur
+die erste Note je Zeile anheben.
+
+Akkordsymbole (Harmonien) über das System mit `\zcharnote{10}{\bf F}` – nur
+an Harmoniewechseln, nicht an jede Note. Hochgestellte Ziffer: `C$^7$`.
+
+## Vorlagen (`assets/`)
+
+| Vorlage | Inhalt |
+|---|---|
+| `vorlage_lied_haenschen.tex` | kompletter Liedsatz „Hänschen klein“ (F-Dur) mit Liedtext und Akkorden – Muster für eigene Lieder |
+| `vorlage_quintenzirkel.tex` | Quintenzirkel in reinem TikZ: Dur außen, parallele Moll innen, Zahl der Vorzeichen; braucht **kein** MusiXTeX |
+
 ## Stolpersteine
 
-- `musixlyr` (Liedtexte) fehlt in vielen TeX-Installationen
-  („File musixlyr.sty not found“). Erst prüfen (`kpsewhich musixlyr.sty`),
-  sonst Liedtext unter die Noten mit einer Tabelle setzen.
+- `musixlyr` (Liedtexte) fehlt in manchen TeX-Installationen
+  („File musixlyr.tex not found“). Erst prüfen (`kpsewhich musixlyr.tex`),
+  sonst Liedtext unter die Noten mit einer Tabelle oder `\zcharnote` setzen.
+- Akkord-Vorzeichen: `\wh{\fl b}` als **ganze** Wertnote setzt das Be nicht
+  zuverlässig – das Vorzeichen an eine `\zw`-Zusatznote hängen (getestet).
 - Notennamen: `\cu{b}` ist das h (englische Benennung), `b` im Deutschen heißt
   in MusiXTeX `_b` (Vorzeichen) – vorher die Ausgabe ansehen.
 - In der `ausgabe`-Box funktioniert `music` (getestet); `\parindent10mm`
@@ -78,4 +120,7 @@ Boxen `musiktheorie`, `uebung`, `repertoire`, Umgebungen `akkordfolge`,
 ## Referenz
 
 `references/handreichung_musixtex.tex` – Handreichung im Standardstil
-(Grundlagen und Paketeinbindung, Notenwerte, Oktaven).
+(Grundlagen und Paketeinbindung, Notenwerte, Oktaven, deutsche Notennamen und
+Vorzeichen, Tonart, Pausen, Akkorde, Liedtext mit musixlyr samt
+Kollisionsvermeidung, Akkordsymbole, Quintenzirkel sowie ein Abschnitt zum
+Urheberrecht beim Teilen von Noten).

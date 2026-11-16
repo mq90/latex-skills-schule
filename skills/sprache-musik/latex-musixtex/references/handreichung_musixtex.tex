@@ -7,6 +7,7 @@
 \date{13. Mai 2025}
 \pagestyle{plain}
 \usepackage{musixtex} % nur in Musik-Dokumenten: definiert \cup als Note um
+\input musixlyr % Liedtext unter Noten (nach musixtex laden)
 
 \begin{document}
 
@@ -144,4 +145,284 @@ Oktaven werden durch verschiedene Notationsformen dargestellt. Die Grundoktave v
 \end{music}
 \end{center}
 \end{ausgabe}
+
+%%%%%  KAPITEL 3  %%%%
+\section{Tonhöhen, deutsche Notennamen und Vorzeichen}
+
+Im deutschen Sprachraum heißt der siebte Stammton \textbf{H} (nicht B). In
+MusiX\TeX{} ist \texttt{h} das deutsche H; \texttt{b} ist das um einen Halbton
+tiefere deutsche B. Versetzungszeichen werden der Note \emph{vorangestellt}:
+\texttt{\textbackslash sh} (Kreuz), \texttt{\textbackslash fl} (Be),
+\texttt{\textbackslash na} (Auflösungszeichen).
+
+\begin{lstlisting}[style=latex]
+\begin{music}
+\instrumentnumber{1}\setclef{1}{\treble}
+\startextract
+\Notes\qu{\sh f}\qu{\fl b}\qu{\na c}\qu{g}\en  % fis, b, c-aufgelöst, g
+\endextract
+\end{music}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{music}
+\instrumentnumber{1}\setclef{1}{\treble}
+\startextract
+\Notes\qu{\sh f}\qu{\fl b}\qu{\na c}\qu{g}\en
+\endextract
+\end{music}
+\end{center}
+\end{ausgabe}
+
+%%%%%  KAPITEL 4  %%%%
+\section{Tonart: Vorzeichen am Schlüssel}
+
+Eine durchgehende Tonart setzt \texttt{\textbackslash generalsignature\{n\}}
+\emph{vor} \texttt{\textbackslash startextract}: positives \texttt{n} für
+Kreuze, negatives für Be. \texttt{-1} ergibt also F-Dur (ein Be),
+\texttt{2} D-Dur (zwei Kreuze).
+
+\begin{lstlisting}[style=latex]
+\begin{music}
+\instrumentnumber{1}\setclef{1}{\treble}
+\generalsignature{-1}            % F-Dur: ein Be
+\startextract
+\Notes\qu{f}\qu{g}\qu{a}\qu{\fl b}\en
+\bar
+\Notes\qu{'c}\qu{'d}\hu{'c}\en
+\endextract
+\end{music}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{music}
+\instrumentnumber{1}\setclef{1}{\treble}
+\generalsignature{-1}
+\startextract
+\Notes\qu{f}\qu{g}\qu{a}\qu{\fl b}\en
+\bar
+\Notes\qu{'c}\qu{'d}\hu{'c}\en
+\endextract
+\end{music}
+\end{center}
+\end{ausgabe}
+
+%%%%%  KAPITEL 5  %%%%
+\section{Pausen und Taktstriche}
+
+Pausen entsprechen den Notenwerten: \texttt{\textbackslash pause} (ganze),
+\texttt{\textbackslash hpause} / \texttt{\textbackslash hp} (halbe),
+\texttt{\textbackslash qp} (Viertel), \texttt{\textbackslash ds} (Achtel),
+\texttt{\textbackslash qs} (Sechzehntel). Taktstriche: \texttt{\textbackslash
+bar}, Schlussdoppelstrich \texttt{\textbackslash doublebar}. Die Taktzählung
+schaltet \texttt{\textbackslash nobarnumbers} ab.
+
+\begin{lstlisting}[style=latex]
+\begin{music}
+\instrumentnumber{1}\setclef{1}{\treble}\nobarnumbers
+\startextract
+\Notes\qu{c}\qp\qu{e}\qp\en
+\bar
+\Notes\hp\hu{g}\en
+\doublebar
+\endextract
+\end{music}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{music}
+\instrumentnumber{1}\setclef{1}{\treble}\nobarnumbers
+\startextract
+\Notes\qu{c}\qp\qu{e}\qp\en
+\bar
+\Notes\hp\hu{g}\en
+\doublebar
+\endextract
+\end{music}
+\end{center}
+\end{ausgabe}
+
+%%%%%  KAPITEL 6  %%%%
+\section{Akkorde}
+
+Mehrere Töne übereinander bilden einen Akkord. Die unteren Töne setzt
+\texttt{\textbackslash zw} (ganze Note) bzw.\ \texttt{\textbackslash zq}
+(Viertel) als \emph{Zusatznoten}, die oberste Note trägt den eigentlichen
+Notenwert. Ein Vorzeichen gehört direkt an die Zusatznote
+(\texttt{\textbackslash zw\{\textbackslash fl b\}}), nicht an die ganze
+Wertnote.
+
+\begin{lstlisting}[style=latex]
+\begin{music}
+\instrumentnumber{1}\setclef{1}{\treble}\nobarnumbers
+\startextract
+\notes\zw{c}\zw{e}\wh{g}\en            % C-Dur (c-e-g)
+\bar
+\notes\zw{c}\zw{e}\zw{\fl b}\wh{g}\en  % C7 (c-e-g-b)
+\endextract
+\end{music}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{music}
+\instrumentnumber{1}\setclef{1}{\treble}\nobarnumbers
+\startextract
+\notes\zw{c}\zw{e}\wh{g}\en
+\bar
+\notes\zw{c}\zw{e}\zw{\fl b}\wh{g}\en
+\endextract
+\end{music}
+\end{center}
+\end{ausgabe}
+
+%%%%%  KAPITEL 7  %%%%
+\section{Liedtext mit \texttt{musixlyr}}
+
+Für Liedtext unter den Noten lädt man die Zusatzbibliothek
+\texttt{musixlyr} in der Präambel \emph{nach} dem \texttt{musixtex}-Paket:
+\texttt{\textbackslash input musixlyr}. Der Text wird \emph{vor} den Noten
+festgelegt; Silben trennt ein \emph{einfacher} Bindestrich \texttt{-}. Mit
+\texttt{\textbackslash setlyrics\{name\}\{\dots\}} wird eine Strophe
+definiert und mit \texttt{\textbackslash assignlyrics1\{name\}} der Stimme
+zugewiesen.
+
+\begin{lstlisting}[style=latex]
+\usepackage{musixtex}
+\input musixlyr                 % in der Präambel, nach musixtex
+% ... im Dokument:
+\begin{music}
+\instrumentnumber{1}\setclef{1}{\treble}
+\generalmeter{\meterfrac44}\nobarnumbers
+\setlyrics{bsp}{Al-le mei-ne Ent-chen schwim-men auf dem See}
+\assignlyrics1{bsp}
+\startpiece
+\Notes\qu{c}\qu{d}\qu{e}\qu{f}\en\bar
+\Notes\qu{g}\qu{g}\hu{g}\en
+\endpiece
+\end{music}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{music}
+\instrumentnumber{1}\setclef{1}{\treble}
+\generalmeter{\meterfrac44}\nobarnumbers
+\setlyrics{bsp}{Al-le mei-ne Ent-chen schwim-men auf dem See}
+\assignlyrics1{bsp}
+\startpiece
+\Notes\qu{c}\qu{d}\qu{e}\qu{f}\en\bar
+\Notes\qu{g}\qu{g}\hu{g}\en
+\endpiece
+\end{music}
+\end{center}
+\end{ausgabe}
+
+\begin{hinweis}[Noten und Text kollidieren]
+Bei tief liegenden Melodien stößt der Liedtext leicht an die Notenköpfe. Drei
+Stellschrauben helfen, am besten kombiniert: \texttt{\textbackslash
+interstaff\{10\}} vor der \texttt{music}-Umgebung schafft mehr Abstand
+zwischen System und Text; \texttt{\textbackslash lyrraise1\{-2pt\}} rückt den
+Text der Stimme~1 tiefer; und bei tiefer Lage zeigen die Notenhälse mit
+\texttt{\textbackslash qu} nach oben vom Text weg. (\texttt{\textbackslash
+lyrraise} ist der richtige Befehl -- ein \texttt{\textbackslash setlyrraise}
+gibt es nicht.)
+\end{hinweis}
+
+\begin{hinweis}[musixlyr fehlt?]
+\texttt{musixlyr} ist in manchen \TeX-Installationen nicht vorhanden
+(\glqq File musixlyr.tex not found\grqq). Erst prüfen mit
+\texttt{kpsewhich musixlyr.tex}; fehlt es, einzelne Silben als Notl\"osung
+mit \texttt{\textbackslash zcharnote\{Höhe\}\{Text\}} unter die Noten setzen.
+\end{hinweis}
+
+%%%%%  KAPITEL 8  %%%%
+\section{Akkordsymbole über den Noten}
+
+Akkordsymbole (Harmonien) setzt man mit \texttt{\textbackslash
+zcharnote\{Höhe\}\{Symbol\}} \emph{über} das System -- nur an
+Harmoniewechseln, nicht an jede Note. Die Höhe \texttt{10} liegt knapp über
+der obersten Linie. Hochgestellte Ziffern wie bei C\textsuperscript{7}
+schreibt man als \texttt{C\$\textasciicircum 7\$}.
+
+\begin{lstlisting}[style=latex]
+\begin{music}
+\instrumentnumber{1}\setclef{1}{\treble}
+\generalmeter{\meterfrac44}\generalsignature{-1}\nobarnumbers
+\startpiece
+\Notes\zcharnote{10}{\bf F}\qu{'a}\qu{f}\hu{f}\en\bar
+\Notes\zcharnote{10}{\bf C$^7$}\qu{g}\qu{e}\hu{e}\en
+\endpiece
+\end{music}
+\end{lstlisting}
+
+\begin{ausgabe}
+\begin{center}
+\begin{music}
+\instrumentnumber{1}\setclef{1}{\treble}
+\generalmeter{\meterfrac44}\generalsignature{-1}\nobarnumbers
+\startpiece
+\Notes\zcharnote{10}{\bf F}\qu{'a}\qu{f}\hu{f}\en\bar
+\Notes\zcharnote{10}{\bf C$^7$}\qu{g}\qu{e}\hu{e}\en
+\endpiece
+\end{music}
+\end{center}
+\end{ausgabe}
+
+Ein vollständiger Liedsatz mit Text und Akkorden (Vorlage
+\texttt{assets/vorlage\_lied\_haenschen.tex}) sieht so aus:
+
+\begin{center}
+\includegraphics[width=\linewidth]{vorlage_lied_haenschen.pdf}
+\end{center}
+
+%%%%%  KAPITEL 9  %%%%
+\section{Quintenzirkel (reines TikZ)}
+
+Der Quintenzirkel ordnet die Dur- und Moll-Tonarten nach Quinten und zeigt
+die Zahl der Vorzeichen. Er braucht kein MusiX\TeX, sondern nur TikZ (Vorlage
+\texttt{assets/vorlage\_quintenzirkel.tex}):
+
+\begin{center}
+\includegraphics[width=0.78\linewidth]{vorlage_quintenzirkel.pdf}
+\end{center}
+
+%%%%%  KAPITEL 10  %%%%
+\section{Rechtliches: Welche Lieder darf ich setzen und teilen?}
+
+\begin{hinweis}[Keine Rechtsberatung]
+Dieser Abschnitt ist eine fachliche Orientierung, keine Rechtsberatung. Bei
+konkreten Zweifelsfällen sind die Rechtsabteilung des Schulträgers bzw.\ die
+Justiziarin oder der Justiziar der Schule die richtige Adresse.
+\end{hinweis}
+
+Ob selbst gesetzte Noten weitergegeben werden dürfen, hängt nicht davon ab,
+dass man die \texttt{.tex}-Datei getippt hat, sondern davon, \emph{wessen
+Werk} notiert wird.
+
+\begin{itemize}
+  \item \textbf{Melodie und Text} sind das eigentliche Werk und in
+        Deutschland bis 70 Jahre nach dem Tod des Urhebers geschützt
+        (\S\,64 UrhG). Danach sind sie gemeinfrei und frei nutzbar --
+        etwa \glqq Hänschen klein\grqq{} oder \glqq Alle meine Entchen\grqq.
+  \item Reines Abtippen begründet in der Regel \emph{kein} eigenes
+        Urheberrecht (fehlende Schöpfungshöhe); ein eigenes Arrangement
+        kann ein Bearbeiterrecht begründen, befreit aber nicht vom Recht
+        am Originalwerk.
+  \item Die Unterrichtsschranke (\S\,60a UrhG) erlaubt bis zu 15\,\% eines
+        geschützten Werks für die eigene Lerngruppe -- \emph{Musiknoten
+        sind davon aber weitgehend ausgenommen} (\S\,60a Abs.\,3). Für
+        geschützte Noten ist meist eine Lizenz nötig.
+\end{itemize}
+
+\begin{merke}
+Gemeinfreie Lieder (Volkslieder, alte Melodien) dürfen frei gesetzt und
+geteilt werden. Bei geschützten Liedern nur im Rahmen von Schullizenzen und
+nicht öffentlich ins Netz stellen. Quellenangabe ist bei gemeinfreien Werken
+guter Stil, bei Nutzung unter einer Schranke Pflicht (\S\,63 UrhG).
+\end{merke}
+
 \end{document}

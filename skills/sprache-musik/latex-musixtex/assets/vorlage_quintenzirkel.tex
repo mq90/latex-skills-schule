@@ -1,0 +1,52 @@
+% ===================================================================
+%  Vorlage: Quintenzirkel (Dur außen, Moll innen, Vorzeichenzahl)
+%  Reines TikZ – kein pgfplots, kein musixtex nötig.
+%    pdflatex vorlage_quintenzirkel.tex
+% ===================================================================
+\input{header.tex}
+\input{newcommands.tex}
+\pagestyle{empty}
+
+\begin{document}
+\begin{center}
+{\Large\bfseries\sffamily Quintenzirkel}\\[2pt]
+{\small Dur-Tonarten außen, parallele Moll-Tonarten innen, Anzahl der Vorzeichen am Rand}
+\end{center}
+\vspace{4mm}
+
+\begin{center}
+\begin{tikzpicture}[font=\sffamily]
+  \def\rdur{3.25}   % Radius Dur-Ring
+  \def\rmoll{2.05}  % Radius Moll-Ring
+  \def\rvz{4.35}    % Radius Vorzeichen-Beschriftung
+
+  % pos (0 = oben, im Uhrzeigersinn) / Dur / Moll / Vorzeichen
+  \foreach \pos/\dur/\moll/\vz in {%
+    0/C/a/{0},
+    1/G/e/{1\(\sharp\)},
+    2/D/h/{2\(\sharp\)},
+    3/A/fis/{3\(\sharp\)},
+    4/E/cis/{4\(\sharp\)},
+    5/H/gis/{5\(\sharp\)},
+    6/{Fis/Ges}/{dis/es}/{6\(\sharp\)\,/\,6\(\flat\)},
+    7/Des/b/{5\(\flat\)},
+    8/As/f/{4\(\flat\)},
+    9/Es/c/{3\(\flat\)},
+    10/B/g/{2\(\flat\)},
+    11/F/d/{1\(\flat\)}}
+  {
+    \pgfmathsetmacro{\ang}{90 - 30*\pos}
+    \node[circle, draw=akzentblau!70!black, fill=akzentblau!15,
+          minimum size=12mm, inner sep=0pt, line width=0.5pt]
+      (D\pos) at (\ang:\rdur) {\textbf{\dur}};
+    \node[circle, draw=akzentorange!70!black, fill=akzentorange!15,
+          minimum size=9mm, inner sep=0pt, line width=0.5pt]
+      (M\pos) at (\ang:\rmoll) {\small\moll};
+    \node[text=gray!55!black] at (\ang:\rvz) {\footnotesize\vz};
+  }
+  \node[align=center, text=gray!50!black] at (0,0)
+    {\scriptsize\textbf{Dur}\\[-1pt]\tiny außen\\[3pt]\scriptsize\textbf{Moll}\\[-1pt]\tiny innen};
+\end{tikzpicture}
+\end{center}
+
+\end{document}
