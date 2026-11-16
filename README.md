@@ -142,6 +142,8 @@ Quelltexte liegen in den `assets/`-Ordnern der Skills.
 |  | [Notenpapier mit Violinschlüssel](druckvorlagen/musik/Notenpapier-A5-quer-mit-Violinschluessel.pdf) | A5 quer |
 |  | [Notenpapier ohne Schlüssel](druckvorlagen/musik/Notenpapier-A5-quer-ohne-Schluessel.pdf) | A5 quer |
 |  | [Quintenzirkel mit Eselsbrücken](druckvorlagen/musik/Quintenzirkel.pdf) | A4 |
+|  | [Liedblatt „Hänschen klein“ mit Text und Akkorden](druckvorlagen/musik/Haenschen-klein.pdf) | A4 |
+|  | [Liedblatt „Alle meine Entchen“ mit 5 Strophen](druckvorlagen/musik/Alle-meine-Entchen.pdf) | A4 |
 
 ## Installieren
 
