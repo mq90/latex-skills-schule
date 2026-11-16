@@ -26,6 +26,7 @@ skills/
 └── raetsel-spiele/            Sudoku, Schach
 handreichungen/                fertige PDFs aller Handreichungen
 druckvorlagen/                 druckfertige PDFs zum direkten Ausdrucken (z. B. Notenpapier)
+materialien/                   fertige Unterrichtsmaterialien, die mit den Skills entstanden sind
 werkzeuge/                     Prüf- und Hilfsskripte für das Repository
 ```
 
@@ -144,6 +145,14 @@ Quelltexte liegen in den `assets/`-Ordnern der Skills.
 |  | [Quintenzirkel mit Eselsbrücken](druckvorlagen/musik/Quintenzirkel.pdf) | A4 |
 |  | [Liedblatt „Hänschen klein“ mit Text und Akkorden](druckvorlagen/musik/Haenschen-klein.pdf) | A4 |
 |  | [Liedblatt „Alle meine Entchen“ mit 5 Strophen](druckvorlagen/musik/Alle-meine-Entchen.pdf) | A4 |
+
+## Materialien
+
+Fertige Materialien, die mit den Skills gebaut wurden – als PDF und mit Quelltext.
+
+| Fach | Material | Seiten |
+|---|---|---|
+| Mathematik | [Mathematisches Wörterbuch Deutsch – Englisch](materialien/mathematik/woerterbuch-deutsch-englisch) mit englischer Lautschrift, Zeichen, Skizzen und Lesarten ([PDF](materialien/mathematik/woerterbuch-deutsch-englisch/Mathematisches-Woerterbuch-Deutsch-Englisch.pdf)) | 89 |
 
 ## Installieren
 
