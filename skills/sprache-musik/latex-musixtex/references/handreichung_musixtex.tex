@@ -643,13 +643,30 @@ Alles zusammen ergibt einen vollständigen Liedsatz mit Text und Akkorden. Die V
 %%%%%  KAPITEL 12  %%%%
 \section{Quintenzirkel}\label{sec:quintenzirkel}
 
-Der Quintenzirkel ordnet die Tonarten nach Quinten: Im Uhrzeigersinn kommt je ein Kreuz dazu, gegen den Uhrzeigersinn je ein Be. Außen stehen die Dur-, innen die parallelen Moll-Tonarten; die kleinen Notensysteme zeigen die Vorzeichen am Schlüssel. Er ist in TikZ gezeichnet; Schlüssel und Vorzeichen stammen aus der Notenschrift \texttt{musix24}, ein \texttt{\textbackslash usepackage\{musixtex\}} ist nicht nötig. Vorlage: \texttt{vorlage\_quintenzirkel.tex} in \texttt{assets/}.
+Der Quintenzirkel ordnet die Tonarten nach Quinten: Im Uhrzeigersinn kommt je ein Kreuz dazu, gegen den Uhrzeigersinn je ein Be. Unten treffen sich Ges-Dur (6\,\(\flat\), links) und Fis-Dur (6\,\(\sharp\), rechts). Eselsbrücken für die Reihenfolge stehen auf dem Blatt: \glqq Geh Du Alter Esel, Hole Fisch\grqq{} für die Kreuz-, \glqq Frische Bohnen Essen Alte Damen Gerne\grqq{} für die Be-Tonarten. Außen stehen die Dur-, innen die parallelen Moll-Tonarten; die kleinen Notensysteme zeigen die Vorzeichen am Schlüssel. Er ist in TikZ gezeichnet; Schlüssel und Vorzeichen stammen aus der Notenschrift \texttt{musix24}, ein \texttt{\textbackslash usepackage\{musixtex\}} ist nicht nötig. Vorlage: \texttt{vorlage\_quintenzirkel.tex} in \texttt{assets/}.
 
 \begin{center}
-\includegraphics[width=\linewidth,trim=0 10.5cm 0 1.2cm,clip]{vorlage_quintenzirkel.pdf}
+\includegraphics[width=0.9\linewidth,trim=0 1.5cm 0 1.2cm,clip]{vorlage_quintenzirkel.pdf}
 \end{center}
 
 %%%%%  KAPITEL 13  %%%%
+\section{Blanko-Notenpapier}
+
+Leeres Notenpapier entsteht ohne MusiX\TeX{}: Eine TikZ-Schleife zeichnet so viele Fünfliniensysteme, wie auf die Seite passen, und verteilt den Rest gleichmäßig. Der Violinschlüssel ist wie beim Quintenzirkel ein Zeichen der Notenschrift (\texttt{musix20}, Zeichen 71). Vier Vorlagen in \texttt{assets/} wählen A5 hoch oder quer, jeweils mit oder ohne Schlüssel; Linienabstand (Standard 2{,}5\,mm) und Systemabstand stehen oben in \texttt{notenpapier.tex}. Druckfertige PDFs liegen im Ordner \texttt{druckvorlagen/musik/} des Repositorys.
+
+\begin{lstlisting}[style=latex]
+\documentclass{article}
+\newif\ifquer          \querfalse        % \quertrue = Querformat
+\newif\ifschluessel    \schluesseltrue   % \schluesselfalse = ohne Schlüssel
+\input{notenpapier.tex}
+\end{lstlisting}
+
+\begin{center}
+\fbox{\includegraphics[height=6.2cm]{vorlage_notenpapier_a5_hoch_mit_schluessel.pdf}}\quad
+\fbox{\includegraphics[height=4.37cm]{vorlage_notenpapier_a5_quer_ohne_schluessel.pdf}}
+\end{center}
+
+%%%%%  KAPITEL 14  %%%%
 \section{Rechtliches: Welche Lieder darf ich setzen und teilen?}
 
 \begin{hinweis}[Keine Rechtsberatung]
@@ -689,7 +706,7 @@ Eigene Komposition & ja\\
 Quellenangabe ist bei gemeinfreien Werken guter Stil, bei Nutzung unter einer Schranke oder Lizenz Pflicht (\S\,63 UrhG). Datenschutz ist bei Noten nicht berührt, solange keine personenbezogenen Daten (etwa Schülernamen) im Dokument stehen.
 \end{merke}
 
-%%%%%  KAPITEL 14  %%%%
+%%%%%  KAPITEL 15  %%%%
 \section{Praktische Tipps für den Schulalltag}
 
 \begin{itemize}

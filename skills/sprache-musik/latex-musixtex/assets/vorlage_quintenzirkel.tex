@@ -40,14 +40,14 @@
 {\Large\bfseries\sffamily Quintenzirkel}\\[3pt]
 {\small Dur außen, parallele Moll-Tonarten innen, Vorzeichen am Schlüssel daneben}
 \end{center}
-\vspace{2mm}
+\vspace{-2mm}
 
 \begin{center}
 \begin{tikzpicture}[font=\sffamily]
   \def\Raussen{3.7}  % Außenkreis
   \def\Rmitte{2.6}   % Grenze Dur/Moll
   \def\Rinnen{1.5}   % Innenkreis
-  \def\Rnoten{5.75}  % Mittelpunkte der Notenlinien-Ausschnitte
+  \def\Rnoten{5.6}  % Mittelpunkte der Notenlinien-Ausschnitte
 
   % Ringe
   \fill[akzentblau!12]   (0,0) circle (\Raussen);
@@ -87,16 +87,46 @@
     \fi
   }
 
-  % Position 6 (unten): Fis-Dur = Ges-Dur, dis-Moll = es-Moll (enharmonisch)
-  \node[font=\bfseries\sffamily, align=center, inner sep=0] at (-90:{(\Raussen+\Rmitte)/2}) {Fis/Ges};
-  \node[font=\sffamily\small] at (-90:{(\Rmitte+\Rinnen)/2}) {dis/es};
-  \vorzeichenzeile{-1.5}{-6.95}{6}{\kreuzpositionen}{52}{Fis: 6\,\(\sharp\)}
-  \vorzeichenzeile{1.5}{-6.95}{6}{\bepositionen}{50}{Ges: 6\,\(\flat\)}
+  % Position 6 (unten): Ges-Dur = Fis-Dur, es-Moll = dis-Moll (enharmonisch).
+  % Ges links (Be-Seite), Fis rechts (Kreuz-Seite).
+  \node[font=\bfseries\sffamily, align=center, inner sep=0] at (-90:{(\Raussen+\Rmitte)/2}) {Ges/Fis};
+  \node[font=\sffamily\small] at (-90:{(\Rmitte+\Rinnen)/2}) {es/dis};
+  \vorzeichenzeile{-1.5}{-6.7}{6}{\bepositionen}{50}{Ges: 6\,\(\flat\)}
+  \vorzeichenzeile{1.5}{-6.7}{6}{\kreuzpositionen}{52}{Fis: 6\,\(\sharp\)}
 
   % Mitte
   \node[align=center, font=\scriptsize\sffamily, text=gray!50!black] at (0,0)
     {\textbf{Dur}\\außen\\[2pt]\textbf{Moll}\\innen};
 \end{tikzpicture}
 \end{center}
+
+\vspace{0mm}
+% ---- Eselsbrücken ---------------------------------------------------
+\noindent
+\begin{minipage}[t]{0.485\linewidth}
+\begin{hinweis}[Be-Tonarten (links herum)]\mbox{}\\[2pt]
+\raggedright\textbf{F}rische \textbf{B}ohnen \textbf{E}ssen \textbf{A}lte \textbf{D}amen \textbf{G}erne\\[3pt]
+F -- B -- Es -- As -- Des -- Ges\\
+\small 1 bis 6 \(\flat\)
+\end{hinweis}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.485\linewidth}
+\begin{hinweis}[Kreuz-Tonarten (rechts herum)]\mbox{}\\[2pt]
+\raggedright\textbf{G}eh \textbf{D}u \textbf{A}lter \textbf{E}sel, \textbf{H}ole \textbf{F}isch\\[3pt]
+G -- D -- A -- E -- H -- Fis\\
+\small 1 bis 6 \(\sharp\)
+\end{hinweis}
+\end{minipage}
+
+\vspace{0mm}
+\begin{merke}
+\textbf{Reihenfolge der Vorzeichen am Schlüssel:}\\
+Kreuze: fis -- cis -- gis -- dis -- ais -- eis\\
+Be: b -- es -- as -- des -- ges -- ces \quad(die Be-Eselsbrücke ohne das F am Anfang)\\[3pt]
+\textbf{Tonart ablesen:} Bei Kreuz-Tonarten liegt der Grundton einen Halbton über dem
+letzten Kreuz (letztes Kreuz fis \(\Rightarrow\) G-Dur). Bei Be-Tonarten ist das
+vorletzte Be der Grundton (b, es, as \(\Rightarrow\) Es-Dur); nur F-Dur mit einem Be
+muss man sich merken.
+\end{merke}
 
 \end{document}

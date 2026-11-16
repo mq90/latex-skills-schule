@@ -25,6 +25,9 @@
 - Handreichungen dürfen Datendateien aus `assets/` desselben Skills per `\input`
   laden und PDFs kompilierter Vorlagen per `\includegraphics{name.pdf}` einbinden;
   die Bauskripte stellen beides bereit (`vorlagen_vorbauen`).
+- Druckfertige Blätter (z. B. Notenpapier) als PDF in `druckvorlagen/<bereich>/`
+  ablegen (von `.gitignore` freigegeben, vom Bauskript nicht gelöscht) und in der
+  Tabelle „Druckvorlagen“ der `README.md` eintragen; PDFs nach Änderungen neu bauen.
 - Keine echten Personen- oder Schulnamen in Beispieldateien (Platzhalter „N. N.“,
   „Musterschule“); Schülernamen nie, auch nicht als Beispiel.
 - Keine Stolpersteine in eine SKILL.md schreiben, die nicht getestet sind.

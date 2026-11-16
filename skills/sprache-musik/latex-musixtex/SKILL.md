@@ -113,8 +113,10 @@ an Harmoniewechseln, nicht an jede Note. Hochgestellte Ziffer: `C$^7$`.
 
 | Vorlage | Inhalt |
 |---|---|
+| `notenpapier.tex` | Basis für das Notenpapier, nicht allein kompilierbar (Schnipsel) |
 | `vorlage_lied_haenschen.tex` | kompletter Liedsatz „Hänschen klein“ (F-Dur) mit Liedtext und Akkorden, großes System, 4 Takte pro Zeile – Muster für eigene Lieder |
-| `vorlage_quintenzirkel.tex` | Quintenzirkel in TikZ: großer Kreis, Dur außen, parallele Moll innen, außen je ein Notenlinien-Ausschnitt mit den Vorzeichen; Schlüssel/Vorzeichen aus der Schrift `musix24` (`\char71/52/50`), **kein** `\usepackage{musixtex}` |
+| `vorlage_quintenzirkel.tex` | Quintenzirkel in TikZ: großer Kreis, Dur außen, parallele Moll innen, außen je ein Notenlinien-Ausschnitt mit den Vorzeichen (Ges links, Fis rechts), Eselsbrücken und Merkregeln darunter; Schlüssel/Vorzeichen aus der Schrift `musix24` (`\char71/52/50`), **kein** `\usepackage{musixtex}` |
+| `vorlage_notenpapier_a5_{hoch,quer}_{mit,ohne}_schluessel.tex` | Blanko-Notenpapier A5; setzen nur zwei Schalter und laden `notenpapier.tex` (dort Linien- und Systemabstand einstellen). Druckfertige PDFs in `druckvorlagen/musik/` |
 
 ## Stolpersteine
 

@@ -1,0 +1,51 @@
+% ===================================================================
+%  Basis für Blanko-Notenpapier (A5) – wird von den vier Vorlagen
+%  vorlage_notenpapier_a5_*.tex per \input geladen, nicht allein kompilieren.
+%
+%  Die Vorlage setzt vorher zwei Schalter:
+%    \querfalse / \quertrue               Hoch- oder Querformat
+%    \schluesseltrue / \schluesselfalse   mit oder ohne Violinschlüssel
+%  Reines TikZ; der Violinschlüssel ist Zeichen 71 der MusiXTeX-Schrift
+%  musix20 (nur als Schrift geladen, kein \usepackage{musixtex}).
+% ===================================================================
+\ifquer
+  \usepackage[a5paper,landscape,margin=12mm]{geometry}
+\else
+  \usepackage[a5paper,margin=12mm]{geometry}
+\fi
+\usepackage{tikz}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+% ---- Einstellungen ----------------------------------------------------
+\newlength{\Linienabstand}  \setlength{\Linienabstand}{2.5mm}  % Abstand zweier Notenlinien
+\newlength{\Systemabstand}  \setlength{\Systemabstand}{11mm}   % Lücke zwischen zwei Systemen
+\newcommand{\Linienstaerke}{0.4pt}
+
+% Schlüsselgröße passt sich dem Linienabstand an: musix20 gehört zu 5pt
+% Linienabstand bei 20pt Schriftgröße, also Schriftgröße = 4 x Linienabstand.
+\font\notenschrift=musix20 at \dimexpr 4\Linienabstand\relax
+
+\begin{document}
+\begin{tikzpicture}[x=1mm,y=1mm]
+  \pgfmathsetmacro{\L}{\Linienabstand/1mm}
+  \pgfmathsetmacro{\G}{\Systemabstand/1mm}
+  \pgfmathsetmacro{\B}{\linewidth/1mm}
+  \pgfmathsetmacro{\H}{\textheight/1mm}
+  % so viele Systeme, wie auf die Seite passen
+  \pgfmathtruncatemacro{\n}{floor((\H+\G)/(4*\L+\G))}
+  % Restplatz gleichmäßig oben und unten verteilen
+  \pgfmathsetmacro{\oben}{(\H-(\n*4*\L+(\n-1)*\G))/2}
+  % feste Zeichenfläche = Satzspiegel (Schlüssel dürfen in den Rand ragen)
+  \path[use as bounding box] (0,0) rectangle (\B,-\H);
+  \foreach \s in {1,...,\n} {
+    \pgfmathsetmacro{\y}{-\oben-(\s-1)*(4*\L+\G)}  % oberste Linie des Systems
+    \foreach \l in {0,...,4}
+      \draw[line width=\Linienstaerke] (0,\y-\l*\L) -- (\B,\y-\l*\L);
+    \ifschluessel
+      % Grundlinie des Schlüssels auf der g'-Linie (2. Linie von unten)
+      \node[anchor=base west, inner sep=0] at (0.8,\y-3*\L) {\notenschrift\char71};
+    \fi
+  }
+\end{tikzpicture}
+\end{document}

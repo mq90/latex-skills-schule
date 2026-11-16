@@ -25,6 +25,7 @@ skills/
 ├── schulorganisation/         Stoffverteilungsplan, Sitzplan, Klassenarbeit, Anki-Karten
 └── raetsel-spiele/            Sudoku, Schach
 handreichungen/                fertige PDFs aller Handreichungen
+druckvorlagen/                 druckfertige PDFs zum direkten Ausdrucken (z. B. Notenpapier)
 werkzeuge/                     Prüf- und Hilfsskripte für das Repository
 ```
 
@@ -47,7 +48,7 @@ werkzeuge/                     Prüf- und Hilfsskripte für das Repository
 | | [`latex-quellcode-listings`](skills/informatik/latex-quellcode-listings) | Programmcode mit listings | Handreichung |
 | | [`latex-pdf-formulare`](skills/informatik/latex-pdf-formulare) | interaktive, ausfüllbare PDFs, digitale Leistungskontrollen | Handreichung, Vorlage, Beispiel-LK, Skripte zum Einsammeln und Testen |
 | Sprache & Musik | [`latex-lautschrift`](skills/sprache-musik/latex-lautschrift) | IPA mit tipa oder Unicode | Handreichung, Lauttabellen, Vokalviereck |
-| | [`latex-musixtex`](skills/sprache-musik/latex-musixtex) | Notensatz, Liedsätze mit Text und Akkorden, Quintenzirkel | Handreichung, Musik-Kürzel, Vorlagen (Liedsatz, Quintenzirkel) |
+| | [`latex-musixtex`](skills/sprache-musik/latex-musixtex) | Notensatz, Liedsätze mit Text und Akkorden, Quintenzirkel, Notenpapier | Handreichung, Musik-Kürzel, Vorlagen (Liedsatz, Quintenzirkel, Notenpapier A5) |
 | Naturwissenschaften | [`latex-physik`](skills/naturwissenschaften/latex-physik) | Einheiten, Messwerttabellen, Ausgleichsgerade, Schaltpläne (circuitikz), Strahlengänge | Handreichung; Vorlagen Federdehnung (Regression in TikZ), Schaltpläne, Sammellinse |
 | | [`latex-chemie`](skills/naturwissenschaften/latex-chemie) | Reaktionsgleichungen (mhchem), Oxidationszahlen, Strukturformeln (chemfig), Periodensystem, Titrationskurve, Energiediagramm | Handreichung; 3 Vorlagen, pH-Kurve wird berechnet statt gezeichnet |
 | | [`latex-biologie`](skills/naturwissenschaften/latex-biologie) | Kreuzungsschemata, Stammbäume (genealogytree), Codesonne, Nahrungsnetz, Wachstumskurven | Handreichung; 5 Vorlagen |
@@ -128,6 +129,19 @@ auch ohne LaTeX-Installation. Die Quelltexte stehen in den
 |  | [Stoffverteilungspläne automatisch erstellen](handreichungen/schulorganisation/Stoffverteilungspl%C3%A4ne-automatisch-erstellen.pdf) | 8 |
 | Rätsel & Spiele | [Schach mit skak, xskak und chessboard](handreichungen/raetsel-spiele/Schach-mit-skak-xskak-und-chessboard.pdf) | 9 |
 |  | [Sudokus mit dem Paket sudoku setzen](handreichungen/raetsel-spiele/Sudokus-mit-dem-Paket-sudoku-setzen.pdf) | 7 |
+
+## Druckvorlagen
+
+Fertige Blätter zum direkten Ausdrucken, ohne LaTeX-Installation. Die
+Quelltexte liegen in den `assets/`-Ordnern der Skills.
+
+| Bereich | Druckvorlage | Format |
+|---|---|---|
+| Musik | [Notenpapier mit Violinschlüssel](druckvorlagen/musik/Notenpapier-A5-hoch-mit-Violinschluessel.pdf) | A5 hoch |
+|  | [Notenpapier ohne Schlüssel](druckvorlagen/musik/Notenpapier-A5-hoch-ohne-Schluessel.pdf) | A5 hoch |
+|  | [Notenpapier mit Violinschlüssel](druckvorlagen/musik/Notenpapier-A5-quer-mit-Violinschluessel.pdf) | A5 quer |
+|  | [Notenpapier ohne Schlüssel](druckvorlagen/musik/Notenpapier-A5-quer-ohne-Schluessel.pdf) | A5 quer |
+|  | [Quintenzirkel mit Eselsbrücken](druckvorlagen/musik/Quintenzirkel.pdf) | A4 |
 
 ## Installieren
 
