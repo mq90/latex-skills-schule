@@ -1,0 +1,175 @@
+%----------------------------------------------------------------------------------------------------%
+% Dokumentspezifische Befehle (nur für dieses Wörterbuch, deshalb lokal und nicht in newcommands.tex)
+%----------------------------------------------------------------------------------------------------%
+
+% \eintrag{Marke}{Artikel}{Begriff}{english term}{Lautschrift EN}{Formelzeichen/Skizze}
+% Schaltet das babel-Kürzel " aus, BEVOR die Argumente gelesen werden – dadurch darf die Lautschrift
+% wie bei \ipa{...} mit " (Hauptbetonung) und "" (Nebenbetonung) geschrieben werden.
+\makeatletter
+\newcommand\eintrag{\begingroup\shorthandoff{"}\eintrag@aux}
+\newcommand\eintrag@aux[6]{\endgroup
+	#2 \textbf{#3}\phantomsection\label{e:#1}
+	& \textbf{#4}\newline{\small\color{black!70}\ipa{#5}}
+	& #6 \\ \midrule}
+% \lies{Ausdruck}{english reading}{deutsche Lesart}
+\newcommand\lies{\begingroup\shorthandoff{"}\lies@aux}
+\newcommand\lies@aux[3]{\endgroup #1 & #2\newline{\color{black!60}#3} \\[4.5pt]}
+\makeatother
+
+% Tabellenkopf für jedes Kapitel in Teil I (wird auf jeder Folgeseite wiederholt)
+\newenvironment{woerter}{%
+	\arrayrulecolor{black!20}%
+	\begin{longtable}{>{\raggedright\arraybackslash}m{5.3cm} >{\raggedright\arraybackslash}m{6.1cm} >{\centering\arraybackslash}m{4.6cm}}
+		\rowcolor{cornflower!15}\textbf{Deutsch} & \textbf{Englisch} & \textbf{Formelzeichen \,/\, Skizze} \\ \midrule
+		\endhead}{%
+	\end{longtable}\arrayrulecolor{black}}
+
+% Liste ohne Linien und Rahmen (Teil II): links der Ausdruck, rechts Englisch (schwarz) und Deutsch (grau)
+\newenvironment{lesen}{%
+	\begin{longtable}{@{}>{\raggedright\arraybackslash}p{4.6cm} >{\raggedright\arraybackslash}p{12.1cm}@{}}}{%
+	\end{longtable}\vspace{-1.2em}}
+
+\newcommand{\anmerkung}[1]{\par\smallskip\noindent{\small\sloppy\textbf{Hinweis:} #1\par}\smallskip}
+% Verhindert, dass eine Zwischenüberschrift allein am Seitenende steht
+\newcommand{\platz}{\par\ifdim\dimexpr\pagegoal-\pagetotal\relax<5.5cm \newpage\fi}
+% Einheit aufrecht im Mathemodus
+\newcommand{\eh}[1]{\,\mathrm{#1}}
+
+% Kleine Skizzen: Gegenstand blau, Hervorhebung (der Begriff selbst) rot, Hilfslinien gestrichelt
+\tikzset{
+	fig/.style={blue, very thick},
+	mass/.style={red, thick},
+	hilf/.style={dashed},
+	achse/.style={-{Stealth[length=4pt]}, thin},
+	kraft/.style={red, very thick, -{Stealth[length=5pt]}},
+}
+\newcommand{\skizze}[1]{\tikz[baseline=(current bounding box.center), scale=0.45, line cap=round,
+	line join=round, every node/.style={font=\scriptsize}, outer sep=0pt]{#1}}
+\newcommand{\achsen}[6]{\draw[achse] (#1,0) -- (#2,0) node[below left] {$#5$}; \draw[achse] (0,#3) -- (0,#4) node[below left] {$#6$};}
+% Schaltzeichen (circuitikz, europäische Symbole)
+\newcommand{\sz}[1]{\tikz[baseline=-0.6ex]{\ctikzset{bipoles/length=0.9cm}\draw (0,0) to[#1] (1.7,0);}}
+
+% Messen und Auswerten
+\newcommand{\skSkala}{\skizze{\draw[fig, thick] (0,0) rectangle (5,0.9);
+	\foreach \x in {0,...,10} {\draw[blue] ({0.25+0.45*\x},0.9) -- ++(0,-0.3);}
+	\foreach \x in {0,5,10} {\draw[blue, thick] ({0.25+0.45*\x},0.9) -- ++(0,-0.5) node[below, black] {\x};}}}
+\newcommand{\messpunkte}{\foreach \x/\y in {0.5/0.45, 1/0.6, 1.5/1.15, 2/1.2, 2.5/1.75, 3/1.9} {\draw[blue, thick] (\x-0.08,\y-0.08) -- (\x+0.08,\y+0.08) (\x-0.08,\y+0.08) -- (\x+0.08,\y-0.08);}}
+\newcommand{\skDiagramm}{\skizze{\achsen{-0.3}{3.6}{-0.3}{2.5}{x}{y}\messpunkte}}
+\newcommand{\skAusgleich}{\skizze{\achsen{-0.3}{3.6}{-0.3}{2.5}{x}{y}\messpunkte \draw[mass] (0,0.1) -- (3.4,2.15);}}
+\newcommand{\skProp}{\skizze{\achsen{-0.3}{3.4}{-0.3}{2.4}{s}{F}\draw[fig] (0,0) -- (3.1,2.1);}}
+\newcommand{\skAntiprop}{\skizze{\achsen{-0.3}{3.4}{-0.3}{2.4}{V}{p}\draw[fig, domain=0.3:3.2, samples=30] plot (\x,{0.65/\x});}}
+
+% Bewegungen
+\newcommand{\skST}{\skizze{\achsen{-0.3}{3.4}{-0.3}{2.4}{t}{s}\draw[fig] (0,0) -- (3.1,2.1);}}
+\newcommand{\skSTParabel}{\skizze{\achsen{-0.3}{3.4}{-0.3}{2.4}{t}{s}\draw[fig, domain=0:3, samples=30] plot (\x,{0.24*\x*\x});}}
+\newcommand{\skVT}{\skizze{\achsen{-0.3}{3.4}{-0.3}{2.4}{t}{v}\draw[fig] (0,0) -- (3.1,2.1);}}
+\newcommand{\skVTkonst}{\skizze{\achsen{-0.3}{3.4}{-0.3}{2.4}{t}{v}\draw[fig] (0,1.4) -- (3.1,1.4);}}
+\newcommand{\skWurf}{\skizze{\draw[thick] (0,0) -- (4,0); \draw[thick] (0,0) -- (0,1.9) -- (-0.8,1.9);
+	\draw[fig, domain=0:3.4, samples=30] plot (\x,{1.9-0.164*\x*\x}); \draw[kraft] (0,1.9) -- (1.1,1.9) node[above] {$v_0$};
+	\fill[blue] (0,1.9) circle (3pt);}}
+\newcommand{\skKreisbew}{\skizze{\draw[fig, hilf, thick] (0,0) circle (1.2); \fill (0,0) circle (1.5pt);
+	\draw[thin] (0,0) -- node[below, inner sep=1.5pt] {$r$} (30:1.2); \fill[blue] (30:1.2) circle (3.5pt);
+	\draw[kraft] (30:1.2) -- ++(120:1.2) node[above right, inner sep=1pt] {$v$};}}
+\newcommand{\skBahn}{\skizze{\draw[fig, hilf, thick] (0,0) .. controls (1,1.6) and (2.2,-0.6) .. (3.6,0.9); \fill[blue] (3.6,0.9) circle (3.5pt);}}
+
+% Kräfte
+\newcommand{\klotz}[2]{\filldraw[fill=blue!15, draw=blue, very thick] (#1,#2) rectangle ++(1.2,0.8);}
+\newcommand{\skKraft}{\skizze{\klotz{0}{0} \draw[kraft] (1.2,0.4) -- (3.2,0.4) node[above left] {$\vec{F}$};}}
+\newcommand{\skAngriff}{\skizze{\klotz{0}{0} \draw[blue, thick, -{Stealth}] (1.2,0.4) -- (3.2,0.4); \fill[red] (1.2,0.4) circle (3.5pt);}}
+\newcommand{\skGewicht}{\skizze{\klotz{0}{0} \draw[kraft] (0.6,0.4) -- (0.6,-1.4) node[right] {$\vec{F}_G$}; \fill (0.6,0.4) circle (2pt);}}
+\newcommand{\skNormal}{\skizze{\draw[thick] (-0.8,0) -- (2,0); \klotz{0}{0} \draw[kraft] (0.6,0) -- (0.6,1.9) node[right] {$\vec{F}_N$};}}
+\newcommand{\skReibung}{\skizze{\draw[thick] (-1.6,0) -- (3,0); \klotz{0}{0} \draw[blue, thick, -{Stealth}] (1.2,0.4) -- (2.8,0.4) node[above] {$\vec{F}$};
+	\draw[kraft] (0,0.12) -- (-1.4,0.12) node[above] {$\vec{F}_R$};}}
+\newcommand{\feder}[2]{\draw[blue, thick, decorate, decoration={zigzag, segment length=3.2pt, amplitude=3pt}] #1 -- #2;}
+\newcommand{\skFeder}{\skizze{\draw[thick] (-0.7,2.4) -- (0.7,2.4); \feder{(0,2.4)}{(0,0.8)} \filldraw[fill=blue!15, draw=blue, very thick] (-0.4,0.1) rectangle (0.4,0.8);}}
+\newcommand{\skDehnung}{\skizze{\draw[thick] (-0.7,2.4) -- (2.2,2.4); \feder{(0,2.4)}{(0,1.3)} \feder{(1.5,2.4)}{(1.5,0.5)}
+	\filldraw[fill=blue!15, draw=blue, very thick] (1.1,-0.2) rectangle (1.9,0.5);
+	\draw[hilf, thin] (-0.3,1.3) -- (2.6,1.3) (1.5,0.5) -- (2.6,0.5); \draw[mass, <->] (2.4,1.3) -- node[right] {$s$} (2.4,0.5);}}
+\newcommand{\skResultierende}{\skizze{\draw[hilf, thin] (2.2,0) -- (2.9,1.5) -- (0.7,1.5);
+	\draw[blue, very thick, -{Stealth}] (0,0) -- (2.2,0) node[below] {$\vec{F}_1$}; \draw[blue, very thick, -{Stealth}] (0,0) -- (0.7,1.5) node[left] {$\vec{F}_2$};
+	\draw[kraft] (0,0) -- (2.9,1.5) node[right] {$\vec{F}_{\mathrm{res}}$};}}
+\newcommand{\hebel}{\draw[fig] (-2,0.5) -- (1.4,0.5); \filldraw[fill=black!20, draw=black, thick] (0,0.45) -- (-0.35,-0.2) -- (0.35,-0.2) -- cycle;}
+\newcommand{\skHebel}{\skizze{\hebel \draw[kraft] (-1.8,0.5) -- (-1.8,-0.5) node[left] {$F_1$}; \draw[kraft] (1.2,0.5) -- (1.2,-0.9) node[right] {$F_2$};}}
+\newcommand{\skHebelarm}{\skizze{\hebel \draw[mass, |<->|] (-1.8,0.95) -- node[above] {$r_1$} (0,0.95); \draw[mass, |<->|] (0,0.95) -- node[above] {$r_2$} (1.2,0.95);}}
+\newcommand{\skDrehpunkt}{\skizze{\hebel \fill[red] (0,0.5) circle (4pt);}}
+\newcommand{\skEbene}{\skizze{\draw[thick] (0,0) -- (3.6,0) -- (3.6,1.8) -- cycle; \draw[mass] (1,0) arc[start angle=0, end angle=26.57, radius=1]; \node at (13:1.4) {$\alpha$};
+	\begin{scope}[shift={(1.8,0.9)}, rotate=26.57] \filldraw[fill=blue!15, draw=blue, very thick] (-0.5,0) rectangle (0.5,0.7);\end{scope}}}
+\newcommand{\skRolle}{\skizze{\draw[thick] (-0.8,2.5) -- (0.8,2.5) (0,2.5) -- (0,1.7); \draw[fig] (0,1.7) circle (0.55); \fill (0,1.7) circle (2pt);
+	\draw[blue, thick] (-0.55,1.7) -- (-0.55,0.5); \filldraw[fill=blue!15, draw=blue, very thick] (-0.9,-0.1) rectangle (-0.2,0.5);
+	\draw[blue, thick] (0.55,1.7) -- (0.55,0.9); \draw[kraft] (0.55,0.9) -- (0.55,-0.1) node[right] {$F$};}}
+\newcommand{\skAuftrieb}{\skizze{\fill[blue!12] (-1.4,-1) rectangle (1.4,0.9); \draw[thick] (-1.4,1.3) -- (-1.4,-1) -- (1.4,-1) -- (1.4,1.3); \draw[blue, thick] (-1.4,0.9) -- (1.4,0.9);
+	\filldraw[fill=white, draw=blue, very thick] (-0.4,-0.5) rectangle (0.4,0.2); \draw[kraft] (0,0.2) -- (0,1.6) node[right] {$F_A$};}}
+\newcommand{\skDruck}{\skizze{\draw[thick] (-1.5,0) -- (1.5,0); \filldraw[fill=blue!15, draw=blue, very thick] (-0.8,0) rectangle (0.8,0.8);
+	\draw[kraft] (0,2) -- (0,0.85) node[pos=0.1, right] {$F$}; \draw[red, line width=2pt] (-0.8,0) -- (0.8,0); \node[below] at (0,0) {$A$};}}
+
+% Wärme
+\newcommand{\skThermometer}{\skizze{\draw[fig, thick, rounded corners=2pt] (-0.15,0.3) rectangle (0.15,2.8); \filldraw[fill=red, draw=blue, thick] (0,0.1) circle (0.33);
+	\fill[red] (-0.07,0.3) rectangle (0.07,1.7); \foreach \y in {0.8,1.2,...,2.5} {\draw[thin] (0.15,\y) -- (0.4,\y);}}}
+\newcommand{\teilchen}[1]{\foreach \p in {#1} {\fill[blue] \p circle (2.6pt);}}
+\newcommand{\skFest}{\skizze{\draw[thin] (0,0) rectangle (1.9,1.5); \teilchen{(0.3,0.25),(0.75,0.25),(1.2,0.25),(1.65,0.25),(0.3,0.7),(0.75,0.7),(1.2,0.7),(1.65,0.7),(0.3,1.15),(0.75,1.15),(1.2,1.15),(1.65,1.15)}}}
+\newcommand{\skFluessig}{\skizze{\draw[thin] (0,0) rectangle (1.9,1.5); \teilchen{(0.25,0.22),(0.7,0.3),(1.15,0.2),(1.6,0.28),(0.4,0.68),(0.9,0.72),(1.4,0.62),(0.22,1.05),(0.75,1.1),(1.25,1.02),(1.68,0.95)}}}
+\newcommand{\skGas}{\skizze{\draw[thin] (0,0) rectangle (1.9,1.5); \teilchen{(0.3,0.3),(1.5,0.5),(0.8,1.2),(1.6,1.25),(0.4,0.95)}}}
+
+% Elektrizität und Magnetismus
+\newcommand{\skStromkreis}{\tikz[baseline=(current bounding box.center)]{\ctikzset{bipoles/length=0.8cm}
+	\draw (0,0) to[battery1] (0,1.3) -- (1.9,1.3) to[lamp] (1.9,0) to[nos] (0,0);}}
+\newcommand{\skReihe}{\tikz[baseline=(current bounding box.center)]{\ctikzset{bipoles/length=0.75cm}
+	\draw (0,0) to[battery1] (0,1.2) to[R, l=\scriptsize$R_1$] (1.5,1.2) to[R, l=\scriptsize$R_2$] (3,1.2) -- (3,0) -- (0,0);}}
+\newcommand{\skParallel}{\tikz[baseline=(current bounding box.center)]{\ctikzset{bipoles/length=0.75cm}
+	\draw (0,0) to[battery1] (0,1.3) -- (1.3,1.3) to[R, l_=\scriptsize$R_1$, *-*] (1.3,0) -- (0,0);
+	\draw (1.3,1.3) -- (2.6,1.3) to[R, l=\scriptsize$R_2$] (2.6,0) -- (1.3,0);}}
+\newcommand{\skMagnet}{\skizze{\filldraw[fill=red!60, draw=black, thick] (-1.3,-0.35) rectangle (0,0.35); \filldraw[fill=green!50!black!60, draw=black, thick] (0,-0.35) rectangle (1.3,0.35);
+	\node at (-0.65,0) {N}; \node at (0.65,0) {S};}}
+\newcommand{\skMagnetfeld}{\skizze{\foreach \h in {0.9,1.5} {\draw[blue, thick, -{Stealth[length=3pt]}] (-1.1,0.35) .. controls (-1.6,\h+0.3) and (1.6,\h+0.3) .. (1.1,0.35);
+		\draw[blue, thick, -{Stealth[length=3pt]}] (-1.1,-0.35) .. controls (-1.6,-\h-0.3) and (1.6,-\h-0.3) .. (1.1,-0.35);}
+	\filldraw[fill=red!60, draw=black, thick] (-1.3,-0.35) rectangle (0,0.35); \filldraw[fill=green!50!black!60, draw=black, thick] (0,-0.35) rectangle (1.3,0.35);
+	\node at (-0.65,0) {N}; \node at (0.65,0) {S};}}
+\newcommand{\skEFeld}{\skizze{\draw[red, line width=2pt] (0,0) -- (0,2) node[above] {$+$}; \draw[blue, line width=2pt] (2.4,0) -- (2.4,2) node[above] {$-$};
+	\foreach \y in {0.3,0.77,1.23,1.7} {\draw[thick, -{Stealth[length=3pt]}] (0.1,\y) -- (2.25,\y);}}}
+
+% Schwingungen und Wellen
+\newcommand{\skPendel}{\skizze{\draw[thick] (-0.9,2.6) -- (0.9,2.6); \draw[hilf, thin] (0,2.6) -- (0,0.2); \draw[blue, thick] (0,2.6) -- ++(-65:2.3) coordinate (m);
+	\fill[blue] (m) circle (5pt); \draw[mass] (0,1.6) arc[start angle=-90, end angle=-65, radius=1]; \draw[hilf, thin, blue] (0,2.6) -- ++(-115:2.3);}}
+\newcommand{\sinus}{\achsen{-0.3}{4.6}{-1.3}{1.5}{}{}\draw[fig, domain=0:4.2, samples=60] plot (\x,{sin(180*\x)});}
+\newcommand{\skAmplitude}{\skizze{\sinus \draw[mass, <->] (0.5,0) -- node[right, inner sep=1.5pt] {$\hat{y}$} (0.5,1);}}
+\newcommand{\skPeriode}{\skizze{\sinus \draw[mass, |<->|] (0.5,1.3) -- node[above] {$T$} (2.5,1.3); \node[below] at (4.4,0) {$t$};}}
+\newcommand{\skWellenlaenge}{\skizze{\sinus \draw[mass, |<->|] (0.5,1.3) -- node[above] {$\lambda$} (2.5,1.3); \node[below] at (4.4,0) {$x$};}}
+\newcommand{\skBergTal}{\skizze{\sinus \fill[red] (0.5,1) circle (3pt) (2.5,1) circle (3pt); \filldraw[fill=white, draw=red, thick] (1.5,-1) circle (3pt) (3.5,-1) circle (3pt);}}
+\newcommand{\skGedaempft}{\skizze{\achsen{-0.3}{4.6}{-1.3}{1.5}{t}{y}\draw[fig, domain=0:4.2, samples=80] plot (\x,{1.2*exp(-0.55*\x)*cos(360*\x)});}}
+\newcommand{\skStehend}{\skizze{\draw[thick] (0,-1) -- (0,1) (4,-1) -- (4,1); \draw[fig, domain=0:4, samples=50] plot (\x,{0.8*sin(90*\x)});
+	\draw[fig, hilf, thick, domain=0:4, samples=50] plot (\x,{-0.8*sin(90*\x)});}}
+\newcommand{\skLaengswelle}{\skizze{\foreach \k in {0,...,24} {\pgfmathsetmacro{\x}{0.17*\k+0.12*sin(30*\k)} \draw[blue, thick] (\x,-0.5) -- (\x,0.5);}}}
+
+% Optik
+\newcommand{\skReflexion}{\skizze{\draw[thick] (-2,0) -- (2,0); \foreach \x in {-1.9,-1.6,...,1.9} {\draw[thin] (\x,0) -- ++(-0.15,-0.2);}
+	\draw[hilf, thin] (0,0) -- (0,2); \draw[fig, -{Stealth}] (130:2.3) -- (130:1.1); \draw[fig] (130:1.2) -- (0,0); \draw[fig, -{Stealth}] (0,0) -- (50:1.3); \draw[fig] (50:1.2) -- (50:2.3);
+	\draw[mass] (90:0.9) arc[start angle=90, end angle=130, radius=0.9]; \draw[mass] (90:0.9) arc[start angle=90, end angle=50, radius=0.9];
+	\node at (110:1.25) {$\alpha$}; \node at (70:1.25) {$\alpha'$};}}
+\newcommand{\skBrechung}{\skizze{\fill[blue!12] (-2,-1.7) rectangle (2,0); \draw[thick] (-2,0) -- (2,0); \draw[hilf, thin] (0,-1.7) -- (0,1.8);
+	\draw[fig, -{Stealth}] (130:2.2) -- (130:1); \draw[fig] (130:1.1) -- (0,0) -- (-65:1.9);
+	\draw[mass] (90:0.8) arc[start angle=90, end angle=130, radius=0.8]; \draw[mass] (-90:0.9) arc[start angle=-90, end angle=-65, radius=0.9];
+	\node at (110:1.15) {$\alpha$}; \node at (-78:1.3) {$\beta$};}}
+\newcommand{\skLot}{\skizze{\draw[thick] (-2,0) -- (2,0); \foreach \x in {-1.9,-1.6,...,1.9} {\draw[thin] (\x,0) -- ++(-0.15,-0.2);}
+	\draw[red, very thick, hilf] (0,0) -- (0,2); \draw[fig] (130:2.3) -- (0,0) -- (50:2.3);}}
+\newcommand{\linse}{\draw[fig, fill=blue!12] (0,1.3) arc[start angle=140, end angle=220, radius=2.022] arc[start angle=-40, end angle=40, radius=2.022];}
+\newcommand{\skSammellinse}{\skizze{\draw[thin, dash dot] (-2.2,0) -- (3,0); \linse
+	\foreach \y in {0.7,-0.7} {\draw[red, thick] (-2.2,\y) -- (0,\y) -- (2.8,-\y);} \fill (1.4,0) circle (2pt) node[below] {$F$};}}
+\newcommand{\skZerstreuungslinse}{\skizze{\draw[thin, dash dot] (-2.4,0) -- (2.8,0);
+	\draw[fig, fill=blue!12] (-0.45,1.3) -- (0.45,1.3) arc[start angle=150, end angle=210, radius=2.6] -- (-0.45,-1.3) arc[start angle=-30, end angle=30, radius=2.6];
+	\foreach \s in {1,-1} {\draw[red, thick] (-2.4,0.7*\s) -- (0,0.7*\s) -- (2.6,1.7*\s); \draw[red, thin, hilf] (0,0.7*\s) -- (-1.8,0);} \fill (-1.8,0) circle (2pt) node[below] {$F$};}}
+\newcommand{\skBrennweite}{\skizze{\draw[thin, dash dot] (-1.2,0) -- (3,0); \linse \fill (1.9,0) circle (2pt) node[above] {$F$}; \draw[mass, |<->|] (0,-0.6) -- node[below] {$f$} (1.9,-0.6);}}
+\newcommand{\skPrisma}{\skizze{\draw[fig, fill=blue!10] (0,0) -- (2.4,0) -- (1.2,2.08) -- cycle; \draw[thick] (-1.6,0.6) -- (0.6,1.04);
+	\draw[red, thick] (0.6,1.04) -- (1.75,1.12) -- (3.4,0.7); \draw[green!60!black, thick] (0.6,1.04) -- (1.82,1.0) -- (3.4,0.4); \draw[blue!70!red, thick] (0.6,1.04) -- (1.89,0.88) -- (3.4,0.1);}}
+\newcommand{\skSchatten}{\skizze{\fill[black!25] (1.5,0.5) -- (4,1.25) -- (4,-1.25) -- (1.5,-0.5) -- cycle; \fill[yellow!80!orange, draw=black] (0,0) circle (0.22);
+	\draw[thin] (0,0) -- (4,1.25) (0,0) -- (4,-1.25); \filldraw[fill=blue!40, draw=blue, thick] (1.5,0) circle (0.5); \draw[thick] (4,-1.6) -- (4,1.6);}}
+
+% Atom- und Kernphysik
+\newcommand{\skAtom}{\skizze{\draw[thin] (0,0) circle (0.75) circle (1.3); \fill[red] (0,0) circle (0.25); \fill[blue] (40:0.75) circle (3pt) (200:0.75) circle (3pt) (100:1.3) circle (3pt) (300:1.3) circle (3pt);}}
+\newcommand{\skKern}{\skizze{\draw[thin, black!40] (0,0) circle (1.2); \foreach \w/\c in {0/red, 60/black!45, 120/red, 180/black!45, 240/red, 300/black!45} {\fill[\c] (\w:0.3) circle (0.17);} \fill[black!45] (0,0) circle (0.17);}}
+\newcommand{\skHuelle}{\skizze{\draw[red, very thick] (0,0) circle (0.75) circle (1.3); \fill[black!45] (0,0) circle (0.25);}}
+\newcommand{\skZerfall}{\skizze{\achsen{-0.3}{4.4}{-0.3}{2.6}{t}{N}\draw[fig, domain=0:4.1, samples=40] plot (\x,{1.9*exp(-0.693*\x/1.2)});
+	\draw[mass, hilf] (0,0.95) -- (1.2,0.95) -- (1.2,0) node[below] {$T_{1/2}$}; \node[left] at (0,1.9) {$N_0$};}}
+\newcommand{\skNiveaus}{\skizze{\foreach \y/\n in {0/1, 1.3/2, 1.9/3, 2.2/4} {\draw[fig, thick] (0,\y) -- (2.4,\y) node[right, black] {$n=\n$};}
+	\draw[mass, -{Stealth}, decorate, decoration={snake, amplitude=1.2pt, segment length=4pt, post length=3pt}] (1.2,1.3) -- (1.2,0.05);}}
+\newcommand{\skSpaltung}{\skizze{\fill[black!45] (-2,0) circle (0.14); \draw[thin, -{Stealth}] (-1.8,0) -- (-1,0); \filldraw[fill=red!35, draw=red, thick] (0,0) circle (0.7);
+	\draw[thin, -{Stealth}] (0.9,0.3) -- (1.6,0.7); \draw[thin, -{Stealth}] (0.9,-0.3) -- (1.6,-0.7); \filldraw[fill=red!35, draw=red, thick] (2.1,0.95) circle (0.45) (2.1,-0.95) circle (0.38);}}

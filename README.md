@@ -153,6 +153,8 @@ Fertige Materialien, die mit den Skills gebaut wurden – als PDF und mit Quellt
 | Fach | Material | Seiten |
 |---|---|---|
 | Mathematik | [Mathematisches Wörterbuch Deutsch – Englisch](materialien/mathematik/woerterbuch-deutsch-englisch) mit englischer Lautschrift, Zeichen, Skizzen und Lesarten ([PDF](materialien/mathematik/woerterbuch-deutsch-englisch/Mathematisches-Woerterbuch-Deutsch-Englisch.pdf)) | 89 |
+| Physik | [Physikalisches Wörterbuch Deutsch – Englisch](materialien/physik/woerterbuch-deutsch-englisch) mit englischer Lautschrift, Formelzeichen, Skizzen, Einheiten und Lesarten ([PDF](materialien/physik/woerterbuch-deutsch-englisch/Physikalisches-Woerterbuch-Deutsch-Englisch.pdf)) | 63 |
+| Chemie | [Chemisches Wörterbuch Deutsch – Englisch](materialien/chemie/woerterbuch-deutsch-englisch) mit englischer Lautschrift, Formeln, Skizzen, Nomenklatur und Lesarten ([PDF](materialien/chemie/woerterbuch-deutsch-englisch/Chemisches-Woerterbuch-Deutsch-Englisch.pdf)) | 52 |
 
 ## Installieren
 

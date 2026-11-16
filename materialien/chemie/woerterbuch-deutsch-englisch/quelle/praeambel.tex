@@ -1,0 +1,156 @@
+%----------------------------------------------------------------------------------------------------%
+% Dokumentspezifische Befehle (nur für dieses Wörterbuch, deshalb lokal und nicht in newcommands.tex)
+%----------------------------------------------------------------------------------------------------%
+
+% \eintrag{Marke}{Artikel}{Begriff}{english term}{Lautschrift EN}{Formel/Skizze}
+% Schaltet das babel-Kürzel " aus, BEVOR die Argumente gelesen werden – dadurch darf die Lautschrift
+% wie bei \ipa{...} mit " (Hauptbetonung) und "" (Nebenbetonung) geschrieben werden.
+\makeatletter
+\newcommand\eintrag{\begingroup\shorthandoff{"}\eintrag@aux}
+\newcommand\eintrag@aux[6]{\endgroup
+	#2 \textbf{#3}\phantomsection\label{e:#1}
+	& \textbf{#4}\newline{\small\color{black!70}\ipa{#5}}
+	& #6 \\ \midrule}
+% \lies{Ausdruck}{english reading}{deutsche Lesart}
+\newcommand\lies{\begingroup\shorthandoff{"}\lies@aux}
+\newcommand\lies@aux[3]{\endgroup #1 & #2\newline{\color{black!60}#3} \\[4.5pt]}
+\makeatother
+
+% Tabellenkopf für jedes Kapitel in Teil I (wird auf jeder Folgeseite wiederholt)
+\newenvironment{woerter}{%
+	\arrayrulecolor{black!20}%
+	\begin{longtable}{>{\raggedright\arraybackslash}m{5.3cm} >{\raggedright\arraybackslash}m{6.1cm} >{\centering\arraybackslash}m{4.6cm}}
+		\rowcolor{cornflower!15}\textbf{Deutsch} & \textbf{Englisch} & \textbf{Formel \,/\, Skizze} \\ \midrule
+		\endhead}{%
+	\end{longtable}\arrayrulecolor{black}}
+
+% Liste ohne Linien und Rahmen (Teil II): links der Ausdruck, rechts Englisch (schwarz) und Deutsch (grau)
+\newenvironment{lesen}{%
+	\begin{longtable}{@{}>{\raggedright\arraybackslash}p{4.6cm} >{\raggedright\arraybackslash}p{12.1cm}@{}}}{%
+	\end{longtable}\vspace{-1.2em}}
+
+\newcommand{\anmerkung}[1]{\par\smallskip\noindent{\small\sloppy\textbf{Hinweis:} #1\par}\smallskip}
+% Verhindert, dass eine Zwischenüberschrift allein am Seitenende steht
+\newcommand{\platz}{\par\ifdim\dimexpr\pagegoal-\pagetotal\relax<5.5cm \newpage\fi}
+% Einheit aufrecht im Mathemodus
+\newcommand{\eh}[1]{\,\mathrm{#1}}
+
+% Kleine Skizzen: Gegenstand blau, Hervorhebung (der Begriff selbst) rot, Hilfslinien gestrichelt
+\tikzset{
+	fig/.style={blue, very thick},
+	mass/.style={red, thick},
+	hilf/.style={dashed},
+	achse/.style={-{Stealth[length=4pt]}, thin},
+	kraft/.style={red, very thick, -{Stealth[length=5pt]}},
+}
+\newcommand{\skizze}[1]{\tikz[baseline=(current bounding box.center), scale=0.45, line cap=round,
+	line join=round, every node/.style={font=\scriptsize}, outer sep=0pt]{#1}}
+\newcommand{\achsen}[6]{\draw[achse] (#1,0) -- (#2,0) node[below left] {$#5$}; \draw[achse] (0,#3) -- (0,#4) node[below left] {$#6$};}
+
+% Strukturformel in kleiner Größe
+\newcommand{\struktur}[1]{{\footnotesize\setchemfig{atom sep=1.7em, bond offset=1.5pt}\chemfig{#1}}}
+\newcommand{\fl}[2]{\fill[blue!12] #1; \draw[blue!60, thin] #2;}
+
+% Laborgeräte
+\newcommand{\skReagenzglas}{\skizze{\fill[blue!12] (-0.25,1.1) -- (-0.25,0.25) arc[start angle=180, end angle=360, radius=0.25] -- (0.25,1.1) -- cycle;
+	\draw[fig] (-0.25,2.4) -- (-0.25,0.25) arc[start angle=180, end angle=360, radius=0.25] -- (0.25,2.4);}}
+\newcommand{\becher}[2]{\fill[blue!12] (#1-0.9,#2) rectangle (#1+0.9,#2+0.9); \draw[fig] (#1-1.05,#2+1.7) -- (#1-0.9,#2+1.6) -- (#1-0.9,#2) -- (#1+0.9,#2) -- (#1+0.9,#2+1.7);}
+\newcommand{\skBecherglas}{\skizze{\becher{0}{0} \foreach \y in {0.5,0.8,1.1} {\draw[blue, thin] (0.9,\y) -- (0.55,\y);}}}
+\newcommand{\skErlenmeyer}{\skizze{\fill[blue!12] (-0.78,0.6) -- (-1.1,0) -- (1.1,0) -- (0.78,0.6) -- cycle;
+	\draw[fig] (-0.3,2.2) -- (-0.3,1.5) -- (-1.1,0) -- (1.1,0) -- (0.3,1.5) -- (0.3,2.2);}}
+\newcommand{\skRundkolben}{\skizze{\begin{scope}\clip (-1,0) rectangle (1,0.8); \fill[blue!12] (0,0.9) circle (0.9);\end{scope}
+	\draw[fig] (-0.25,2.5) -- (-0.25,1.765) arc[start angle=106.1, end angle=433.9, radius=0.9] -- (0.25,2.5);}}
+\newcommand{\skMesszylinder}{\skizze{\fill[blue!12] (-0.3,0.15) rectangle (0.3,1.5); \draw[fig] (-0.3,2.8) -- (-0.3,0.15) -- (0.3,0.15) -- (0.3,2.8); \draw[fig] (-0.7,0.1) -- (0.7,0.1);
+	\foreach \y in {0.5,0.8,...,2.6} {\draw[blue, thin] (0.3,\y) -- (0.05,\y);}}}
+\newcommand{\trichter}[2]{\draw[fig] (#1-0.9,#2+1.5) -- (#1-0.1,#2+0.7) -- (#1-0.1,#2) (#1+0.9,#2+1.5) -- (#1+0.1,#2+0.7) -- (#1+0.1,#2+0.1);}
+\newcommand{\skTrichter}{\skizze{\trichter{0}{0}}}
+\newcommand{\brenner}[2]{\fill[orange!70] (#1,#2+1.3) .. controls (#1-0.35,#2+1.6) and (#1-0.2,#2+2.0) .. (#1,#2+2.4) .. controls (#1+0.2,#2+2.0) and (#1+0.35,#2+1.6) .. cycle;
+	\fill[blue!50] (#1,#2+1.3) .. controls (#1-0.15,#2+1.45) and (#1-0.1,#2+1.65) .. (#1,#2+1.85) .. controls (#1+0.1,#2+1.65) and (#1+0.15,#2+1.45) .. cycle;
+	\draw[fig] (#1-0.17,#2+0.2) rectangle (#1+0.17,#2+1.3); \draw[fig] (#1-0.6,#2) rectangle (#1+0.6,#2+0.2); \draw[fig, thick] (#1-0.6,#2+0.1) -- (#1-1.1,#2+0.1);}
+\newcommand{\skBrenner}{\skizze{\brenner{0}{0}}}
+\newcommand{\skDreifuss}{\skizze{\draw[fig] (-0.9,1.6) -- (0.9,1.6) (-0.8,1.6) -- (-1.1,0) (0.8,1.6) -- (1.1,0) (0,1.6) -- (0,0.15); \draw[black!60, thick, densely dashed] (-1,1.72) -- (1,1.72);}}
+\newcommand{\skAbdampfschale}{\skizze{\draw[fig] (-1.1,0.8) arc[start angle=180, end angle=360, x radius=1.1, y radius=0.8] (-1.25,0.8) -- (1.25,0.8);}}
+\newcommand{\skTiegel}{\skizze{\draw[fig] (-0.7,1.2) -- (-0.4,0) -- (0.4,0) -- (0.7,1.2) (-0.8,1.2) -- (0.8,1.2);}}
+\newcommand{\skPipette}{\skizze{\draw[fig, thick] (-0.06,2.8) -- (-0.06,1.9) .. controls (-0.3,1.7) and (-0.3,1.3) .. (-0.06,1.1) -- (-0.06,0.3) -- (0,0) -- (0.06,0.3) -- (0.06,1.1) .. controls (0.3,1.3) and (0.3,1.7) .. (0.06,1.9) -- (0.06,2.8);}}
+\newcommand{\buerette}[2]{\fill[blue!12] (#1-0.12,#2+0.9) rectangle (#1+0.12,#2+2.3); \draw[fig, thick] (#1-0.12,#2+3) -- (#1-0.12,#2+0.6) -- (#1-0.04,#2+0.45) -- (#1-0.04,#2) (#1+0.12,#2+3) -- (#1+0.12,#2+0.6) -- (#1+0.04,#2+0.45) -- (#1+0.04,#2);
+	\draw[red, very thick] (#1-0.35,#2+0.52) -- (#1+0.35,#2+0.52); \foreach \k in {0,...,6} {\draw[blue, thin] (#1+0.12,#2+1+0.3*\k) -- (#1-0.02,#2+1+0.3*\k);}}
+\newcommand{\skBuerette}{\skizze{\buerette{0}{0}}}
+\newcommand{\skSpatel}{\skizze{\draw[fig] (0,0) -- (2.3,0.9); \draw[blue, line width=2.5pt] (2.3,0.9) -- (2.9,1.13);}}
+\newcommand{\skMoerser}{\skizze{\draw[fig] (-1,1) arc[start angle=180, end angle=360, x radius=1, y radius=0.9] (-1.1,1) -- (1.1,1) (-0.4,0.1) -- (0.4,0.1);
+	\draw[blue, line width=3pt, line cap=round] (0.1,0.5) -- (0.9,1.9);}}
+\newcommand{\skUhrglas}{\skizze{\draw[fig] (-1.2,0.35) arc[start angle=200, end angle=340, x radius=1.277, y radius=0.9];}}
+\newcommand{\stativ}{\draw[black, line width=2pt] (-1.2,0) -- (0.6,0); \draw[black, line width=1.5pt] (-0.8,0) -- (-0.8,3.6);}
+\newcommand{\skStativ}{\skizze{\stativ \draw[black, thick] (-0.8,2.6) -- (0.5,2.6); \draw[fig, thick] (0.5,2.45) rectangle (0.9,2.75);}}
+\newcommand{\skThermometer}{\skizze{\draw[fig, thick, rounded corners=2pt] (-0.15,0.3) rectangle (0.15,2.8); \filldraw[fill=red, draw=blue, thick] (0,0.1) circle (0.33);
+	\fill[red] (-0.07,0.3) rectangle (0.07,1.7); \foreach \y in {0.8,1.2,...,2.5} {\draw[thin] (0.15,\y) -- (0.4,\y);}}}
+\newcommand{\skKuehler}{\skizze{\begin{scope}[rotate=-20] \draw[fig, fill=blue!10] (0,-0.3) rectangle (3,0.3); \draw[fig, thick] (-0.6,-0.08) -- (3.6,-0.08) (-0.6,0.08) -- (3.6,0.08);
+	\draw[fig, thick] (0.4,0.3) -- (0.4,0.7) (2.6,-0.3) -- (2.6,-0.7);\end{scope}}}
+\newcommand{\skSchutzbrille}{\skizze{\draw[fig, rounded corners=3pt] (-1.3,0) rectangle (-0.15,0.7) (0.15,0) rectangle (1.3,0.7); \draw[fig] (-0.15,0.45) -- (0.15,0.45) (-1.3,0.5) -- (-1.7,0.7) (1.3,0.5) -- (1.7,0.7);}}
+\newcommand{\skWaage}{\skizze{\draw[fig] (-1.2,0) rectangle (1.2,0.6); \draw[fig] (-0.9,0.8) -- (0.9,0.8) (0,0.6) -- (0,0.8); \node at (0,0.3) {\tiny 12{,}5\,g};}}
+\newcommand{\skFiltration}{\skizze{\becher{0}{0} \trichter{0}{1.3} \draw[mass, hilf] (-0.75,2.72) -- (0,1.95) -- (0.75,2.72); \fill[black!55] (-0.3,2.3) -- (0,2.0) -- (0.3,2.3) -- cycle;}}
+\newcommand{\skErhitzen}{\skizze{\brenner{0}{0} \begin{scope}[shift={(0,2.5)}, rotate=-35] \fill[blue!12] (-0.2,0.8) -- (-0.2,0.2) arc[start angle=180, end angle=360, radius=0.2] -- (0.2,0.8) -- cycle;
+	\draw[fig] (-0.2,2) -- (-0.2,0.2) arc[start angle=180, end angle=360, radius=0.2] -- (0.2,2);\end{scope}}}
+
+% Teilchen, Atome, Bindungen
+\newcommand{\rahmen}{\draw[thin] (0,0) rectangle (2.1,1.5);}
+\newcommand{\punkte}[3]{\foreach \p in {#3} {\fill[#1] \p circle (#2);}}
+\newcommand{\skElement}{\skizze{\rahmen \punkte{blue}{2.8pt}{(0.3,0.3),(0.9,0.5),(1.6,0.3),(0.5,1.0),(1.2,1.1),(1.8,0.9)}}}
+\newcommand{\molek}[2]{\fill[blue] (#1,#2) circle (2.8pt); \fill[red] (#1+0.22,#2+0.1) circle (2.8pt);}
+\newcommand{\skVerbindung}{\skizze{\rahmen \molek{0.25}{0.3} \molek{0.95}{0.45} \molek{1.6}{0.25} \molek{0.45}{1.0} \molek{1.2}{1.05}}}
+\newcommand{\skGemisch}{\skizze{\rahmen \punkte{blue}{2.8pt}{(0.3,0.3),(1.6,0.3),(1.2,1.1)} \punkte{red}{2.8pt}{(0.9,0.55),(0.5,1.05)} \punkte{green!55!black}{2.8pt}{(1.8,0.95),(0.95,0.2)}}}
+\newcommand{\skReinstoff}{\skVerbindung}
+\newcommand{\skLoesung}{\skizze{\becher{0}{0} \punkte{red}{1.6pt}{(-0.6,0.2),(-0.2,0.6),(0.3,0.25),(0.65,0.7),(-0.55,0.75),(0.1,0.45)}}}
+\newcommand{\skSuspension}{\skizze{\becher{0}{0} \punkte{black!60}{2.2pt}{(-0.6,0.1),(-0.3,0.12),(0,0.1),(0.3,0.13),(0.6,0.1),(-0.45,0.28),(0.15,0.3),(0.45,0.5)}}}
+\newcommand{\skSchalen}{\skizze{\fill[red] (0,0) circle (0.22); \foreach \r in {0.5,0.9,1.3} {\draw[thin] (0,0) circle (\r);}
+	\punkte{blue}{2pt}{(90:0.5),(270:0.5),(0:0.9),(45:0.9),(90:0.9),(135:0.9),(180:0.9),(225:0.9),(270:0.9),(315:0.9),(30:1.3)}}}
+\newcommand{\skAussenelektron}{\skizze{\fill[black!40] (0,0) circle (0.22); \foreach \r in {0.5,0.9,1.3} {\draw[thin, black!40] (0,0) circle (\r);}
+	\punkte{black!40}{2pt}{(90:0.5),(270:0.5),(0:0.9),(45:0.9),(90:0.9),(135:0.9),(180:0.9),(225:0.9),(270:0.9),(315:0.9)} \fill[red] (30:1.3) circle (3pt);}}
+\newcommand{\skPSE}{\skizze{\foreach \x in {0,...,7} {\foreach \y in {0,...,3} {\draw[thin, black!50] (0.3*\x,0.3*\y) rectangle ++(0.3,0.3);}}
+	\draw[thin, black!50] (0,1.2) rectangle (0.3,1.5) (2.1,1.2) rectangle (2.4,1.5);}}
+\newcommand{\pse}[1]{\skizze{\foreach \x in {0,...,7} {\foreach \y in {0,...,3} {\draw[thin, black!50] (0.3*\x,0.3*\y) rectangle ++(0.3,0.3);}}
+	\draw[thin, black!50] (0,1.2) rectangle (0.3,1.5) (2.1,1.2) rectangle (2.4,1.5); \fill[red, opacity=0.6] #1;}}
+\newcommand{\skGitter}{\skizze{\foreach \x in {0,...,3} {\foreach \y in {0,...,2} {\pgfmathparse{int(mod(\x+\y,2))}
+	\ifnum\pgfmathresult=0 \fill[red] (0.5*\x,0.5*\y) circle (4pt); \else \fill[blue] (0.5*\x,0.5*\y) circle (3pt); \fi}}}}
+\newcommand{\skMetall}{\skizze{\foreach \x in {0,...,3} {\foreach \y in {0,...,2} {\filldraw[fill=red!25, draw=red] (0.6*\x,0.6*\y) circle (5pt); \node[font=\tiny] at (0.6*\x,0.6*\y) {+};}}
+	\punkte{blue}{1.5pt}{(0.3,0.3),(0.9,0.25),(1.5,0.35),(0.3,0.9),(0.95,0.95),(1.5,0.85),(0.6,0.62),(1.2,0.58)}}}
+\newcommand{\skAtombindung}{\skizze{\draw[fig, fill=blue!10, fill opacity=0.6] (-0.45,0) circle (0.7) (0.45,0) circle (0.7); \punkte{red}{2.2pt}{(0,0.15),(0,-0.15)} \node at (-0.7,0) {H}; \node at (0.7,0) {H};}}
+\newcommand{\skDipol}{\skizze{\fill[red] (0,0) circle (0.42); \fill[black!30] (-0.55,-0.42) circle (0.27) (0.55,-0.42) circle (0.27); \node at (0,0.75) {$\delta^-$}; \node at (-1.05,-0.6) {$\delta^+$}; \node at (1.05,-0.6) {$\delta^+$};}}
+
+% Reaktionen
+\newcommand{\skExotherm}{\skizze{\achsen{-0.3}{3.8}{-0.3}{2.7}{}{E}\draw[fig, thick] (0.2,1.5) -- (1,1.5) (2.6,0.5) -- (3.4,0.5); \draw[fig] (1,1.5) .. controls (1.5,1.5) and (1.5,2.4) .. (1.8,2.4) .. controls (2.1,2.4) and (2.2,0.5) .. (2.6,0.5);
+	\draw[mass, -{Stealth[length=3pt]}] (3.1,1.5) -- (3.1,0.55); \draw[thin, hilf] (1,1.5) -- (3.3,1.5);}}
+\newcommand{\skEndotherm}{\skizze{\achsen{-0.3}{3.8}{-0.3}{2.7}{}{E}\draw[fig, thick] (0.2,0.5) -- (1,0.5) (2.6,1.5) -- (3.4,1.5); \draw[fig] (1,0.5) .. controls (1.5,0.5) and (1.5,2.4) .. (1.8,2.4) .. controls (2.1,2.4) and (2.2,1.5) .. (2.6,1.5);
+	\draw[mass, -{Stealth[length=3pt]}] (3.1,0.5) -- (3.1,1.45); \draw[thin, hilf] (1,0.5) -- (3.3,0.5);}}
+\newcommand{\skAktivierung}{\skizze{\achsen{-0.3}{3.8}{-0.3}{2.7}{}{E}\draw[fig, thick] (0.2,1.5) -- (1,1.5) (2.6,0.5) -- (3.4,0.5); \draw[fig] (1,1.5) .. controls (1.5,1.5) and (1.5,2.4) .. (1.8,2.4) .. controls (2.1,2.4) and (2.2,0.5) .. (2.6,0.5);
+	\draw[mass, <->] (0.6,1.5) -- node[left, inner sep=1pt] {$E_A$} (0.6,2.4); \draw[thin, hilf] (0.5,2.4) -- (1.8,2.4);}}
+\newcommand{\skKatalysator}{\skizze{\achsen{-0.3}{3.8}{-0.3}{2.7}{}{E}\draw[fig, thick] (0.2,1.5) -- (1,1.5) (2.6,0.5) -- (3.4,0.5); \draw[fig] (1,1.5) .. controls (1.5,1.5) and (1.5,2.4) .. (1.8,2.4) .. controls (2.1,2.4) and (2.2,0.5) .. (2.6,0.5);
+	\draw[mass, hilf] (1,1.5) .. controls (1.5,1.5) and (1.5,1.9) .. (1.8,1.9) .. controls (2.1,1.9) and (2.2,0.5) .. (2.6,0.5);}}
+\newcommand{\skGeschwindigkeit}{\skizze{\achsen{-0.3}{3.8}{-0.3}{2.6}{t}{c}\draw[fig, domain=0:3.5, samples=30] plot (\x,{2.2*exp(-1.1*\x)}); \draw[mass, domain=0:3.5, samples=30] plot (\x,{2.0*(1-exp(-1.1*\x))});}}
+\newcommand{\skGleichgewicht}{\skizze{\achsen{-0.3}{3.8}{-0.3}{2.6}{t}{c}\draw[fig, domain=0:3.5, samples=30] plot (\x,{1.3+0.9*exp(-1.6*\x)}); \draw[mass, domain=0:3.5, samples=30] plot (\x,{0.8*(1-exp(-1.6*\x))});}}
+\newcommand{\skNiederschlag}{\skizze{\fill[blue!12] (-0.25,1.4) -- (-0.25,0.25) arc[start angle=180, end angle=360, radius=0.25] -- (0.25,1.4) -- cycle;
+	\begin{scope}\clip (-0.25,0) rectangle (0.25,0.45); \fill[black!55] (0,0.25) circle (0.25); \fill[black!55] (-0.25,0.25) rectangle (0.25,0.45);\end{scope}
+	\draw[fig] (-0.25,2.4) -- (-0.25,0.25) arc[start angle=180, end angle=360, radius=0.25] -- (0.25,2.4);}}
+
+% Säuren und Basen
+\newcommand{\phskala}[1]{\foreach \k/\c in {0/red, 1/red!80!orange, 2/red!50!orange, 3/orange, 4/orange!60!yellow, 5/yellow, 6/yellow!60!green, 7/green!80!black, 8/green!50!blue!70, 9/blue!50!green, 10/blue!70, 11/blue, 12/blue!80!violet, 13/violet!80!blue, 14/violet}
+	{\fill[\c] (#1*\k,0) rectangle ++(#1,#1*1.4);}}
+\newcommand{\skPH}{\skizze{\phskala{0.24} \node[below] at (0.12,0) {0}; \node[below] at (1.8,0) {7}; \node[below] at (3.48,0) {14};}}
+\newcommand{\skTitration}{\skizze{\stativ \draw[black, thick] (-0.8,2.4) -- (0.2,2.4); \buerette{0.2}{1.2}
+	\fill[blue!12] (-0.33,0.25) -- (-0.5,0.05) -- (0.9,0.05) -- (0.73,0.25) -- cycle; \draw[fig, thick] (0.05,1.1) -- (0.05,0.75) -- (-0.5,0.05) -- (0.9,0.05) -- (0.35,0.75) -- (0.35,1.1);}}
+\newcommand{\skTitrationskurve}{\skizze{\achsen{-0.3}{3.8}{-0.3}{2.7}{V}{}\node[left] at (0,2.4) {pH}; \draw[fig, domain=0:3.5, samples=60] plot (\x,{1.3+0.7*rad(atan(7*(\x-1.9)))});
+	\fill[red] (1.9,1.3) circle (2.5pt);}}
+
+% Elektrochemie
+\newcommand{\skElektrolyse}{\skizze{\fill[blue!12] (-1.2,0) rectangle (1.2,1.2); \draw[fig] (-1.2,1.9) -- (-1.2,0) -- (1.2,0) -- (1.2,1.9);
+	\draw[black, line width=2pt] (-0.6,0.3) -- (-0.6,2.2) (0.6,0.3) -- (0.6,2.2); \draw[thick] (-0.6,2.2) -- (-0.6,2.8) -- (-0.12,2.8) (0.12,2.8) -- (0.6,2.8) -- (0.6,2.2);
+	\draw[thick] (-0.12,2.55) -- (-0.12,3.05); \draw[line width=1.6pt] (0.12,2.67) -- (0.12,2.93); \node at (-0.95,2.5) {$+$}; \node at (0.95,2.5) {$-$};}}
+\newcommand{\skGalvanisch}{\skizze{\fill[blue!12] (-1.9,0) rectangle (-0.5,1); \fill[blue!12] (0.5,0) rectangle (1.9,1);
+	\draw[fig] (-1.9,1.5) -- (-1.9,0) -- (-0.5,0) -- (-0.5,1.5) (0.5,1.5) -- (0.5,0) -- (1.9,0) -- (1.9,1.5);
+	\draw[black!60, line width=2.2pt] (-1.4,0.25) -- (-1.4,1.9); \draw[orange!80!black, line width=2.2pt] (1.4,0.25) -- (1.4,1.9);
+	\draw[thick] (-1.4,1.9) -- (-1.4,2.5) -- (-0.3,2.5) (0.3,2.5) -- (1.4,2.5) -- (1.4,1.9); \draw[thick] (0,2.5) circle (0.3); \node at (0,2.5) {\tiny V};
+	\draw[fig, thick] (-0.8,0.4) -- (-0.8,1.7) -- (0.8,1.7) -- (0.8,0.4);}}
+\newcommand{\skRost}{\skizze{\filldraw[fill=black!25, draw=black!60, thick] (0,0) rectangle (2.6,0.5); \fill[orange!60!brown] (0.3,0.5) .. controls (0.5,0.8) and (0.9,0.75) .. (1.1,0.5) -- cycle;
+	\fill[orange!60!brown] (1.5,0.5) .. controls (1.7,0.7) and (2.1,0.7) .. (2.3,0.5) -- cycle;}}
+\newcommand{\skKolonne}{\skizze{\draw[fig, rounded corners=4pt] (0,0) rectangle (1,3); \foreach \y in {0.6,1.2,1.8,2.4} {\draw[blue, thin] (0,\y) -- (1,\y); \draw[thick, -{Stealth[length=3pt]}] (1,\y+0.3) -- (1.9,\y+0.3);}
+	\draw[thick, -{Stealth[length=3pt]}] (-0.9,0.3) -- (0,0.3);}}
+\newcommand{\skKette}{\skizze{\foreach \k in {0,...,5} {\fill[blue] (0.55*\k,{0.18*mod(\k,2)}) circle (4pt);} \draw[blue, thick] (0,0) -- (0.55,0.18) -- (1.1,0) -- (1.65,0.18) -- (2.2,0) -- (2.75,0.18);}}
