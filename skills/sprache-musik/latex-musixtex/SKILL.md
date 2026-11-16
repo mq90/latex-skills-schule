@@ -33,9 +33,9 @@ gestaucht. (`werkzeuge/alles_kompilieren.py` macht das automatisch.)
 \startextract
 \Notes\qu{c}\qu{d}\qu{e}\qu{f}\en
 \bar
-\Notes\hu{g}\qu{a}\qu{b}\en
+\Notes\hu{g}\qu{h}\qu{i}\en
 \bar
-\Notes\wh{'c}\en
+\Notes\wh{j}\en
 \endextract
 \end{music}
 ```
@@ -53,8 +53,13 @@ gestaucht. (`werkzeuge/alles_kompilieren.py` macht das automatisch.)
 | `\generalmeter{\meterfrac34}` | Taktart |
 | `\setname1{Flöte}` | Instrumentenname |
 
-Tonhöhen: `c` ist das c' (eingestrichenes c); Großbuchstaben tiefer,
-`'c` und `''c` höher.
+**Tonhöhen sind absolute Buchstaben** (getestet): `c d e f g` = c'–g',
+dann geht das Alphabet weiter: `h` = a', `i` = h', `j` = c'', `k` = d'' …
+`a`/`b` sind das kleine a/h **unter** dem System. Großbuchstaben setzen die
+Reihe nach unten fort: `N` = g, `J` = c (kleine Oktave), `H` = A – Bassstimmen
+also mit Großbuchstaben (Klavierbass `\qb0{JNL}` = c–g–e).
+`'` hebt alle folgenden Töne bis zum nächsten `\en` um eine Oktave (`!` hebt
+auf). Beim Abschreiben von Melodien deshalb `h i j …` statt `a b 'c` schreiben.
 
 ## Musik-Kürzel (`assets/musik-befehle.tex`)
 
@@ -67,15 +72,15 @@ Boxen `musiktheorie`, `uebung`, `repertoire`, Umgebungen `akkordfolge`,
 
 ## Vorzeichen, Tonart und Akkorde
 
-Vorzeichen stehen **vor** der Note: `\sh` (Kreuz), `\fl` (Be), `\na`
-(Auflösung), z. B. `\qu{\sh f}` für fis. Eine durchgehende Tonart setzt
+Vorzeichen als Kurzform in der Notenklammer: `^` (Kreuz), `_` (Be),
+`=` (Auflösung), z. B. `\qu{^f}` für fis, `\qu{_i}` für b'. Gleichwertig:
+Befehl **vor** dem Notenbefehl, `\sh f\qu f`. Eine durchgehende Tonart setzt
 `\generalsignature{n}` **vor** `\startextract` (positiv = Kreuze,
 negativ = Be): `-1` = F-Dur, `2` = D-Dur.
 
 Akkorde stapelt man mit `\zw` (ganze) oder `\zq` (Viertel) für die unteren
-Töne; die **oberste** Note trägt den Notenwert. Ein Vorzeichen gehört an die
-Zusatznote, nicht an die ganze Wertnote: `\notes\zw{c}\zw{e}\zw{\fl b}\wh{g}\en`
-ergibt C7 (c-e-g-b).
+Töne; die letzte Note trägt den Notenwert. Vorzeichen als Kurzform an die
+Zusatznote: `\notes\zw{c}\zw{e}\zw{_i}\wh{g}\en` ergibt C7 (c-e-g-b').
 
 ## Liedtext und Akkordsymbole
 
@@ -88,39 +93,55 @@ per `\input musixlyr` laden). Text **vor** den Noten festlegen, Silben mit
 \assignlyrics1{strophe}
 ```
 
-Stößt der Text an tiefe Notenköpfe: `\interstaff{10}` (mehr Abstand, vor der
-`music`-Umgebung), `\lyrraise1{-2pt}` (Text tiefer) und bei tiefer Lage `\qu`
-(Hälse nach oben vom Text weg). **`\lyrraise`** ist der richtige Befehl, nicht
-`\setlyrraise`. Tonhöhen möglichst **ohne** Apostroph schreiben – MusiXTeX
-wählt die nächstliegende Oktave, so bleibt die Melodie kompakt im System; nur
-die erste Note je Zeile anheben.
+Größe und Abstände in mehrzeiligen Liedsätzen (alle getestet, siehe
+`vorlage_lied_haenschen.tex`):
 
-Akkordsymbole (Harmonien) über das System mit `\zcharnote{10}{\bf F}` – nur
+| Befehl | Wirkung |
+|---|---|
+| `\Largemusicsize` | größeres System; **vor** `\begin{music}`, innen wirkungslos |
+| `\staffbotmarg=8\Interligne` | Platz unter jedem System; **innerhalb** `music` |
+| `\stafftopmarg=4\Interligne` | Platz über jedem System (Akkordsymbole) |
+| `\setsongraise1{8mm}` | Text verschieben (positiv = höher, bezogen auf den unteren Rand) |
+
+Ein großer `\staffbotmarg` schiebt den Text mit nach unten; mit positivem
+`\setsongraise` wieder unter die eigene Zeile holen.
+
+Akkordsymbole (Harmonien) über das System mit `\zcharnote{12}{\bf F}` – nur
 an Harmoniewechseln, nicht an jede Note. Hochgestellte Ziffer: `C$^7$`.
 
 ## Vorlagen (`assets/`)
 
 | Vorlage | Inhalt |
 |---|---|
-| `vorlage_lied_haenschen.tex` | kompletter Liedsatz „Hänschen klein“ (F-Dur) mit Liedtext und Akkorden – Muster für eigene Lieder |
-| `vorlage_quintenzirkel.tex` | Quintenzirkel in reinem TikZ: Dur außen, parallele Moll innen, Zahl der Vorzeichen; braucht **kein** MusiXTeX |
+| `vorlage_lied_haenschen.tex` | kompletter Liedsatz „Hänschen klein“ (F-Dur) mit Liedtext und Akkorden, großes System, 4 Takte pro Zeile – Muster für eigene Lieder |
+| `vorlage_quintenzirkel.tex` | Quintenzirkel in TikZ: großer Kreis, Dur außen, parallele Moll innen, außen je ein Notenlinien-Ausschnitt mit den Vorzeichen; Schlüssel/Vorzeichen aus der Schrift `musix24` (`\char71/52/50`), **kein** `\usepackage{musixtex}` |
 
 ## Stolpersteine
 
 - `musixlyr` (Liedtexte) fehlt in manchen TeX-Installationen
   („File musixlyr.tex not found“). Erst prüfen (`kpsewhich musixlyr.tex`),
   sonst Liedtext unter die Noten mit einer Tabelle oder `\zcharnote` setzen.
-- Akkord-Vorzeichen: `\wh{\fl b}` als **ganze** Wertnote setzt das Be nicht
-  zuverlässig – das Vorzeichen an eine `\zw`-Zusatznote hängen (getestet).
-- Notennamen: `\cu{b}` ist das h (englische Benennung), `b` im Deutschen heißt
-  in MusiXTeX `_b` (Vorzeichen) – vorher die Ausgabe ansehen.
+- `\qu{\sh f}`, `\wh{\fl i}`: Vorzeichen**befehl** in der Notenklammer setzt
+  **gar keine** Note, ohne Fehlermeldung (getestet). Kurzform `^ _ =` in der
+  Klammer oder Befehl davor (`\sh f\qu f`).
+- `\qu a` ist das kleine a unter dem System, nicht das a' (das ist `\qu h`).
+  Abgeschriebene Melodien als PNG rendern und Note für Note mit der Vorlage
+  vergleichen.
+- `\lyrraise1{-2pt}` ohne Bezugsbuchstaben schiebt den Text ins System;
+  `\setsongraise1{…}` verwenden (oder `\lyrraise1{b-2pt}`).
+- `\assignlyrics1{name}` gilt global, auch in späteren `music`-Umgebungen
+  (Reste erscheinen als Punkte unter fremden Noten); nach dem Lied
+  `\assignlyrics1{}` (getestet).
+- `\bar` direkt vor `\alaligne` ergibt einen doppelten Strich am Zeilenende;
+  `\alaligne` setzt den Taktstrich selbst.
 - In der `ausgabe`-Box funktioniert `music` (getestet); `\parindent10mm`
   rückt das System ein, für zentrierte Beispiele `\begin{center}` drumherum.
 
 ## Referenz
 
 `references/handreichung_musixtex.tex` – Handreichung im Standardstil
-(Grundlagen und Paketeinbindung, Notenwerte, Oktaven, deutsche Notennamen und
-Vorzeichen, Tonart, Pausen, Akkorde, Liedtext mit musixlyr samt
-Kollisionsvermeidung, Akkordsymbole, Quintenzirkel sowie ein Abschnitt zum
-Urheberrecht beim Teilen von Noten).
+(Drei-Wege-Kompilierung, Notenwerte und Punktierung, absolute Tonhöhen und
+Oktavieren, B/H, Vorzeichen und Tonart, Takt/Schlüssel/Pausen, Balken und
+Haltebögen, Akkorde, Klaviersystem, Liedtext mit musixlyr samt Größe und
+Abständen, „Alle meine Entchen“, Akkordsymbole, Quintenzirkel, Urheberrecht
+beim Teilen von Noten, Praxistipps).

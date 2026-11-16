@@ -116,7 +116,7 @@ auch ohne LaTeX-Installation. Die Quelltexte stehen in den
 |  | [UML-Klassendiagramme mit TikZ erstellen](handreichungen/informatik/UML-Klassendiagramme-mit-TikZ-erstellen.pdf) | 9 |
 | Illustration | [Sprechblasen mit TikZ in LaTeX](handreichungen/illustration/Sprechblasen-mit-TikZ-in-LaTeX.pdf) | 5 |
 |  | [Figuren mit tikzpeople zeichnen](handreichungen/illustration/Figuren-mit-tikzpeople-zeichnen.pdf) | 7 |
-| Sprache & Musik | [Notensätze mit MusiXTeX erstellen](handreichungen/sprache-musik/Notens%C3%A4tze-mit-MusiXTeX-erstellen.pdf) | 9 |
+| Sprache & Musik | [Notensätze mit MusiXTeX erstellen](handreichungen/sprache-musik/Notens%C3%A4tze-mit-MusiXTeX-erstellen.pdf) | 15 |
 |  | [Lautschrift mit LaTeX setzen](handreichungen/sprache-musik/Lautschrift-mit-LaTeX-setzen.pdf) | 12 |
 | Gesellschaftswissenschaft | [Landkarten aus Geodaten mit TikZ zeichnen](handreichungen/gesellschaftswissenschaft/Landkarten-aus-Geodaten-mit-TikZ-zeichnen.pdf) | 37 |
 | Naturwissenschaften | [Biologie mit LaTeX: Erbgänge, Stammbäume, Codesonne und Wachstum](handreichungen/naturwissenschaften/Biologie-mit-LaTeX-Erbg%C3%A4nge-Stammb%C3%A4ume-Codesonne-und-Wachstum.pdf) | 9 |

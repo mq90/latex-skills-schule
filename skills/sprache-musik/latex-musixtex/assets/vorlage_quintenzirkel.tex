@@ -1,51 +1,101 @@
 % ===================================================================
-%  Vorlage: Quintenzirkel (Dur außen, Moll innen, Vorzeichenzahl)
-%  Reines TikZ – kein pgfplots, kein musixtex nötig.
+%  Vorlage: Quintenzirkel
+%  Großer Kreis: Dur-Tonarten im äußeren Ring, parallele Moll-Tonarten im
+%  inneren Ring. Außen je ein Notenlinien-Ausschnitt mit den Vorzeichen.
+%  Reines TikZ; Schlüssel und Vorzeichen kommen aus der MusiXTeX-Schrift
+%  musix24 (wird nur als Schrift geladen, kein \usepackage{musixtex} nötig).
 %    pdflatex vorlage_quintenzirkel.tex
 % ===================================================================
 \input{header.tex}
 \input{newcommands.tex}
 \pagestyle{empty}
 
+% Notenschrift: Zeichen 71 = Violinschlüssel, 52 = Kreuz, 50 = Be.
+% musix24 passt zu einem Linienabstand von 6pt.
+\font\notenschrift=musix24
+\newcommand{\notenzeichen}[1]{{\notenschrift\char#1}}
+
+% Positionen der Vorzeichen in Halbschritten über der untersten Linie (e' = 0):
+% Kreuze f'' c'' g'' d'' a' e'' h',  Be h' e'' a' d'' g' c'' f'
+\newcommand{\kreuzpositionen}{8,5,9,6,3,7,4}
+\newcommand{\bepositionen}{4,7,3,6,2,5,1}
+
+% \vorzeichenzeile{x}{y}{Anzahl}{Positionsliste}{Zeichen}{Beschriftung}
+% zeichnet ein kleines Notensystem mit Violinschlüssel, Mittelpunkt (x,y) in cm.
+\newcommand{\vorzeichenzeile}[6]{%
+  \begin{scope}[shift={({#1},{#2})}]
+    \foreach \l in {-12,-6,0,6,12}
+      \draw[line width=0.35pt] (-36pt,\l pt) -- (36pt,\l pt);
+    \node[anchor=base west, inner sep=0] at (-35pt,-6pt) {\notenzeichen{71}};
+    \foreach \p [count=\i] in #4 {%
+      \ifnum\i>#3\else
+        \node[anchor=base west, inner sep=0]
+          at ({(-12+(\i-1)*8)*1pt},{(-12+\p*3)*1pt}) {\notenzeichen{#5}};
+      \fi}
+    \node[text=gray!60!black, font=\footnotesize\sffamily] at (0,-25pt) {#6};
+  \end{scope}}
+
 \begin{document}
 \begin{center}
-{\Large\bfseries\sffamily Quintenzirkel}\\[2pt]
-{\small Dur-Tonarten außen, parallele Moll-Tonarten innen, Anzahl der Vorzeichen am Rand}
+{\Large\bfseries\sffamily Quintenzirkel}\\[3pt]
+{\small Dur außen, parallele Moll-Tonarten innen, Vorzeichen am Schlüssel daneben}
 \end{center}
-\vspace{4mm}
+\vspace{2mm}
 
 \begin{center}
 \begin{tikzpicture}[font=\sffamily]
-  \def\rdur{3.25}   % Radius Dur-Ring
-  \def\rmoll{2.05}  % Radius Moll-Ring
-  \def\rvz{4.35}    % Radius Vorzeichen-Beschriftung
+  \def\Raussen{3.7}  % Außenkreis
+  \def\Rmitte{2.6}   % Grenze Dur/Moll
+  \def\Rinnen{1.5}   % Innenkreis
+  \def\Rnoten{5.75}  % Mittelpunkte der Notenlinien-Ausschnitte
 
-  % pos (0 = oben, im Uhrzeigersinn) / Dur / Moll / Vorzeichen
-  \foreach \pos/\dur/\moll/\vz in {%
-    0/C/a/{0},
-    1/G/e/{1\(\sharp\)},
-    2/D/h/{2\(\sharp\)},
-    3/A/fis/{3\(\sharp\)},
-    4/E/cis/{4\(\sharp\)},
-    5/H/gis/{5\(\sharp\)},
-    6/{Fis/Ges}/{dis/es}/{6\(\sharp\)\,/\,6\(\flat\)},
-    7/Des/b/{5\(\flat\)},
-    8/As/f/{4\(\flat\)},
-    9/Es/c/{3\(\flat\)},
-    10/B/g/{2\(\flat\)},
-    11/F/d/{1\(\flat\)}}
+  % Ringe
+  \fill[akzentblau!12]   (0,0) circle (\Raussen);
+  \fill[akzentorange!14] (0,0) circle (\Rmitte);
+  \fill[white]           (0,0) circle (\Rinnen);
+  \draw[line width=0.8pt] (0,0) circle (\Raussen);
+  \draw[line width=0.6pt] (0,0) circle (\Rmitte);
+  \draw[line width=0.6pt] (0,0) circle (\Rinnen);
+  % Trennlinien zwischen den Tonarten
+  \foreach \k in {0,...,11}
+    \draw[gray!60, line width=0.4pt] ({105-30*\k}:\Rinnen) -- ({105-30*\k}:\Raussen);
+
+  % Richtungspfeile: im Uhrzeigersinn ein Kreuz mehr, gegen ihn ein Be mehr
+  \draw[-{Stealth[length=2mm]}, akzentblau!80!black, line width=0.7pt]
+    (80:4.05) arc[start angle=80, end angle=40, radius=4.05];
+  \node[akzentblau!80!black, font=\scriptsize] at (60:4.35) {+\,\(\sharp\)};
+  \draw[-{Stealth[length=2mm]}, akzentblau!80!black, line width=0.7pt]
+    (100:4.05) arc[start angle=100, end angle=140, radius=4.05];
+  \node[akzentblau!80!black, font=\scriptsize] at (120:4.35) {+\,\(\flat\)};
+
+  % Position (0 = oben, im Uhrzeigersinn) / Dur / Moll / Anzahl / Art
+  \foreach \k/\dur/\moll/\n/\art in {%
+     0/C/a/0/s, 1/G/e/1/s, 2/D/h/2/s, 3/A/fis/3/s, 4/E/cis/4/s, 5/H/gis/5/s,
+     7/Des/b/5/b, 8/As/f/4/b, 9/Es/c/3/b, 10/B/g/2/b, 11/F/d/1/b}
   {
-    \pgfmathsetmacro{\ang}{90 - 30*\pos}
-    \node[circle, draw=akzentblau!70!black, fill=akzentblau!15,
-          minimum size=12mm, inner sep=0pt, line width=0.5pt]
-      (D\pos) at (\ang:\rdur) {\textbf{\dur}};
-    \node[circle, draw=akzentorange!70!black, fill=akzentorange!15,
-          minimum size=9mm, inner sep=0pt, line width=0.5pt]
-      (M\pos) at (\ang:\rmoll) {\small\moll};
-    \node[text=gray!55!black] at (\ang:\rvz) {\footnotesize\vz};
+    \pgfmathsetmacro{\w}{90-30*\k}
+    \node[font=\large\bfseries\sffamily] at (\w:{(\Raussen+\Rmitte)/2}) {\dur};
+    \node[font=\sffamily] at (\w:{(\Rmitte+\Rinnen)/2}) {\moll};
+    \if s\art
+      \ifnum\n=0
+        \vorzeichenzeile{\Rnoten*cos(\w)}{\Rnoten*sin(\w)}{0}{\kreuzpositionen}{52}{keine Vorzeichen}
+      \else
+        \vorzeichenzeile{\Rnoten*cos(\w)}{\Rnoten*sin(\w)}{\n}{\kreuzpositionen}{52}{\n\,\(\sharp\)}
+      \fi
+    \else
+      \vorzeichenzeile{\Rnoten*cos(\w)}{\Rnoten*sin(\w)}{\n}{\bepositionen}{50}{\n\,\(\flat\)}
+    \fi
   }
-  \node[align=center, text=gray!50!black] at (0,0)
-    {\scriptsize\textbf{Dur}\\[-1pt]\tiny außen\\[3pt]\scriptsize\textbf{Moll}\\[-1pt]\tiny innen};
+
+  % Position 6 (unten): Fis-Dur = Ges-Dur, dis-Moll = es-Moll (enharmonisch)
+  \node[font=\bfseries\sffamily, align=center, inner sep=0] at (-90:{(\Raussen+\Rmitte)/2}) {Fis/Ges};
+  \node[font=\sffamily\small] at (-90:{(\Rmitte+\Rinnen)/2}) {dis/es};
+  \vorzeichenzeile{-1.5}{-6.95}{6}{\kreuzpositionen}{52}{Fis: 6\,\(\sharp\)}
+  \vorzeichenzeile{1.5}{-6.95}{6}{\bepositionen}{50}{Ges: 6\,\(\flat\)}
+
+  % Mitte
+  \node[align=center, font=\scriptsize\sffamily, text=gray!50!black] at (0,0)
+    {\textbf{Dur}\\außen\\[2pt]\textbf{Moll}\\innen};
 \end{tikzpicture}
 \end{center}
 

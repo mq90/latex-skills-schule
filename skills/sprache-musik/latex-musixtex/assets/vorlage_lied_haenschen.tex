@@ -20,45 +20,45 @@
 \end{center}
 \vspace{1em}
 
-% \interstaff: mehr Luft zwischen System und Textzeile (gegen Kollisionen);
-% \lyrraise: Liedtext ein wenig tiefer. Beide aus musixlyr.
-\interstaff{11}
+% Größeres Notensystem: Größenbefehl VOR \begin{music} (wirkt sonst nicht).
+\Largemusicsize
 
 \begin{music}
+% Platz unter (Liedtext) und über (Akkorde) jedem System – INNERHALB von music:
+\staffbotmarg=8\Interligne
+\stafftopmarg=4\Interligne
 \instrumentnumber{1}\setclef1\treble
 \generalmeter{\meterfrac44}\generalsignature{-1}\nobarnumbers
-\lyrraise1{-2pt}
+\setsongraise1{8mm}         % Liedtext dicht unter die Hälse (bezogen auf den unteren Rand)
 \setlyrics{strophe}{Häns-chen klein ging al-lein in die wei-te Welt hin-ein.
 Stock und Hut steht ihm gut, ist gar wohl-ge-mut.
-Doch die Mut-ter wei-net sehr, hat ja nun kein Häns-chen mehr!
-»Wünsch dir Glück«, sagt ihr Blick, »kehr nur bald zu-rück!«}
+Doch die Mut-ter wei-net sehr, hat ja nun kein
+Häns-chen mehr! »Wünsch dir Glück«, sagt ihr Blick, »kehr nur bald zu-rück!«}
 \assignlyrics1{strophe}
 \startpiece
-% Akkorde über den Noten mit \zcharnote{Höhe}{Symbol} – nur an Harmoniewechseln.
-% Tonhöhen ohne Apostroph: MusiXTeX wählt die nächstliegende Oktave,
-% so bleibt die Melodie kompakt im System (nur die erste Note je Zeile anheben).
-% Zeile 1 --------------------------------------------------------------
-\Notes\zcharnote{10}{\bf F}\qu{'a}\qu f\hu f\en\bar
-\Notes\qu g\qu e\hu e\en\bar
-\Notes\zcharnote{10}{\bf C$^7$}\qu d\qu e\qu f\qu g\en\bar
-\Notes\zcharnote{10}{\bf F}\qu a\qu a\hu g\en\bar
+% Tonhöhen als absolute Buchstaben: c = c', f g = f' g', h = a', i = h'/b',
+% j = c''. Das b' ergibt sich aus der Tonart (\generalsignature{-1}).
+% Akkorde mit \zcharnote{Höhe}{Symbol} nur an Harmoniewechseln.
+\Notes\zcharnote{12}{\bf F}\qa j\qa h\ha h\en\bar          % Häns-chen klein
+\Notes\zcharnote{12}{\bf C$^7$}\qa i\qa g\ha g\en\bar      % ging al-lein
+\Notes\zcharnote{12}{\bf F}\qa f\qa g\qa h\qa i\en\bar     % in die wei-te
+\Notes\qa j\qa j\ha j\en                                   % Welt hin-ein.
 \alaligne
-% Zeile 2 --------------------------------------------------------------
-\Notes\zcharnote{10}{\bf F}\qu{'a}\qu f\hu f\en\bar
-\Notes\qu g\qu e\hu e\en\bar
-\Notes\zcharnote{10}{\bf C$^7$}\qu e\qu f\qu g\qu a\en\bar
-\Notes\zcharnote{10}{\bf F}\wh c\en\bar
-\Notes\zcharnote{10}{\bf F}\qu a\qu a\qu a\qu a\en\bar
-\Notes\zcharnote{10}{\bf C$^7$}\qu a\qu g\hu g\en\bar
-\Notes\qu a\qu a\qu a\qu a\en\bar
+\Notes\zcharnote{12}{\bf F}\qa j\qa h\ha h\en\bar          % Stock und Hut
+\Notes\zcharnote{12}{\bf C$^7$}\qa i\qa g\ha g\en\bar      % steht ihm gut,
+\Notes\zcharnote{12}{\bf F}\qa f\qa h\qa j\qa j\en\bar     % ist gar wohl-ge-
+\Notes\wh f\en                                             % mut.
 \alaligne
-% Zeile 3 --------------------------------------------------------------
-\Notes\zcharnote{10}{\bf F}\qu{'a}\qu a\hu{'c}\en\bar
-\Notes\zcharnote{10}{\bf C$^7$}\qu a\qu g\hu f\en\bar
-\Notes\qu g\qu e\hu e\en\bar
-\Notes\zcharnote{10}{\bf C$^7$}\qu d\qu f\qu a\qu g\en\bar
-\Notes\zcharnote{10}{\bf F}\wh f\en
-\endpiece
+\Notes\zcharnote{12}{\bf C$^7$}\qa g\qa g\qa g\qa g\en\bar % Doch die Mut-ter
+\Notes\qa g\qa h\ha i\en\bar                               % wei-net sehr,
+\Notes\zcharnote{12}{\bf F}\qa h\qa h\qa h\qa h\en\bar     % hat ja nun kein
+\Notes\qa h\qa i\ha j\en                                   % Häns-chen mehr!
+\alaligne
+\Notes\zcharnote{12}{\bf F}\qa j\qa h\ha h\en\bar          % »Wünsch dir Glück«,
+\Notes\zcharnote{12}{\bf C$^7$}\qa i\qa g\ha g\en\bar      % sagt ihr Blick,
+\Notes\zcharnote{12}{\bf F}\qa f\qa h\qa j\qa j\en\bar     % »kehr nur bald zu-
+\Notes\wh f\en                                             % rück!«
+\Endpiece                  % Schlussstrich
 \end{music}
 
 \end{document}
