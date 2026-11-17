@@ -1,0 +1,76 @@
+% ===================================================================
+%  Minimalbeispiel: Alle Dur- und Molldreiklänge in Noten (Violinschlüssel),
+%  mit enharmonischen Schreibweisen (Cis = Des, Dis = Es …) und Tonnamen.
+%  Notensystem in reinem TikZ mit der Notenschrift musix24, alle Zeilen
+%  gleich lang. Braucht nur akkord-makros.tex aus demselben Ordner.
+%  Ein Durchlauf pdflatex genügt.
+% ===================================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{lmodern}
+\usepackage[margin=1.2cm]{geometry}
+\usepackage{tikz}
+\input{akkord-makros.tex}   % liegt im selben Ordner
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+% \Akkordreihe{Anzahl}{Einträge}
+% Eintrag: Trenner/Name/Stufe/V1/V2/V3/Tonnamen
+%   Trenner: 0 = Zeilenanfang, 1 = Taktstrich, 2 = gestrichelt mit „=“ (enharmonisch gleich)
+%   Stufe: 0 = e' (unterste Linie), -2 = c'; V1–V3: 0, 52 (Kreuz), 50 (Be), 53 (Doppelkreuz), 51 (Doppel-Be)
+\newcommand{\Akkordreihe}[2]{%
+  \begin{tikzpicture}[x=1pt, y=1pt, baseline=0pt]
+    \Notenlinien{520}
+    \Taktstrich{520}
+    \pgfmathsetmacro{\feld}{(520-36)/#1}
+    \foreach \trenn/\name/\stufe/\va/\vb/\vc/\toene [count=\i from 0] in {#2}{
+      \pgfmathsetmacro{\xl}{36+\feld*\i}
+      \pgfmathsetmacro{\xm}{36+\feld*(\i+0.58)}
+      \ifnum\trenn=1 \Taktstrich{\xl}\fi
+      \ifnum\trenn=2 \Taktstrich[dash pattern=on 2.5pt off 2pt]{\xl}
+        \node[font=\sffamily\bfseries\large, text=akzent] at (\xl,45) {=};\fi
+      \node[font=\sffamily\bfseries, text=akzent, anchor=base] at (\xm,41) {\name};
+      \Dreiklang{\xm}{\stufe}{\va}{\vb}{\vc}
+      \node[font=\sffamily\scriptsize, text=black!60, anchor=base] at (\xm,-25) {\toene};
+    }
+  \end{tikzpicture}\par\vspace{9mm}}
+\definecolor{akzent}{RGB}{20,80,160}
+
+\begin{document}
+\begin{center}
+{\Huge\bfseries\sffamily\color{akzent} Alle Dur- und Mollakkorde}\\[3pt]
+{\small\sffamily Dreiklänge in Grundstellung \textbullet\ gestrichelte Linie mit „=“: gleicher Klang, andere Schreibweise}
+\end{center}
+\vspace{6mm}
+
+\centering
+\Akkordreihe{6}{
+  0/C-Dur/-2/0/0/0/c – e – g,          1/c-Moll/-2/0/50/0/c – es – g,
+  1/Cis-Dur/-2/52/52/52/cis – eis – gis, 1/cis-Moll/-2/52/0/52/cis – e – gis,
+  2/Des-Dur/-1/50/0/50/des – f – as,    1/des-Moll/-1/50/50/50/des – fes – as}
+\Akkordreihe{6}{
+  0/D-Dur/-1/0/52/0/d – fis – a,        1/d-Moll/-1/0/0/0/d – f – a,
+  1/Dis-Dur/-1/52/53/52/dis – fisis – ais, 1/dis-Moll/-1/52/52/52/dis – fis – ais,
+  2/Es-Dur/0/50/0/50/es – g – b,        1/es-Moll/0/50/50/50/es – ges – b}
+\Akkordreihe{4}{
+  0/E-Dur/0/0/52/0/e – gis – h,         1/e-Moll/0/0/0/0/e – g – h,
+  1/F-Dur/1/0/0/0/f – a – c,            1/f-Moll/1/0/50/0/f – as – c}
+\Akkordreihe{6}{
+  0/Fis-Dur/1/52/52/52/fis – ais – cis, 1/fis-Moll/1/52/0/52/fis – a – cis,
+  2/Ges-Dur/2/50/50/50/ges – b – des,   1/ges-Moll/2/50/51/50/ges – heses – des,
+  1/G-Dur/2/0/0/0/g – h – d,            1/g-Moll/2/0/50/0/g – b – d}
+\Akkordreihe{6}{
+  0/Gis-Dur/2/52/52/52/gis – his – dis, 1/gis-Moll/2/52/0/52/gis – h – dis,
+  2/As-Dur/3/50/0/50/as – c – es,       1/as-Moll/3/50/50/50/as – ces – es,
+  1/A-Dur/3/0/52/0/a – cis – e,         1/a-Moll/3/0/0/0/a – c – e}
+\Akkordreihe{6}{
+  0/Ais-Dur/3/52/53/52/ais – cisis – eis, 1/ais-Moll/3/52/52/52/ais – cis – eis,
+  2/B-Dur/4/50/0/0/b – d – f,           1/b-Moll/4/50/50/0/b – des – f,
+  1/H-Dur/4/0/52/52/h – dis – fis,      1/h-Moll/4/0/0/52/h – d – fis}
+
+\vfill
+{\small\sffamily Dur = große Terz + kleine Terz \quad\textbullet\quad Moll = kleine Terz + große Terz \quad\textbullet\quad
+jeder Akkord steht in einem eigenen Takt, Vorzeichen gelten nur dort}
+
+\end{document}

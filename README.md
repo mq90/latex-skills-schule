@@ -47,7 +47,7 @@ werkzeuge/                     Prüf- und Hilfsskripte für das Repository
 | | [`latex-quellcode-listings`](skills/informatik/latex-quellcode-listings) | Programmcode mit listings | Handreichung |
 | | [`latex-pdf-formulare`](skills/informatik/latex-pdf-formulare) | interaktive, ausfüllbare PDFs, digitale Leistungskontrollen | Handreichung, Vorlage, Beispiel-LK, Skripte zum Einsammeln und Testen |
 | Sprache & Musik | [`latex-lautschrift`](skills/sprache-musik/latex-lautschrift) | IPA mit tipa oder Unicode | Handreichung, Lauttabellen, Vokalviereck |
-| | [`latex-musixtex`](skills/sprache-musik/latex-musixtex) | Notensatz, Liedsätze mit Text und Akkorden, Quintenzirkel, Notenpapier | Handreichung, Musik-Kürzel, Vorlagen (Liedsatz, Quintenzirkel, Notenpapier A5) |
+| | [`latex-musixtex`](skills/sprache-musik/latex-musixtex) | Notensatz, Liedsätze mit Text und Akkorden, Akkordtafeln für Klavier und Gitarre, Quintenzirkel, Notenpapier | Handreichung, Musik-Kürzel, Vorlagen (Liedblätter, Akkordblätter, Quintenzirkel, Notenpapier A5) |
 | Naturwissenschaften | [`latex-physik`](skills/naturwissenschaften/latex-physik) | Einheiten, Messwerttabellen, Ausgleichsgerade, Schaltpläne (circuitikz), Strahlengänge | Handreichung; Vorlagen Federdehnung (Regression in TikZ), Schaltpläne, Sammellinse |
 | | [`latex-chemie`](skills/naturwissenschaften/latex-chemie) | Reaktionsgleichungen (mhchem), Oxidationszahlen, Strukturformeln (chemfig), Periodensystem, Titrationskurve, Energiediagramm | Handreichung; 3 Vorlagen, pH-Kurve wird berechnet statt gezeichnet |
 | | [`latex-biologie`](skills/naturwissenschaften/latex-biologie) | Kreuzungsschemata, Stammbäume (genealogytree), Codesonne, Nahrungsnetz, Wachstumskurven | Handreichung; 5 Vorlagen |
@@ -133,7 +133,7 @@ auch ohne LaTeX-Installation. Die Quelltexte stehen in den
 
 Fertige Blätter zum direkten Ausdrucken, ohne LaTeX-Installation. PDF und
 Quelltext liegen immer nebeneinander im `assets/`-Ordner des Skills und heißen
-gleich. Die Liedblätter sind eigenständig kompilierbar; Notenpapier und
+gleich. Die Liedblätter sind eigenständig kompilierbar, die Akkordblätter brauchen nur `akkord-makros.tex` aus demselben Ordner; Notenpapier und
 Quintenzirkel brauchen zusätzlich `header.tex`/`newcommands.tex` aus `latex-grundstil`.
 
 | Bereich | Druckvorlage (PDF) | Quelltext | Format |
@@ -147,6 +147,10 @@ Quintenzirkel brauchen zusätzlich `header.tex`/`newcommands.tex` aus `latex-gru
 |  | [Liedblatt „Alle meine Entchen“ mit 5 Strophen](skills/sprache-musik/latex-musixtex/assets/vorlage_lied_entchen.pdf) | [`vorlage_lied_entchen.tex`](skills/sprache-musik/latex-musixtex/assets/vorlage_lied_entchen.tex) | A4 |
 |  | [Liedblatt „Hänsel und Gretel“ mit 3 Strophen](skills/sprache-musik/latex-musixtex/assets/vorlage_lied_haensel_gretel.pdf) | [`vorlage_lied_haensel_gretel.tex`](skills/sprache-musik/latex-musixtex/assets/vorlage_lied_haensel_gretel.tex) | A4 |
 |  | [Liedblatt „Grün, grün, grün sind alle meine Kleider“ mit 6 Strophen](skills/sprache-musik/latex-musixtex/assets/vorlage_lied_gruen.pdf) | [`vorlage_lied_gruen.tex`](skills/sprache-musik/latex-musixtex/assets/vorlage_lied_gruen.tex) | A4 |
+|  | [Klavierakkorde: Dur, Moll, 7, maj7, m7 für alle 12 Grundtöne](skills/sprache-musik/latex-musixtex/assets/vorlage_akkorde_klavier.pdf) | [`vorlage_akkorde_klavier.tex`](skills/sprache-musik/latex-musixtex/assets/vorlage_akkorde_klavier.tex) | A4 |
+|  | [Alle Dur- und Mollakkorde in Noten](skills/sprache-musik/latex-musixtex/assets/vorlage_akkorde_noten.pdf) | [`vorlage_akkorde_noten.tex`](skills/sprache-musik/latex-musixtex/assets/vorlage_akkorde_noten.tex) | A4 |
+|  | [Dur- und Moll-Grundakkorde im Quintenzirkel (Noten, Klaviatur, Tonnamen)](skills/sprache-musik/latex-musixtex/assets/vorlage_akkorde_grundakkorde.pdf) | [`vorlage_akkorde_grundakkorde.tex`](skills/sprache-musik/latex-musixtex/assets/vorlage_akkorde_grundakkorde.tex) | A4, 2 Seiten |
+|  | [Gitarrenakkorde: 28 Griffbilder](skills/sprache-musik/latex-musixtex/assets/vorlage_akkorde_gitarre.pdf) | [`vorlage_akkorde_gitarre.tex`](skills/sprache-musik/latex-musixtex/assets/vorlage_akkorde_gitarre.tex) | A4 |
 
 ## Installieren
 

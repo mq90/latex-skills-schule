@@ -1,0 +1,73 @@
+% ===================================================================
+%  Minimalbeispiel: Gitarrenakkorde – Griffbilder für C, D, E, F, G, A, H
+%  jeweils als Dur, Dur 7, Moll und Moll 7 (28 Griffe). Grundtöne hellgrün,
+%  Zahlen = Finger, Balken = Barré. Reines TikZ.
+%  Braucht nur akkord-makros.tex aus demselben Ordner. Ein Durchlauf pdflatex.
+% ===================================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{lmodern}
+\usepackage[margin=1cm]{geometry}
+\usepackage{tikz}
+\input{akkord-makros.tex}   % liegt im selben Ordner
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\begin{document}
+\begin{center}
+{\Huge\bfseries\sffamily Gitarrenakkorde}\\[3pt]
+{\small\sffamily die 28 wichtigsten Griffe \textbullet\ Grundton hellgrün}
+\end{center}
+\vspace{1mm}
+
+\centering
+\begin{tikzpicture}
+  % Zeilenköpfe
+  \foreach \kopf [count=\z from 0] in {Dur, Dur 7, Moll, Moll 7}{
+    \fill[akkordgruen!45, rounded corners=2pt] (-1.5,{-5.6*\z-2.85}) rectangle (-0.85,{-5.6*\z+0.75});
+    \node[font=\sffamily\bfseries, rotate=90] at (-1.175,{-5.6*\z-1.05}) {\kopf}; }
+  % Saiten: tiefe E-Saite zuerst, Einträge Bund/Finger
+  % --- Dur ---
+  \Griff[shift={(0,0)}]{C}{0}{1}{-1/0,3/3,2/2,0/0,1/1,0/0}{}
+  \Griff[shift={(2.58,0)}]{D}{2}{1}{-1/0,-1/0,0/0,2/1,3/3,2/2}{}
+  \Griff[shift={(5.16,0)}]{E}{4}{1}{0/0,2/2,2/3,1/1,0/0,0/0}{}
+  \Griff[shift={(7.74,0)}]{F}{5}{1}{1/1,3/3,3/4,2/2,1/1,1/1}{1/0/5}
+  \Griff[shift={(10.32,0)}]{G}{7}{1}{3/2,2/1,0/0,0/0,0/0,3/3}{}
+  \Griff[shift={(12.9,0)}]{A}{9}{1}{-1/0,0/0,2/1,2/2,2/3,0/0}{}
+  \Griff[shift={(15.48,0)}]{H}{11}{2}{-1/0,2/1,4/2,4/3,4/4,2/1}{2/1/5}
+  % --- Dur 7 ---
+  \Griff[shift={(0,-5.6)}]{C7}{0}{1}{-1/0,3/3,2/2,3/4,1/1,0/0}{}
+  \Griff[shift={(2.58,-5.6)}]{D7}{2}{1}{-1/0,-1/0,0/0,2/2,1/1,2/3}{}
+  \Griff[shift={(5.16,-5.6)}]{E7}{4}{1}{0/0,2/2,0/0,1/1,0/0,0/0}{}
+  \Griff[shift={(7.74,-5.6)}]{F7}{5}{1}{1/1,3/3,1/1,2/2,1/1,1/1}{1/0/5}
+  \Griff[shift={(10.32,-5.6)}]{G7}{7}{1}{3/3,2/2,0/0,0/0,0/0,1/1}{}
+  \Griff[shift={(12.9,-5.6)}]{A7}{9}{1}{-1/0,0/0,2/2,0/0,2/3,0/0}{}
+  \Griff[shift={(15.48,-5.6)}]{H7}{11}{1}{-1/0,2/2,1/1,2/3,0/0,2/4}{}
+  % --- Moll ---
+  \Griff[shift={(0,-11.2)}]{Cm}{0}{3}{-1/0,3/1,5/3,5/4,4/2,3/1}{3/1/5}
+  \Griff[shift={(2.58,-11.2)}]{Dm}{2}{1}{-1/0,-1/0,0/0,2/2,3/3,1/1}{}
+  \Griff[shift={(5.16,-11.2)}]{Em}{4}{1}{0/0,2/2,2/3,0/0,0/0,0/0}{}
+  \Griff[shift={(7.74,-11.2)}]{Fm}{5}{1}{1/1,3/3,3/4,1/1,1/1,1/1}{1/0/5}
+  \Griff[shift={(10.32,-11.2)}]{Gm}{7}{3}{3/1,5/3,5/4,3/1,3/1,3/1}{3/0/5}
+  \Griff[shift={(12.9,-11.2)}]{Am}{9}{1}{-1/0,0/0,2/2,2/3,1/1,0/0}{}
+  \Griff[shift={(15.48,-11.2)}]{Hm}{11}{2}{-1/0,2/1,4/3,4/4,3/2,2/1}{2/1/5}
+  % --- Moll 7 ---
+  \Griff[shift={(0,-16.8)}]{Cm7}{0}{3}{-1/0,3/1,5/3,3/1,4/2,3/1}{3/1/5}
+  \Griff[shift={(2.58,-16.8)}]{Dm7}{2}{1}{-1/0,-1/0,0/0,2/2,1/1,1/1}{1/4/5}
+  \Griff[shift={(5.16,-16.8)}]{Em7}{4}{1}{0/0,2/2,0/0,0/0,0/0,0/0}{}
+  \Griff[shift={(7.74,-16.8)}]{Fm7}{5}{1}{1/1,3/3,1/1,1/1,1/1,1/1}{1/0/5}
+  \Griff[shift={(10.32,-16.8)}]{Gm7}{7}{3}{3/1,5/3,3/1,3/1,3/1,3/1}{3/0/5}
+  \Griff[shift={(12.9,-16.8)}]{Am7}{9}{1}{-1/0,0/0,2/2,0/0,1/1,0/0}{}
+  \Griff[shift={(15.48,-16.8)}]{Hm7}{11}{1}{-1/0,2/1,0/0,2/2,0/0,2/3}{}
+\end{tikzpicture}
+
+\vfill
+{\small\sffamily
+\begin{tabular}{@{}l@{\quad}l@{\qquad}l@{\quad}l@{}}
+$\times$ & Saite nicht anschlagen & 1–4 & Finger: Zeige-, Mittel-, Ring-, kleiner Finger\\
+\tikz\draw[line width=0.6pt] (0,0) circle (1.25mm); & leere Saite & grauer Balken & Barré: Zeigefinger liegt quer über die Saiten\\
+\tikz\draw[fill=akkordgruen, line width=0.6pt] (0,0) circle (1.25mm); & Grundton des Akkords & „3.“ links & Griffbild beginnt am 3. Bund (sonst am Sattel)\\
+\end{tabular}}
+
+\end{document}

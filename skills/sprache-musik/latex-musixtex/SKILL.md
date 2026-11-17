@@ -130,8 +130,32 @@ an Harmoniewechseln, nicht an jede Note. Hochgestellte Ziffer: `C$^7$`.
 | `vorlage_lied_entchen.tex` | Liedblatt „Alle meine Entchen“ (C-Dur), Strophen 2–5 zweispaltig – Muster für Lieder mit vielen Strophen |
 | `vorlage_lied_haensel_gretel.tex` | Liedblatt „Hänsel und Gretel“ (G-Dur, 2/4) – Muster für Achtelpaare mit Balken, Viertel- und Achtelpause |
 | `vorlage_lied_gruen.tex` | Liedblatt „Grün, grün, grün sind alle meine Kleider“ (G-Dur, 2/4), 6 Strophen – Muster für Melismen mit Bindebogen |
+| `vorlage_akkorde_klavier.tex` | Klavierakkorde: 12 Grundtöne × Dur, Moll, 7, maj7, m7; jede Klaviatur zwei Oktaven, Akkordtöne hellgrün, unten Tastennamen |
+| `vorlage_akkorde_noten.tex` | alle Dur- und Molldreiklänge in Noten mit enharmonischen Schreibweisen und Tonnamen (Notensystem in TikZ) |
+| `vorlage_akkorde_grundakkorde.tex` | Grundakkorde in Quintenzirkel-Reihenfolge, Seite 1 Dur, Seite 2 Moll: Notenzeile mit Vorzeichen, Klaviatur, Tonnamen, kleiner farbiger Quintenzirkel |
+| `vorlage_akkorde_gitarre.tex` | 28 Gitarren-Griffbilder (C–H als Dur, 7, Moll, m7), Grundtöne hellgrün, Finger, Barré |
+| `akkord-makros.tex` | Schnipsel für die vier Akkordblätter (per `\input`, selber Ordner), nicht allein kompilierbar |
 | `vorlage_quintenzirkel.tex` | Quintenzirkel in TikZ: großer Kreis, Dur außen, parallele Moll innen, außen je ein Notenlinien-Ausschnitt mit den Vorzeichen (Ges links, Fis rechts), Eselsbrücken und Merkregeln darunter; Schlüssel/Vorzeichen aus der Schrift `musix24` (`\char71/52/50`), **kein** `\usepackage{musixtex}` |
 | `vorlage_notenpapier_a5_{hoch,quer}_{mit,ohne}_schluessel.tex` | Blanko-Notenpapier A5; setzen nur zwei Schalter und laden `notenpapier.tex` (dort Linien- und Systemabstand einstellen). Druckfertige PDFs gleichnamig daneben |
+
+## Akkordblätter (`akkord-makros.tex`)
+
+Eigenständige Blätter mit eigenem `\documentclass`, nur TikZ und die Schrift
+`musix24` – **kein** `\usepackage{musixtex}`, ein pdflatex-Lauf. Alle Befehle
+innerhalb von `tikzpicture` (getestet):
+
+| Befehl | Wirkung |
+|---|---|
+| `\Klaviatur[shift={(x,y)}, x=2.3mm, y=11mm]{0,4,7}` | zwei Oktaven ab C; Töne als Halbtonschritte (C=0 … H=11, c'=12 …), Rechenausdrücke wie `9+4` erlaubt; `x` = Tastenbreite, `y` = Tastenhöhe |
+| `\Notenlinien{Länge}`, `\Taktstrich[Stil]{x}` | Fünfliniensystem mit Violinschlüssel, Einheit pt (`[x=1pt,y=1pt]`), Linienabstand 6pt |
+| `\Vorzeichnung{x}{n}` | Tonart-Vorzeichen: n>0 Kreuze, n<0 Bes |
+| `\Dreiklang{x}{Stufe}{V1}{V2}{V3}` | ganze Noten auf Stufe, +2, +4 (0 = e', -2 = c' mit Hilfslinie); Vorzeichen als Zeichennummer 0/52/50/53/51, automatisch gestaffelt |
+| `\Griff[shift={(x,y)}]{Name}{Grundton}{Bund}{Saiten}{Barré}` | Gitarren-Griffbild; Saiten = sechs Einträge `Bund/Finger` ab tiefer E-Saite (`-1/0` = ×, `0/0` = leer); Barré = `Bund/vonSaite/bisSaite` oder leer |
+
+- `shift` muss **vor** `x=`/`y=` stehen, sonst wird die Verschiebung in den
+  neuen Einheiten gerechnet (Griffbilder liegen dann übereinander).
+- Farben in einer `\foreach`-Schleife mit `\xglobal\definecolor` anlegen,
+  sonst sind sie nach der Schleife wieder weg.
 
 ## Stolpersteine
 

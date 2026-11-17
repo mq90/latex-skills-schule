@@ -1,0 +1,139 @@
+% ===================================================================
+%  akkord-makros.tex – gemeinsame Befehle der Akkordblätter
+%  (vorlage_akkorde_*.tex). Schnipsel, nicht allein kompilierbar;
+%  liegt im selben Ordner und wird per \input{akkord-makros.tex} geladen.
+%  Braucht nur TikZ und die Notenschrift musix24 (KEIN \usepackage{musixtex}).
+%  Quelle: https://github.com/mq90/latex-skills-schule  (CC BY 4.0, Martin Quandt)
+% ===================================================================
+\definecolor{akkordgruen}{RGB}{150,230,140}   % hellgrün: alle Akkordtöne
+\definecolor{akkordgrau}{gray}{0.35}
+
+% -------------------------------------------------------------------
+%  \Klaviatur[TikZ-Optionen]{Töne}
+%  Zwei Oktaven (c bis h'), Akkordtöne hellgrün. Töne = Halbtonschritte ab
+%  dem linken C: C=0, Cis=1, D=2 … H=11, c'=12 …; Rechenausdrücke sind
+%  erlaubt (z. B. 9, 9+4, 9+7 für A-Dur). Innerhalb von tikzpicture benutzen;
+%  Einheiten: x = Breite einer weißen Taste, y = Tastenhöhe (per Option setzen).
+% -------------------------------------------------------------------
+\newcommand{\Klaviatur}[2][]{%
+  \edef\KLtoene{#2}% Liste einmal ausrechnen (darf selbst ein Makro sein)
+  \begin{scope}[line width=0.3pt, line join=round, #1]
+    \foreach \w in {0,...,13}{ \draw[fill=white] (\w,0) rectangle ++(1,1); }
+    \foreach \s in \KLtoene {
+      \pgfmathtruncatemacro{\KLw}{{0,-1,1,-1,2,3,-1,4,-1,5,-1,6}[mod(\s,12)]}
+      \ifnum\KLw>-1
+        \pgfmathtruncatemacro{\KLx}{7*div(\s,12)+\KLw}
+        \draw[fill=akkordgruen] (\KLx,0) rectangle ++(1,1);
+      \fi
+    }
+    \foreach \w in {0,1,3,4,5,7,8,10,11,12}{ \fill[black] (\w+0.68,0.40) rectangle ++(0.64,0.60); }
+    \foreach \s in \KLtoene {
+      \pgfmathtruncatemacro{\KLw}{{0,-1,1,-1,2,3,-1,4,-1,5,-1,6}[mod(\s,12)]}
+      \ifnum\KLw=-1
+        \pgfmathtruncatemacro{\KLu}{{0,0,1,1,2,3,3,4,4,5,5,6}[mod(\s,12)]}
+        \pgfmathsetmacro{\KLx}{7*div(\s,12)+\KLu+0.68}
+        \draw[fill=akkordgruen, line width=0.5pt] (\KLx,0.40) rectangle ++(0.64,0.60);
+      \fi
+    }
+    \draw[line width=0.6pt] (0,0) rectangle (14,1);
+  \end{scope}%
+}
+
+% -------------------------------------------------------------------
+%  Notensystem in TikZ (Einheit pt, Linienabstand 6pt, unterste Linie y=0).
+%  Tonhöhen als Stufen: 0 = e' (unterste Linie), 1 = f', 2 = g' … -2 = c'.
+% -------------------------------------------------------------------
+\font\notenschrift=musix24
+\newcommand{\notenzeichen}[1]{{\notenschrift\char#1}}
+% Zeichen der Schrift: 71 Violinschlüssel, 9 ganze Note,
+% 52 Kreuz, 50 Be, 53 Doppelkreuz, 51 Doppel-Be, 54 Auflösungszeichen
+
+% \Notenlinien{Länge in pt}: fünf Linien mit Violinschlüssel
+\newcommand{\Notenlinien}[1]{%
+  \foreach \l in {0,6,12,18,24}{ \draw[line width=0.4pt] (0,\l) -- (#1,\l); }
+  \draw[line width=0.4pt] (0,0) -- (0,24);
+  \node[anchor=base west, inner sep=0] at (3,6) {\notenzeichen{71}};
+}
+% \Taktstrich[Stil]{x}
+\newcommand{\Taktstrich}[2][]{\draw[line width=0.5pt, #1] (#2,0) -- (#2,24);}
+
+% \Vorzeichnung{x}{n}: Tonart-Vorzeichen ab x; n>0 Kreuze, n<0 Bes
+\newcommand{\Vorzeichnung}[2]{%
+  \ifnum#2>0
+    \foreach \st [count=\i] in {8,5,9,6,3,7,4}{
+      \ifnum\i>#2\else \node[anchor=base, inner sep=0] at (#1+5.6*\i-5.6,3*\st) {\notenzeichen{52}}; \fi }
+  \fi
+  \ifnum#2<0
+    \foreach \st [count=\i] in {4,7,3,6,2,5,1}{
+      \ifnum\i>-#2\else \node[anchor=base, inner sep=0] at (#1+5.2*\i-5.2,3*\st) {\notenzeichen{50}}; \fi }
+  \fi
+}
+
+% \Dreiklang{x}{Stufe}{V1}{V2}{V3}: Terzschichtung aus ganzen Noten auf
+% Stufe, Stufe+2, Stufe+4. V1–V3 = Vorzeichen von Grundton, Terz, Quinte
+% als Zeichennummer (0 = keins, 52 Kreuz, 50 Be, 53 Doppelkreuz, 51 Doppel-Be).
+% Vorzeichen werden gestaffelt: Quinte dicht am Kopf, Grundton daneben, Terz außen.
+\newcommand{\Dreiklang}[5]{%
+  \ifnum#2<-1 \draw[line width=0.4pt] (#1-8,-6) -- (#1+8,-6); \fi
+  \foreach \k in {0,2,4}{
+    \node[anchor=base, inner sep=0] at (#1,3*#2+3*\k) {\notenzeichen{9}}; }
+  \def\DKspalte{0}%
+  \ifnum#5>0 \DKvorz{#1}{#2+4}{#5}\fi
+  \ifnum#3>0 \DKvorz{#1}{#2}{#3}\fi
+  \ifnum#4>0 \DKvorz{#1}{#2+2}{#4}\fi
+}
+\newcommand{\DKvorz}[3]{% x, Stufe, Zeichen – setzt in die nächste freie Spalte
+  \pgfmathsetmacro{\DKx}{#1-11.5-6.2*\DKspalte-(#3==51 ? 2.5 : 0)}
+  \node[anchor=base, inner sep=0] at (\DKx,{3*(#2)}) {\notenzeichen{#3}};
+  \pgfmathtruncatemacro{\DKneu}{\DKspalte+1}\xdef\DKspalte{\DKneu}%
+}
+
+% -------------------------------------------------------------------
+%  \Griff[TikZ-Optionen]{Name}{Grundton}{Bund}{Saiten}{Barré}
+%  Gitarren-Griffbild. Grundton als Zahl (C=0, Cis=1 … H=11) – Grundtöne
+%  werden hellgrün. Bund = oberster gezeigter Bund (1 = mit Sattel).
+%  Saiten = sechs Einträge Bund/Finger von der tiefen E- zur hohen e-Saite:
+%  -1/0 = nicht spielen (x), 0/0 = leere Saite (o), 3/2 = 3. Bund, Finger 2.
+%  Barré = Bund/vonSaite/bisSaite (Saiten 0–5) oder leer.
+% -------------------------------------------------------------------
+\newcommand{\Griff}[6][]{%
+  \begin{scope}[#1, x=3.8mm, y=6mm, line cap=round]
+    \node[font=\sffamily\bfseries\Large, anchor=base] at (2.5,1.05) {#2};
+    % Griffbrett: 4 Bünde, 6 Saiten
+    \foreach \b in {1,...,4}{ \draw[line width=0.4pt] (0,-\b) -- (5,-\b); }
+    \foreach \s in {0,...,5}{ \draw[line width=0.4pt] (\s,0) -- (\s,-4.25); }
+    \ifnum#4=1 \draw[line width=2.2pt, line cap=butt] (-0.03,0) -- (5.03,0);
+    \else \draw[line width=0.4pt] (0,0) -- (5,0);
+      \node[font=\sffamily\bfseries\tiny, anchor=east, inner sep=0] at (-0.5,-0.5) {#4.};\fi
+    \foreach \n [count=\s from 0] in {E,A,D,G,H,e}{
+      \node[font=\sffamily\tiny, text=black!55, anchor=base] at (\s,-4.75) {\n}; }
+    % Barré
+    \gdef\GRbarre{0}%
+    \foreach \bf/\ba/\bb in {#6}{
+      \xdef\GRbarre{\bf}
+      \fill[akkordgrau, rounded corners=1.7mm] (\ba-0.45,{-(\bf-#4)-0.8}) rectangle (\bb+0.45,{-(\bf-#4)-0.2});
+    }
+    % Saiten
+    \foreach \f/\g [count=\s from 0] in {#5}{
+      \pgfmathtruncatemacro{\GRton}{mod({4,9,2,7,11,4}[\s]+\f+12,12)}
+      \ifnum\f<0 \node[font=\sffamily\small, inner sep=0] at (\s,0.42) {$\times$};\fi
+      \ifnum\f=0
+        \ifnum\GRton=#3 \draw[fill=akkordgruen, line width=0.6pt] (\s,0.42) circle (1.25mm);
+        \else \draw[line width=0.6pt] (\s,0.42) circle (1.25mm);\fi
+      \fi
+      \ifnum\f>0
+        \def\GRzeichnen{1}%
+        \ifnum\f=\GRbarre \ifnum\g=1 \ifnum\GRton=#3 \else \def\GRzeichnen{0}\fi\fi\fi
+        \ifnum\GRzeichnen=1
+          \ifnum\GRton=#3
+            \node[circle, draw=black, fill=akkordgruen, line width=0.6pt, inner sep=0, minimum size=3.4mm,
+                  font=\sffamily\bfseries\scriptsize] at (\s,{-(\f-#4)-0.5}) {\g};
+          \else
+            \node[circle, fill=akkordgrau, inner sep=0, minimum size=3.4mm, text=white,
+                  font=\sffamily\bfseries\scriptsize] at (\s,{-(\f-#4)-0.5}) {\g};
+          \fi
+        \fi
+      \fi
+    }
+  \end{scope}%
+}
