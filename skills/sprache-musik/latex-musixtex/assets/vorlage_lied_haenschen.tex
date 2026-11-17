@@ -1,21 +1,34 @@
 % ===================================================================
-%  Vorlage: Liedsatz mit Text und Akkorden – „Hänschen klein“
-%  Volkslied (gemeinfrei), F-Dur. Melodie mit Liedtext (musixlyr) und
-%  Akkordsymbolen über den Noten.
+%  Minimalbeispiel: Liedblatt mit Text und Akkorden – „Hänschen klein“
+%  Text: Franz Wiedemann (1821–1882), Melodie: Volksweise (gemeinfrei), F-Dur.
+%  Erste Strophe unter den Noten (musixlyr), Akkordsymbole über den Noten,
+%  Strophen 2–3 zweispaltig darunter, alles auf einer Seite.
+%  Eigenständig: braucht keine header.tex.
 %
 %  Drei Durchläufe:  pdflatex … → musixflx … → pdflatex …
-%  (musixflx berechnet die Abstände; alles_kompilieren.py macht das selbst.)
+%  (musixflx gleicht alle Notenzeilen auf dieselbe Länge aus.)
 % ===================================================================
-\input{header.tex}
-\usepackage{musixtex}       % direkt nach der header.tex (definiert \cup um)
-\input{newcommands.tex}
-\input{musik-befehle.tex}
-\input musixlyr             % Liedtext unter den Noten (siehe Stolperstein in SKILL.md)
+\documentclass[a4paper,12pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{lmodern}
+\usepackage[margin=1.8cm]{geometry}
+\usepackage{multicol}       % Strophen zweispaltig
+\usepackage{musixtex}
+\input musixlyr             % Liedtext unter den Noten
 \pagestyle{empty}
+\setlength{\columnsep}{1em}
+
+% Eine Strophe: \strophe{Nummer}{Text}; bleibt beim Spaltenumbruch zusammen.
+\newcommand{\strophe}[2]{%
+  \noindent\makebox[1.4em][l]{\textbf{#1.}}%
+  \begin{minipage}[t]{\dimexpr\linewidth-1.4em}\raggedright #2\end{minipage}%
+  \par\vspace{1.2em}}
 
 \begin{document}
 \begin{center}
-{\Large\bfseries\sffamily Hänschen klein}\\[2pt]
+{\LARGE\bfseries\sffamily Hänschen klein}\\[4pt]
 {\small Text: Franz Wiedemann \textbullet\ Melodie: Volksweise \textbullet\ F-Dur}
 \end{center}
 \vspace{1em}
@@ -24,6 +37,7 @@
 \Largemusicsize
 
 \begin{music}
+\parindent0pt                % erste Zeile nicht einrücken: alle Zeilen gleich lang
 % Platz unter (Liedtext) und über (Akkorde) jedem System – INNERHALB von music:
 \staffbotmarg=8\Interligne
 \stafftopmarg=4\Interligne
@@ -32,7 +46,7 @@
 \setsongraise1{8mm}         % Liedtext dicht unter die Hälse (bezogen auf den unteren Rand)
 \setlyrics{strophe}{Häns-chen klein ging al-lein in die wei-te Welt hin-ein.
 Stock und Hut steht ihm gut, ist gar wohl-ge-mut.
-Doch die Mut-ter wei-net sehr, hat ja nun kein
+A-ber Mut-ter wei-net sehr, hat ja nun kein
 Häns-chen mehr! »Wünsch dir Glück«, sagt ihr Blick, »kehr nur bald zu-rück!«}
 \assignlyrics1{strophe}
 \startpiece
@@ -49,7 +63,7 @@ Häns-chen mehr! »Wünsch dir Glück«, sagt ihr Blick, »kehr nur bald zu-rüc
 \Notes\zcharnote{12}{\bf F}\qa f\qa h\qa j\qa j\en\bar     % ist gar wohl-ge-
 \Notes\wh f\en                                             % mut.
 \alaligne
-\Notes\zcharnote{12}{\bf C$^7$}\qa g\qa g\qa g\qa g\en\bar % Doch die Mut-ter
+\Notes\zcharnote{12}{\bf C$^7$}\qa g\qa g\qa g\qa g\en\bar % A-ber Mut-ter  
 \Notes\qa g\qa h\ha i\en\bar                               % wei-net sehr,
 \Notes\zcharnote{12}{\bf F}\qa h\qa h\qa h\qa h\en\bar     % hat ja nun kein
 \Notes\qa h\qa i\ha j\en                                   % Häns-chen mehr!
@@ -60,5 +74,21 @@ Häns-chen mehr! »Wünsch dir Glück«, sagt ihr Blick, »kehr nur bald zu-rüc
 \Notes\wh f\en                                             % rück!«
 \Endpiece                  % Schlussstrich
 \end{music}
+\assignlyrics1{}            % Zuweisung beenden (gilt sonst global weiter)
+
+\vspace{2em}
+
+\begin{multicols}{2}
+\strophe{2}{Sieben Jahr, trüb und klar,\\ Hänschen in der Fremde war.\\
+Da besinnt sich das Kind,\\ eilet heim geschwind.\\
+Doch nun ist’s kein Hänschen mehr,\\ nein, ein großer Hans ist er,\\
+braun gebrannt Stirn und Hand.\\ Wird er wohl erkannt?}
+
+\columnbreak
+\strophe{3}{Eins, zwei, drei gehn vorbei,\\ wissen nicht, wer das wohl sei.\\
+Schwester spricht: »Welch Gesicht!«,\\ kennt den Bruder nicht.\\
+Kommt daher die Mutter sein,\\ schaut ihm kaum ins Aug hinein,\\
+ruft sie schon: »Hans, mein Sohn!\\ Grüß dich Gott, mein Sohn!«}
+\end{multicols}
 
 \end{document}

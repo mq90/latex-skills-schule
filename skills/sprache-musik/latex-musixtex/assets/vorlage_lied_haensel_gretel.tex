@@ -1,0 +1,88 @@
+% ===================================================================
+%  Minimalbeispiel: Liedblatt – „Hänsel und Gretel“ (Volkslied, gemeinfrei)
+%  G-Dur, 2/4-Takt. Erste Strophe unter den Noten (musixlyr),
+%  Strophen 2–3 zweispaltig darunter, alles auf einer Seite.
+%  Eigenständig: braucht keine header.tex.
+%
+%  Drei Durchläufe:  pdflatex … → musixflx … → pdflatex …
+%  (musixflx gleicht alle Notenzeilen auf dieselbe Länge aus.)
+% ===================================================================
+\documentclass[a4paper,12pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{lmodern}
+\usepackage[margin=1.8cm]{geometry}
+\usepackage{multicol}       % Strophen zweispaltig
+\usepackage{musixtex}
+\input musixlyr             % Liedtext unter den Noten
+\pagestyle{empty}
+\setlength{\columnsep}{1em}
+
+% Eine Strophe: \strophe{Nummer}{Text}; bleibt beim Spaltenumbruch zusammen.
+\newcommand{\strophe}[2]{%
+  \noindent\makebox[1.4em][l]{\textbf{#1.}}%
+  \begin{minipage}[t]{\dimexpr\linewidth-1.4em}\raggedright #2\end{minipage}%
+  \par\vspace{1.2em}}
+
+\begin{document}
+\begin{center}
+{\LARGE\bfseries\sffamily Hänsel und Gretel}\\[4pt]
+{\small Text und Melodie: Volksweise \textbullet\ G-Dur}
+\end{center}
+\vspace{1em}
+
+\Largemusicsize             % großes System: VOR \begin{music}
+\begin{music}
+\parindent0pt                % erste Zeile nicht einrücken: alle Zeilen gleich lang
+\staffbotmarg=8\Interligne  % Platz unter jedem System (innerhalb von music)
+\instrumentnumber{1}\setclef1\treble
+\generalmeter{\meterfrac24}\generalsignature{1}\nobarnumbers
+\setsongraise1{11mm}         % Text dicht unter die eigene Zeile
+\setlyrics{strophe}{Hän-sel und Gre-tel ver-lie-fen sich im Wald.
+Es war so fins-ter und auch so bit-ter kalt.
+Sie ka-men an ein Häus-chen von Pfef-fer-ku-chen fein.
+Wer mag der Herr wohl von die-sem Häus-chen sein?}
+\assignlyrics1{strophe}
+\startpiece
+% Tonhöhen: g = g', h = a', i = h', j = c'', k = d''.
+% Achtelpaare mit Balken: \ibu (Balken oben) bzw. \ibl (unten), \qb, \tbu/\tbl.
+\NOtes\ql k\en\Notes\ibl0i1\qb0i\tbl0\qb0j\en\bar                    % Hän-sel und
+\NOtes\ql k\en\Notes\ibu0i{-2}\qb0i\tbu0\qb0g\en\bar                 % Gre-tel ver-
+\Notes\ibu0h0\qb0h\tbu0\qb0h\ibu0h1\qb0h\tbu0\qb0i\en\bar            % lie-fen sich im
+\NOtes\qu g\qp\en                                                    % Wald.
+\alaligne
+\NOtes\ql k\en\Notes\ibl0i1\qb0i\tbl0\qb0j\en\bar                    % Es war so
+\NOtes\ql k\en\Notes\ibu0i{-2}\qb0i\tbu0\qb0g\en\bar                 % fins-ter und
+\Notes\ibu0h0\qb0h\tbu0\qb0h\ibu0h1\qb0h\tbu0\qb0i\en\bar            % auch so bit-ter
+\NOtes\qu g\en\Notes\ds\cu g\en                                      % kalt. Sie
+\alaligne
+\Notes\ibu0h0\qb0h\tbu0\qb0h\ibu0h1\qb0h\tbu0\qb0i\en\bar            % ka-men an ein
+\NOtes\ql j\en\Notes\ibu0h0\qb0h\tbu0\qb0h\en\bar                    % Häus-chen von
+\Notes\ibu0i{-1}\qb0i\tbu0\qb0h\ibl0i1\qb0i\tbl0\qb0j\en\bar         % Pfef-fer-ku-chen
+\NOtes\ql k\qp\en                                                    % fein.
+\alaligne
+\NOtes\ql k\en\Notes\ibl0i1\qb0i\tbl0\qb0j\en\bar                    % Wer mag der
+\NOtes\ql k\en\Notes\ibu0i{-2}\qb0i\tbu0\qb0g\en\bar                 % Herr wohl von
+\Notes\ibu0h0\qb0h\tbu0\qb0h\ibu0h1\qb0h\tbu0\qb0i\en\bar            % die-sem Häus-chen
+\NOTes\hu g\en                                                       % sein?
+\Endpiece
+\end{music}
+\assignlyrics1{}            % Zuweisung beenden (gilt sonst global weiter)
+
+\vspace{2em}
+
+\begin{multicols}{2}
+\strophe{2}{Hu, hu, da schaut\\ eine alte Hexe raus!\\
+Sie lockt die Kinder\\ ins Pfefferkuchenhaus.\\
+Sie stellte sich gar freundlich,\\ o Hänsel, welche Not!\\
+Ihn wollt sie braten\\ im Ofen braun wie Brot.}
+
+\columnbreak
+\strophe{3}{Doch als die Hexe\\ zum Ofen schaut hinein,\\
+ward sie gestoßen\\ von unserm Gretelein.\\
+Die Hexe musste braten,\\ die Kinder gehn nach Haus.\\
+Nun ist das Märchen\\ von Hans und Gretel aus.}
+\end{multicols}
+
+\end{document}

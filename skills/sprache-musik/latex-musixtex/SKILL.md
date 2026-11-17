@@ -106,6 +106,18 @@ Größe und Abstände in mehrzeiligen Liedsätzen (alle getestet, siehe
 Ein großer `\staffbotmarg` schiebt den Text mit nach unten; mit positivem
 `\setsongraise` wieder unter die eigene Zeile holen.
 
+**Liedblätter** (`vorlage_lied_*.tex`) sind eigenständige Minimalbeispiele mit
+eigenem `\documentclass`, ohne header.tex: erste Strophe unter den Noten,
+weitere Strophen zweispaltig darunter (`multicols`, Befehl `\strophe{Nr}{Text}`),
+alles auf einer Seite. Getestet:
+
+- `\parindent0pt` in der `music`-Umgebung: sonst ist die erste Zeile eingerückt
+  und kürzer als die übrigen (musixflx gleicht nur die Folgezeilen aus).
+- Zwei Noten auf einer Silbe (Melisma): `\lyricsoff` vor der zweiten Note,
+  `\lyricson` danach; Bogen dazu mit `\islurd0f … \tslur0f` (oben `\isluru`).
+- Höchstens 4 Takte pro Zeile (`\alaligne`), sonst verschluckt musixlyr bei
+  Achteln die Trennstriche zwischen den Silben.
+
 Akkordsymbole (Harmonien) über das System mit `\zcharnote{12}{\bf F}` – nur
 an Harmoniewechseln, nicht an jede Note. Hochgestellte Ziffer: `C$^7$`.
 
@@ -114,8 +126,10 @@ an Harmoniewechseln, nicht an jede Note. Hochgestellte Ziffer: `C$^7$`.
 | Vorlage | Inhalt |
 |---|---|
 | `notenpapier.tex` | Basis für das Notenpapier, nicht allein kompilierbar (Schnipsel) |
-| `vorlage_lied_haenschen.tex` | kompletter Liedsatz „Hänschen klein“ (F-Dur) mit Liedtext und Akkorden, großes System, 4 Takte pro Zeile – Muster für eigene Lieder |
-| `vorlage_lied_entchen.tex` | Liedblatt „Alle meine Entchen“ (C-Dur): 1. Strophe unter den Noten, Strophen 2–5 als Text – Muster für Lieder mit vielen Strophen |
+| `vorlage_lied_haenschen.tex` | Liedblatt „Hänschen klein“ (F-Dur) mit Liedtext und Akkorden, großes System, 4 Takte pro Zeile, Strophen 2–3 zweispaltig darunter – Muster für eigene Lieder |
+| `vorlage_lied_entchen.tex` | Liedblatt „Alle meine Entchen“ (C-Dur), Strophen 2–5 zweispaltig – Muster für Lieder mit vielen Strophen |
+| `vorlage_lied_haensel_gretel.tex` | Liedblatt „Hänsel und Gretel“ (G-Dur, 2/4) – Muster für Achtelpaare mit Balken, Viertel- und Achtelpause |
+| `vorlage_lied_gruen.tex` | Liedblatt „Grün, grün, grün sind alle meine Kleider“ (G-Dur, 2/4), 6 Strophen – Muster für Melismen mit Bindebogen |
 | `vorlage_quintenzirkel.tex` | Quintenzirkel in TikZ: großer Kreis, Dur außen, parallele Moll innen, außen je ein Notenlinien-Ausschnitt mit den Vorzeichen (Ges links, Fis rechts), Eselsbrücken und Merkregeln darunter; Schlüssel/Vorzeichen aus der Schrift `musix24` (`\char71/52/50`), **kein** `\usepackage{musixtex}` |
 | `vorlage_notenpapier_a5_{hoch,quer}_{mit,ohne}_schluessel.tex` | Blanko-Notenpapier A5; setzen nur zwei Schalter und laden `notenpapier.tex` (dort Linien- und Systemabstand einstellen). Druckfertige PDFs in `druckvorlagen/musik/` |
 
