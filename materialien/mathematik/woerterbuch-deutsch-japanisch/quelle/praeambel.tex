@@ -1,0 +1,442 @@
+%----------------------------------------------------------------------------------------------------%
+% Dokumentspezifische Befehle (nur für dieses Wörterbuch, deshalb lokal und nicht in newcommands.tex)
+%----------------------------------------------------------------------------------------------------%
+
+% Japanisch mit pdflatex: CJKutf8 setzt Kanji und Kana, sobald der Text in \begin{CJK}{UTF8}{ipxm} steht.
+% Schriften: IPAex Mincho (ipxm) und IPAex Gothic (ipxg) aus dem Paket ipaex-type1 (in TeX Live/MacTeX
+% enthalten). Das Paket steht bewusst hier und nicht in der universalen header.tex, weil es nur dieses
+% Dokument braucht und die japanischen Schriften sonst für jedes Dokument installiert sein müssten.
+\usepackage{CJKutf8}
+\newcommand{\jfett}[1]{\leavevmode{\CJKfamily{ipxg}#1}}   % Hervorhebung: im Japanischen Gothic statt fett
+% Absatzschutz: Beginnt ein Absatz mit einem japanischen Zeichen, öffnet CJK erst seine Gruppe und beginnt
+% dann den Absatz. Bricht TeX genau dort die Seite um, läuft die Ausgaberoutine innerhalb dieser Gruppe:
+% Kopf- und Fußzeile bekommen dann die Zeichentabelle (ToUnicode) der japanischen Schrift, und der
+% lateinische Text lässt sich im PDF nicht mehr suchen oder kopieren. Deshalb beginnt der Absatz hier
+% zuerst. Der Befehl steht direkt hinter \begin{CJK}, weil CJK seine Zeichenbefehle erst dort anlegt.
+\makeatletter
+\newcommand{\CJKabsatzschutz}{\global\let\CJK@altchar@ohne\CJK@altchar
+	\gdef\CJK@altchar{\leavevmode\CJK@altchar@ohne}}
+\makeatother
+\newcommand{\jp}[2]{#1 (\textit{#2})}           % japanisches Wort mit Umschrift im deutschen Fließtext
+
+% \eintrag{Marke}{Artikel}{Begriff}{Japanisch}{Lesung in Hiragana}{Umschrift}{Zeichen/Skizze}
+% Die Lesung bleibt leer, wenn der Begriff schon in Kana geschrieben ist.
+% Schaltet das babel-Kürzel " aus, BEVOR die Argumente gelesen werden (wie in den anderen Wörterbüchern).
+\makeatletter
+\newcommand\eintrag{\begingroup\shorthandoff{"}\eintrag@aux}
+\newcommand\eintrag@aux[7]{\endgroup
+	#2 \textbf{#3}\phantomsection\label{e:#1}
+	& \jfett{#4}\newline{\small\color{black!70}\ifx\relax#5\relax\else#5\hspace{0.6em}\fi\mbox{[#6]}}
+	& #7 \\ \midrule}
+\makeatother
+
+% Tabellenkopf für jedes Kapitel (wird auf jeder Folgeseite wiederholt)
+\newenvironment{woerter}{%
+	\arrayrulecolor{black!20}%
+	\begin{longtable}{>{\raggedright\arraybackslash}m{5.0cm} >{\raggedright\arraybackslash}m{6.4cm} >{\centering\arraybackslash}m{4.6cm}}
+		\rowcolor{cornflower!15}\textbf{Deutsch} & \textbf{Japanisch} & \textbf{Zeichen \,/\, Skizze} \\ \midrule
+		\endhead}{%
+	\end{longtable}\arrayrulecolor{black}}
+
+% Kleine Skizzen (Gestaltung wie im Skill latex-geometrie: Figur blau very thick, Maße/Hervorhebung rot)
+\tikzset{
+	fig/.style={blue, very thick},
+	mass/.style={red, thick},
+	hilf/.style={dashed},
+	achse/.style={-{Stealth[length=4pt]}, thin},
+}
+\newcommand{\skizze}[1]{\tikz[baseline=(current bounding box.center), scale=0.45, line cap=round,
+	line join=round, every node/.style={font=\scriptsize}, outer sep=0pt]{#1}}
+
+% Grundbegriffe
+\newcommand{\skPunkt}{\skizze{\fill[blue] (0,0) circle (2.5pt); \node[above right] at (0,0) {$P$};}}
+\newcommand{\skGerade}{\skizze{\draw[fig] (0,0) -- (3.6,0.8); \node[below right] at (3.2,0.7) {$g$};}}
+\newcommand{\skStrecke}{\skizze{\draw[fig] (0,0) -- (3.2,0.7); \fill (0,0) circle (2pt) (3.2,0.7) circle (2pt);
+	\node[below] at (0,0) {$A$}; \node[below] at (3.2,0.7) {$B$};}}
+\newcommand{\skStrahl}{\skizze{\draw[fig, -{Stealth}] (0,0) -- (3.6,0.8); \fill (0,0) circle (2pt);
+	\node[below] at (0,0) {$S$};}}
+\newcommand{\skParallel}{\skizze{\draw[fig] (0,0) -- (3.5,0.6) node[right] {$g$};
+	\draw[fig] (0,-0.9) -- (3.5,-0.3) node[right] {$h$};}}
+\newcommand{\skSenkrecht}{\skizze{\draw[fig] (-1.6,0) -- (1.6,0) node[right] {$g$};
+	\draw[fig] (0,-0.5) -- (0,1.8) node[right] {$h$};
+	\draw[mass] (0.45,0) arc[start angle=0, end angle=90, radius=0.45]; \fill[red] (45:0.24) circle (1pt);}}
+\newcommand{\skAbstand}{\skizze{\draw[fig] (-0.4,0) -- (3.2,0) node[right] {$g$}; \fill (1.4,1.6) circle (2pt) node[above] {$P$};
+	\draw[mass, hilf] (1.4,1.6) -- node[right] {$d$} (1.4,0);
+	\draw[mass] (1.75,0) arc[start angle=0, end angle=90, radius=0.35]; \fill[red] (1.4,0) ++(45:0.19) circle (0.8pt);}}
+
+% Winkel
+\newcommand{\skWinkel}[1]{\skizze{\draw[mass] (0.7,0) arc[start angle=0, end angle=#1, radius=0.7];
+	\draw[fig] (2.3,0) -- (0,0) -- (#1:2.3); \node at ({#1/2}:1.15) {$\alpha$};}}
+\newcommand{\skRechterWinkel}{\skizze{\draw[mass] (0.6,0) arc[start angle=0, end angle=90, radius=0.6];
+	\fill[red] (45:0.32) circle (1pt); \draw[fig] (2.3,0) -- (0,0) -- (0,2.3);}}
+\newcommand{\skVollwinkel}{\skizze{\draw[mass] (0.6,0) arc[start angle=0, end angle=355, radius=0.6];
+	\draw[fig] (0,0) -- (2.3,0); \fill[blue] (0,0) circle (1.5pt); \node at (135:1.0) {$\alpha$};}}
+\newcommand{\skNebenwinkel}{\skizze{\draw[mass] (0.7,0) arc[start angle=0, end angle=60, radius=0.7];
+	\draw[mass] (60:0.55) arc[start angle=60, end angle=180, radius=0.55];
+	\draw[fig] (-2.2,0) -- (2.2,0); \draw[fig] (0,0) -- (60:2.2);
+	\node at (28:1.15) {$\alpha$}; \node at (125:1.0) {$\beta$};}}
+\newcommand{\skScheitelwinkel}{\skizze{\draw[mass] (143.1:0.6) arc[start angle=143.1, end angle=201.8, radius=0.6];
+	\draw[mass] (323.1:0.6) arc[start angle=323.1, end angle=381.8, radius=0.6];
+	\draw[fig] (-2,-0.8) -- (2,0.8); \draw[fig] (-1.6,1.2) -- (1.6,-1.2);
+	\node at (172:1.05) {$\alpha$}; \node at (352:1.1) {$\alpha'$};}}
+\newcommand{\skStufenwinkel}{\skizze{\draw[mass] (0.5,0) arc[start angle=0, end angle=53.13, radius=0.5];
+	\draw[mass] (1.7,1.6) arc[start angle=0, end angle=53.13, radius=0.5];
+	\draw[fig] (-1.2,0) -- (2.6,0); \draw[fig] (-1.2,1.6) -- (2.6,1.6); \draw[fig] (-0.6,-0.8) -- (1.8,2.4);
+	\node at (26:0.85) {$\alpha$}; \node at ($(1.2,1.6)+(26:0.85)$) {$\beta$};}}
+\newcommand{\skWechselwinkel}{\skizze{\draw[mass] (0.5,0) arc[start angle=0, end angle=53.13, radius=0.5];
+	\draw[mass] (0.7,1.6) arc[start angle=180, end angle=233.13, radius=0.5];
+	\draw[fig] (-1.2,0) -- (2.6,0); \draw[fig] (-1.2,1.6) -- (2.6,1.6); \draw[fig] (-0.6,-0.8) -- (1.8,2.4);
+	\node at (26:0.85) {$\alpha$}; \node at ($(1.2,1.6)+(206:0.85)$) {$\beta$};}}
+
+% Abbildungen
+\newcommand{\skSymmetrieachse}{\skizze{\draw[fig] (0,0) -- (2.6,0) -- (1.3,2.1) -- cycle;
+	\draw[mass, hilf] (1.3,-0.5) -- (1.3,2.5);}}
+\newcommand{\skSpiegelung}{\skizze{\draw[mass, hilf] (0,-0.4) -- (0,1.8);
+	\draw[fig] (-2,0) -- (-0.5,0.3) -- (-1.5,1.4) -- cycle;
+	\draw[fig, blue!45] (2,0) -- (0.5,0.3) -- (1.5,1.4) -- cycle;}}
+\newcommand{\skVerschiebung}{\skizze{\draw[fig] (0,0) -- (1.3,0) -- (0.3,1.1) -- cycle;
+	\draw[fig, blue!45] (2,0.6) -- (3.3,0.6) -- (2.3,1.7) -- cycle;
+	\draw[mass, -{Stealth}] (0.3,1.1) -- (2.3,1.7);}}
+\newcommand{\skDrehung}{\skizze{\draw[fig] (0.6,0) -- (1.9,0) -- (0.8,0.9) -- cycle;
+	\draw[fig, blue!45] (0,0.6) -- (0,1.9) -- (-0.9,0.8) -- cycle;
+	\fill (0,0) circle (2pt) node[below left] {$Z$};
+	\draw[mass, -{Stealth}] (10:2.2) arc[start angle=10, end angle=80, radius=2.2];}}
+
+% Dreiecke
+\newcommand{\skDreieck}{\skizze{\draw[fig] (0,0) -- (3,0) -- (1,2) -- cycle;
+	\node[below left] at (0,0) {$A$}; \node[below right] at (3,0) {$B$}; \node[above] at (1,2) {$C$};}}
+\newcommand{\skRechtwinklig}{\skizze{\draw[mass] (0.5,0) arc[start angle=0, end angle=90, radius=0.5];
+	\fill[red] (45:0.27) circle (1pt); \draw[fig] (0,0) -- (3,0) -- (0,2) -- cycle;}}
+\newcommand{\skGleichschenklig}{\skizze{\draw[fig] (0,0) -- (2.6,0) -- (1.3,2.2) -- cycle;
+	\draw[mass] (0.52,1.176) -- (0.78,1.024); \draw[mass] (1.82,1.024) -- (2.08,1.176);}}
+\newcommand{\skGleichseitig}{\skizze{\draw[fig] (0,0) -- (2.6,0) -- (1.3,2.252) -- cycle;
+	\draw[mass] (1.3,-0.15) -- (1.3,0.15); \draw[mass] (0.52,1.201) -- (0.78,1.051);
+	\draw[mass] (1.82,1.051) -- (2.08,1.201);}}
+\newcommand{\skHypotenuse}{\skizze{\draw[fig] (0,2) -- (0,0) -- (3,0); \draw[red, very thick] (3,0) -- (0,2);
+	\draw[mass] (0.5,0) arc[start angle=0, end angle=90, radius=0.5]; \fill[red] (45:0.27) circle (1pt);
+	\node[above right] at (1.5,1) {$c$};}}
+\newcommand{\skKathete}{\skizze{\draw[fig] (3,0) -- (0,2); \draw[red, very thick] (0,2) -- (0,0) -- (3,0);
+	\draw[mass] (0.5,0) arc[start angle=0, end angle=90, radius=0.5]; \fill[red] (45:0.27) circle (1pt);
+	\node[left] at (0,1) {$b$}; \node[below] at (1.5,0) {$a$};}}
+\newcommand{\skPythagoras}{\skizze{\draw[fig] (0,0) -- (2,0) -- (0,1.5) -- cycle;
+	\draw[fig, fill=blue!10] (0,0) rectangle (2,-2); \draw[fig, fill=blue!10] (0,0) rectangle (-1.5,1.5);
+	\draw[fig, fill=red!10] (2,0) -- (3.5,2) -- (1.5,3.5) -- (0,1.5) -- cycle;
+	\node at (1,-1) {$a^2$}; \node at (-0.75,0.75) {$b^2$}; \node at (1.75,1.75) {$c^2$};}}
+\newcommand{\skHoehe}{\skizze{\draw[fig] (0,0) -- (3.2,0) -- (1,2) -- cycle;
+	\draw[mass, hilf] (1,2) -- node[right] {$h$} (1,0);
+	\draw[mass] (1.35,0) arc[start angle=0, end angle=90, radius=0.35]; \fill[red] (1,0) ++(45:0.19) circle (0.8pt);}}
+
+% Vierecke, Vielecke
+\newcommand{\skViereck}{\skizze{\draw[fig] (0,0) -- (2.8,0.3) -- (2.3,1.9) -- (0.4,1.5) -- cycle;}}
+\newcommand{\skQuadrat}{\skizze{\draw[fig] (0,0) rectangle (1.9,1.9);}}
+\newcommand{\skRechteck}{\skizze{\draw[fig] (0,0) rectangle (3.2,1.6);}}
+\newcommand{\skParallelogramm}{\skizze{\draw[fig] (0,0) -- (2.6,0) -- (3.4,1.5) -- (0.8,1.5) -- cycle;}}
+\newcommand{\skRaute}{\skizze{\draw[fig] (0,0) -- (1.4,-1) -- (2.8,0) -- (1.4,1) -- cycle;}}
+\newcommand{\skTrapez}{\skizze{\draw[fig] (0,0) -- (3.2,0) -- (2.4,1.5) -- (0.6,1.5) -- cycle;}}
+\newcommand{\skDrachen}{\skizze{\draw[fig] (1,0) -- (2,1.6) -- (1,2.3) -- (0,1.6) -- cycle;
+	\draw[mass, hilf] (1,-0.3) -- (1,2.6);}}
+\newcommand{\skFuenfeck}{\skizze{\draw[fig] (90:1.2) -- (162:1.2) -- (234:1.2) -- (306:1.2) -- (18:1.2) -- cycle;}}
+\newcommand{\skSechseck}{\skizze{\draw[fig] (0:1.2) -- (60:1.2) -- (120:1.2) -- (180:1.2) -- (240:1.2) -- (300:1.2) -- cycle;}}
+\newcommand{\skFlaeche}{\skizze{\filldraw[gray, opacity=0.5] (0,0) rectangle (3,1.6);
+	\draw[fig] (0,0) rectangle (3,1.6); \node at (1.5,0.8) {$A$};}}
+\newcommand{\skUmfangViereck}{\skizze{\draw[red, very thick] (0,0) rectangle (3,1.6); \node at (1.5,0.8) {$u$};}}
+
+% Kreis
+\newcommand{\skKreis}{\skizze{\draw[fig] (0,0) circle (1.2); \fill (0,0) circle (1.5pt);}}
+\newcommand{\skMittelpunkt}{\skizze{\draw[fig] (0,0) circle (1.2); \fill[red] (0,0) circle (2.5pt) node[below] {$M$};}}
+\newcommand{\skRadius}{\skizze{\draw[fig] (0,0) circle (1.2); \fill (0,0) circle (1.5pt) node[below] {$M$};
+	\draw[mass] (0,0) -- node[above] {$r$} (30:1.2);}}
+\newcommand{\skDurchmesser}{\skizze{\draw[fig] (0,0) circle (1.2); \fill (0,0) circle (1.5pt);
+	\draw[mass] (200:1.2) -- (20:1.2); \node[above] at (100:0.25) {$d$};}}
+\newcommand{\skKreisumfang}{\skizze{\draw[red, very thick] (0,0) circle (1.2); \fill (0,0) circle (1.5pt);}}
+\newcommand{\skSektor}{\skizze{\filldraw[gray, opacity=0.5] (0,0) -- (1.2,0) arc[start angle=0, end angle=70, radius=1.2] -- cycle;
+	\draw[fig] (0,0) circle (1.2); \draw[mass] (1.2,0) -- (0,0) -- (70:1.2);}}
+\newcommand{\skSehne}{\skizze{\draw[fig] (0,0) circle (1.2); \draw[mass] (160:1.2) -- (40:1.2);}}
+\newcommand{\skTangente}{\skizze{\draw[fig] (0,0) circle (1.1); \draw[mass] ($(50:1.1)+(140:1.5)$) -- ($(50:1.1)+(-40:1.5)$);
+	\fill[red] (50:1.1) circle (2.5pt);}}
+
+% Körper (Schrägbild: Tiefe unter 45° und halb so lang, verdeckte Kanten gestrichelt)
+\newcommand{\skWuerfel}{\skizze{\def\d{0.57}
+	\draw[fig, hilf, thick] (0,0) -- (\d,\d) -- (1.6+\d,\d) (\d,\d) -- (\d,1.6+\d);
+	\draw[fig] (0,0) rectangle (1.6,1.6); \draw[fig] (1.6,0) -- (1.6+\d,\d) -- (1.6+\d,1.6+\d) -- (\d,1.6+\d) -- (0,1.6)
+		(1.6,1.6) -- (1.6+\d,1.6+\d);}}
+\newcommand{\skQuader}{\skizze{\def\d{0.6}
+	\draw[fig, hilf, thick] (0,0) -- (\d,\d) -- (2.6+\d,\d) (\d,\d) -- (\d,1.3+\d);
+	\draw[fig] (0,0) rectangle (2.6,1.3); \draw[fig] (2.6,0) -- (2.6+\d,\d) -- (2.6+\d,1.3+\d) -- (\d,1.3+\d) -- (0,1.3)
+		(2.6,1.3) -- (2.6+\d,1.3+\d);}}
+\newcommand{\skPrisma}{\skizze{
+	\draw[fig, hilf, thick] (0,0) -- (1.4,0.7) -- (3,0.7) (1.4,0.7) -- (2.2,2);
+	\draw[fig] (0,0) -- (1.6,0) -- (0.8,1.3) -- cycle;
+	\draw[fig] (1.6,0) -- (3,0.7) -- (2.2,2) -- (0.8,1.3);}}
+\newcommand{\skZylinder}{\skizze{
+	\draw[fig, hilf, thick] (1,0) arc[start angle=0, end angle=180, x radius=1, y radius=0.3];
+	\draw[fig] (-1,0) arc[start angle=180, end angle=360, x radius=1, y radius=0.3];
+	\draw[fig] (0,1.9) ellipse[x radius=1, y radius=0.3];
+	\draw[fig] (-1,0) -- (-1,1.9) (1,0) -- (1,1.9);}}
+\newcommand{\skKegel}{\skizze{
+	\draw[fig, hilf, thick] (1,0) arc[start angle=0, end angle=180, x radius=1, y radius=0.3];
+	\draw[fig] (-1,0) arc[start angle=180, end angle=360, x radius=1, y radius=0.3];
+	\draw[fig] (-1,0) -- (0,2.2) -- (1,0);}}
+\newcommand{\skPyramide}{\skizze{
+	\draw[fig, hilf, thick] (0,0) -- (0.8,0.6) -- (2.8,0.6) (0.8,0.6) -- (1.4,2.3);
+	\draw[fig] (0,0) -- (2,0) -- (2.8,0.6) -- (1.4,2.3) -- cycle (2,0) -- (1.4,2.3);}}
+\newcommand{\skKugel}{\skizze{\draw[fig] (0,0) circle (1.1);
+	\draw[fig, hilf, thick] (1.1,0) arc[start angle=0, end angle=180, x radius=1.1, y radius=0.3];
+	\draw[fig] (-1.1,0) arc[start angle=180, end angle=360, x radius=1.1, y radius=0.3];}}
+\newcommand{\skKante}{\skizze{\def\d{0.57}
+	\draw[fig, hilf, thick] (0,0) -- (\d,\d) -- (1.6+\d,\d) (\d,\d) -- (\d,1.6+\d);
+	\draw[fig] (0,0) rectangle (1.6,1.6); \draw[fig] (1.6,0) -- (1.6+\d,\d) -- (1.6+\d,1.6+\d) -- (\d,1.6+\d) -- (0,1.6);
+	\draw[red, very thick] (1.6,1.6) -- (1.6+\d,1.6+\d);}}
+\newcommand{\skEcke}{\skizze{\def\d{0.57}
+	\draw[fig, hilf, thick] (0,0) -- (\d,\d) -- (1.6+\d,\d) (\d,\d) -- (\d,1.6+\d);
+	\draw[fig] (0,0) rectangle (1.6,1.6); \draw[fig] (1.6,0) -- (1.6+\d,\d) -- (1.6+\d,1.6+\d) -- (\d,1.6+\d) -- (0,1.6)
+		(1.6,1.6) -- (1.6+\d,1.6+\d); \fill[red] (1.6+\d,1.6+\d) circle (2.5pt);}}
+\newcommand{\skSeitenflaeche}{\skizze{\def\d{0.57}
+	\draw[fig, hilf, thick] (0,0) -- (\d,\d) -- (1.6+\d,\d) (\d,\d) -- (\d,1.6+\d);
+	\fill[gray, opacity=0.5] (0,0) rectangle (1.6,1.6);
+	\draw[fig] (0,0) rectangle (1.6,1.6); \draw[fig] (1.6,0) -- (1.6+\d,\d) -- (1.6+\d,1.6+\d) -- (\d,1.6+\d) -- (0,1.6)
+		(1.6,1.6) -- (1.6+\d,1.6+\d);}}
+\newcommand{\skNetz}{\skizze{\begin{scope}[scale=0.62]
+	\foreach \x/\y in {1/0, 0/1, 1/1, 2/1, 3/1, 1/2} {\draw[fig, fill=blue!8] (\x,\y) rectangle ++(1,1);}
+	\end{scope}}}
+
+% Funktionen (Achsen dünn mit Pfeil, Graph blau, Hervorhebungen rot)
+\newcommand{\achsen}[4]{\draw[achse] (#1,0) -- (#2,0) node[below left] {$x$}; \draw[achse] (0,#3) -- (0,#4) node[below left] {$y$};}
+\newcommand{\skKoordinaten}{\skizze{\draw[black!25, very thin] (-1.5,-1.5) grid (2.5,2); \achsen{-1.6}{2.7}{-1.6}{2.2}
+	\fill[red] (1,1.5) circle (2pt) node[right] {$P$};}}
+\newcommand{\skGraph}{\skizze{\achsen{-1.8}{2.4}{-0.6}{2.4}
+	\begin{scope}\clip (-1.8,-0.6) rectangle (2.2,2.2); \draw[fig, domain=-1.8:2.2, samples=40] plot (\x, {0.3*\x*\x*\x - 0.6*\x + 0.9});\end{scope}}}
+\newcommand{\skXAchse}{\skizze{\draw[achse, red, thick] (-1.8,0) -- (2.4,0) node[below left] {$x$}; \draw[achse] (0,-1.2) -- (0,1.6) node[below left] {$y$};}}
+\newcommand{\skParabel}{\skizze{\achsen{-1.9}{1.9}{-0.6}{2.4}
+	\begin{scope}\clip (-1.9,-0.6) rectangle (1.9,2.2); \draw[fig, domain=-1.8:1.8, samples=40] plot (\x, {0.7*\x*\x});\end{scope}}}
+\newcommand{\skScheitelpunkt}{\skizze{\achsen{-0.6}{3}{-0.6}{2.4}
+	\begin{scope}\clip (-0.6,-0.6) rectangle (3,2.2); \draw[fig, domain=-0.3:3, samples=40] plot (\x, {0.7*(\x-1.4)*(\x-1.4)+0.4});\end{scope}
+	\fill[red] (1.4,0.4) circle (2.5pt) node[below] {$S$};}}
+\newcommand{\skNullstelle}{\skizze{\achsen{-1.9}{1.9}{-1.2}{1.8}
+	\begin{scope}\clip (-1.9,-1.2) rectangle (1.9,1.6); \draw[fig, domain=-1.8:1.8, samples=40] plot (\x, {0.6*\x*\x-0.9});\end{scope}
+	\fill[red] (-1.2247,0) circle (2.5pt) (1.2247,0) circle (2.5pt);}}
+\newcommand{\skLinear}{\skizze{\achsen{-0.8}{3}{-0.6}{2.4}
+	\begin{scope}\clip (-0.8,-0.6) rectangle (3,2.2); \draw[fig, domain=-0.8:3] plot (\x, {0.5*\x+0.5});\end{scope}}}
+\newcommand{\skSteigung}{\skizze{\achsen{-0.8}{3}{-0.6}{2.4}
+	\begin{scope}\clip (-0.8,-0.6) rectangle (3,2.2); \draw[fig, domain=-0.8:3] plot (\x, {0.5*\x+0.5});\end{scope}
+	\draw[mass] (0.6,0.8) -- node[below] {$\Delta x$} (2.2,0.8) -- node[right] {$\Delta y$} (2.2,1.6);}}
+\newcommand{\skAchsenabschnitt}{\skizze{\achsen{-0.8}{3}{-0.6}{2.4}
+	\begin{scope}\clip (-0.8,-0.6) rectangle (3,2.2); \draw[fig, domain=-0.8:3] plot (\x, {0.5*\x+0.5});\end{scope}
+	\fill[red] (0,0.5) circle (2.5pt) node[left] {$n$};}}
+\newcommand{\skSchnittpunkt}{\skizze{\draw[fig] (-0.2,0) -- (3,1.6); \draw[fig] (-0.2,1.8) -- (3,0.2);
+	\fill[red] (1.6,0.9) circle (2.5pt) node[above=2pt] {$S$};}}
+\newcommand{\skExponential}{\skizze{\achsen{-1.9}{1.9}{-0.6}{2.4}
+	\begin{scope}\clip (-1.9,-0.6) rectangle (1.9,2.2); \draw[fig, domain=-1.9:1.9, samples=40] plot (\x, {0.5*2^\x});\end{scope}}}
+\newcommand{\skLogarithmus}{\skizze{\achsen{-0.6}{3.2}{-1.4}{1.6}
+	\begin{scope}\clip (-0.6,-1.4) rectangle (3.2,1.4); \draw[fig, domain=0.2:3.2, samples=40] plot (\x, {ln(\x)});\end{scope}}}
+\newcommand{\sinusgraph}{\achsen{-0.3}{3.5}{-1.2}{1.4}\draw[fig, domain=0:3.3, samples=50] plot (\x, {0.9*sin(2*\x r)});}
+\newcommand{\skSinus}{\skizze{\sinusgraph}}
+\newcommand{\skKosinus}{\skizze{\achsen{-0.3}{3.5}{-1.2}{1.4}\draw[fig, domain=0:3.3, samples=50] plot (\x, {0.9*cos(2*\x r)});}}
+\newcommand{\skHochpunkt}{\skizze{\sinusgraph \fill[red] (0.785,0.9) circle (2.5pt) node[above] {$H$};}}
+\newcommand{\skTiefpunkt}{\skizze{\sinusgraph \fill[red] (2.356,-0.9) circle (2.5pt) node[below] {$T$};}}
+\newcommand{\skWendepunkt}{\skizze{\sinusgraph \fill[red] (1.571,0) circle (2.5pt) node[above right] {$W$};}}
+\newcommand{\skMonotonSteigend}{\skizze{\achsen{-0.4}{3}{-0.4}{2.2}\draw[fig, domain=0:2.7, samples=40] plot (\x, {0.25*\x*\x+0.2});}}
+\newcommand{\skMonotonFallend}{\skizze{\achsen{-0.4}{3}{-0.4}{2.2}\draw[fig, domain=0.25:2.8, samples=40] plot (\x, {0.5/\x+0.1});}}
+\newcommand{\skAchsensymmetrisch}{\skizze{\draw[mass, hilf] (0,-0.6) -- (0,2.2); \achsen{-1.9}{1.9}{-0.6}{2.4}
+	\begin{scope}\clip (-1.9,-0.6) rectangle (1.9,2.2); \draw[fig, domain=-1.8:1.8, samples=40] plot (\x, {0.3*\x*\x*\x*\x - 0.9*\x*\x + 1});\end{scope}}}
+\newcommand{\skPunktsymmetrisch}{\skizze{\achsen{-1.9}{1.9}{-1.4}{1.6}
+	\begin{scope}\clip (-1.9,-1.4) rectangle (1.9,1.4); \draw[fig, domain=-1.8:1.8, samples=40] plot (\x, {0.4*\x*\x*\x - 0.9*\x});\end{scope}
+	\fill[red] (0,0) circle (2.5pt);}}
+\newcommand{\skAsymptote}{\skizze{\achsen{-0.4}{3.2}{-0.4}{2.4}\draw[mass, hilf] (-0.3,0.4) -- (3.1,0.4);
+	\draw[fig, domain=0.3:3.1, samples=40] plot (\x, {0.5/\x+0.4});}}
+\newcommand{\skIntegral}{\skizze{\fill[gray, opacity=0.5] (0.5,0) -- plot[domain=0.5:2.5, samples=30] (\x, {0.3*(\x-1.5)*(\x-1.5)+0.6}) -- (2.5,0) -- cycle;
+	\achsen{-0.4}{3.2}{-0.4}{2.2}\draw[fig, domain=0.1:2.9, samples=40] plot (\x, {0.3*(\x-1.5)*(\x-1.5)+0.6});
+	\node[below] at (0.5,0) {$a$}; \node[below] at (2.5,0) {$b$};}}
+\newcommand{\skTangenteGraph}{\skizze{\achsen{-0.4}{3.2}{-0.4}{2.4}
+	\begin{scope}\clip (-0.4,-0.4) rectangle (3.2,2.2); \draw[fig, domain=0:3, samples=40] plot (\x, {0.25*\x*\x});
+	\draw[mass] (0.4,-0.4) -- (3.2,2.4);\end{scope} \fill[red] (2,1) circle (2pt);}}
+\newcommand{\skFolge}{\skizze{\achsen{-0.3}{3.4}{-0.3}{2.2}
+	\foreach \n in {1,...,10} {\fill[blue] ({0.3*\n},{1.6-1.2/\n}) circle (1.6pt);}
+	\draw[mass, hilf] (0,1.6) -- (3.2,1.6);}}
+
+% Vektoren
+\newcommand{\skVektor}{\skizze{\draw[mass, very thick, -{Stealth}] (0,0) -- node[above left] {$\vec{a}$} (2.6,1.3);}}
+\newcommand{\skOrtsvektor}{\skizze{\achsen{-0.4}{3}{-0.4}{2.2}\draw[mass, very thick, -{Stealth}] (0,0) -- (2.2,1.5);
+	\fill (2.2,1.5) circle (2pt) node[above] {$P$}; \node[below left] at (0,0) {$O$};}}
+\newcommand{\skKreuzprodukt}{\skizze{\draw[fig, -{Stealth}] (0,0) -- (2.2,0) node[below] {$\vec{a}$};
+	\draw[fig, -{Stealth}] (0,0) -- (1,-0.8) node[below] {$\vec{b}$};
+	\draw[mass, very thick, -{Stealth}] (0,0) -- (0,2) node[right] {$\vec{a}\times\vec{b}$};}}
+\newcommand{\skEbene}{\skizze{\filldraw[blue!10, draw=blue, very thick] (0,0) -- (2.8,0) -- (3.6,1.4) -- (0.8,1.4) -- cycle;
+	\node at (1.8,0.7) {$E$};}}
+
+% Mengen (wie im Skill latex-venn-diagramme: Schnitt über \clip)
+\newcommand{\venn}{\draw[fig] (0,0) circle (1) (1.2,0) circle (1); \node at (-0.5,0) {$A$}; \node at (1.7,0) {$B$};}
+\newcommand{\skSchnittmenge}{\skizze{\begin{scope}\clip (0,0) circle (1); \fill[gray, opacity=0.5] (1.2,0) circle (1);\end{scope}\venn}}
+\newcommand{\skVereinigung}{\skizze{\fill[gray, opacity=0.5] (0,0) circle (1) (1.2,0) circle (1);\venn}}
+\newcommand{\skTeilmenge}{\skizze{\draw[fig] (0,0) ellipse[x radius=1.6, y radius=1.1]; \draw[fig, fill=gray!40] (-0.5,-0.1) circle (0.55);
+	\node at (-0.5,-0.1) {$A$}; \node at (0.8,0.3) {$B$};}}
+
+% Stochastik
+\newcommand{\skBaum}{\skizze{\draw[fig, thick] (0,0) -- (1.4,0.9) (0,0) -- (1.4,-0.9) (1.4,0.9) -- (2.8,1.35) (1.4,0.9) -- (2.8,0.45)
+	(1.4,-0.9) -- (2.8,-0.45) (1.4,-0.9) -- (2.8,-1.35);
+	\foreach \p in {(0,0),(1.4,0.9),(1.4,-0.9),(2.8,1.35),(2.8,0.45),(2.8,-0.45),(2.8,-1.35)} {\fill[blue] \p circle (1.6pt);}}}
+\newcommand{\skVierfeldertafel}{{\scriptsize\begin{tabular}{c|cc|c}
+	& $B$ & $\overline{B}$ & \\ \hline $A$ & & & \\ $\overline{A}$ & & & \\ \hline & & & $1$\end{tabular}}}
+\newcommand{\skWertetabelle}{{\scriptsize\begin{tabular}{c|c|c|c|c} $x$ & $0$ & $1$ & $2$ & $3$ \\ \hline $y$ & $1$ & $3$ & $5$ & $7$\end{tabular}}}
+\newcommand{\skSaeulen}{\skizze{\draw[achse] (-0.2,0) -- (3.4,0); \draw[achse] (0,-0.2) -- (0,2.2);
+	\foreach \k/\h in {1/0.4, 2/1.2, 3/1.8, 4/1.2, 5/0.4} {\filldraw[fill=blue!25, draw=blue, thick] ({0.55*\k-0.2},0) rectangle ++(0.4,\h);}}}
+
+% Ober- und Untersumme (Ergänzung aus Teil II)
+\newcommand{\rechtecksumme}[2]{\skizze{\foreach \i in {0,...,3} {
+		\pgfmathsetmacro{\xl}{0.4+0.6*\i} \pgfmathsetmacro{\xr}{1.0+0.6*\i}
+		\pgfmathsetmacro{\h}{0.18*(#1)*(#1)+0.3}
+		\filldraw[fill=#2!30, draw=#2] (\xl,0) rectangle (\xr,\h);}
+	\achsen{-0.3}{3.2}{-0.3}{2.4}\draw[fig, domain=0:2.9, samples=30] plot (\x, {0.18*\x*\x+0.3});}}
+\newcommand{\skUntersumme}{\rechtecksumme{\xl}{gray}}
+\newcommand{\skObersumme}{\rechtecksumme{\xr}{red}}
+
+%----------------------------------------------------------------------------------------------------%
+% Ergänzungen: Geometrie, Körper, analytische Geometrie
+%----------------------------------------------------------------------------------------------------%
+\newcommand{\skScheitel}{\skizze{\draw[fig] (2.3,0) -- (0,0) -- (50:2.3); \fill[red] (0,0) circle (3pt) node[below] {$S$};}}
+\newcommand{\skSchenkel}{\skizze{\draw[fig] (0,0) -- (50:2.3); \draw[red, very thick] (0,0) -- (2.3,0); \fill (0,0) circle (1.5pt);}}
+\newcommand{\skKomplement}{\skizze{\draw[mass] (0.8,0) arc[start angle=0, end angle=35, radius=0.8];
+	\draw[mass] (35:1.1) arc[start angle=35, end angle=90, radius=1.1];
+	\draw[fig] (2.3,0) -- (0,0) -- (0,2.3); \draw[fig] (0,0) -- (35:2.3);
+	\node at (17:1.25) {$\alpha$}; \node at (62:1.5) {$\beta$};}}
+\newcommand{\skEntgegen}{\skizze{\draw[mass] (0.5,0) arc[start angle=0, end angle=53.13, radius=0.5];
+	\draw[mass] ($(1.2,1.6)+(233.13:0.45)$) arc[start angle=233.13, end angle=360, radius=0.45];
+	\draw[fig] (-1.2,0) -- (2.6,0); \draw[fig] (-1.2,1.6) -- (2.6,1.6); \draw[fig] (-0.6,-0.8) -- (1.8,2.4);
+	\node at (26:0.85) {$\alpha$}; \node at ($(1.2,1.6)+(300:0.8)$) {$\beta$};}}
+\newcommand{\skMittelsenkrechte}{\skizze{\draw[fig] (0,0) -- (3,0); \fill (0,0) circle (2pt) (3,0) circle (2pt);
+	\draw[mass] (1.5,-0.8) -- (1.5,1.4); \draw[mass] (1.85,0) arc[start angle=0, end angle=90, radius=0.35];
+	\fill[red] (1.5,0) ++(45:0.19) circle (0.8pt); \draw[mass] (0.75,-0.13) -- (0.75,0.13) (2.25,-0.13) -- (2.25,0.13);}}
+\newcommand{\skWinkelhalbierende}{\skizze{\draw[mass] (0.8,0) arc[start angle=0, end angle=30, radius=0.8];
+	\draw[mass] (30:0.95) arc[start angle=30, end angle=60, radius=0.95];
+	\draw[fig] (2.3,0) -- (0,0) -- (60:2.3); \draw[mass, hilf] (0,0) -- (30:2.6);}}
+\newcommand{\skInnenwinkel}{\skizze{\draw[mass] (0.55,0) arc[start angle=0, end angle=63.43, radius=0.55];
+	\draw[mass] ($(3,0)+(135:0.55)$) arc[start angle=135, end angle=180, radius=0.55];
+	\draw[mass] ($(1,2)+(243.43:0.5)$) arc[start angle=243.43, end angle=315, radius=0.5];
+	\draw[fig] (0,0) -- (3,0) -- (1,2) -- cycle;}}
+\newcommand{\skAussenwinkel}{\skizze{\draw[mass] (3.6,0) arc[start angle=0, end angle=135, radius=0.6];
+	\draw[fig] (0,0) -- (3,0) -- (1,2) -- cycle; \draw[fig, hilf, thick] (3,0) -- (4.3,0);
+	\node at ($(3,0)+(60:0.98)$) {$\delta$};}}
+\newcommand{\skBasis}{\skizze{\draw[fig] (0,0) -- (1.3,2.2) -- (2.6,0); \draw[red, very thick] (0,0) -- (2.6,0);}}
+\newcommand{\skBasiswinkel}{\skizze{\draw[mass] (0.6,0) arc[start angle=0, end angle=59.4, radius=0.6];
+	\draw[mass] ($(2.6,0)+(120.6:0.6)$) arc[start angle=120.6, end angle=180, radius=0.6];
+	\draw[fig] (0,0) -- (2.6,0) -- (1.3,2.2) -- cycle;}}
+\newcommand{\rwdreieck}{\draw[mass] (0.85,0) arc[start angle=0, end angle=30.96, radius=0.85]; \node at (14:1.2) {$\alpha$};
+	\draw[black!60, thick] (3,0.4) arc[start angle=90, end angle=180, radius=0.4]; \fill[black!60] ($(3,0)+(135:0.2)$) circle (0.8pt);}
+\newcommand{\skAnkathete}{\skizze{\rwdreieck \draw[fig] (0,0) -- (3,1.8) -- (3,0); \draw[red, very thick] (0,0) -- (3,0);}}
+\newcommand{\skGegenkathete}{\skizze{\rwdreieck \draw[fig] (3,0) -- (0,0) -- (3,1.8); \draw[red, very thick] (3,0) -- (3,1.8);}}
+\newcommand{\skSeitenhalbierende}{\skizze{\draw[fig] (0,0) -- (3,0) -- (1,2) -- cycle; \draw[mass] (1,2) -- (1.5,0);
+	\draw[mass] (0.75,-0.13) -- (0.75,0.13) (2.25,-0.13) -- (2.25,0.13);}}
+\newcommand{\skInkreis}{\skizze{\draw[fig] (0,0) -- (3,0) -- (1,2) -- cycle; \draw[mass] (1.204,0.744) circle (0.744);}}
+\newcommand{\skUmkreis}{\skizze{\draw[mass] (1.5,0.5) circle (1.581); \draw[fig] (0,0) -- (3,0) -- (1,2) -- cycle;}}
+\newcommand{\skDiagonale}{\skizze{\draw[fig] (0,0) rectangle (3,1.6); \draw[mass] (0,0) -- (3,1.6);}}
+\newcommand{\skNeck}[1]{\skizze{\draw[fig] (90:1.2) \foreach \k in {1,...,#1} { -- ({90+\k*360/#1}:1.2) } -- cycle;}}
+\newcommand{\skSekante}{\skizze{\draw[fig] (0,0) circle (1.2); \draw[mass] ($(150:1.2)!-0.35!(30:1.2)$) -- ($(150:1.2)!1.35!(30:1.2)$);
+	\fill[red] (150:1.2) circle (1.6pt) (30:1.2) circle (1.6pt);}}
+\newcommand{\skBeruehrpunkt}{\skizze{\draw[fig] (0,0) circle (1.1); \draw[fig, thick] ($(50:1.1)+(140:1.5)$) -- ($(50:1.1)+(-40:1.5)$);
+	\fill[red] (50:1.1) circle (3pt) node[above right] {$B$};}}
+\newcommand{\skKreisbogen}{\skizze{\draw[fig] (0,0) circle (1.2); \draw[red, line width=1.8pt] (20:1.2) arc[start angle=20, end angle=110, radius=1.2];}}
+\newcommand{\skKreisabschnitt}{\skizze{\fill[gray, opacity=0.5] (150:1.2) arc[start angle=150, end angle=30, radius=1.2] -- cycle;
+	\draw[fig] (0,0) circle (1.2); \draw[mass] (150:1.2) -- (30:1.2);}}
+\newcommand{\skKreisflaeche}{\skizze{\filldraw[fill=gray!50, draw=blue, very thick] (0,0) circle (1.2);}}
+
+% Körper
+\newcommand{\wuerfelbasis}{\def\d{0.57}\draw[fig, hilf, thick] (0,0) -- (\d,\d) -- (1.6+\d,\d) (\d,\d) -- (\d,1.6+\d);
+	\draw[fig] (0,0) rectangle (1.6,1.6); \draw[fig] (1.6,0) -- (1.6+\d,\d) -- (1.6+\d,1.6+\d) -- (\d,1.6+\d) -- (0,1.6) (1.6,1.6) -- (1.6+\d,1.6+\d);}
+\newcommand{\quaderbasis}{\def\d{0.6}\draw[fig, hilf, thick] (0,0) -- (\d,\d) -- (2.6+\d,\d) (\d,\d) -- (\d,1.3+\d);
+	\draw[fig] (0,0) rectangle (2.6,1.3); \draw[fig] (2.6,0) -- (2.6+\d,\d) -- (2.6+\d,1.3+\d) -- (\d,1.3+\d) -- (0,1.3) (2.6,1.3) -- (2.6+\d,1.3+\d);}
+\newcommand{\zylinderbasis}{\draw[fig, hilf, thick] (1,0) arc[start angle=0, end angle=180, x radius=1, y radius=0.3];
+	\draw[fig] (-1,0) arc[start angle=180, end angle=360, x radius=1, y radius=0.3];
+	\draw[fig] (0,1.9) ellipse[x radius=1, y radius=0.3]; \draw[fig] (-1,0) -- (-1,1.9) (1,0) -- (1,1.9);}
+\newcommand{\skFlaechendiagonale}{\skizze{\wuerfelbasis \draw[red, very thick] (0,0) -- (1.6,1.6);}}
+\newcommand{\skRaumdiagonale}{\skizze{\wuerfelbasis \draw[red, very thick] (0,0) -- (1.6+\d,1.6+\d);}}
+\newcommand{\skGrundflaeche}{\skizze{\quaderbasis \fill[red, opacity=0.4] (0,0) -- (2.6,0) -- (2.6+\d,\d) -- (\d,\d) -- cycle;}}
+\newcommand{\skDeckflaeche}{\skizze{\quaderbasis \fill[red, opacity=0.4] (0,1.3) -- (2.6,1.3) -- (2.6+\d,1.3+\d) -- (\d,1.3+\d) -- cycle;}}
+\newcommand{\skMantel}{\skizze{\fill[red, opacity=0.35] (-1,0) arc[start angle=180, end angle=360, x radius=1, y radius=0.3] -- (1,1.9)
+	arc[start angle=0, end angle=-180, x radius=1, y radius=0.3] -- cycle; \zylinderbasis}}
+\newcommand{\skPyramidenstumpf}{\skizze{\draw[fig, hilf, thick] (0,0) -- (0.8,0.6) -- (2.8,0.6) (0.8,0.6) -- (1.1,1.45);
+	\draw[fig] (0,0) -- (2,0) -- (2.8,0.6) -- (2.1,1.45) -- (1.1,1.45) -- (0.7,1.15) -- cycle (0.7,1.15) -- (1.7,1.15) -- (2.1,1.45) (1.7,1.15) -- (2,0);}}
+\newcommand{\skKegelstumpf}{\skizze{\draw[fig, hilf, thick] (1.1,0) arc[start angle=0, end angle=180, x radius=1.1, y radius=0.3];
+	\draw[fig] (-1.1,0) arc[start angle=180, end angle=360, x radius=1.1, y radius=0.3];
+	\draw[fig] (0,1.5) ellipse[x radius=0.5, y radius=0.15]; \draw[fig] (-1.1,0) -- (-0.5,1.5) (1.1,0) -- (0.5,1.5);}}
+\newcommand{\skTetraeder}{\skizze{\draw[fig, hilf, thick] (0,0) -- (2.6,0.3);
+	\draw[fig] (0,0) -- (1.6,-0.4) -- (2.6,0.3) -- (1.3,1.9) -- cycle (1.6,-0.4) -- (1.3,1.9);}}
+\newcommand{\skHohlzylinder}{\skizze{\zylinderbasis \draw[fig] (0,1.9) ellipse[x radius=0.5, y radius=0.15];
+	\draw[fig, hilf, thin] (-0.5,0) -- (-0.5,1.9) (0.5,0) -- (0.5,1.9);}}
+\newcommand{\skSchieferZylinder}{\skizze{\draw[fig, hilf, thick] (1,0) arc[start angle=0, end angle=180, x radius=1, y radius=0.3];
+	\draw[fig] (-1,0) arc[start angle=180, end angle=360, x radius=1, y radius=0.3];
+	\draw[fig] (0.8,1.8) ellipse[x radius=1, y radius=0.3]; \draw[fig] (-1,0) -- (-0.2,1.8) (1,0) -- (1.8,1.8);}}
+\newcommand{\drehachse}[2]{\draw[dash dot] (0,#1) -- (0,#2); \draw[mass, -{Stealth[length=3pt]}] (-0.3,#2-0.15) arc[start angle=180, end angle=500, x radius=0.3, y radius=0.1];}
+\newcommand{\skRotation}{\skizze{\filldraw[fill=gray!50, draw=blue, very thick] (0,-1.1) arc[start angle=-90, end angle=90, radius=1.1] -- cycle;
+	\draw[fig, hilf, thick] (0,1.1) arc[start angle=90, end angle=270, radius=1.1]; \drehachse{-1.4}{1.6}}}
+\newcommand{\skKugelsegment}{\skizze{\fill[gray, opacity=0.5] (27.04:1.1) arc[start angle=27.04, end angle=152.96, radius=1.1] -- cycle;
+	\draw[fig] (0,0) circle (1.1); \draw[fig] (-0.98,0.5) arc[start angle=180, end angle=360, x radius=0.98, y radius=0.2];
+	\draw[fig, hilf, thick] (0.98,0.5) arc[start angle=0, end angle=180, x radius=0.98, y radius=0.2];}}
+\newcommand{\skKugelsektor}{\skizze{\fill[gray, opacity=0.5] (0,0) -- (55:1.1) arc[start angle=55, end angle=125, radius=1.1] -- cycle;
+	\draw[fig] (0,0) circle (1.1); \draw[fig, thick] (55:1.1) -- (0,0) -- (125:1.1);
+	\draw[fig, thick] (-0.63,0.9) arc[start angle=180, end angle=360, x radius=0.63, y radius=0.13];}}
+\newcommand{\skEllipsoid}{\skizze{\draw[fig] (0,0) ellipse[x radius=1.5, y radius=0.9];
+	\draw[fig, hilf, thick] (1.5,0) arc[start angle=0, end angle=180, x radius=1.5, y radius=0.3];
+	\draw[fig] (-1.5,0) arc[start angle=180, end angle=360, x radius=1.5, y radius=0.3];}}
+\newcommand{\skParaboloid}{\skizze{\draw[fig, domain=-1.3:1.3, samples=30] plot (\x, {0.9*\x*\x});
+	\draw[fig] (0,1.521) ellipse[x radius=1.3, y radius=0.22];}}
+\newcommand{\skHyperboloid}{\skizze{\draw[fig, domain=-1.2:1.2, samples=30, variable=\t] plot ({0.55*cosh(\t)}, {0.9*sinh(\t)});
+	\draw[fig, domain=-1.2:1.2, samples=30, variable=\t] plot ({-0.55*cosh(\t)}, {0.9*sinh(\t)});
+	\draw[fig] (0,1.358) ellipse[x radius=0.996, y radius=0.2];
+	\draw[fig] (-0.996,-1.358) arc[start angle=180, end angle=360, x radius=0.996, y radius=0.2];
+	\draw[fig, hilf, thick] (0.996,-1.358) arc[start angle=0, end angle=180, x radius=0.996, y radius=0.2];}}
+
+% Trigonometrie und analytische Geometrie
+\newcommand{\skEinheitskreis}{\skizze{\achsen{-1.6}{1.9}{-1.5}{1.8}\draw[fig] (0,0) circle (1.1); \node[below right] at (1.05,0) {$1$};}}
+\newcommand{\skBogenmass}{\skizze{\draw[fig] (1.6,0) -- (0,0) -- (60:1.6); \draw[red, very thick] (1.6,0) arc[start angle=0, end angle=60, radius=1.6];
+	\node at (30:2.0) {$b$}; \node[below] at (0.8,0) {$r$}; \node at (30:0.6) {$\alpha$};}}
+\newcommand{\skPolar}{\skizze{\achsen{-0.4}{3}{-0.4}{2.4}\draw[mass] (0.9,0) arc[start angle=0, end angle=36, radius=0.9];
+	\draw[mass, very thick] (0,0) -- node[above left, inner sep=1pt] {$r$} (2.2,1.6); \fill (2.2,1.6) circle (2pt) node[above] {$P$};
+	\node at (17:1.35) {$\varphi$};}}
+\newcommand{\skKreisgleichung}{\skizze{\achsen{-1.7}{1.9}{-1.6}{1.8}\draw[fig] (0,0) circle (1.2); \draw[mass] (0,0) -- node[above left, inner sep=1pt] {$r$} (35:1.2);}}
+\newcommand{\ellipsebasis}{\achsen{-2}{2.2}{-1.4}{1.6}\draw[fig] (0,0) ellipse[x radius=1.6, y radius=1];}
+\newcommand{\skEllipse}{\skizze{\ellipsebasis}}
+\newcommand{\skBrennpunkt}{\skizze{\ellipsebasis \fill[red] (-1.249,0) circle (2.5pt) node[below] {$F_1$} (1.249,0) circle (2.5pt) node[below] {$F_2$};}}
+\newcommand{\skHalbachse}{\skizze{\ellipsebasis \draw[red, very thick] (0,0) -- node[below] {$a$} (1.6,0) (0,0) -- node[left] {$b$} (0,1);}}
+\newcommand{\skHyperbel}{\skizze{\achsen{-2.2}{2.4}{-1.6}{1.8}
+	\draw[fig, domain=-1.6:1.6, samples=30, variable=\t] plot ({0.7*cosh(\t)}, {0.6*sinh(\t)});
+	\draw[fig, domain=-1.6:1.6, samples=30, variable=\t] plot ({-0.7*cosh(\t)}, {0.6*sinh(\t)});}}
+\newcommand{\skLeitlinie}{\skizze{\achsen{-1.2}{2.4}{-1.7}{1.9}
+	\draw[fig, domain=-1.5:1.5, samples=30, variable=\t] plot ({\t*\t/1.6}, {\t});
+	\draw[mass, hilf] (-0.4,-1.6) -- (-0.4,1.7) node[left] {$l$}; \fill (0.4,0) circle (2pt) node[below right] {$F$};}}
+
+%----------------------------------------------------------------------------------------------------%
+% Teil B: Lesen und Sprechen (dokumentspezifisch)
+%----------------------------------------------------------------------------------------------------%
+
+% \lies{Ausdruck}{Japanisch}{Umschrift}{deutsche Lesart}   (bauen.py erzeugt Japanisch und Umschrift
+% aus der Kurzschreibweise in den Quelldateien)
+\makeatletter
+\newcommand\lies{\begingroup\shorthandoff{"}\lies@aux}
+\newcommand\lies@aux[4]{\endgroup #1 & \leavevmode #2\newline{\small\color{black!70}[#3]}\ifx\relax#4\relax\else\newline{\color{black!60}#4}\fi \\[1.5pt]}
+\makeatother
+
+% Zeilenabstand in den Listen; bauen.py setzt ihn für einzelne Kapitel enger (siehe ENG dort)
+\newcommand{\lesenabstand}{1.12}
+% Liste ohne Linien und Rahmen: links der Ausdruck, rechts Japanisch (schwarz), Umschrift (klein) und Deutsch (grau)
+\newenvironment{lesen}{%
+	\setstretch{\lesenabstand}% drei Zeilen je Eintrag (Japanisch, Umschrift, Deutsch): enger als der Fließtext
+	\begin{longtable}{@{}>{\raggedright\arraybackslash}p{4.6cm} >{\raggedright\arraybackslash}p{12.1cm}@{}}}{%
+	\end{longtable}\vspace{-1.2em}}
+
+% Kurzer Hinweis im Fließtext
+\newcommand{\anmerkung}[1]{\par\smallskip\noindent{\small\sloppy\textbf{Hinweis:} #1\par}\smallskip}
+
+% Zahlenstrahl für Intervalle: \intervall{g|o}{g|o} (g = Randpunkt gehört dazu, o = gehört nicht dazu)
+\newcommand{\randpunkt}[2]{\if#1g\fill[blue] (#2,0) circle (3.2pt);\else\filldraw[fill=white, draw=blue, very thick] (#2,0) circle (3.2pt);\fi}
+\newcommand{\intervall}[2]{\tikz[baseline=-0.6ex, scale=0.6]{\draw[achse] (-0.3,0) -- (5.6,0);
+	\draw[blue, line width=2pt] (1,0) -- (4,0); \randpunkt{#1}{1} \randpunkt{#2}{4}
+	\node[below=2pt, font=\scriptsize] at (1,0) {$a$}; \node[below=2pt, font=\scriptsize] at (4,0) {$b$};}}
+\newcommand{\intervallR}{\tikz[baseline=-0.6ex, scale=0.6]{\draw[achse] (-0.3,0) -- (5.6,0);
+	\draw[blue, line width=2pt, -{Stealth}] (1,0) -- (5.3,0); \randpunkt{g}{1}
+	\node[below=2pt, font=\scriptsize] at (1,0) {$a$};}}
+
+% Rechengröße mit Namen (japanisch/deutsch) unter einer Klammer
+\newcommand{\ub}[3]{\underbrace{\text{\Large$#1$}}_{\text{\footnotesize\shortstack{#2\\\color{black!60}#3}}}}
+
+% Verhindert, dass eine Zwischenüberschrift allein am Seitenende steht
+\newcommand{\platz}{\par\ifdim\dimexpr\pagegoal-\pagetotal\relax<5.5cm \newpage\fi}
