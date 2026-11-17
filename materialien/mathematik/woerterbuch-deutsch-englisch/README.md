@@ -6,7 +6,7 @@ lesen und sprechen“ mit Lesarten und Beispielen in beiden Sprachen.
 
 | Datei | Inhalt |
 |---|---|
-| [`Mathematisches-Woerterbuch-Deutsch-Englisch.pdf`](Mathematisches-Woerterbuch-Deutsch-Englisch.pdf) | fertiges PDF (89 Seiten) |
+| [`Mathematisches-Woerterbuch-Deutsch-Englisch.pdf`](Mathematisches-Woerterbuch-Deutsch-Englisch.pdf) | fertiges PDF (85 Seiten) |
 | `Mathematisches-Woerterbuch-Deutsch-Englisch.tex` | erzeugter Quelltext, kompiliert mit pdflatex |
 | `quelle/` | Daten und Bausteine, aus denen `bauen.py` die `.tex`-Datei erzeugt |
 
@@ -19,7 +19,9 @@ lesen und sprechen“ mit Lesarten und Beispielen in beiden Sprachen.
   Relationszeichen bis Kegelschnitte und griechisches Alphabet.
 - **Teil III – Register** Deutsch → Englisch und English → German.
 
-Jedes Kapitel beginnt auf einer neuen Seite und endet mit Beispielen.
+Jedes Kapitel beginnt auf einer neuen Seite und endet mit Beispielen. Alle
+Überschriften stehen zweisprachig da, die englische mit Lautschrift
+(`quelle/ueberschriften.py`).
 
 ## Bauen
 

@@ -189,6 +189,22 @@
 \pagestyle{plain}
 \setlength{\tabcolsep}{4pt}
 
+
+% Zweisprachige Überschriften: \teil, \kapitel, \zwischen{Deutsch}{English}{Lautschrift}
+% Wie \eintrag wird " ausgeschaltet, BEVOR die Argumente gelesen werden (Betonungszeichen der Lautschrift).
+% Ins Inhaltsverzeichnis und in die PDF-Lesezeichen kommt nur „Deutsch -- English“ ohne Lautschrift.
+\makeatletter
+\newcommand\teil{\begingroup\shorthandoff{"}\teil@aux}
+\newcommand\teil@aux[3]{\endgroup\part[#1 -- #2]{\raggedright #1\\[5pt]{\normalfont\Large\color{black!55}#2\hspace{0.35em}\penalty0 \ipa{#3}}}}
+\newcommand\kapitel{\begingroup\shorthandoff{"}\kapitel@aux}
+\newcommand\kapitel@aux[3]{\endgroup\section[#1 -- #2]{\raggedright #1\\[0pt]{\normalfont\small\color{black!55}#2\hspace{0.35em}\penalty0 \ipa{#3}}}}
+\newcommand\zwischen{\begingroup\shorthandoff{"}\zwischen@aux}
+\newcommand\zwischen@aux[3]{\endgroup\subsection*{\raggedright #1 {\normalfont\small\color{black!55}\,--\, #2\hspace{0.35em}\penalty0 \ipa{#3}}}}
+% Die zweite Überschriftenzeile kostet Platz: Zeilen in den Listen und Tabellen etwas enger setzen
+\renewcommand\lies@aux[3]{\endgroup #1 & #2\newline{\color{black!60}#3} \\[1.5pt]}
+\makeatother
+\setlength{\aboverulesep}{0.15ex}\setlength{\belowrulesep}{0.3ex}\renewcommand{\arraystretch}{0.93}
+
 \begin{document}
 
 \maketitle
@@ -199,7 +215,7 @@ geordnet nach Sachgebieten. Zu jedem Begriff stehen der englische Fachausdruck m
 man Einheiten, Größenangaben und Formeln auf Englisch vorliest und wie man Experimente und Diagramme
 beschreibt. Am Ende finden Sie je ein alphabetisches Register Deutsch -- Englisch und Englisch -- Deutsch.
 
-\subsection*{Hinweise zur Lautschrift}
+\zwischen{Hinweise zur Lautschrift}{Notes on the phonetic transcription}{"n@Uts 6n D@ f@"netIk tr\ae n"skrIpS\textsyllabic{n}}
 
 Die Lautschrift folgt dem Internationalen Phonetischen Alphabet (IPA) und gibt die britische
 Aussprache wieder, wie sie in Schulwörterbüchern steht (dort wird \textipa{r} statt
@@ -229,10 +245,10 @@ hervorgehobene Teile (der Begriff selbst, Kräfte, Maße) rot, Hilfslinien gestr
 {\footnotesize\setlength{\parskip}{0pt}\tableofcontents}
 \newpage
 
-\part{Wörterbuch}
+\teil{Wörterbuch}{Dictionary}{"dIkS@n@ri}
 
 %%%%  GRÖSSEN, EINHEITEN UND MESSEN  %%%%
-\section{Größen, Einheiten und Messen}
+\kapitel{Größen, Einheiten und Messen}{Quantities, units and measurement}{"kw6nt@tiz, "ju:nIts @n "meZ@m@nt}
 
 \begin{woerter}
 \eintrag{1}{die}{physikalische Größe}{physical quantity}{"fIzIk\textsyllabic{l} "kw6nt@ti}{$l = 2{,}5\eh{m}$}
@@ -266,7 +282,7 @@ hervorgehobene Teile (der Begriff selbst, Kräfte, Maße) rot, Hilfslinien gestr
 \eintrag{29}{der}{Stoff}{substance, material}{"s2bst@ns, m@"tI@ri@l}{}
 \end{woerter}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$l = 2{,}5\eh{m}$}{The length is two point five metres. Two point five is the numerical value, the metre is the unit.}{Die Länge beträgt zwei Komma fünf Meter. Zwei Komma fünf ist der Zahlenwert, Meter die Einheit.}
@@ -279,7 +295,7 @@ hervorgehobene Teile (der Begriff selbst, Kräfte, Maße) rot, Hilfslinien gestr
 
 %%%%  BEWEGUNGEN  %%%%
 \newpage
-\section{Bewegungen}
+\kapitel{Bewegungen}{Motion}{"m@US\textsyllabic{n}}
 
 \begin{woerter}
 \eintrag{30}{die}{Bewegung}{motion}{"m@US\textsyllabic{n}}{}
@@ -310,7 +326,7 @@ hervorgehobene Teile (der Begriff selbst, Kräfte, Maße) rot, Hilfslinien gestr
 \eintrag{55}{die}{Bahngeschwindigkeit}{tangential speed}{t\ae n"dZenS\textsyllabic{l} spi:d}{$v = \omega \cdot r$}
 \end{woerter}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$s = 100\eh{m},\ t = 12{,}5\eh{s}$ \newline $v = \dfrac{s}{t} = 8\eh{m/s}$}{A sprinter covers one hundred metres in twelve point five seconds. Her average speed is eight metres per second.}{Eine Sprinterin legt hundert Meter in zwölf Komma fünf Sekunden zurück. Ihre Durchschnittsgeschwindigkeit beträgt acht Meter pro Sekunde.}
@@ -323,7 +339,7 @@ hervorgehobene Teile (der Begriff selbst, Kräfte, Maße) rot, Hilfslinien gestr
 
 %%%%  KRÄFTE UND IHRE WIRKUNGEN  %%%%
 \newpage
-\section{Kräfte und ihre Wirkungen}
+\kapitel{Kräfte und ihre Wirkungen}{Forces and their effects}{"fO:sIz @n De@r I"fekts}
 
 \begin{woerter}
 \eintrag{56}{die}{Masse}{mass}{m\ae s}{$m$ in $\mathrm{kg}$}
@@ -367,7 +383,7 @@ hervorgehobene Teile (der Begriff selbst, Kräfte, Maße) rot, Hilfslinien gestr
 \eintrag{94}{die}{Radialkraft}{centripetal force}{sen"trIpIt\textsyllabic{l} fO:s}{$F = \dfrac{m \cdot v^2}{r}$}
 \end{woerter}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$m = 5\eh{kg}$ \newline $F_G = m \cdot g \approx 49\eh{N}$}{The weight of a five-kilogram mass is about forty-nine newtons.}{Die Gewichtskraft eines Körpers der Masse fünf Kilogramm beträgt etwa neunundvierzig Newton.}
@@ -375,13 +391,12 @@ hervorgehobene Teile (der Begriff selbst, Kräfte, Maße) rot, Hilfslinien gestr
 \lies{$D = \dfrac{F}{s} = \dfrac{2\eh{N}}{0{,}05\eh{m}} = 40\eh{N/m}$}{A force of two newtons stretches the spring by five centimetres. The spring constant is forty newtons per metre.}{Eine Kraft von zwei Newton dehnt die Feder um fünf Zentimeter. Die Federkonstante beträgt vierzig Newton pro Meter.}
 \lies{\skHebel}{The lever is balanced when the clockwise moment equals the anticlockwise moment.}{Der Hebel ist im Gleichgewicht, wenn rechtsdrehendes und linksdrehendes Drehmoment gleich groß sind.}
 \lies{$p = \dfrac{F}{A} = \dfrac{600\eh{N}}{0{,}03\eh{m^2}}$ \newline $p = 20\,000\eh{Pa}$}{The pressure is the force divided by the area: twenty thousand pascals.}{Der Druck ist der Quotient aus Kraft und Fläche: zwanzigtausend Pascal.}
-\lies{$\varrho = \dfrac{m}{V} = \dfrac{540\eh{g}}{200\eh{cm^3}}$ \newline $\varrho = 2{,}7\eh{g/cm^3}$}{The density of the block is two point seven grams per cubic centimetre: it is made of aluminium.}{Die Dichte des Quaders beträgt zwei Komma sieben Gramm pro Kubikzentimeter: Er besteht aus Aluminium.}
 \end{lesen}
 
 
 %%%%  ENERGIE, ARBEIT UND LEISTUNG  %%%%
 \newpage
-\section{Energie, Arbeit und Leistung}
+\kapitel{Energie, Arbeit und Leistung}{Energy, work and power}{"en@dZi, "w3:k @n "paU@}
 
 \begin{woerter}
 \eintrag{95}{die}{Energie}{energy}{"en@dZi}{$E$ in $\mathrm{J}$}
@@ -404,7 +419,7 @@ hervorgehobene Teile (der Begriff selbst, Kräfte, Maße) rot, Hilfslinien gestr
 \eintrag{112}{die}{Kilowattstunde}{kilowatt-hour}{"kIl@w6t ""aU@}{$1\eh{kWh} = 3{,}6\eh{MJ}$}
 \end{woerter}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$W = F \cdot s$ \newline $W = 50\eh{N} \cdot 4\eh{m} = 200\eh{J}$}{The work done is the force times the distance moved in the direction of the force: two hundred joules.}{Die verrichtete Arbeit ist Kraft mal Weg in Kraftrichtung: zweihundert Joule.}
@@ -417,7 +432,7 @@ hervorgehobene Teile (der Begriff selbst, Kräfte, Maße) rot, Hilfslinien gestr
 
 %%%%  WÄRMELEHRE  %%%%
 \newpage
-\section{Wärmelehre}
+\kapitel{Wärmelehre}{Thermal physics}{"T3:m\textsyllabic{l} "fIzIks}
 
 \begin{woerter}
 \eintrag{113}{die}{Temperatur}{temperature}{"tempr@tS@}{$\vartheta$ in $\mathrm{\degree C}$}
@@ -452,7 +467,7 @@ hervorgehobene Teile (der Begriff selbst, Kräfte, Maße) rot, Hilfslinien gestr
 \eintrag{142}{die}{Entropie}{entropy}{"entr@pi}{$S$ in $\mathrm{J/K}$}
 \end{woerter}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$\vartheta = 20\eh{\degree C}$ \newline $T = 293{,}15\eh{K}$}{Twenty degrees Celsius corresponds to two hundred and ninety-three point one five kelvin.}{Zwanzig Grad Celsius entsprechen zweihundertdreiundneunzig Komma eins fünf Kelvin.}
@@ -465,7 +480,7 @@ hervorgehobene Teile (der Begriff selbst, Kräfte, Maße) rot, Hilfslinien gestr
 
 %%%%  ELEKTRIZITÄT UND MAGNETISMUS  %%%%
 \newpage
-\section{Elektrizität und Magnetismus}
+\kapitel{Elektrizität und Magnetismus}{Electricity and magnetism}{I""lek"trIs@ti @n "m\ae gn@tIz@m}
 
 \begin{woerter}
 \eintrag{143}{die}{elektrische Ladung}{electric charge}{I"lektrIk tSA:dZ}{$Q$ in $\mathrm{C}$}
@@ -517,7 +532,7 @@ hervorgehobene Teile (der Begriff selbst, Kräfte, Maße) rot, Hilfslinien gestr
 \eintrag{189}{die}{Erdung}{earth (BE), ground (AE)}{3:T, graUnd}{}
 \end{woerter}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$R = \dfrac{U}{I} = \dfrac{12\eh{V}}{0{,}5\eh{A}} = 24\eh{\Omega}$}{The voltage across the resistor is twelve volts and the current through it is half an ampere. Its resistance is twenty-four ohms.}{Am Widerstand liegt eine Spannung von zwölf Volt an, die Stromstärke beträgt ein halbes Ampere. Der Widerstand beträgt vierundzwanzig Ohm.}
@@ -530,7 +545,7 @@ hervorgehobene Teile (der Begriff selbst, Kräfte, Maße) rot, Hilfslinien gestr
 
 %%%%  SCHWINGUNGEN UND WELLEN  %%%%
 \newpage
-\section{Schwingungen und Wellen}
+\kapitel{Schwingungen und Wellen}{Oscillations and waves}{""6sI"leIS\textsyllabic{n}z @n "weIvz}
 
 \begin{woerter}
 \eintrag{190}{die}{Schwingung}{oscillation, vibration}{""6sI"leIS\textsyllabic{n}, vaI"breIS\textsyllabic{n}}{}
@@ -565,7 +580,7 @@ hervorgehobene Teile (der Begriff selbst, Kräfte, Maße) rot, Hilfslinien gestr
 \eintrag{219}{der}{Doppler-Effekt}{Doppler effect}{"d6pl@r I""fekt}{}
 \end{woerter}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$l = 1\eh{m}$ \newline $T = 2\pi \cdot \sqrt{\dfrac{l}{g}} \approx 2{,}0\eh{s}$}{A simple pendulum one metre long has a period of about two seconds.}{Ein Fadenpendel von einem Meter Länge hat eine Periodendauer von etwa zwei Sekunden.}
@@ -578,7 +593,7 @@ hervorgehobene Teile (der Begriff selbst, Kräfte, Maße) rot, Hilfslinien gestr
 
 %%%%  OPTIK  %%%%
 \newpage
-\section{Optik}
+\kapitel{Optik}{Optics}{"6ptIks}
 
 \begin{woerter}
 \eintrag{220}{das}{Licht}{light}{laIt}{}
@@ -622,7 +637,7 @@ hervorgehobene Teile (der Begriff selbst, Kräfte, Maße) rot, Hilfslinien gestr
 \eintrag{258}{die}{Beleuchtungsstärke}{illuminance}{I"lu:mIn@ns}{$E_v$ in $\mathrm{lx}$}
 \end{woerter}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{\skReflexion}{The angle of incidence equals the angle of reflection. Both angles are measured from the normal.}{Der Einfallswinkel ist gleich dem Reflexionswinkel. Beide Winkel werden zum Lot gemessen.}
@@ -635,7 +650,7 @@ hervorgehobene Teile (der Begriff selbst, Kräfte, Maße) rot, Hilfslinien gestr
 
 %%%%  ATOM- UND KERNPHYSIK  %%%%
 \newpage
-\section{Atom- und Kernphysik}
+\kapitel{Atom- und Kernphysik}{Atomic and nuclear physics}{@"t6mIk @n "nju:kli@ "fIzIks}
 
 \begin{woerter}
 \eintrag{259}{das}{Atom}{atom}{"\ae t@m}{\skAtom}
@@ -677,7 +692,7 @@ hervorgehobene Teile (der Begriff selbst, Kräfte, Maße) rot, Hilfslinien gestr
 \eintrag{295}{die}{Hauptquantenzahl}{principal quantum number}{"prIns@p\textsyllabic{l} "kw6nt@m ""n2mb@}{$n = 1;\ 2;\ 3;\ \ldots$}
 \end{woerter}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$^{14}_{\ 6}\mathrm{C}$}{carbon-fourteen: the nucleus contains six protons and eight neutrons}{Kohlenstoff-14: Der Kern enthält sechs Protonen und acht Neutronen}
@@ -691,14 +706,14 @@ hervorgehobene Teile (der Begriff selbst, Kräfte, Maße) rot, Hilfslinien gestr
 
 %%%%  TEIL II: PHYSIK LESEN UND SPRECHEN  %%%%
 \newpage
-\part{Physik lesen und sprechen}
+\teil{Physik lesen und sprechen}{Reading and speaking physics}{"ri:dIN @n "spi:kIN "fIzIks}
 
 In diesem Teil steht, wie man Einheiten, Größenangaben und Formeln auf Englisch (und zum Vergleich
 auf Deutsch) vorliest und wie man Experimente und Diagramme beschreibt. Links steht der Ausdruck,
 rechts die englische Lesart und darunter grau die deutsche.
 
 %--------------------------------------------------------------------------------------------------
-\section{Die Basiseinheiten des SI}
+\kapitel{Die Basiseinheiten des SI}{The SI base units}{Di ""es "aI "beIs ""ju:nIts}
 
 Das Internationale Einheitensystem (\textit{International System of Units}, SI) hat sieben
 Basiseinheiten. Alle anderen Einheiten werden daraus abgeleitet.
@@ -717,7 +732,7 @@ Basiseinheiten. Alle anderen Einheiten werden daraus abgeleitet.
 (\textit{newton, joule, watt, kelvin}); nur das Einheitenzeichen ist groß (N, J, W, K). Es heißt
 \textit{kelvin}, nicht \textit{degree Kelvin} -- das „Grad“ wurde 1968 abgeschafft.}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$1{,}80\eh{m}$}{one point eight metres \;/\; one metre eighty}{ein Meter achtzig}
@@ -727,7 +742,7 @@ Basiseinheiten. Alle anderen Einheiten werden daraus abgeleitet.
 
 %--------------------------------------------------------------------------------------------------
 \newpage
-\section{Abgeleitete Einheiten mit eigenem Namen}
+\kapitel{Abgeleitete Einheiten mit eigenem Namen}{Derived units with special names}{dI"raIvd "ju:nIts wID "speS\textsyllabic{l} "neImz}
 
 \begin{lesen}
 \lies{$1\eh{Hz} = 1\eh{s^{-1}}$}{hertz \ipa{h3:ts} -- the unit of frequency: one hertz is one per second}{Hertz -- die Einheit der Frequenz: ein Hertz ist eins durch Sekunde}
@@ -747,7 +762,7 @@ Basiseinheiten. Alle anderen Einheiten werden daraus abgeleitet.
 \lies{$\mathrm{\degree C}$}{degree Celsius \ipa{"selsi@s} -- the everyday unit of temperature}{Grad Celsius -- die Einheit der Temperatur im Alltag}
 \end{lesen}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$230\eh{V}$}{The mains voltage is two hundred and thirty volts.}{Die Netzspannung beträgt zweihundertdreißig Volt.}
@@ -759,7 +774,7 @@ Basiseinheiten. Alle anderen Einheiten werden daraus abgeleitet.
 
 %--------------------------------------------------------------------------------------------------
 \newpage
-\section{Vorsätze für Einheiten}
+\kapitel{Vorsätze für Einheiten}{Prefixes for units}{"pri:fIksIz f@ "ju:nIts}
 
 Vorsätze (\textit{prefixes}) bezeichnen dezimale Vielfache und Teile einer Einheit.
 
@@ -782,7 +797,7 @@ Vorsätze (\textit{prefixes}) bezeichnen dezimale Vielfache und Teile einer Einh
 \ipa{"kIl@mi:t@} (häufig auch \ipa{kI"l6mIt@}), \textit{millimetre} \ipa{"mIlimi:t@},
 \textit{megawatt} \ipa{"meg@w6t}.}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$5\eh{km} = 5000\eh{m}$}{five kilometres equals five thousand metres}{fünf Kilometer sind fünftausend Meter}
@@ -795,7 +810,7 @@ Vorsätze (\textit{prefixes}) bezeichnen dezimale Vielfache und Teile einer Einh
 
 %--------------------------------------------------------------------------------------------------
 \newpage
-\section{Einheiten und Größenangaben lesen}
+\kapitel{Einheiten und Größenangaben lesen}{Reading units and quantities}{"ri:dIN "ju:nIts @n "kw6nt@tiz}
 
 \begin{lesen}
 \lies{$\mathrm{m/s}$ \;oder\; $\mathrm{m \cdot s^{-1}}$}{metres per second}{Meter pro Sekunde \;/\; Meter durch Sekunde}
@@ -817,18 +832,16 @@ Vorsätze (\textit{prefixes}) bezeichnen dezimale Vielfache und Teile einer Einh
 ist: \textit{five newtons, nought point five volts}. Das Einheitenzeichen bekommt nie ein Plural-s
 (5\,N, nicht 5\,Ns). Unverändert bleiben \textit{hertz, lux, siemens} und meist \textit{kelvin}.}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$v = 72\eh{km/h} = 20\eh{m/s}$}{seventy-two kilometres per hour equals twenty metres per second}{zweiundsiebzig Kilometer pro Stunde sind zwanzig Meter pro Sekunde}
 \lies{$\varrho = 1000\eh{kg/m^3}$}{The density of water is one thousand kilograms per cubic metre.}{Die Dichte von Wasser beträgt eintausend Kilogramm pro Kubikmeter.}
-\lies{$c = 4{,}19\eh{kJ/(kg \cdot K)}$}{The specific heat capacity of water is four point one nine kilojoules per kilogram kelvin.}{Die spezifische Wärmekapazität von Wasser beträgt vier Komma eins neun Kilojoule pro Kilogramm und Kelvin.}
-\lies{$E = 3500\eh{kWh}$}{The household uses three thousand five hundred kilowatt-hours of electrical energy a year.}{Der Haushalt benötigt im Jahr dreitausendfünfhundert Kilowattstunden elektrische Energie.}
 \end{lesen}
 
 %--------------------------------------------------------------------------------------------------
 \newpage
-\section{Angloamerikanische Einheiten}
+\kapitel{Angloamerikanische Einheiten}{Imperial and US units}{Im"pI@ri@l @n ""ju: "es "ju:nIts}
 
 In Großbritannien und vor allem in den USA sind neben den SI-Einheiten ältere Einheiten im
 Gebrauch (\textit{imperial units} bzw.\ \textit{US customary units}).
@@ -845,7 +858,7 @@ Gebrauch (\textit{imperial units} bzw.\ \textit{US customary units}).
 \end{tikzpicture}
 \end{center}
 
-\platz\subsection*{Länge}
+\platz\zwischen{Länge}{Length}{leNT}
 \begin{lesen}
 \lies{$1\eh{in} = 2{,}54\eh{cm}$ \newline \footnotesize auch $1''$}{one inch \ipa{IntS} equals two point five four centimetres}{ein Zoll sind zwei Komma fünf vier Zentimeter}
 \lies{$1\eh{ft} = 12\eh{in} = 30{,}48\eh{cm}$ \newline \footnotesize auch $1'$}{one foot (plural: feet) equals twelve inches}{ein Fuß sind zwölf Zoll}
@@ -853,7 +866,7 @@ Gebrauch (\textit{imperial units} bzw.\ \textit{US customary units}).
 \lies{$1\eh{mi} = 1760\eh{yd} \approx 1{,}609\eh{km}$}{one mile equals one thousand seven hundred and sixty yards}{eine Meile sind eintausendsiebenhundertsechzig Yard}
 \end{lesen}
 
-\platz\subsection*{Volumen und Masse}
+\platz\zwischen{Volumen und Masse}{Volume and mass}{"v6lju:m @n "m\ae s}
 \begin{lesen}
 \lies{$1\eh{pt} \approx 568\eh{ml}$ (GB) \newline $1\eh{pt} \approx 473\eh{ml}$ (US)}{one pint \ipa{paInt}}{ein Pint}
 \lies{$1\eh{gal} \approx 4{,}546\eh{l}$ (GB) \newline $1\eh{gal} \approx 3{,}785\eh{l}$ (US)}{one gallon \ipa{"g\ae l@n} equals eight pints}{eine Gallone sind acht Pints}
@@ -862,7 +875,7 @@ Gebrauch (\textit{imperial units} bzw.\ \textit{US customary units}).
 \lies{$1\eh{st} = 14\eh{lb} \approx 6{,}35\eh{kg}$}{one stone equals fourteen pounds (used in Britain for body weight)}{ein Stone sind vierzehn Pfund (in Großbritannien für das Körpergewicht)}
 \end{lesen}
 
-\platz\subsection*{Geschwindigkeit, Druck, Leistung, Energie}
+\platz\zwischen{Geschwindigkeit, Druck, Leistung, Energie}{Speed, pressure, power, energy}{"spi:d, "preS@, "paU@, "en@dZi}
 \begin{lesen}
 \lies{$1\eh{mph} \approx 1{,}609\eh{km/h}$}{one mile per hour}{eine Meile pro Stunde}
 \lies{$1\eh{psi} \approx 6895\eh{Pa}$}{one pound per square inch}{ein Pfund pro Quadratzoll}
@@ -875,7 +888,7 @@ Gebrauch (\textit{imperial units} bzw.\ \textit{US customary units}).
 größer als die amerikanischen. Körpergröße wird in \textit{feet} und \textit{inches} angegeben:
 $5'\,11''$ -- \textit{five foot eleven}.}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$6\eh{ft} \approx 1{,}83\eh{m}$}{He is six feet tall, that is about one metre eighty-three.}{Er ist sechs Fuß groß, das sind etwa ein Meter dreiundachtzig.}
@@ -887,7 +900,7 @@ $5'\,11''$ -- \textit{five foot eleven}.}
 
 %--------------------------------------------------------------------------------------------------
 \newpage
-\section{Temperaturskalen}
+\kapitel{Temperaturskalen}{Temperature scales}{"tempr@tS@ skeIlz}
 
 \begin{center}
 \begin{tikzpicture}[font=\small]
@@ -920,7 +933,7 @@ $5'\,11''$ -- \textit{five foot eleven}.}
 Statt \textit{degrees Celsius} hört man im Alltag auch noch \textit{degrees centigrade}
 \ipa{"sentIgreId}. Temperaturdifferenzen gibt man in Kelvin an.}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$68\eh{\degree F} \mathrel{\widehat{=}} 20\eh{\degree C}$}{Sixty-eight degrees Fahrenheit corresponds to twenty degrees Celsius: sixty-eight minus thirty-two is thirty-six; thirty-six times five ninths is twenty.}{Achtundsechzig Grad Fahrenheit entsprechen zwanzig Grad Celsius: achtundsechzig minus zweiunddreißig ist sechsunddreißig; sechsunddreißig mal fünf Neuntel ist zwanzig.}
@@ -931,7 +944,7 @@ Statt \textit{degrees Celsius} hört man im Alltag auch noch \textit{degrees cen
 
 %--------------------------------------------------------------------------------------------------
 \newpage
-\section{Formeln lesen: Mechanik}
+\kapitel{Formeln lesen: Mechanik}{Reading formulae: mechanics}{"ri:dIN "fO:mjuli:, mI"k\ae nIks}
 
 \begin{lesen}
 \lies{$v = \dfrac{s}{t}$}{$v$ equals $s$ over $t$: speed equals distance divided by time}{$v$ gleich $s$ durch $t$: Geschwindigkeit gleich Weg durch Zeit}
@@ -952,7 +965,7 @@ Statt \textit{degrees Celsius} hört man im Alltag auch noch \textit{degrees cen
 Weg (\textit{distance, displacement}), $k$ für die Federkonstante, $W$ für die Gewichtskraft
 (\textit{weight}) und $u$ für die Anfangsgeschwindigkeit: $v = u + a\,t$.}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{\textit{Gegeben -- gesucht}}{\textit{Given:} $m$ equals two kilograms, $a$ equals three metres per second squared. \textit{Find:} the force $F$.}{\textit{Gegeben:} $m$ gleich zwei Kilogramm, $a$ gleich drei Meter pro Sekunde zum Quadrat. \textit{Gesucht:} die Kraft $F$.}
@@ -964,7 +977,7 @@ Weg (\textit{distance, displacement}), $k$ für die Federkonstante, $W$ für die
 
 %--------------------------------------------------------------------------------------------------
 \newpage
-\section{Formeln lesen: Elektrizitätslehre}
+\kapitel{Formeln lesen: Elektrizitätslehre}{Reading formulae: electricity}{"ri:dIN "fO:mjuli:, I""lek"trIs@ti}
 
 \begin{center}
 \begin{circuitikz}[font=\footnotesize]
@@ -995,7 +1008,7 @@ Weg (\textit{distance, displacement}), $k$ für die Federkonstante, $W$ für die
 Zeichen und Einheit sehen dann gleich aus: $V = 12\eh{V}$. Man sagt \textit{the voltage across
 the lamp} (an der Lampe) und \textit{the current through the lamp} (durch die Lampe).}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$I = \dfrac{U}{R} = \dfrac{6\eh{V}}{12\eh{\Omega}} = 0{,}5\eh{A}$}{A six-volt battery is connected to a twelve-ohm resistor. The current is nought point five amperes.}{An eine Sechs-Volt-Batterie wird ein Zwölf-Ohm-Widerstand angeschlossen. Die Stromstärke beträgt null Komma fünf Ampere.}
@@ -1007,7 +1020,7 @@ the lamp} (an der Lampe) und \textit{the current through the lamp} (durch die La
 
 %--------------------------------------------------------------------------------------------------
 \newpage
-\section{Formeln lesen: Wärme, Wellen, Optik und Atome}
+\kapitel{Formeln lesen: Wärme, Wellen, Optik und Atome}{Reading formulae: heat, waves, optics and atoms}{"ri:dIN "fO:mjuli:, "hi:t, "weIvz, "6ptIks @n "\ae t@mz}
 
 \begin{lesen}
 \lies{$Q = c \cdot m \cdot \Delta T$}{$Q$ equals $c$ $m$ delta $T$: heat equals specific heat capacity times mass times temperature change}{$Q$ gleich $c$ mal $m$ mal Delta $T$: Wärme gleich spezifische Wärmekapazität mal Masse mal Temperaturänderung}
@@ -1023,7 +1036,7 @@ the lamp} (an der Lampe) und \textit{the current through the lamp} (durch die La
 \lies{$^{238}_{\ 92}\mathrm{U}$}{uranium-two three eight: mass number two hundred and thirty-eight, atomic number ninety-two}{Uran-238: Massenzahl zweihundertachtunddreißig, Kernladungszahl zweiundneunzig}
 \end{lesen}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$\lambda = \dfrac{c}{f} = \dfrac{3 \cdot 10^8\eh{m/s}}{100\eh{MHz}} = 3\eh{m}$}{A radio station broadcasts at one hundred megahertz. The wavelength is three metres.}{Ein Radiosender sendet mit hundert Megahertz. Die Wellenlänge beträgt drei Meter.}
@@ -1034,7 +1047,7 @@ the lamp} (an der Lampe) und \textit{the current through the lamp} (durch die La
 
 %--------------------------------------------------------------------------------------------------
 \newpage
-\section{Experimente beschreiben}
+\kapitel{Experimente beschreiben}{Describing experiments}{dI"skraIbIN Ik"sperIm@nts}
 
 \begin{center}
 \begin{tikzpicture}[font=\small]
@@ -1066,7 +1079,7 @@ Die Teile eines Versuchsprotokolls (\textit{lab report}):
 \lies{\textbf{Fehlerbetrachtung}}{\textbf{Evaluation:} Sources of error are reading the ruler (parallax error) and the oscillation of the spring.}{Fehlerquellen sind das Ablesen am Lineal (Parallaxenfehler) und das Schwingen der Feder.}
 \end{lesen}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{Variablen}{Change only one variable at a time and keep all the other variables constant (a fair test).}{Ändere immer nur eine Größe und halte alle anderen Größen konstant.}
@@ -1078,7 +1091,7 @@ Die Teile eines Versuchsprotokolls (\textit{lab report}):
 
 %--------------------------------------------------------------------------------------------------
 \newpage
-\section{Diagramme beschreiben}
+\kapitel{Diagramme beschreiben}{Describing graphs}{dI"skraIbIN "grA:fs}
 
 \begin{center}
 \begin{tikzpicture}[font=\small, scale=1.05]
@@ -1110,7 +1123,7 @@ Die Teile eines Versuchsprotokolls (\textit{lab report}):
 \lies{Ausreißer}{This reading is an anomalous result (an outlier); it is ignored when drawing the line of best fit.}{Dieser Messwert ist ein Ausreißer; er wird beim Zeichnen der Ausgleichsgeraden nicht berücksichtigt.}
 \end{lesen}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$D = \dfrac{1{,}0\eh{N}}{3{,}1\eh{cm}} \approx 32\eh{N/m}$}{From the gradient triangle the spring constant is about thirty-two newtons per metre.}{Aus dem Anstiegsdreieck ergibt sich eine Federkonstante von etwa zweiunddreißig Newton pro Meter.}
@@ -1122,7 +1135,7 @@ Die Teile eines Versuchsprotokolls (\textit{lab report}):
 
 %--------------------------------------------------------------------------------------------------
 \newpage
-\section{Griechische Buchstaben in der Physik}
+\kapitel{Griechische Buchstaben in der Physik}{Greek letters in physics}{"gri:k "let@z In "fIzIks}
 
 \begin{center}
 {\small\renewcommand{\arraystretch}{1.25}
@@ -1149,7 +1162,7 @@ Die Teile eines Versuchsprotokolls (\textit{lab report}):
 \end{tabular}}
 \end{center}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$\Delta T = T_2 - T_1$}{delta $T$ equals $T$ two minus $T$ one: the change in temperature}{Delta $T$ gleich $T$ zwei minus $T$ eins: die Temperaturänderung}
@@ -1162,7 +1175,7 @@ Die Teile eines Versuchsprotokolls (\textit{lab report}):
 
 \newpage
 %%%%  REGISTER  %%%%
-\part{Register}
+\teil{Register}{Index}{"Indeks}
 \section{Register Deutsch -- Englisch}
 \begin{multicols}{2}\small\raggedright
 

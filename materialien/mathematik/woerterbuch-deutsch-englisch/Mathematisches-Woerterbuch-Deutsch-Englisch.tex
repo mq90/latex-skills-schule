@@ -436,6 +436,22 @@
 \pagestyle{plain}
 \setlength{\tabcolsep}{4pt}
 
+
+% Zweisprachige Überschriften: \teil, \kapitel, \zwischen{Deutsch}{English}{Lautschrift}
+% Wie \eintrag wird " ausgeschaltet, BEVOR die Argumente gelesen werden (Betonungszeichen der Lautschrift).
+% Ins Inhaltsverzeichnis und in die PDF-Lesezeichen kommt nur „Deutsch -- English“ ohne Lautschrift.
+\makeatletter
+\newcommand\teil{\begingroup\shorthandoff{"}\teil@aux}
+\newcommand\teil@aux[3]{\endgroup\part[#1 -- #2]{\raggedright #1\\[5pt]{\normalfont\Large\color{black!55}#2\hspace{0.35em}\penalty0 \ipa{#3}}}}
+\newcommand\kapitel{\begingroup\shorthandoff{"}\kapitel@aux}
+\newcommand\kapitel@aux[3]{\endgroup\section[#1 -- #2]{\raggedright #1\\[0pt]{\normalfont\small\color{black!55}#2\hspace{0.35em}\penalty0 \ipa{#3}}}}
+\newcommand\zwischen{\begingroup\shorthandoff{"}\zwischen@aux}
+\newcommand\zwischen@aux[3]{\endgroup\subsection*{\raggedright #1 {\normalfont\small\color{black!55}\,--\, #2\hspace{0.35em}\penalty0 \ipa{#3}}}}
+% Die zweite Überschriftenzeile kostet Platz: Zeilen in den Listen und Tabellen etwas enger setzen
+\renewcommand\lies@aux[3]{\endgroup #1 & #2\newline{\color{black!60}#3} \\[1.5pt]}
+\makeatother
+\setlength{\aboverulesep}{0.15ex}\setlength{\belowrulesep}{0.3ex}\renewcommand{\arraystretch}{0.93}
+
 \begin{document}
 
 \maketitle
@@ -446,7 +462,7 @@ geordnet nach Sachgebieten. Zu jedem Begriff stehen der englische Fachausdruck m
 Formeln und Rechenwege auf Englisch vorliest, mit vielen Beispielen. Am Ende finden Sie je ein
 alphabetisches Register Deutsch -- Englisch und Englisch -- Deutsch.
 
-\subsection*{Hinweise zur Lautschrift}
+\zwischen{Hinweise zur Lautschrift}{Notes on the phonetic transcription}{"n@Uts 6n D@ f@"netIk tr\ae n"skrIpS\textsyllabic{n}}
 
 Die Lautschrift folgt dem Internationalen Phonetischen Alphabet (IPA) und gibt die britische
 Aussprache wieder, wie sie in Schulwörterbüchern steht (dort wird \textipa{r} statt
@@ -475,10 +491,10 @@ Maße) rot, verdeckte Kanten und Hilfslinien gestrichelt.
 {\small\setlength{\parskip}{0pt}\tableofcontents}
 \newpage
 
-\part{Wörterbuch}
+\teil{Wörterbuch}{Dictionary}{"dIkS@n@ri}
 
 %%%%  ZAHLEN UND RECHENARTEN  %%%%
-\section{Zahlen und Rechenarten}
+\kapitel{Zahlen und Rechenarten}{Numbers and operations}{"n2mb@z @n ""6p@"reIS\textsyllabic{n}z}
 
 \begin{woerter}
 \eintrag{1}{die}{Zahl}{number}{"n2mb@}{$1;\ 2;\ 3;\ \ldots$}
@@ -553,7 +569,7 @@ Maße) rot, verdeckte Kanten und Hilfslinien gestrichelt.
 \eintrag{70}{}{unendlich}{infinite}{"InfIn@t}{$\infty$}
 \end{woerter}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$12 + 30 = 42$}{The sum of twelve and thirty is forty-two.}{Die Summe von zwölf und dreißig ist zweiundvierzig.}
@@ -568,7 +584,7 @@ Maße) rot, verdeckte Kanten und Hilfslinien gestrichelt.
 
 %%%%  ALGEBRA, GLEICHUNGEN UND MENGEN  %%%%
 \newpage
-\section{Algebra, Gleichungen und Mengen}
+\kapitel{Algebra, Gleichungen und Mengen}{Algebra, equations and sets}{"\ae ldZIbr@, I"kweIZ\textsyllabic{n}z @n "sets}
 
 \begin{woerter}
 \eintrag{71}{die}{Variable}{variable}{"ve@ri@b\textsyllabic{l}}{$x;\ y;\ a$}
@@ -607,7 +623,7 @@ Maße) rot, verdeckte Kanten und Hilfslinien gestrichelt.
 \eintrag{104}{die}{leere Menge}{empty set}{"empti set}{$\emptyset = \{\,\}$}
 \end{woerter}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$3(x + 2) = 3x + 6$}{Expand the brackets.}{Multipliziere die Klammer aus.}
@@ -621,7 +637,7 @@ Maße) rot, verdeckte Kanten und Hilfslinien gestrichelt.
 
 %%%%  FUNKTIONEN  %%%%
 \newpage
-\section{Funktionen}
+\kapitel{Funktionen}{Functions}{"f2NkS\textsyllabic{n}z}
 
 \begin{woerter}
 \eintrag{105}{die}{Funktion}{function}{"f2NkS\textsyllabic{n}}{$f(x)$}
@@ -667,7 +683,7 @@ Maße) rot, verdeckte Kanten und Hilfslinien gestrichelt.
 \eintrag{145}{}{punktsymmetrisch zum Ursprung}{symmetric about the origin}{sI"metrIk @"baUt Di "6rIdZIn}{$f(-x) = -f(x)$ \newline \skPunktsymmetrisch}
 \end{woerter}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$f(x) = 2x - 4$}{$f$ is a linear function with the gradient two and the $y$-intercept minus four. Its zero is $x$ equals two.}{$f$ ist eine lineare Funktion mit der Steigung zwei und dem $y$-Achsenabschnitt minus vier. Ihre Nullstelle ist $x$ gleich zwei.}
@@ -680,7 +696,7 @@ Maße) rot, verdeckte Kanten und Hilfslinien gestrichelt.
 
 %%%%  GEOMETRIE: GRUNDBEGRIFFE, WINKEL, ABBILDUNGEN  %%%%
 \newpage
-\section{Geometrie: Grundbegriffe, Winkel, Abbildungen}
+\kapitel{Geometrie: Grundbegriffe, Winkel, Abbildungen}{Geometry: basic terms, angles, transformations}{dZi"6m@tri, "beIsIk "t3:mz, "\ae Ng\textsyllabic{l}z, ""tr\ae nsf@"meIS\textsyllabic{n}z}
 
 \begin{woerter}
 \eintrag{146}{der}{Punkt}{point}{pOInt}{\skPunkt}
@@ -716,7 +732,7 @@ Maße) rot, verdeckte Kanten und Hilfslinien gestrichelt.
 \eintrag{176}{}{ähnlich}{similar}{"sIm@l@}{$\triangle ABC \sim \triangle A'B'C'$}
 \end{woerter}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$\overline{AB} = 5\,\mathrm{cm}$}{The line segment $A$ $B$ is five centimetres long.}{Die Strecke $A$ $B$ ist fünf Zentimeter lang.}
@@ -731,7 +747,7 @@ Maße) rot, verdeckte Kanten und Hilfslinien gestrichelt.
 
 %%%%  EBENE FIGUREN  %%%%
 \newpage
-\section{Ebene Figuren}
+\kapitel{Ebene Figuren}{Plane figures}{"pleIn "fIg@z}
 
 \begin{woerter}
 \eintrag{177}{das}{Dreieck}{triangle}{"traI\ae Ng\textsyllabic{l}}{$\triangle ABC$ \newline \skDreieck}
@@ -784,7 +800,7 @@ Maße) rot, verdeckte Kanten und Hilfslinien gestrichelt.
 \eintrag{224}{die}{Tangente}{tangent}{"t\ae ndZ@nt}{\skTangente}
 \end{woerter}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$a = 6\,\mathrm{cm},\ b = 4\,\mathrm{cm}$ \newline $A = 24\,\mathrm{cm}^2$}{The area of the rectangle is six centimetres times four centimetres, that is twenty-four square centimetres.}{Der Flächeninhalt des Rechtecks ist sechs Zentimeter mal vier Zentimeter, also vierundzwanzig Quadratzentimeter.}
@@ -797,7 +813,7 @@ Maße) rot, verdeckte Kanten und Hilfslinien gestrichelt.
 
 %%%%  KÖRPER  %%%%
 \newpage
-\section{Körper}
+\kapitel{Körper}{Solids}{"s6lIdz}
 
 \begin{woerter}
 \eintrag{225}{der}{Körper}{solid}{"s6lId}{}
@@ -834,7 +850,7 @@ Maße) rot, verdeckte Kanten und Hilfslinien gestrichelt.
 \eintrag{256}{der}{Oberflächeninhalt}{surface area}{"s3:fIs ""e@ri@}{$O = 2(ab + ac + bc)$}
 \end{woerter}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$a = 3\,\mathrm{cm}$ \newline $V = a^3 = 27\,\mathrm{cm}^3$}{The volume of a cube with an edge length of three centimetres is twenty-seven cubic centimetres.}{Das Volumen eines Würfels mit drei Zentimetern Kantenlänge beträgt siebenundzwanzig Kubikzentimeter.}
@@ -847,7 +863,7 @@ Maße) rot, verdeckte Kanten und Hilfslinien gestrichelt.
 
 %%%%  ANALYSIS  %%%%
 \newpage
-\section{Analysis}
+\kapitel{Analysis}{Calculus}{"k\ae lkj@l@s}
 
 \begin{woerter}
 \eintrag{257}{die}{Folge}{sequence}{"si:kw@ns}{$(a_n)$ \newline \skFolge}
@@ -896,21 +912,19 @@ Maße) rot, verdeckte Kanten und Hilfslinien gestrichelt.
 \eintrag{300}{der}{natürliche Logarithmus}{natural logarithm}{"n\ae tSr@l "l6g@rID@m}{$\ln x$}
 \end{woerter}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$f(x) = x^3 - 3x$ \newline $f'(x) = 3x^2 - 3$}{Differentiate $f$: the derivative is three $x$ squared minus three.}{Leite $f$ ab: Die Ableitung ist drei $x$ Quadrat minus drei.}
 \lies{$f'(x) = 0 \ \Rightarrow\ x = \pm 1$}{The derivative is zero at $x$ equals plus or minus one.}{Die Ableitung ist null für $x$ gleich plus oder minus eins.}
 \lies{$H(-1 \mid 2),\ T(1 \mid -2)$ \newline $W(0 \mid 0)$}{The graph has a maximum at minus one two, a minimum at one minus two and a point of inflection at the origin.}{Der Graph hat den Hochpunkt $H$, den Tiefpunkt $T$ und den Wendepunkt $W$ im Ursprung.}
 \lies{$F(x) = x^2$ \newline $f(x) = 2x$}{Capital $F$ is an antiderivative of $f$.}{Groß $F$ ist eine Stammfunktion von $f$.}
-\lies{$\displaystyle\int_0^3 2x \dx = \big[x^2\big]_0^3 = 9$}{The integral from nought to three of two $x$ d $x$ equals nine.}{Das Integral von null bis drei über zwei $x$ d $x$ ist neun.}
-\lies{$\limn \dfrac{2n + 1}{n} = 2$}{The sequence converges; its limit is two.}{Die Folge konvergiert; ihr Grenzwert ist zwei.}
 \end{lesen}
 
 
 %%%%  VEKTOREN UND ANALYTISCHE GEOMETRIE  %%%%
 \newpage
-\section{Vektoren und analytische Geometrie}
+\kapitel{Vektoren und analytische Geometrie}{Vectors and coordinate geometry}{"vekt@z @n k@U"O:dIn@t dZi"6m@tri}
 
 \begin{woerter}
 \eintrag{301}{der}{Vektor}{vector}{"vekt@}{$\vec{a} = \vektor{a_1}{a_2}{a_3}$ \newline \skVektor}
@@ -940,20 +954,18 @@ Maße) rot, verdeckte Kanten und Hilfslinien gestrichelt.
 \eintrag{325}{die}{Determinante}{determinant}{dI"t3:mIn@nt}{$\begin{vmatrix} a & b\\ c & d\end{vmatrix} = ad - bc$}
 \end{woerter}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$\vec{a} = \vektor{3}{4}{0}$ \newline $|\vec{a}\,| = \sqrt{9 + 16 + 0} = 5$}{The magnitude of vector $a$ is five.}{Der Betrag des Vektors $a$ ist fünf.}
 \lies{$A(1 \mid 2 \mid 3),\ B(4 \mid 6 \mid 3)$ \newline $\overrightarrow{AB} = \vektor{3}{4}{0}$}{The vector from $A$ to $B$ is three, four, nought.}{Der Vektor von $A$ nach $B$ ist drei, vier, null.}
 \lies{$g\colon\ \vec{x} = \vektor{1}{2}{3} + t \cdot \vektor{3}{4}{0}$}{The equation of the line $g$: a position vector plus $t$ times a direction vector.}{Die Gleichung der Geraden $g$: Stützvektor plus $t$ mal Richtungsvektor.}
-\lies{$\vec{a} \cdot \vec{b} = 0$}{The vectors $a$ and $b$ are perpendicular (orthogonal).}{Die Vektoren $a$ und $b$ sind zueinander senkrecht (orthogonal).}
-\lies{$\vec{b} = 2 \cdot \vec{a}$}{The vectors $a$ and $b$ are linearly dependent (parallel).}{Die Vektoren $a$ und $b$ sind linear abhängig (parallel).}
 \end{lesen}
 
 
 %%%%  STOCHASTIK  %%%%
 \newpage
-\section{Stochastik}
+\kapitel{Stochastik}{Probability and statistics}{""pr6b@"bIl@ti @n st@"tIstIks}
 
 \begin{woerter}
 \eintrag{326}{das}{Zufallsexperiment}{random experiment}{"r\ae nd@m Ik"sperIm@nt}{}
@@ -978,7 +990,7 @@ Maße) rot, verdeckte Kanten und Hilfslinien gestrichelt.
 \eintrag{345}{die}{Binomialverteilung}{binomial distribution}{baI"n@Umi@l ""dIstrI"bju:S\textsyllabic{n}}{$B_{n;p}(k)$ \newline \skSaeulen}
 \end{woerter}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$P(\text{„6“}) = \dfrac16$}{The probability of rolling a six with a fair die is one sixth.}{Die Wahrscheinlichkeit, mit einem fairen Würfel eine Sechs zu würfeln, beträgt ein Sechstel.}
@@ -991,7 +1003,7 @@ Maße) rot, verdeckte Kanten und Hilfslinien gestrichelt.
 
 %%%%  LOGIK UND BEWEIS  %%%%
 \newpage
-\section{Logik und Beweis}
+\kapitel{Logik und Beweis}{Logic and proof}{"l6dZIk @n "pru:f}
 
 \begin{woerter}
 \eintrag{346}{die}{Definition}{definition}{""defI"nIS\textsyllabic{n}}{}
@@ -1004,7 +1016,7 @@ Maße) rot, verdeckte Kanten und Hilfslinien gestrichelt.
 \eintrag{353}{}{es gibt}{there exists}{De@r Ig"zIsts}{$\exists$}
 \end{woerter}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$x > 2 \ \Rightarrow\ x^2 > 4$}{If $x$ is greater than two, then $x$ squared is greater than four.}{Wenn $x$ größer als zwei ist, dann ist $x$ Quadrat größer als vier.}
@@ -1018,7 +1030,7 @@ Maße) rot, verdeckte Kanten und Hilfslinien gestrichelt.
 
 %%%%  TEIL B: MATHEMATIK LESEN UND SPRECHEN  %%%%
 \newpage
-\part{Mathematik lesen und sprechen}
+\teil{Mathematik lesen und sprechen}{Reading and speaking mathematics}{"ri:dIN @n "spi:kIN ""m\ae T@"m\ae tIks}
 
 In diesem Teil steht, wie man Zeichen, Formeln und Rechenwege auf Englisch (und zum Vergleich auf
 Deutsch) vorliest. Links steht der Ausdruck, rechts die englische Lesart und darunter grau die
@@ -1026,9 +1038,9 @@ deutsche. Wo es mehrere übliche Lesarten gibt, sind sie durch Schrägstriche ge
 sind bewusst einfach gehalten, damit sie sich direkt im Unterricht verwenden lassen.
 
 %--------------------------------------------------------------------------------------------------
-\section{Zahlen, Zeichen und Schreibweisen}
+\kapitel{Zahlen, Zeichen und Schreibweisen}{Numbers, symbols and notation}{"n2mb@z, "sImb\textsyllabic{l}z @n n@U"teIS\textsyllabic{n}}
 
-\platz\subsection*{Ordnungszahlen, Indizes und Aufzählungen}
+\platz\zwischen{Ordnungszahlen, Indizes und Aufzählungen}{Ordinal numbers, subscripts and lists}{"O:dIn\textsyllabic{l} "n2mb@z, "s2bskrIpts @n "lIsts}
 
 \begin{lesen}
 \lies{1.\quad 2.\quad 3.\quad 21.}{1st, 2nd, 3rd, 21st -- first, second, third, twenty-first}{erstens, zweitens, drittens -- der Erste, der Zweite, \ldots}
@@ -1039,7 +1051,7 @@ sind bewusst einfach gehalten, damit sie sich direkt im Unterricht verwenden las
 \lies{$1;\ 2;\ \ldots;\ 25$}{one, two, and so on up to twenty-five}{eins, zwei und so weiter bis fünfundzwanzig}
 \end{lesen}
 
-\platz\subsection*{Dezimalzahlen, große Zahlen und Brüche}
+\platz\zwischen{Dezimalzahlen, große Zahlen und Brüche}{Decimals, large numbers and fractions}{"desIm\textsyllabic{l}z, "lA:dZ "n2mb@z @n "fr\ae kS\textsyllabic{n}z}
 
 Im Englischen trennt ein \textbf{Punkt} die Nachkommastellen ab, das Komma gliedert große Zahlen in
 Dreiergruppen -- im Deutschen ist es genau umgekehrt. Das führt leicht zu Verwechslungen.
@@ -1055,7 +1067,7 @@ Dreiergruppen -- im Deutschen ist es genau umgekehrt. Das führt leicht zu Verwe
 \lies{$\frac{17}{25}$}{seventeen over twenty-five \;/\; seventeen twenty-fifths}{siebzehn Fünfundzwanzigstel}
 \end{lesen}
 
-\platz\subsection*{Britisches und amerikanisches Englisch}
+\platz\zwischen{Britisches und amerikanisches Englisch}{British and American English}{"brItIS @n @"merIk@n "INglIS}
 
 Die Lautschrift im Wörterbuch folgt dem britischen Englisch. Im amerikanischen Englisch heißen
 einige Dinge anders:
@@ -1075,7 +1087,7 @@ Zwischen Variablen ist der Malpunkt üblich oder wird ganz weggelassen: $a \cdot
 
 %--------------------------------------------------------------------------------------------------
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$7{,}25$}{seven point two five}{sieben Komma zwei fünf}
@@ -1084,7 +1096,7 @@ Zwischen Variablen ist der Malpunkt üblich oder wird ganz weggelassen: $a \cdot
 \end{lesen}
 
 \newpage
-\section{Relationszeichen}
+\kapitel{Relationszeichen}{Relation symbols}{rI"leIS\textsyllabic{n} ""sImb\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$p = q$}{$p$ equals $q$ \;/\; $p$ is equal to $q$}{$p$ (ist) gleich $q$}
@@ -1108,18 +1120,16 @@ Zwischen Variablen ist der Malpunkt üblich oder wird ganz weggelassen: $a \cdot
 
 %--------------------------------------------------------------------------------------------------
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$5 < 8$}{five is less than eight}{fünf ist kleiner als acht}
 \lies{$x \ge 0$}{$x$ is greater than or equal to zero: $x$ is non-negative}{$x$ ist größer oder gleich null: $x$ ist nicht negativ}
 \lies{$7 \neq 9$}{seven is not equal to nine}{sieben ist ungleich neun}
-\lies{$\sqrt{2} \approx 1{,}41$}{the square root of two is approximately one point four one}{die Wurzel aus zwei ist ungefähr eins Komma vier eins}
-\lies{$-2 < x < 2$}{$x$ lies between minus two and two}{$x$ liegt zwischen minus zwei und zwei}
 \end{lesen}
 
 \newpage
-\section{Grundrechenarten}
+\kapitel{Grundrechenarten}{The four basic operations}{D@ "fO: "beIsIk ""6p@"reIS\textsyllabic{n}z}
 
 Die Namen der Rechengrößen auf einen Blick:
 \[
@@ -1142,7 +1152,7 @@ Die Namen der Rechengrößen auf einen Blick:
 \lies{$\dfrac{a}{b} = a/b$}{$a$ over $b$}{$a$ durch $b$ \;/\; $a$ $b$-tel}
 \end{lesen}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$17 + 8 = 25$}{seventeen plus eight equals twenty-five}{siebzehn plus acht gleich fünfundzwanzig}
@@ -1154,7 +1164,7 @@ Die Namen der Rechengrößen auf einen Blick:
 
 %--------------------------------------------------------------------------------------------------
 \newpage
-\section{Rechnen mit Brüchen}
+\kapitel{Rechnen mit Brüchen}{Calculating with fractions}{"k\ae lkjuleItIN wID "fr\ae kS\textsyllabic{n}z}
 
 \begin{lesen}
 \lies{$\dfrac{12}{18} = \dfrac{2}{3}$}{twelve eighteenths equals two thirds. \newline \textit{Rule:} To reduce a fraction to its lowest terms, divide the numerator and the denominator by their highest common factor (here 6).}{zwölf Achtzehntel gleich zwei Drittel. \newline \textit{Regel:} Man kürzt einen Bruch, indem man Zähler und Nenner durch dieselbe Zahl dividiert (hier 6).}
@@ -1171,7 +1181,7 @@ Bruch durch 6“. Bei gemischten Zahlen sagt man im Englischen immer \textit{and
 
 %--------------------------------------------------------------------------------------------------
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$\dfrac56 - \dfrac14 = \dfrac{10}{12} - \dfrac{3}{12} = \dfrac{7}{12}$}{five sixths minus one quarter equals ten twelfths minus three twelfths, which is seven twelfths}{fünf Sechstel minus ein Viertel ist gleich zehn Zwölftel minus drei Zwölftel, also sieben Zwölftel}
@@ -1181,7 +1191,7 @@ Bruch durch 6“. Bei gemischten Zahlen sagt man im Englischen immer \textit{and
 \end{lesen}
 
 \newpage
-\section{Potenzen, Wurzeln und Logarithmen}
+\kapitel{Potenzen, Wurzeln und Logarithmen}{Powers, roots and logarithms}{"paU@z, "ru:ts @n "l6g@rID@mz}
 
 Aus der Gleichung $b^n = c$ lassen sich drei Fragen stellen -- je nachdem, welche Größe gesucht ist:
 
@@ -1208,7 +1218,7 @@ Aus der Gleichung $b^n = c$ lassen sich drei Fragen stellen -- je nachdem, welch
 \end{tikzpicture}
 \end{center}
 
-\platz\subsection*{Potenzen}
+\platz\zwischen{Potenzen}{Powers}{"paU@z}
 \begin{lesen}
 \lies{$b^n$}{$b$ to the power of $n$ \;/\; $b$ to the $n$th (power) \;/\; the $n$th power of $b$}{$b$ hoch $n$}
 \lies{$5^2 = 25$}{five squared is twenty-five}{fünf Quadrat \;/\; fünf hoch zwei ist fünfundzwanzig}
@@ -1218,7 +1228,7 @@ Aus der Gleichung $b^n = c$ lassen sich drei Fragen stellen -- je nachdem, welch
 \lies{$10^{-3} = 0{,}001$}{ten to the minus three equals nought point nought nought one}{zehn hoch minus drei gleich null Komma null null eins}
 \end{lesen}
 
-\platz\subsection*{Wurzeln}
+\platz\zwischen{Wurzeln}{Roots}{ru:ts}
 \begin{lesen}
 \lies{$\sqrt[n]{c} = b$}{the $n$th root of $c$ is (equal to) $b$}{die $n$-te Wurzel aus $c$ ist gleich $b$}
 \lies{$\sqrt{49} = 7$}{the square root of forty-nine is seven}{die (Quadrat-)Wurzel aus neunundvierzig ist sieben}
@@ -1228,7 +1238,7 @@ Aus der Gleichung $b^n = c$ lassen sich drei Fragen stellen -- je nachdem, welch
 \lies{$\sqrt{a^2 + b^2}$}{the square root of $a$ squared plus $b$ squared}{die Wurzel aus $a$ Quadrat plus $b$ Quadrat}
 \end{lesen}
 
-\platz\subsection*{Logarithmen}
+\platz\zwischen{Logarithmen}{Logarithms}{"l6g@rID@mz}
 \begin{lesen}
 \lies{$\log_b c = n$}{the logarithm of $c$ to the base $b$ is $n$ \;/\; log to the base $b$ of $c$ equals $n$}{der Logarithmus von $c$ zur Basis $b$ ist $n$}
 \lies{$\log_2 32 = 5$}{log to the base two of thirty-two equals five}{Logarithmus von zweiunddreißig zur Basis zwei gleich fünf}
@@ -1242,7 +1252,7 @@ im Englischen unüblich -- dort schreibt man $\log_{10} x$ oder nur $\log x$.}
 
 %--------------------------------------------------------------------------------------------------
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$2^{10} = 1024$}{two to the power of ten equals one thousand and twenty-four}{zwei hoch zehn ist eintausendvierundzwanzig}
@@ -1252,7 +1262,7 @@ im Englischen unüblich -- dort schreibt man $\log_{10} x$ oder nur $\log x$.}
 \end{lesen}
 
 \newpage
-\section{Zahlbereiche}
+\kapitel{Zahlbereiche}{Number sets}{"n2mb@ sets}
 
 \begin{center}
 \begin{tikzpicture}[font=\small]
@@ -1283,7 +1293,7 @@ der Doppelstrich-Buchstaben.}
 
 %--------------------------------------------------------------------------------------------------
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$-3 \in \Z,\ -3 \notin \N$}{minus three is an integer, but it is not a natural number}{minus drei ist eine ganze Zahl, aber keine natürliche Zahl}
@@ -1293,7 +1303,7 @@ der Doppelstrich-Buchstaben.}
 \end{lesen}
 
 \newpage
-\section{Mengen}
+\kapitel{Mengen}{Sets}{sets}
 
 \begin{lesen}
 \lies{$a \in M$}{$a$ is an element of $M$ \;/\; $a$ is in $M$ \;/\; $a$ belongs to $M$}{$a$ ist Element von $M$}
@@ -1311,7 +1321,7 @@ der Doppelstrich-Buchstaben.}
 
 %--------------------------------------------------------------------------------------------------
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$A = \{1;\,2;\,3;\,4\}$ \newline $B = \{3;\,4;\,5\}$}{$A$ is the set with the elements one, two, three and four; $B$ is the set with the elements three, four and five}{$A$ ist die Menge mit den Elementen eins, zwei, drei und vier; $B$ ist die Menge mit den Elementen drei, vier und fünf}
@@ -1320,9 +1330,9 @@ der Doppelstrich-Buchstaben.}
 \end{lesen}
 
 \newpage
-\section{Gleichungen und Ungleichungen lösen}
+\kapitel{Gleichungen und Ungleichungen lösen}{Solving equations and inequalities}{"s6lvIN I"kweIZ\textsyllabic{n}z @n ""InI"kw6l@tiz}
 
-\platz\subsection*{Beispiel: eine lineare Gleichung}
+\platz\zwischen{Beispiel: eine lineare Gleichung}{Example: a linear equation}{Ig"zA:mp\textsyllabic{l}, @ "lIni@r I"kweIZ\textsyllabic{n}}
 
 \begin{lesen}
 \lies{$\dfrac{2(x - 1)}{3} + \dfrac{1}{2} = \dfrac{5}{2}$}{\textit{Solve the equation.}}{\textit{Löse die Gleichung.}}
@@ -1335,7 +1345,7 @@ der Doppelstrich-Buchstaben.}
 \lies{\textit{Probe:} \newline $\frac{2 \cdot 3}{3} + \frac12 = \frac52$ \;\checkmark}{\textit{Check:} Substitute four for $x$: two plus a half equals five halves. \checkmark}{\textit{Probe:} Setze vier für $x$ ein: zwei plus ein Halb gleich fünf Halbe. \checkmark}
 \end{lesen}
 
-\platz\subsection*{Beispiel: eine lineare Ungleichung}
+\platz\zwischen{Beispiel: eine lineare Ungleichung}{Example: a linear inequality}{Ig"zA:mp\textsyllabic{l}, @ "lIni@r ""InI"kw6l@ti}
 
 \begin{lesen}
 \lies{$3 - 2x < 9$}{\textit{Solve the inequality.}}{\textit{Löse die Ungleichung.}}
@@ -1354,7 +1364,7 @@ der Doppelstrich-Buchstaben.}
 \end{tikzpicture}
 \end{center}
 
-\platz\subsection*{Gleichungsarten}
+\platz\zwischen{Gleichungsarten}{Types of equations}{"taIps @v I"kweIZ\textsyllabic{n}z}
 
 \begin{lesen}
 \lies{$3x - 7 = 11$}{a linear equation (an equation of the first degree): three $x$ minus seven equals eleven}{eine lineare Gleichung (Gleichung ersten Grades): drei $x$ minus sieben gleich elf}
@@ -1371,7 +1381,7 @@ im Zähler steht. Klammern liest man bei Bedarf mit: \textit{open bracket} \ldot
 
 %--------------------------------------------------------------------------------------------------
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$x^2 - 5x + 6 = 0$ \newline $(x - 2)(x - 3) = 0$}{Factorise the left-hand side.}{Zerlege die linke Seite in Faktoren.}
@@ -1379,7 +1389,7 @@ im Zähler steht. Klammern liest man bei Bedarf mit: \textit{open bracket} \ldot
 \end{lesen}
 
 \newpage
-\section{Funktionen}
+\kapitel{Funktionen}{Functions}{"f2NkS\textsyllabic{n}z}
 
 \begin{lesen}
 \lies{$y = f(x)$}{$y$ equals $f$ of $x$ \;/\; $y$ is a function of $x$ ($y$ is the value of the function corresponding to $x$)}{$y$ gleich $f$ von $x$ \;/\; $y$ ist der Funktionswert zu $x$}
@@ -1391,7 +1401,7 @@ im Zähler steht. Klammern liest man bei Bedarf mit: \textit{open bracket} \ldot
 \lies{$D_f,\ W_f$}{the domain (of definition) and the range of $f$}{der Definitionsbereich und der Wertebereich von $f$}
 \end{lesen}
 
-\platz\subsection*{Der Graph einer Funktion}
+\platz\zwischen{Der Graph einer Funktion}{The graph of a function}{D@ "grA:f @v @ "f2NkS\textsyllabic{n}}
 
 \begin{center}
 \begin{tikzpicture}[font=\small, scale=1.05]
@@ -1426,7 +1436,7 @@ im Zähler steht. Klammern liest man bei Bedarf mit: \textit{open bracket} \ldot
 \lies{$y_P$}{the ordinate (the $y$-coordinate) of $P$}{die Ordinate ($y$-Koordinate) von $P$}
 \end{lesen}
 
-\platz\subsection*{Einteilung der elementaren Funktionen}
+\platz\zwischen{Einteilung der elementaren Funktionen}{Classification of the elementary functions}{""kl\ae sIfI"keIS\textsyllabic{n} @v Di ""elI"mentri "f2NkS\textsyllabic{n}z}
 
 \begin{center}
 \begin{tikzpicture}[font=\footnotesize, every node/.style={align=left, anchor=west}]
@@ -1456,7 +1466,7 @@ im Zähler steht. Klammern liest man bei Bedarf mit: \textit{open bracket} \ldot
 
 %--------------------------------------------------------------------------------------------------
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$f(x) = 2x^2 - 3$ \newline $f(2) = 5$}{$f$ of two equals five: the point $P(2 \mid 5)$ lies on the graph of $f$}{$f$ von zwei ist fünf: Der Punkt $P(2 \mid 5)$ liegt auf dem Graphen von $f$}
@@ -1466,7 +1476,7 @@ im Zähler steht. Klammern liest man bei Bedarf mit: \textit{open bracket} \ldot
 \end{lesen}
 
 \newpage
-\section{Winkelfunktionen}
+\kapitel{Winkelfunktionen}{Trigonometric functions}{""trIg@n@"metrIk "f2NkS\textsyllabic{n}z}
 
 \begin{center}
 \begin{tikzpicture}[scale=2.1, font=\small]
@@ -1504,7 +1514,7 @@ $\frac{1}{\sin x}$. Auf Taschenrechnern steht dafür ebenfalls oft \textsf{SIN$^
 
 %--------------------------------------------------------------------------------------------------
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$\cos 60\degree = \dfrac12$}{the cosine of sixty degrees is one half}{der Kosinus von sechzig Grad ist ein Halb}
@@ -1514,7 +1524,7 @@ $\frac{1}{\sin x}$. Auf Taschenrechnern steht dafür ebenfalls oft \textsf{SIN$^
 \end{lesen}
 
 \newpage
-\section{Intervalle und Grenzwerte}
+\kapitel{Intervalle und Grenzwerte}{Intervals and limits}{"Int@v\textsyllabic{l}z @n "lImIts}
 
 \begin{lesen}
 \lies{\intervall{o}{o} \newline $]a;\,b[$ \quad engl. $(a, b)$}{the open interval from $a$ to $b$: $a < x < b$}{das offene Intervall von $a$ bis $b$: $a < x < b$}
@@ -1539,7 +1549,7 @@ $-\infty < x \le 2$.}
 
 %--------------------------------------------------------------------------------------------------
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$x \in [2;\,5]$}{$x$ is an element of the closed interval from two to five}{$x$ ist Element des abgeschlossenen Intervalls von zwei bis fünf}
@@ -1549,7 +1559,7 @@ $-\infty < x \le 2$.}
 \end{lesen}
 
 \newpage
-\section{Differenzialrechnung}
+\kapitel{Differenzialrechnung}{Differential calculus}{""dIf@"renS\textsyllabic{l} "k\ae lkj@l@s}
 
 \begin{center}
 \begin{tikzpicture}[scale=1.25, font=\small]
@@ -1584,7 +1594,7 @@ $-\infty < x \le 2$.}
 \lies{$\dot{s} = \dfrac{\mathrm{d}s}{\mathrm{d}t}$}{$s$ dot equals d $s$ by d $t$ (derivative with respect to time)}{$s$ Punkt gleich d $s$ nach d $t$ (Ableitung nach der Zeit)}
 \end{lesen}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$(x^3)' = 3x^2$}{the derivative of $x$ cubed is three $x$ squared}{die Ableitung von $x$ hoch drei ist drei $x$ Quadrat}
@@ -1596,7 +1606,7 @@ $-\infty < x \le 2$.}
 
 %--------------------------------------------------------------------------------------------------
 \newpage
-\section{Integralrechnung}
+\kapitel{Integralrechnung}{Integral calculus}{"IntIgr@l "k\ae lkj@l@s}
 
 \begin{center}
 \begin{tikzpicture}[scale=1.15, font=\small]
@@ -1626,7 +1636,7 @@ $-\infty < x \le 2$.}
 \lies{$\displaystyle\int_a^b f(x)\dx = A$}{for $f(x) \ge 0$: the area bounded by the graph of $f$, the $x$-axis and the lines $x = a$ and $x = b$}{für $f(x) \ge 0$: der Inhalt der Fläche zwischen dem Graphen von $f$, der $x$-Achse und den Geraden $x = a$ und $x = b$}
 \end{lesen}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$\displaystyle\int \cos x \dx = \sin x + C$}{the integral of cosine $x$ d $x$ equals sine $x$ plus $C$}{Integral Kosinus $x$ d $x$ gleich Sinus $x$ plus $C$}
@@ -1640,7 +1650,7 @@ integral calculus in geometry}: Flächeninhalte (\textit{areas}), Volumina (\tex
 
 %--------------------------------------------------------------------------------------------------
 \newpage
-\section{Geraden und Winkel}
+\kapitel{Geraden und Winkel}{Lines and angles}{"laInz @n "\ae Ng\textsyllabic{l}z}
 
 \begin{center}
 \begin{tikzpicture}[font=\small]
@@ -1665,7 +1675,7 @@ integral calculus in geometry}: Flächeninhalte (\textit{areas}), Volumina (\tex
 \lies{$\alpha + \beta = 180\degree$}{alpha and beta are supplementary angles: they add up to one hundred and eighty degrees}{Alpha und Beta sind Supplementwinkel: Sie ergänzen sich zu hundertachtzig Grad}
 \end{lesen}
 
-\platz\subsection*{Winkel an geschnittenen Parallelen}
+\platz\zwischen{Winkel an geschnittenen Parallelen}{Angles on parallel lines}{"\ae Ng\textsyllabic{l}z 6n "p\ae r@lel "laInz}
 
 \begin{center}
 \begin{tikzpicture}[font=\small, scale=1.1]
@@ -1688,7 +1698,7 @@ integral calculus in geometry}: Flächeninhalte (\textit{areas}), Volumina (\tex
 \lies{$\alpha_1$ und $\beta_1$}{adjacent angles on a straight line -- they add up to $180\degree$}{Nebenwinkel -- ergänzen sich zu $180\degree$}
 \end{lesen}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$\alpha_1 = 65\degree$ \newline $\beta_1 = 180\degree - 65\degree = 115\degree$}{Alpha one is sixty-five degrees. Beta one is its adjacent angle on the straight line, so beta one is one hundred and fifteen degrees.}{Alpha eins beträgt fünfundsechzig Grad. Beta eins ist der Nebenwinkel, also hundertfünfzehn Grad.}
@@ -1699,7 +1709,7 @@ integral calculus in geometry}: Flächeninhalte (\textit{areas}), Volumina (\tex
 
 %--------------------------------------------------------------------------------------------------
 \newpage
-\section{Dreiecke, Vierecke und Vielecke}
+\kapitel{Dreiecke, Vierecke und Vielecke}{Triangles, quadrilaterals and polygons}{"traI\ae Ng\textsyllabic{l}z, ""kw6drI"l\ae t@r@lz @n "p6lIg@nz}
 
 \begin{center}
 \begin{tikzpicture}[font=\small, scale=1.1]
@@ -1729,7 +1739,7 @@ integral calculus in geometry}: Flächeninhalte (\textit{areas}), Volumina (\tex
 \lies{$\triangle ABC \sim \triangle PQR$}{triangle $A$ $B$ $C$ is similar to triangle $P$ $Q$ $R$}{Dreieck $A$ $B$ $C$ ist ähnlich zu Dreieck $P$ $Q$ $R$}
 \end{lesen}
 
-\platz\subsection*{Besondere Dreiecke}
+\platz\zwischen{Besondere Dreiecke}{Special triangles}{"speS\textsyllabic{l} "traI\ae Ng\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{\skGleichschenklig}{an isosceles triangle: two equal sides (the legs), the third side is the base; the two base angles are equal}{ein gleichschenkliges Dreieck: zwei gleich lange Seiten (Schenkel), die dritte Seite ist die Basis; die Basiswinkel sind gleich groß}
@@ -1749,7 +1759,7 @@ integral calculus in geometry}: Flächeninhalte (\textit{areas}), Volumina (\tex
 \end{tikzpicture}
 \end{center}
 
-\platz\subsection*{Vierecke und regelmäßige Vielecke}
+\platz\zwischen{Vierecke und regelmäßige Vielecke}{Quadrilaterals and regular polygons}{""kw6drI"l\ae t@r@lz @n "regj@l@ "p6lIg@nz}
 
 \begin{lesen}
 \lies{\skTrapez}{a trapezium (AE: trapezoid): a quadrilateral with one pair of parallel sides}{ein Trapez: ein Viereck mit einem Paar paralleler Seiten}
@@ -1760,7 +1770,7 @@ integral calculus in geometry}: Flächeninhalte (\textit{areas}), Volumina (\tex
 \lies{\skNeck{5} \skNeck{6} \skNeck{8}}{regular polygons: a pentagon, a hexagon and an octagon (all sides and all angles are equal)}{regelmäßige Vielecke: ein Fünfeck, ein Sechseck und ein Achteck (alle Seiten und alle Winkel sind gleich groß)}
 \end{lesen}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$a = 3\,\mathrm{cm},\ b = 4\,\mathrm{cm}$ \newline $c = \sqrt{3^2 + 4^2}\,\mathrm{cm} = 5\,\mathrm{cm}$}{In a right-angled triangle the legs are three and four centimetres long. The hypotenuse is the square root of three squared plus four squared, that is five centimetres.}{In einem rechtwinkligen Dreieck sind die Katheten drei und vier Zentimeter lang. Die Hypotenuse ist die Wurzel aus drei Quadrat plus vier Quadrat, also fünf Zentimeter.}
@@ -1771,7 +1781,7 @@ integral calculus in geometry}: Flächeninhalte (\textit{areas}), Volumina (\tex
 
 %--------------------------------------------------------------------------------------------------
 \newpage
-\section{Der Kreis und seine Teile}
+\kapitel{Der Kreis und seine Teile}{The circle and its parts}{D@ "s3:k\textsyllabic{l} @n Its "pA:ts}
 
 \begin{center}
 \begin{tikzpicture}[font=\small, scale=1.2]
@@ -1805,7 +1815,7 @@ integral calculus in geometry}: Flächeninhalte (\textit{areas}), Volumina (\tex
 \lies{$A = \pi r^2$}{the area equals pi $r$ squared}{der Flächeninhalt ist gleich pi $r$ Quadrat}
 \end{lesen}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$r = 5\,\mathrm{cm}$ \newline $u = 2\pi \cdot 5\,\mathrm{cm} \approx 31{,}4\,\mathrm{cm}$}{The radius is five centimetres, so the circumference is two pi times five centimetres, which is approximately thirty-one point four centimetres.}{Der Radius beträgt fünf Zentimeter, also ist der Umfang zwei pi mal fünf Zentimeter, ungefähr einunddreißig Komma vier Zentimeter.}
@@ -1815,7 +1825,7 @@ integral calculus in geometry}: Flächeninhalte (\textit{areas}), Volumina (\tex
 
 %--------------------------------------------------------------------------------------------------
 \newpage
-\section{Körper berechnen}
+\kapitel{Körper berechnen}{Calculating solids}{"k\ae lkjuleItIN "s6lIdz}
 
 \begin{center}
 \begin{tikzpicture}[font=\small]
@@ -1852,7 +1862,7 @@ integral calculus in geometry}: Flächeninhalte (\textit{areas}), Volumina (\tex
 \lies{$O = 4\pi r^2$}{the surface area of a sphere equals four pi $r$ squared}{der Oberflächeninhalt einer Kugel ist gleich vier pi $r$ Quadrat}
 \end{lesen}
 
-\platz\subsection*{Besondere Körper}
+\platz\zwischen{Besondere Körper}{Special solids}{"speS\textsyllabic{l} "s6lIdz}
 
 \begin{lesen}
 \lies{\skPyramidenstumpf \; \skKegelstumpf}{a frustum of a pyramid and a frustum of a cone (a truncated cone): the top has been cut off parallel to the base}{ein Pyramidenstumpf und ein Kegelstumpf: Die Spitze wurde parallel zur Grundfläche abgeschnitten}
@@ -1860,7 +1870,7 @@ integral calculus in geometry}: Flächeninhalte (\textit{areas}), Volumina (\tex
 \lies{\skRotation}{a solid of revolution: it is generated by rotating a plane region about an axis -- here a semicircle generates a sphere}{ein Rotationskörper: Er entsteht, wenn eine ebene Fläche um eine Achse rotiert -- hier erzeugt ein Halbkreis eine Kugel}
 \end{lesen}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$a = 4\,\mathrm{cm},\ b = 3\,\mathrm{cm},\ c = 2\,\mathrm{cm}$ \newline $V = 24\,\mathrm{cm}^3$}{The volume of the cuboid is four times three times two, that is twenty-four cubic centimetres.}{Das Volumen des Quaders ist vier mal drei mal zwei, also vierundzwanzig Kubikzentimeter.}
@@ -1872,7 +1882,7 @@ integral calculus in geometry}: Flächeninhalte (\textit{areas}), Volumina (\tex
 
 %--------------------------------------------------------------------------------------------------
 \newpage
-\section{Trigonometrie im Dreieck}
+\kapitel{Trigonometrie im Dreieck}{Trigonometry in triangles}{""trIg@"n6m@tri In "traI\ae Ng\textsyllabic{l}z}
 
 \begin{center}
 \begin{tikzpicture}[font=\small, scale=1.1]
@@ -1903,7 +1913,7 @@ integral calculus in geometry}: Flächeninhalte (\textit{areas}), Volumina (\tex
 Die Tafelwerke mit Winkelfunktions- und Logarithmentafeln aus älteren Büchern ersetzt heute der
 Taschenrechner (\textit{calculator}).}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$a = 3\,\mathrm{cm},\ c = 5\,\mathrm{cm}$ \newline $\sin\alpha = \frac35 = 0{,}6$ \newline $\alpha \approx 36{,}9\degree$}{Sine alpha equals three over five, which is nought point six. So alpha is the inverse sine of nought point six, approximately thirty-six point nine degrees.}{Sinus Alpha ist drei durch fünf, also null Komma sechs. Damit ist Alpha der Arkussinus von null Komma sechs, ungefähr sechsunddreißig Komma neun Grad.}
@@ -1915,7 +1925,7 @@ Taschenrechner (\textit{calculator}).}
 
 %--------------------------------------------------------------------------------------------------
 \newpage
-\section{Koordinaten und Geraden}
+\kapitel{Koordinaten und Geraden}{Coordinates and straight lines}{k@U"O:dIn@ts @n ""streIt "laInz}
 
 \begin{center}
 \begin{tikzpicture}[font=\small, scale=0.95]
@@ -1946,7 +1956,7 @@ Taschenrechner (\textit{calculator}).}
 \lies{$m_1 \cdot m_2 = -1$}{two lines are perpendicular if the product of their gradients is minus one}{zwei Geraden sind zueinander senkrecht, wenn das Produkt ihrer Steigungen minus eins ist}
 \end{lesen}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$A(1 \mid 2),\ B(3 \mid 6)$ \newline $m = \dfrac{6 - 2}{3 - 1} = 2$}{Find the equation of the line through $A$ and $B$. The gradient is six minus two over three minus one, which is two.}{Bestimme die Gleichung der Geraden durch $A$ und $B$. Die Steigung ist sechs minus zwei durch drei minus eins, also zwei.}
@@ -1957,7 +1967,7 @@ Taschenrechner (\textit{calculator}).}
 
 %--------------------------------------------------------------------------------------------------
 \newpage
-\section{Kegelschnitte}
+\kapitel{Kegelschnitte}{Conic sections}{"k6nIk "sekS\textsyllabic{n}z}
 
 \begin{center}
 \begin{tikzpicture}[font=\footnotesize, scale=0.95]
@@ -2006,7 +2016,7 @@ Taschenrechner (\textit{calculator}).}
 \anmerkung{Kreis, Ellipse, Parabel und Hyperbel heißen Kegelschnitte (\textit{conic sections}, kurz
 \textit{conics}), weil sie entstehen, wenn eine Ebene einen Doppelkegel schneidet.}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$x^2 + y^2 = 25$ \newline $P(3 \mid 4)$: $9 + 16 = 25$ \checkmark}{The point $P$ three four lies on the circle, because three squared plus four squared equals twenty-five.}{Der Punkt $P$ drei vier liegt auf dem Kreis, denn drei Quadrat plus vier Quadrat ist fünfundzwanzig.}
@@ -2016,9 +2026,9 @@ Taschenrechner (\textit{calculator}).}
 
 %--------------------------------------------------------------------------------------------------
 \newpage
-\section{Folgen, Vektoren, Matrizen und Kombinatorik}
+\kapitel{Folgen, Vektoren, Matrizen und Kombinatorik}{Sequences, vectors, matrices and combinatorics}{"si:kw@nsIz, "vekt@z, "meItrIsi:z @n ""k6mbIn@"t6rIks}
 
-\platz\subsection*{Folgen und Reihen}
+\platz\zwischen{Folgen und Reihen}{Sequences and series}{"si:kw@nsIz @n "sI@ri:z}
 \begin{lesen}
 \lies{$a_n = a_1 + (n - 1) \cdot d$}{the $n$th term of an arithmetic sequence: $a$ sub $n$ equals $a$ one plus $n$ minus one, times $d$ ($d$ is the common difference)}{das $n$-te Glied einer arithmetischen Folge: $a$ $n$ gleich $a$ eins plus $n$ minus eins mal $d$}
 \lies{$a_n = a_1 \cdot q^{\,n-1}$}{the $n$th term of a geometric sequence: $a$ sub $n$ equals $a$ one times $q$ to the power of $n$ minus one ($q$ is the common ratio)}{das $n$-te Glied einer geometrischen Folge: $a$ $n$ gleich $a$ eins mal $q$ hoch $n$ minus eins}
@@ -2026,7 +2036,7 @@ Taschenrechner (\textit{calculator}).}
 \lies{$\displaystyle\sum_{k=0}^{\infty} q^k = \frac{1}{1 - q}$ \newline für $|q| < 1$}{the infinite geometric series converges if the absolute value of $q$ is less than one; otherwise it diverges}{die unendliche geometrische Reihe konvergiert, wenn der Betrag von $q$ kleiner als eins ist; sonst divergiert sie}
 \end{lesen}
 
-\platz\subsection*{Vektoren und Matrizen}
+\platz\zwischen{Vektoren und Matrizen}{Vectors and matrices}{"vekt@z @n "meItrIsi:z}
 \begin{lesen}
 \lies{$\vec{a},\ |\vec{a}\,|$}{vector $a$; the magnitude (modulus) of vector $a$}{Vektor $a$; der Betrag von Vektor $a$}
 \lies{$\vec{a} \cdot \vec{b}$}{$a$ dot $b$ -- the scalar product (dot product)}{$a$ mal $b$ -- das Skalarprodukt}
@@ -2037,14 +2047,14 @@ Taschenrechner (\textit{calculator}).}
 \lies{$\det A$}{the determinant of $A$}{die Determinante von $A$}
 \end{lesen}
 
-\platz\subsection*{Kombinatorik}
+\platz\zwischen{Kombinatorik}{Combinatorics}{""k6mbIn@"t6rIks}
 \begin{lesen}
 \lies{$n!$}{$n$ factorial: the number of permutations of $n$ different elements}{$n$ Fakultät: die Anzahl der Permutationen von $n$ verschiedenen Elementen}
 \lies{$\dbinom{n}{k}$}{$n$ choose $k$: the number of combinations of $k$ elements chosen from $n$ (without repetition)}{$n$ über $k$: die Anzahl der Kombinationen von $k$ aus $n$ Elementen (ohne Wiederholung)}
 \lies{$\dfrac{n!}{(n - k)!}$}{the number of arrangements of $k$ elements taken from $n$, where the order matters}{die Anzahl der Variationen von $k$ aus $n$ Elementen (mit Beachtung der Reihenfolge)}
 \end{lesen}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$3;\ 7;\ 11;\ 15;\ \ldots$ \newline $a_{10} = 3 + 9 \cdot 4 = 39$}{an arithmetic sequence with the first term three and the common difference four; the tenth term is thirty-nine}{eine arithmetische Folge mit dem Anfangsglied drei und der Differenz vier; das zehnte Glied ist neununddreißig}
@@ -2056,7 +2066,7 @@ Taschenrechner (\textit{calculator}).}
 
 %--------------------------------------------------------------------------------------------------
 \newpage
-\section{Das griechische Alphabet}
+\kapitel{Das griechische Alphabet}{The Greek alphabet}{D@ "gri:k "\ae lf@bet}
 
 Griechische Buchstaben werden im Englischen anders ausgesprochen als im Deutschen -- besonders
 auffällig bei $\pi$, $\varphi$, $\chi$ und $\psi$.
@@ -2082,7 +2092,7 @@ auffällig bei $\pi$, $\varphi$, $\chi$ und $\psi$.
 \end{tabular}}
 \end{center}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$\alpha,\ \beta,\ \gamma$}{alpha, beta and gamma are the interior angles of the triangle}{Alpha, Beta und Gamma sind die Innenwinkel des Dreiecks}
@@ -2097,7 +2107,7 @@ auffällig bei $\pi$, $\varphi$, $\chi$ und $\psi$.
 
 \newpage
 %%%%  REGISTER  %%%%
-\part{Register}
+\teil{Register}{Index}{"Indeks}
 \section{Register Deutsch -- Englisch}
 \begin{multicols}{2}\small\raggedright
 

@@ -6,7 +6,7 @@ sprechen“ mit Lesarten und Beispielen in beiden Sprachen.
 
 | Datei | Inhalt |
 |---|---|
-| [`Chemisches-Woerterbuch-Deutsch-Englisch.pdf`](Chemisches-Woerterbuch-Deutsch-Englisch.pdf) | fertiges PDF (52 Seiten) |
+| [`Chemisches-Woerterbuch-Deutsch-Englisch.pdf`](Chemisches-Woerterbuch-Deutsch-Englisch.pdf) | fertiges PDF (50 Seiten) |
 | `Chemisches-Woerterbuch-Deutsch-Englisch.tex` | erzeugter Quelltext, kompiliert mit pdflatex |
 | `quelle/` | Daten und Bausteine, aus denen `bauen.py` die `.tex`-Datei erzeugt |
 
@@ -20,7 +20,9 @@ sprechen“ mit Lesarten und Beispielen in beiden Sprachen.
   Verbindungen, pH-Wert, Rechnen mit Stoffmengen, Experimente und Sicherheit.
 - **Teil III – Register** Deutsch → Englisch und English → German.
 
-Jedes Kapitel beginnt auf einer neuen Seite und endet mit Beispielen.
+Jedes Kapitel beginnt auf einer neuen Seite und endet mit Beispielen. Alle
+Überschriften stehen zweisprachig da, die englische mit Lautschrift
+(`quelle/ueberschriften.py`).
 
 ## Bauen
 

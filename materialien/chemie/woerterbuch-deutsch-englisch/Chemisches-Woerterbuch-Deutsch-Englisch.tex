@@ -170,6 +170,22 @@
 \pagestyle{plain}
 \setlength{\tabcolsep}{4pt}
 
+
+% Zweisprachige Überschriften: \teil, \kapitel, \zwischen{Deutsch}{English}{Lautschrift}
+% Wie \eintrag wird " ausgeschaltet, BEVOR die Argumente gelesen werden (Betonungszeichen der Lautschrift).
+% Ins Inhaltsverzeichnis und in die PDF-Lesezeichen kommt nur „Deutsch -- English“ ohne Lautschrift.
+\makeatletter
+\newcommand\teil{\begingroup\shorthandoff{"}\teil@aux}
+\newcommand\teil@aux[3]{\endgroup\part[#1 -- #2]{\raggedright #1\\[5pt]{\normalfont\Large\color{black!55}#2\hspace{0.35em}\penalty0 \ipa{#3}}}}
+\newcommand\kapitel{\begingroup\shorthandoff{"}\kapitel@aux}
+\newcommand\kapitel@aux[3]{\endgroup\section[#1 -- #2]{\raggedright #1\\[0pt]{\normalfont\small\color{black!55}#2\hspace{0.35em}\penalty0 \ipa{#3}}}}
+\newcommand\zwischen{\begingroup\shorthandoff{"}\zwischen@aux}
+\newcommand\zwischen@aux[3]{\endgroup\subsection*{\raggedright #1 {\normalfont\small\color{black!55}\,--\, #2\hspace{0.35em}\penalty0 \ipa{#3}}}}
+% Die zweite Überschriftenzeile kostet Platz: Zeilen in den Listen und Tabellen etwas enger setzen
+\renewcommand\lies@aux[3]{\endgroup #1 & #2\newline{\color{black!60}#3} \\[1.5pt]}
+\makeatother
+\setlength{\aboverulesep}{0.15ex}\setlength{\belowrulesep}{0.3ex}\renewcommand{\arraystretch}{0.93}
+
 \begin{document}
 
 \maketitle
@@ -181,7 +197,7 @@ Elementnamen, Formeln und Reaktionsgleichungen auf Englisch liest, wie Verbindun
 wie man Experimente beschreibt. Am Ende finden Sie je ein alphabetisches Register Deutsch -- Englisch
 und Englisch -- Deutsch.
 
-\subsection*{Hinweise zur Lautschrift}
+\zwischen{Hinweise zur Lautschrift}{Notes on the phonetic transcription}{"n@Uts 6n D@ f@"netIk tr\ae n"skrIpS\textsyllabic{n}}
 
 Die Lautschrift folgt dem Internationalen Phonetischen Alphabet (IPA) und gibt die britische
 Aussprache wieder, wie sie in Schulwörterbüchern steht (dort wird \textipa{r} statt
@@ -211,10 +227,10 @@ Geräte sind blau, hervorgehobene Teile (der Begriff selbst) rot, Hilfslinien ge
 {\footnotesize\setlength{\parskip}{0pt}\tableofcontents}
 \newpage
 
-\part{Wörterbuch}
+\teil{Wörterbuch}{Dictionary}{"dIkS@n@ri}
 
 %%%%  STOFFE UND IHRE EIGENSCHAFTEN  %%%%
-\section{Stoffe und ihre Eigenschaften}
+\kapitel{Stoffe und ihre Eigenschaften}{Substances and their properties}{"s2bst@nsIz @n De@ "pr6p@tiz}
 
 \begin{woerter}
 \eintrag{1}{der}{Stoff}{substance}{"s2bst@ns}{}
@@ -257,7 +273,7 @@ Geräte sind blau, hervorgehobene Teile (der Begriff selbst) rot, Hilfslinien ge
 \eintrag{38}{die}{Chromatografie}{chromatography}{""kr@Um@"t6gr@fi}{}
 \end{woerter}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{\skElement \; \skVerbindung}{An element consists of only one kind of atom; a compound consists of two or more elements chemically combined.}{Ein Element besteht aus nur einer Atomsorte; eine Verbindung besteht aus zwei oder mehr chemisch verbundenen Elementen.}
@@ -270,7 +286,7 @@ Geräte sind blau, hervorgehobene Teile (der Begriff selbst) rot, Hilfslinien ge
 
 %%%%  LABORGERÄTE UND ARBEITSWEISEN  %%%%
 \newpage
-\section{Laborgeräte und Arbeitsweisen}
+\kapitel{Laborgeräte und Arbeitsweisen}{Laboratory apparatus and techniques}{l@"b6r@tri ""\ae p@"reIt@s @n tek"ni:ks}
 
 \begin{woerter}
 \eintrag{39}{das}{Reagenzglas}{test tube}{"test tju:b}{\skReagenzglas}
@@ -308,7 +324,7 @@ Geräte sind blau, hervorgehobene Teile (der Begriff selbst) rot, Hilfslinien ge
 \eintrag{71}{}{abkühlen}{cool (down)}{ku:l}{}
 \end{woerter}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{\skMesszylinder}{Measure out fifty millilitres of water using a measuring cylinder.}{Miss mit dem Messzylinder fünfzig Milliliter Wasser ab.}
@@ -321,7 +337,7 @@ Geräte sind blau, hervorgehobene Teile (der Begriff selbst) rot, Hilfslinien ge
 
 %%%%  ATOMBAU UND PERIODENSYSTEM  %%%%
 \newpage
-\section{Atombau und Periodensystem}
+\kapitel{Atombau und Periodensystem}{Atomic structure and the periodic table}{@"t6mIk "str2ktS@r @n D@ ""pI@ri"6dIk "teIb\textsyllabic{l}}
 
 \begin{woerter}
 \eintrag{72}{das}{Atom}{atom}{"\ae t@m}{}
@@ -359,7 +375,7 @@ Geräte sind blau, hervorgehobene Teile (der Begriff selbst) rot, Hilfslinien ge
 \eintrag{104}{die}{Verhältnisformel}{empirical formula}{Im"pIrIk\textsyllabic{l} "fO:mj@l@}{\ce{NaCl}}
 \end{woerter}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{\skSchalen}{A sodium atom has eleven protons in its nucleus and eleven electrons in three shells: two, eight, one.}{Ein Natriumatom hat elf Protonen im Kern und elf Elektronen auf drei Schalen: zwei, acht, eins.}
@@ -372,7 +388,7 @@ Geräte sind blau, hervorgehobene Teile (der Begriff selbst) rot, Hilfslinien ge
 
 %%%%  CHEMISCHE BINDUNG  %%%%
 \newpage
-\section{Chemische Bindung}
+\kapitel{Chemische Bindung}{Chemical bonding}{"kemIk\textsyllabic{l} "b6ndIN}
 
 \begin{woerter}
 \eintrag{105}{die}{chemische Bindung}{chemical bond}{"kemIk\textsyllabic{l} b6nd}{}
@@ -397,7 +413,7 @@ Geräte sind blau, hervorgehobene Teile (der Begriff selbst) rot, Hilfslinien ge
 \eintrag{124}{die}{delokalisierten Elektronen}{delocalised electrons}{di:"l@Uk@laIzd I"lektr6nz}{}
 \end{woerter}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{\skGitter}{In sodium chloride the sodium ions and the chloride ions are held together in a lattice by ionic bonds.}{Im Natriumchlorid werden die Natrium-Ionen und die Chlorid-Ionen durch Ionenbindung in einem Gitter zusammengehalten.}
@@ -410,7 +426,7 @@ Geräte sind blau, hervorgehobene Teile (der Begriff selbst) rot, Hilfslinien ge
 
 %%%%  CHEMISCHE REAKTIONEN  %%%%
 \newpage
-\section{Chemische Reaktionen}
+\kapitel{Chemische Reaktionen}{Chemical reactions}{"kemIk\textsyllabic{l} ri"\ae kS\textsyllabic{n}z}
 
 \begin{woerter}
 \eintrag{125}{die}{chemische Reaktion}{chemical reaction}{"kemIk\textsyllabic{l} ri"\ae kS\textsyllabic{n}}{}
@@ -442,7 +458,7 @@ Geräte sind blau, hervorgehobene Teile (der Begriff selbst) rot, Hilfslinien ge
 \eintrag{151}{der}{Nachweis}{test (for)}{test}{}
 \end{woerter}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{\ce{2 Mg + O2 -> 2 MgO}}{Magnesium reacts with oxygen to form magnesium oxide. Magnesium and oxygen are the reactants, magnesium oxide is the product.}{Magnesium reagiert mit Sauerstoff zu Magnesiumoxid. Magnesium und Sauerstoff sind die Ausgangsstoffe, Magnesiumoxid ist das Reaktionsprodukt.}
@@ -455,7 +471,7 @@ Geräte sind blau, hervorgehobene Teile (der Begriff selbst) rot, Hilfslinien ge
 
 %%%%  SÄUREN, BASEN UND SALZE  %%%%
 \newpage
-\section{Säuren, Basen und Salze}
+\kapitel{Säuren, Basen und Salze}{Acids, bases and salts}{"\ae sIdz, "beIsIz @n "sO:lts}
 
 \begin{woerter}
 \eintrag{152}{die}{Säure}{acid}{"\ae sId}{\ce{HCl}}
@@ -491,7 +507,7 @@ Geräte sind blau, hervorgehobene Teile (der Begriff selbst) rot, Hilfslinien ge
 \eintrag{182}{das}{Ammoniak}{ammonia}{@"m@Uni@}{\ce{NH3}}
 \end{woerter}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{\ce{HCl + NaOH -> NaCl + H2O}}{Hydrochloric acid reacts with sodium hydroxide solution to form sodium chloride and water: an acid and a base neutralise each other.}{Salzsäure reagiert mit Natronlauge zu Natriumchlorid und Wasser: Säure und Base neutralisieren einander.}
@@ -504,7 +520,7 @@ Geräte sind blau, hervorgehobene Teile (der Begriff selbst) rot, Hilfslinien ge
 
 %%%%  REDOXREAKTIONEN UND ELEKTROCHEMIE  %%%%
 \newpage
-\section{Redoxreaktionen und Elektrochemie}
+\kapitel{Redoxreaktionen und Elektrochemie}{Redox reactions and electrochemistry}{"red6ks ri"\ae kS\textsyllabic{n}z @n I""lektr@U"kemIstri}
 
 \begin{woerter}
 \eintrag{183}{die}{Oxidation}{oxidation}{""6ksI"deIS\textsyllabic{n}}{\ce{Mg -> Mg^2+ + 2 e-}}
@@ -534,7 +550,7 @@ Geräte sind blau, hervorgehobene Teile (der Begriff selbst) rot, Hilfslinien ge
 \eintrag{207}{der}{Hochofen}{blast furnace}{"blA:st ""f3:nIs}{}
 \end{woerter}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{\ce{2 Cu + O2 -> 2 CuO}}{Copper is oxidised to copper(II) oxide: the copper atoms lose electrons.}{Kupfer wird zu Kupfer(II)-oxid oxidiert: Die Kupferatome geben Elektronen ab.}
@@ -547,7 +563,7 @@ Geräte sind blau, hervorgehobene Teile (der Begriff selbst) rot, Hilfslinien ge
 
 %%%%  ORGANISCHE CHEMIE  %%%%
 \newpage
-\section{Organische Chemie}
+\kapitel{Organische Chemie}{Organic chemistry}{O:"g\ae nIk "kemIstri}
 
 \begin{woerter}
 \eintrag{208}{die}{organische Chemie}{organic chemistry}{O:"g\ae nIk "kemIstri}{}
@@ -592,7 +608,7 @@ Geräte sind blau, hervorgehobene Teile (der Begriff selbst) rot, Hilfslinien ge
 \eintrag{247}{die}{alkoholische Gärung}{fermentation}{""f3:men"teIS\textsyllabic{n}}{}
 \end{woerter}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{\ce{CH4 + 2 O2 -> CO2 + 2 H2O}}{Methane burns in oxygen to form carbon dioxide and water.}{Methan verbrennt mit Sauerstoff zu Kohlenstoffdioxid und Wasser.}
@@ -602,7 +618,7 @@ Geräte sind blau, hervorgehobene Teile (der Begriff selbst) rot, Hilfslinien ge
 
 %%%%  STOFFMENGE UND CHEMISCHES RECHNEN  %%%%
 \newpage
-\section{Stoffmenge und chemisches Rechnen}
+\kapitel{Stoffmenge und chemisches Rechnen}{Amount of substance and chemical calculations}{@"maUnt @v "s2bst@ns @n "kemIk\textsyllabic{l} ""k\ae lkju"leIS\textsyllabic{n}z}
 
 \begin{woerter}
 \eintrag{248}{die}{Stoffmenge}{amount of substance}{@"maUnt @v "s2bst@ns}{$n$ in $\mathrm{mol}$}
@@ -620,7 +636,7 @@ Geräte sind blau, hervorgehobene Teile (der Begriff selbst) rot, Hilfslinien ge
 \eintrag{260}{der}{Überschuss}{excess}{Ik"ses}{}
 \end{woerter}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$M(\mathrm{H_2O}) = 18\eh{g/mol}$}{The molar mass of water is eighteen grams per mole.}{Die molare Masse von Wasser beträgt achtzehn Gramm pro Mol.}
@@ -633,14 +649,14 @@ Geräte sind blau, hervorgehobene Teile (der Begriff selbst) rot, Hilfslinien ge
 
 %%%%  TEIL II: CHEMIE LESEN UND SPRECHEN  %%%%
 \newpage
-\part{Chemie lesen und sprechen}
+\teil{Chemie lesen und sprechen}{Reading and speaking chemistry}{"ri:dIN @n "spi:kIN "kemIstri}
 
 In diesem Teil steht, wie man Elementnamen, Formeln und Reaktionsgleichungen auf Englisch (und zum
 Vergleich auf Deutsch) liest, wie Verbindungen benannt werden und wie man Experimente beschreibt.
 Links steht der Ausdruck, rechts die englische Lesart und darunter grau die deutsche.
 
 %--------------------------------------------------------------------------------------------------
-\section{Die Elemente: Namen und Aussprache}
+\kapitel{Die Elemente: Namen und Aussprache}{The elements: names and pronunciation}{Di "elIm@nts, "neImz @n pr@""n2nsi"eIS\textsyllabic{n}}
 
 Viele Elemente heißen im Englischen anders als im Deutschen oder werden deutlich anders
 ausgesprochen. Das Elementsymbol ist in beiden Sprachen gleich.
@@ -676,7 +692,7 @@ ausgesprochen. Das Elementsymbol ist in beiden Sprachen gleich.
 britischen Texten steht \textit{sulphur}. Amerikanisch: \textit{aluminum} \ipa{@"lu:mIn@m}. Im Deutschen
 gelten heute Iod (früher Jod), Calcium (Kalzium), Oxid (Oxyd) und Ethan (Äthan).}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{Na}{Sodium is a soft, silvery metal which reacts vigorously with water.}{Natrium ist ein weiches, silbrig glänzendes Metall, das heftig mit Wasser reagiert.}
@@ -688,7 +704,7 @@ gelten heute Iod (früher Jod), Calcium (Kalzium), Oxid (Oxyd) und Ethan (Äthan
 
 %--------------------------------------------------------------------------------------------------
 \newpage
-\section{Formeln und Reaktionsgleichungen lesen}
+\kapitel{Formeln und Reaktionsgleichungen lesen}{Reading formulae and equations}{"ri:dIN "fO:mjuli: @n I"kweIZ\textsyllabic{n}z}
 
 \begin{center}
 \begin{tikzpicture}[font=\small]
@@ -716,7 +732,7 @@ gelten heute Iod (früher Jod), Calcium (Kalzium), Oxid (Oxyd) und Ethan (Äthan
 \lies{$\Delta H = -286\eh{kJ/mol}$}{delta H equals minus two hundred and eighty-six kilojoules per mole: the reaction is exothermic}{Delta H gleich minus zweihundertsechsundachtzig Kilojoule pro Mol: Die Reaktion ist exotherm}
 \end{lesen}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{\ce{Zn(s) + 2 HCl(aq) -> ZnCl2(aq) + H2(g)}}{Zinc reacts with hydrochloric acid to form zinc chloride solution and hydrogen gas.}{Zink reagiert mit Salzsäure zu Zinkchloridlösung und gasförmigem Wasserstoff.}
@@ -728,7 +744,7 @@ gelten heute Iod (früher Jod), Calcium (Kalzium), Oxid (Oxyd) und Ethan (Äthan
 
 %--------------------------------------------------------------------------------------------------
 \newpage
-\section{Verbindungen aus zwei Elementen benennen}
+\kapitel{Verbindungen aus zwei Elementen benennen}{Naming binary compounds}{"neImIN "baIn@ri "k6mpaUndz}
 
 Der Name eines Salzes aus zwei Elementen besteht aus dem Namen des Metalls (Kation), bei Bedarf
 seiner Wertigkeit als römischer Zahl und dem Namen des Nichtmetalls (Anion) mit der Endung
@@ -759,7 +775,7 @@ seiner Wertigkeit als römischer Zahl und dem Namen des Nichtmetalls (Anion) mit
 \lies{\ce{PbO2}}{lead(IV) oxide \ipa{""led "fO:r "6ksaId}}{Blei(IV)-oxid}
 \end{lesen}
 
-\platz\subsection*{Zahlwörter bei Verbindungen aus Nichtmetallen}
+\platz\zwischen{Zahlwörter bei Verbindungen aus Nichtmetallen}{Number prefixes for non-metal compounds}{"n2mb@ "pri:fIksIz f@ ""n6n"met\textsyllabic{l} "k6mpaUndz}
 
 \begin{center}
 {\small
@@ -790,7 +806,7 @@ Endung \textit{-ous} für die niedrigere, \textit{-ic} für die höhere Wertigke
 \ipa{"fer@s} \textit{chloride} = iron(II) chloride, \textit{ferric} \ipa{"ferIk} \textit{chloride} =
 iron(III) chloride, \textit{cuprous} \ipa{"kju:pr@s} und \textit{cupric} \ipa{"kju:prIk} für Kupfer(I) und Kupfer(II).}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{\ce{Al2O3}}{aluminium oxide -- no Roman numeral is needed, because aluminium always has a valency of three}{Aluminiumoxid -- die römische Zahl entfällt, weil Aluminium immer dreiwertig ist}
@@ -802,7 +818,7 @@ iron(III) chloride, \textit{cuprous} \ipa{"kju:pr@s} und \textit{cupric} \ipa{"k
 
 %--------------------------------------------------------------------------------------------------
 \newpage
-\section{Säuren, Basen und ihre Salze benennen}
+\kapitel{Säuren, Basen und ihre Salze benennen}{Naming acids, bases and their salts}{"neImIN "\ae sIdz, "beIsIz @n De@ "sO:lts}
 
 \begin{center}
 \begin{tikzpicture}[font=\small]
@@ -837,7 +853,7 @@ iron(III) chloride, \textit{cuprous} \ipa{"kju:pr@s} und \textit{cupric} \ipa{"k
 \end{tabular}}
 \end{center}
 
-\platz\subsection*{Basen und bekannte Salze}
+\platz\zwischen{Basen und bekannte Salze}{Bases and common salts}{"beIsIz @n "k6m@n "sO:lts}
 
 \begin{lesen}
 \lies{\ce{NaOH}}{sodium hydroxide \ipa{haI"dr6ksaId} (caustic soda \ipa{""kO:stIk "s@Ud@}); in water: sodium hydroxide solution}{Natriumhydroxid (Ätznatron); in Wasser gelöst: Natronlauge}
@@ -855,7 +871,7 @@ iron(III) chloride, \textit{cuprous} \ipa{"kju:pr@s} und \textit{cupric} \ipa{"k
 Wasser \textit{hydrochloric acid}. Die Endung \textit{-ide} wird \ipa{aId} gesprochen, \textit{-ate}
 \ipa{eIt} und \textit{-ite} \ipa{aIt} -- \textit{sulfide, sulfate, sulfite} klingen also deutlich verschieden.}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{\ce{H2SO4 + 2 NaOH -> Na2SO4 + 2 H2O}}{Sulfuric acid reacts with sodium hydroxide to form sodium sulfate and water.}{Schwefelsäure reagiert mit Natriumhydroxid zu Natriumsulfat und Wasser.}
@@ -863,7 +879,7 @@ Wasser \textit{hydrochloric acid}. Die Endung \textit{-ide} wird \ipa{aId} gespr
 
 %--------------------------------------------------------------------------------------------------
 \newpage
-\section{Der pH-Wert und Indikatoren}
+\kapitel{Der pH-Wert und Indikatoren}{pH and indicators}{""pi: "eItS @n "IndIkeIt@z}
 
 \begin{center}
 \begin{tikzpicture}[font=\small]
@@ -885,7 +901,7 @@ Wasser \textit{hydrochloric acid}. Die Endung \textit{-ide} wird \ipa{aId} gespr
 \lies{Bromthymolblau}{bromothymol \ipa{""br@Um@U"TaIm6l} blue: yellow in acidic, green in neutral and blue in alkaline solutions}{Bromthymolblau: in saurer Lösung gelb, in neutraler grün und in alkalischer blau}
 \end{lesen}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$c(\ce{H3O+}) = 0{,}01\eh{mol/l}$ \newline pH $= 2$}{The concentration of oxonium ions is nought point nought one moles per litre, so the pH is two.}{Die Konzentration der Oxonium-Ionen beträgt null Komma null eins Mol pro Liter, der pH-Wert ist also zwei.}
@@ -894,7 +910,7 @@ Wasser \textit{hydrochloric acid}. Die Endung \textit{-ide} wird \ipa{aId} gespr
 
 %--------------------------------------------------------------------------------------------------
 \newpage
-\section{Organische Verbindungen benennen}
+\kapitel{Organische Verbindungen benennen}{Naming organic compounds}{"neImIN O:"g\ae nIk "k6mpaUndz}
 
 Der Stamm des Namens gibt die Zahl der Kohlenstoffatome an, die Endung die Stoffklasse.
 
@@ -950,7 +966,7 @@ Der Stamm des Namens gibt die Zahl der Kohlenstoffatome an, die Endung die Stoff
 bezeichnet Waschbenzin. Stellungsziffern liest man einzeln: \textit{but-1-ene} -- „but one ene“,
 \textit{propan-2-ol} -- „propan two ol“, \textit{2,2-dimethylpropane} -- „two two dimethylpropane“.}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{\ce{C3H8}}{Propane is the third member of the homologous series of the alkanes.}{Propan ist das dritte Glied der homologen Reihe der Alkane.}
@@ -962,7 +978,7 @@ bezeichnet Waschbenzin. Stellungsziffern liest man einzeln: \textit{but-1-ene} -
 
 %--------------------------------------------------------------------------------------------------
 \newpage
-\section{Rechnen mit Stoffmengen}
+\kapitel{Rechnen mit Stoffmengen}{Calculating with moles}{"k\ae lkjuleItIN wID "m@Ulz}
 
 \begin{lesen}
 \lies{$n = \dfrac{m}{M}$}{$n$ equals $m$ over capital $M$: the amount of substance equals the mass divided by the molar mass}{$n$ gleich $m$ durch groß $M$: Die Stoffmenge ist die Masse durch die molare Masse}
@@ -977,7 +993,7 @@ bezeichnet Waschbenzin. Stellungsziffern liest man einzeln: \textit{but-1-ene} -
 (\textit{molar}): $0{,}1\eh{mol/l} = 0.1\eh{mol\,dm^{-3}} = 0.1\eh{M}$. Eckige Klammern stehen für
 Konzentrationen: $[\ce{H3O+}]$.}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{$M(\ce{CO2}) = (12 + 2 \cdot 16)\eh{g/mol}$ \newline $M(\ce{CO2}) = 44\eh{g/mol}$}{To find the molar mass, add up the atomic masses: twelve plus two times sixteen is forty-four grams per mole.}{Für die molare Masse addiert man die Atommassen: zwölf plus zwei mal sechzehn ergibt vierundvierzig Gramm pro Mol.}
@@ -989,7 +1005,7 @@ Konzentrationen: $[\ce{H3O+}]$.}
 
 %--------------------------------------------------------------------------------------------------
 \newpage
-\section{Experimente beschreiben und sicher arbeiten}
+\kapitel{Experimente beschreiben und sicher arbeiten}{Describing experiments and working safely}{dI"skraIbIN Ik"sperIm@nts @n "w3:kIN "seIfli}
 
 \begin{center}
 \begin{tikzpicture}[font=\small, line cap=round, line join=round]
@@ -1015,7 +1031,7 @@ Die Teile eines Versuchsprotokolls (\textit{lab report}):
 \lies{\textbf{Auswertung}}{\textbf{Conclusion:} The solubility of potassium nitrate increases with temperature.}{Die Löslichkeit von Kaliumnitrat nimmt mit steigender Temperatur zu.}
 \end{lesen}
 
-\platz\subsection*{Beobachtungen und Nachweise}
+\platz\zwischen{Beobachtungen und Nachweise}{Observations and tests}{""6bz@"veIS\textsyllabic{n}z @n "tests}
 
 \begin{lesen}
 \lies{Gasentwicklung}{Bubbles of gas are given off (effervescence \ipa{""ef@"ves=ns}).}{Es steigen Gasblasen auf (die Lösung schäumt).}
@@ -1027,7 +1043,7 @@ Die Teile eines Versuchsprotokolls (\textit{lab report}):
 \lies{Flammenfärbung}{Flame test: sodium compounds colour the flame yellow, potassium compounds lilac.}{Flammenfärbung: Natriumverbindungen färben die Flamme gelb, Kaliumverbindungen violett.}
 \end{lesen}
 
-\platz\subsection*{Gefahren und Sicherheit}
+\platz\zwischen{Gefahren und Sicherheit}{Hazards and safety}{"h\ae z@dz @n "seIfti}
 
 \begin{lesen}
 \lies{entzündbar}{flammable \ipa{"fl\ae m@b=l}}{}
@@ -1039,7 +1055,7 @@ Die Teile eines Versuchsprotokolls (\textit{lab report}):
 \lies{umweltgefährlich}{hazardous to the environment \ipa{"h\ae z@d@s}}{}
 \end{lesen}
 
-\platz\subsection*{Beispiele}
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
 
 \begin{lesen}
 \lies{Schutz}{Wear safety goggles and tie back long hair.}{Trage eine Schutzbrille und binde lange Haare zusammen.}
@@ -1052,7 +1068,7 @@ Die Teile eines Versuchsprotokolls (\textit{lab report}):
 
 \newpage
 %%%%  REGISTER  %%%%
-\part{Register}
+\teil{Register}{Index}{"Indeks}
 \section{Register Deutsch -- Englisch}
 \begin{multicols}{2}\small\raggedright
 

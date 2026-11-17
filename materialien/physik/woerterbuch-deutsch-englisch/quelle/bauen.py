@@ -6,6 +6,7 @@
 daten.py        Begriffe für Teil I (Artikel, Begriff, englisch, Lautschrift, Formelzeichen/Skizze)
 praeambel.tex   dokumentspezifische Befehle und Skizzen
 teil2.tex       Teil II (Lesen und Sprechen) mit Beispielen
+ueberschriften.py  englische Übersetzung und Lautschrift aller Überschriften
 beispiele.tex   Beispiele am Ende der Kapitel von Teil I (Block je Kapitel, Titel hinter %%%)
 """
 import re, sys, unicodedata
@@ -148,5 +149,7 @@ hervorgehobene Teile (der Begriff selbst, Kräfte, Maße) rot, Hilfslinien gestr
 
 kopf, rumpf = tex.split("\\begin{document}", 1)
 tex = kopf + "\\begin{document}" + rumpf.replace("\\subsection*{", "\\platz\\subsection*{").replace("\\platz\\subsection*{Hinweise zur Lautschrift}", "\\subsection*{Hinweise zur Lautschrift}")
+from ueberschriften import zweisprachig
+tex = zweisprachig(tex)
 ZIEL.write_text(tex, encoding="utf-8")
 print(f"{n} Einträge -> {ZIEL}")
