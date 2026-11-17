@@ -25,7 +25,6 @@ skills/
 ├── schulorganisation/         Stoffverteilungsplan, Sitzplan, Klassenarbeit, Anki-Karten
 └── raetsel-spiele/            Sudoku, Schach
 handreichungen/                fertige PDFs aller Handreichungen
-druckvorlagen/                 druckfertige PDFs zum direkten Ausdrucken (z. B. Notenpapier)
 werkzeuge/                     Prüf- und Hilfsskripte für das Repository
 ```
 
@@ -132,20 +131,22 @@ auch ohne LaTeX-Installation. Die Quelltexte stehen in den
 
 ## Druckvorlagen
 
-Fertige Blätter zum direkten Ausdrucken, ohne LaTeX-Installation. Die
-Quelltexte liegen in den `assets/`-Ordnern der Skills.
+Fertige Blätter zum direkten Ausdrucken, ohne LaTeX-Installation. PDF und
+Quelltext liegen immer nebeneinander im `assets/`-Ordner des Skills und heißen
+gleich. Die Liedblätter sind eigenständig kompilierbar; Notenpapier und
+Quintenzirkel brauchen zusätzlich `header.tex`/`newcommands.tex` aus `latex-grundstil`.
 
-| Bereich | Druckvorlage | Format |
-|---|---|---|
-| Musik | [Notenpapier mit Violinschlüssel](druckvorlagen/musik/Notenpapier-A5-hoch-mit-Violinschluessel.pdf) | A5 hoch |
-|  | [Notenpapier ohne Schlüssel](druckvorlagen/musik/Notenpapier-A5-hoch-ohne-Schluessel.pdf) | A5 hoch |
-|  | [Notenpapier mit Violinschlüssel](druckvorlagen/musik/Notenpapier-A5-quer-mit-Violinschluessel.pdf) | A5 quer |
-|  | [Notenpapier ohne Schlüssel](druckvorlagen/musik/Notenpapier-A5-quer-ohne-Schluessel.pdf) | A5 quer |
-|  | [Quintenzirkel mit Eselsbrücken](druckvorlagen/musik/Quintenzirkel.pdf) | A4 |
-|  | [Liedblatt „Hänschen klein“ mit Akkorden und 3 Strophen](druckvorlagen/musik/Haenschen-klein.pdf) | A4 |
-|  | [Liedblatt „Alle meine Entchen“ mit 5 Strophen](druckvorlagen/musik/Alle-meine-Entchen.pdf) | A4 |
-|  | [Liedblatt „Hänsel und Gretel“ mit 3 Strophen](druckvorlagen/musik/Haensel-und-Gretel.pdf) | A4 |
-|  | [Liedblatt „Grün, grün, grün sind alle meine Kleider“ mit 6 Strophen](druckvorlagen/musik/Gruen-gruen-gruen.pdf) | A4 |
+| Bereich | Druckvorlage (PDF) | Quelltext | Format |
+|---|---|---|---|
+| Musik | [Notenpapier mit Violinschlüssel](skills/sprache-musik/latex-musixtex/assets/vorlage_notenpapier_a5_hoch_mit_schluessel.pdf) | [`vorlage_notenpapier_a5_hoch_mit_schluessel.tex`](skills/sprache-musik/latex-musixtex/assets/vorlage_notenpapier_a5_hoch_mit_schluessel.tex) | A5 hoch |
+|  | [Notenpapier ohne Schlüssel](skills/sprache-musik/latex-musixtex/assets/vorlage_notenpapier_a5_hoch_ohne_schluessel.pdf) | [`vorlage_notenpapier_a5_hoch_ohne_schluessel.tex`](skills/sprache-musik/latex-musixtex/assets/vorlage_notenpapier_a5_hoch_ohne_schluessel.tex) | A5 hoch |
+|  | [Notenpapier mit Violinschlüssel](skills/sprache-musik/latex-musixtex/assets/vorlage_notenpapier_a5_quer_mit_schluessel.pdf) | [`vorlage_notenpapier_a5_quer_mit_schluessel.tex`](skills/sprache-musik/latex-musixtex/assets/vorlage_notenpapier_a5_quer_mit_schluessel.tex) | A5 quer |
+|  | [Notenpapier ohne Schlüssel](skills/sprache-musik/latex-musixtex/assets/vorlage_notenpapier_a5_quer_ohne_schluessel.pdf) | [`vorlage_notenpapier_a5_quer_ohne_schluessel.tex`](skills/sprache-musik/latex-musixtex/assets/vorlage_notenpapier_a5_quer_ohne_schluessel.tex) | A5 quer |
+|  | [Quintenzirkel mit Eselsbrücken](skills/sprache-musik/latex-musixtex/assets/vorlage_quintenzirkel.pdf) | [`vorlage_quintenzirkel.tex`](skills/sprache-musik/latex-musixtex/assets/vorlage_quintenzirkel.tex) | A4 |
+|  | [Liedblatt „Hänschen klein“ mit Akkorden und 3 Strophen](skills/sprache-musik/latex-musixtex/assets/vorlage_lied_haenschen.pdf) | [`vorlage_lied_haenschen.tex`](skills/sprache-musik/latex-musixtex/assets/vorlage_lied_haenschen.tex) | A4 |
+|  | [Liedblatt „Alle meine Entchen“ mit 5 Strophen](skills/sprache-musik/latex-musixtex/assets/vorlage_lied_entchen.pdf) | [`vorlage_lied_entchen.tex`](skills/sprache-musik/latex-musixtex/assets/vorlage_lied_entchen.tex) | A4 |
+|  | [Liedblatt „Hänsel und Gretel“ mit 3 Strophen](skills/sprache-musik/latex-musixtex/assets/vorlage_lied_haensel_gretel.pdf) | [`vorlage_lied_haensel_gretel.tex`](skills/sprache-musik/latex-musixtex/assets/vorlage_lied_haensel_gretel.tex) | A4 |
+|  | [Liedblatt „Grün, grün, grün sind alle meine Kleider“ mit 6 Strophen](skills/sprache-musik/latex-musixtex/assets/vorlage_lied_gruen.pdf) | [`vorlage_lied_gruen.tex`](skills/sprache-musik/latex-musixtex/assets/vorlage_lied_gruen.tex) | A4 |
 
 ## Installieren
 

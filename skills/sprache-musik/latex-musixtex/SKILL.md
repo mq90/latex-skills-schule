@@ -109,7 +109,7 @@ Ein großer `\staffbotmarg` schiebt den Text mit nach unten; mit positivem
 **Liedblätter** (`vorlage_lied_*.tex`) sind eigenständige Minimalbeispiele mit
 eigenem `\documentclass`, ohne header.tex: erste Strophe unter den Noten,
 weitere Strophen zweispaltig darunter (`multicols`, Befehl `\strophe{Nr}{Text}`),
-alles auf einer Seite. Getestet:
+alles auf einer Seite; das fertige PDF liegt gleichnamig daneben. Getestet:
 
 - `\parindent0pt` in der `music`-Umgebung: sonst ist die erste Zeile eingerückt
   und kürzer als die übrigen (musixflx gleicht nur die Folgezeilen aus).
@@ -131,7 +131,7 @@ an Harmoniewechseln, nicht an jede Note. Hochgestellte Ziffer: `C$^7$`.
 | `vorlage_lied_haensel_gretel.tex` | Liedblatt „Hänsel und Gretel“ (G-Dur, 2/4) – Muster für Achtelpaare mit Balken, Viertel- und Achtelpause |
 | `vorlage_lied_gruen.tex` | Liedblatt „Grün, grün, grün sind alle meine Kleider“ (G-Dur, 2/4), 6 Strophen – Muster für Melismen mit Bindebogen |
 | `vorlage_quintenzirkel.tex` | Quintenzirkel in TikZ: großer Kreis, Dur außen, parallele Moll innen, außen je ein Notenlinien-Ausschnitt mit den Vorzeichen (Ges links, Fis rechts), Eselsbrücken und Merkregeln darunter; Schlüssel/Vorzeichen aus der Schrift `musix24` (`\char71/52/50`), **kein** `\usepackage{musixtex}` |
-| `vorlage_notenpapier_a5_{hoch,quer}_{mit,ohne}_schluessel.tex` | Blanko-Notenpapier A5; setzen nur zwei Schalter und laden `notenpapier.tex` (dort Linien- und Systemabstand einstellen). Druckfertige PDFs in `druckvorlagen/musik/` |
+| `vorlage_notenpapier_a5_{hoch,quer}_{mit,ohne}_schluessel.tex` | Blanko-Notenpapier A5; setzen nur zwei Schalter und laden `notenpapier.tex` (dort Linien- und Systemabstand einstellen). Druckfertige PDFs gleichnamig daneben |
 
 ## Stolpersteine
 
