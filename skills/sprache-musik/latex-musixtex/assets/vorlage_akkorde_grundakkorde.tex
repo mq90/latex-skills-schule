@@ -1,0 +1,104 @@
+% ===================================================================
+%  Minimalbeispiel: Grundakkorde aller Tonarten in der Reihenfolge des
+%  Quintenzirkels – Seite 1 Dur, Seite 2 Moll. Je Tonart: Notenzeile mit
+%  Vorzeichen und Dreiklang, Klaviatur (Akkord hellgrün), Tonnamen.
+%  Oben ein kleiner Quintenzirkel in denselben Farben wie die Zeilen.
+%  Braucht nur akkord-makros.tex aus demselben Ordner. Ein Durchlauf pdflatex.
+% ===================================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{lmodern}
+\usepackage[margin=1.2cm]{geometry}
+\usepackage{tikz}
+\input{akkord-makros.tex}   % liegt im selben Ordner
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+% Zwölf Farben rund um den Quintenzirkel (Position 0 = C oben, im Uhrzeigersinn)
+\foreach \i in {0,...,11}{
+  \pgfmathsetmacro{\farbton}{mod(0.30-\i/12+1,1)}
+  \xglobal\definecolor{qz\i}{hsb}{\farbton,0.50,0.95} }
+
+% \Quintenzirkel{Dur-Namen}{Moll-Namen}: kleines Rad, außen Dur, innen Moll
+\newcommand{\Quintenzirkel}[2]{%
+  \begin{tikzpicture}[font=\sffamily]
+    \foreach \i in {0,...,11}{
+      \fill[qz\i] (0,0) -- ({105-30*\i}:2.05) arc ({105-30*\i}:{75-30*\i}:2.05) -- cycle;
+      \draw[white, line width=0.8pt] (0,0) -- ({105-30*\i}:2.05); }
+    \fill[white] (0,0) circle (0.55);
+    \draw[white, line width=0.8pt] (0,0) circle (1.3);
+    \foreach \n [count=\i from 0] in {#1}{ \node[font=\sffamily\bfseries\small] at ({90-30*\i}:1.68) {\n}; }
+    \foreach \n [count=\i from 0] in {#2}{ \node[font=\sffamily\scriptsize] at ({90-30*\i}:0.93) {\n}; }
+  \end{tikzpicture}}
+
+% \Grundakkord{Zeile}{Farbe 0–11}{Name}{Zusatz}{Vorzeichen}{Stufe}{Töne Klavier}{Tonnamen}
+\newcommand{\Grundakkord}[8]{%
+  \begin{scope}[shift={(0,{-1.83*#1})}]
+    \fill[qz#2, rounded corners=1.5pt] (0,-0.15) rectangle (0.32,1.35);
+    \node[font=\sffamily\bfseries\Large, anchor=west] at (0.55,0.72) {#3};
+    \node[font=\sffamily\scriptsize, text=black!60, anchor=west] at (0.57,0.22) {#4};
+    \begin{scope}[shift={(3.1,0.18)}, x=1pt, y=1pt]
+      \Notenlinien{118}
+      \Taktstrich{118}
+      \Vorzeichnung{31}{#5}
+      \Dreiklang{92}{#6}{0}{0}{0}
+    \end{scope}
+    \Klaviatur[shift={(8.1,-0.05)}, x=3.7mm, y=13mm]{#7}
+    \node[font=\sffamily\large, anchor=west, align=left] at (13.8,0.6) {#8};
+    \draw[black!15, line width=0.4pt] (0,-0.42) -- (18.4,-0.42);
+  \end{scope}}
+
+\begin{document}
+% ------------------------------ Dur ------------------------------
+\begin{minipage}[c]{0.6\textwidth}
+{\Huge\bfseries\sffamily Dur-Grundakkorde}\\[6pt]
+{\sffamily in der Reihenfolge des Quintenzirkels:\\ von C-Dur im Uhrzeigersinn, jede Tonart\\ eine Quinte höher. Die Farbe der Zeile zeigt\\ den Platz im Kreis (außen Dur, innen Moll).}
+\end{minipage}\hfill
+\begin{minipage}[c]{0.36\textwidth}\raggedleft
+\Quintenzirkel{C,G,D,A,E,H,Fis,Des,As,Es,B,F}{a,e,h,fis,cis,gis,dis,b,f,c,g,d}
+\end{minipage}
+
+\vspace{4mm}
+\begin{tikzpicture}
+  \Grundakkord{1}{0}{C-Dur}{keine Vorzeichen}{0}{-2}{0,4,7}{C – E – G}
+  \Grundakkord{2}{1}{G-Dur}{1 Kreuz}{1}{2}{7,11,14}{G – H – D}
+  \Grundakkord{3}{2}{D-Dur}{2 Kreuze}{2}{-1}{2,6,9}{D – Fis – A}
+  \Grundakkord{4}{3}{A-Dur}{3 Kreuze}{3}{3}{9,13,16}{A – Cis – E}
+  \Grundakkord{5}{4}{E-Dur}{4 Kreuze}{4}{0}{4,8,11}{E – Gis – H}
+  \Grundakkord{6}{5}{H-Dur}{5 Kreuze}{5}{4}{11,15,18}{H – Dis – Fis}
+  \Grundakkord{7}{6}{Fis-Dur}{6 Kreuze}{6}{1}{6,10,13}{Fis – Ais – Cis\\[-1pt]{\scriptsize\color{black!60}= Ges-Dur mit 6 Be: Ges – B – Des}}
+  \Grundakkord{8}{7}{Des-Dur}{5 Be}{-5}{-1}{1,5,8}{Des – F – As}
+  \Grundakkord{9}{8}{As-Dur}{4 Be}{-4}{3}{8,12,15}{As – C – Es}
+  \Grundakkord{10}{9}{Es-Dur}{3 Be}{-3}{0}{3,7,10}{Es – G – B}
+  \Grundakkord{11}{10}{B-Dur}{2 Be}{-2}{4}{10,14,17}{B – D – F}
+  \Grundakkord{12}{11}{F-Dur}{1 Be}{-1}{1}{5,9,12}{F – A – C}
+\end{tikzpicture}
+
+\newpage
+% ------------------------------ Moll ------------------------------
+\begin{minipage}[c]{0.6\textwidth}
+{\Huge\bfseries\sffamily Moll-Grundakkorde}\\[6pt]
+{\sffamily Die parallelen Molltonarten in derselben\\ Reihenfolge: gleiche Vorzeichen wie die\\ Durtonart derselben Farbe, Grundton eine\\ kleine Terz tiefer.}
+\end{minipage}\hfill
+\begin{minipage}[c]{0.36\textwidth}\raggedleft
+\Quintenzirkel{C,G,D,A,E,H,Fis,Des,As,Es,B,F}{a,e,h,fis,cis,gis,dis,b,f,c,g,d}
+\end{minipage}
+
+\vspace{4mm}
+\begin{tikzpicture}
+  \Grundakkord{1}{0}{a-Moll}{keine Vorzeichen}{0}{3}{9,12,16}{A – C – E}
+  \Grundakkord{2}{1}{e-Moll}{1 Kreuz}{1}{0}{4,7,11}{E – G – H}
+  \Grundakkord{3}{2}{h-Moll}{2 Kreuze}{2}{4}{11,14,18}{H – D – Fis}
+  \Grundakkord{4}{3}{fis-Moll}{3 Kreuze}{3}{1}{6,9,13}{Fis – A – Cis}
+  \Grundakkord{5}{4}{cis-Moll}{4 Kreuze}{4}{-2}{1,4,8}{Cis – E – Gis}
+  \Grundakkord{6}{5}{gis-Moll}{5 Kreuze}{5}{2}{8,11,15}{Gis – H – Dis}
+  \Grundakkord{7}{6}{dis-Moll}{6 Kreuze}{6}{-1}{3,6,10}{Dis – Fis – Ais\\[-1pt]{\scriptsize\color{black!60}= es-Moll mit 6 Be: Es – Ges – B}}
+  \Grundakkord{8}{7}{b-Moll}{5 Be}{-5}{4}{10,13,17}{B – Des – F}
+  \Grundakkord{9}{8}{f-Moll}{4 Be}{-4}{1}{5,8,12}{F – As – C}
+  \Grundakkord{10}{9}{c-Moll}{3 Be}{-3}{-2}{0,3,7}{C – Es – G}
+  \Grundakkord{11}{10}{g-Moll}{2 Be}{-2}{2}{7,10,14}{G – B – D}
+  \Grundakkord{12}{11}{d-Moll}{1 Be}{-1}{-1}{2,5,9}{D – F – A}
+\end{tikzpicture}
+
+\end{document}

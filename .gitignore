@@ -10,7 +10,8 @@
 # erzeugte Dateien
 *.pdf
 !handreichungen/**/*.pdf
-!druckvorlagen/**/*.pdf
+# Druckvorlagen: PDF liegt neben der gleichnamigen .tex im assets-Ordner
+!skills/**/assets/vorlage_*.pdf
 sudokus.tex
 karte_daten.tex
 # Geodaten nicht ins Repo (Größe, Lizenzen)

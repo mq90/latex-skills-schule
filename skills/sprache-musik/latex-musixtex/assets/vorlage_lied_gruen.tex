@@ -1,0 +1,104 @@
+% ===================================================================
+%  Minimalbeispiel: Liedblatt – „Grün, grün, grün sind alle meine Kleider“
+%  (Volkslied, gemeinfrei), G-Dur, 2/4-Takt. Erste Strophe unter den Noten
+%  (musixlyr), Strophen 2–6 zweispaltig darunter, alles auf einer Seite.
+%  Eigenständig: braucht keine header.tex.
+%
+%  Drei Durchläufe:  pdflatex … → musixflx … → pdflatex …
+%  (musixflx gleicht alle Notenzeilen auf dieselbe Länge aus.)
+% ===================================================================
+\documentclass[a4paper,12pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{lmodern}
+\usepackage[margin=1.8cm]{geometry}
+\usepackage{multicol}       % Strophen zweispaltig
+\usepackage{musixtex}
+\input musixlyr             % Liedtext unter den Noten
+\pagestyle{empty}
+\setlength{\columnsep}{1em}
+
+% Eine Strophe: \strophe{Nummer}{Text}; bleibt beim Spaltenumbruch zusammen.
+\newcommand{\strophe}[2]{%
+  \noindent\makebox[1.4em][l]{\textbf{#1.}}%
+  \begin{minipage}[t]{\dimexpr\linewidth-1.4em}\raggedright #2\end{minipage}%
+  \par\vspace{1.2em}}
+
+\begin{document}
+\begin{center}
+{\LARGE\bfseries\sffamily Grün, grün, grün sind alle meine Kleider}\\[4pt]
+{\small Text und Melodie: Volksweise \textbullet\ G-Dur}
+\end{center}
+\vspace{1em}
+
+\Largemusicsize             % großes System: VOR \begin{music}
+\begin{music}
+\parindent0pt                % erste Zeile nicht einrücken: alle Zeilen gleich lang
+\staffbotmarg=8\Interligne  % Platz unter jedem System (innerhalb von music)
+\instrumentnumber{1}\setclef1\treble
+\generalmeter{\meterfrac24}\generalsignature{1}\nobarnumbers
+\setsongraise1{10mm}        % Text dicht unter die eigene Zeile
+\setlyrics{strophe}{Grün, ja grün sind al-le mei-ne Klei-der,
+grün, ja grün ist al-les, was ich hab.
+Da-rum lieb ich al-les, was so grün ist,
+weil mein Schatz ein Jä-ger ist.}
+\assignlyrics1{strophe}
+\startpiece
+% Tonhöhen: d = d', e = e', f = fis' (Tonart), g = g', h = a', i = h', j = c'', k = d''.
+% Zwei Noten auf einer Silbe (Melisma): \lyricsoff vor der zweiten Note,
+% \lyricson danach; dazu ein Bindebogen \islurd … \tslur (oben: \isluru).
+\NOtes\qu g\qu g\en\bar                                              % Grün, ja
+\NOtes\qu h\qu h\en\bar                                              % grün sind
+\Notes\ibu0f0\qb0f\tbu0\qb0f\ibu0e1\qb0e\tbu0\qb0f\en\bar            % al-le mei-ne
+\NOtes\qu g\qu d\en                                                  % Klei-der,
+\alaligne
+\NOtes\qu g\qu g\en\bar                                              % grün, ja
+\NOtes\qu h\qu h\en\bar                                              % grün ist
+\Notes\ibu0f0\qb0f\tbu0\qb0f\ibu0e1\qb0e\tbu0\qb0f\en\bar            % al-les, was ich
+\NOtes\qu g\qp\en                                                    % hab.
+\alaligne
+\NOtes\ql i\en\Notes\ibl0i2\isluru0i\qb0i\lyricsoff\tslur0k\tbl0\qb0k\lyricson\en\bar % Da-rum
+\NOtes\ql j\ql j\en\bar                                              % lieb ich
+\Notes\ibu0h0\qb0h\tbu0\qb0h\ibu0h2\qb0h\tbu0\qb0j\en\bar            % al-les, was so
+\NOtes\ql i\ql i\en                                                  % grün ist,
+\alaligne
+\NOtes\qu g\qu g\en\bar                                              % weil mein
+\NOtes\qu h\qu h\en\bar                                              % Schatz ein
+\Notes\ibu0f0\islurd0f\qb0f\lyricsoff\tslur0f\tbu0\qb0f\lyricson     % Jä-
+\ibu0e1\islurd0e\qb0e\lyricsoff\tslur0f\tbu0\qb0f\lyricson\en\bar    % ger
+\NOtes\qu g\qp\en                                                    % ist.
+\Endpiece
+\end{music}
+\assignlyrics1{}            % Zuweisung beenden (gilt sonst global weiter)
+
+\vspace{2em}
+
+\begin{multicols}{2}
+\strophe{2}{Blau, ja blau sind alle meine Kleider,\\
+blau, ja blau ist alles, was ich hab.\\
+Darum lieb ich alles, was so blau ist,\\
+weil mein Schatz ein Seemann ist.}
+
+\strophe{3}{Weiß, ja weiß sind alle meine Kleider,\\
+weiß, ja weiß ist alles, was ich hab.\\
+Darum lieb ich alles, was so weiß ist,\\
+weil mein Schatz ein Bäcker ist.}
+
+\strophe{4}{Schwarz, ja schwarz sind alle meine Kleider,\\
+schwarz, ja schwarz ist alles, was ich hab.\\
+Darum lieb ich alles, was so schwarz ist,\\
+weil mein Schatz ein Schornsteinfeger ist.}
+
+\strophe{5}{Rot, ja rot sind alle meine Kleider,\\
+rot, ja rot ist alles, was ich hab.\\
+Darum lieb ich alles, was so rot ist,\\
+weil mein Schatz ein Reiter ist.}
+
+\strophe{6}{Bunt, ja bunt sind alle meine Kleider,\\
+bunt, ja bunt ist alles, was ich hab.\\
+Darum lieb ich alles, was so bunt ist,\\
+weil mein Schatz ein Maler ist.}
+\end{multicols}
+
+\end{document}

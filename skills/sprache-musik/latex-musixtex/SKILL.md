@@ -106,6 +106,18 @@ Größe und Abstände in mehrzeiligen Liedsätzen (alle getestet, siehe
 Ein großer `\staffbotmarg` schiebt den Text mit nach unten; mit positivem
 `\setsongraise` wieder unter die eigene Zeile holen.
 
+**Liedblätter** (`vorlage_lied_*.tex`) sind eigenständige Minimalbeispiele mit
+eigenem `\documentclass`, ohne header.tex: erste Strophe unter den Noten,
+weitere Strophen zweispaltig darunter (`multicols`, Befehl `\strophe{Nr}{Text}`),
+alles auf einer Seite; das fertige PDF liegt gleichnamig daneben. Getestet:
+
+- `\parindent0pt` in der `music`-Umgebung: sonst ist die erste Zeile eingerückt
+  und kürzer als die übrigen (musixflx gleicht nur die Folgezeilen aus).
+- Zwei Noten auf einer Silbe (Melisma): `\lyricsoff` vor der zweiten Note,
+  `\lyricson` danach; Bogen dazu mit `\islurd0f … \tslur0f` (oben `\isluru`).
+- Höchstens 4 Takte pro Zeile (`\alaligne`), sonst verschluckt musixlyr bei
+  Achteln die Trennstriche zwischen den Silben.
+
 Akkordsymbole (Harmonien) über das System mit `\zcharnote{12}{\bf F}` – nur
 an Harmoniewechseln, nicht an jede Note. Hochgestellte Ziffer: `C$^7$`.
 
@@ -114,10 +126,36 @@ an Harmoniewechseln, nicht an jede Note. Hochgestellte Ziffer: `C$^7$`.
 | Vorlage | Inhalt |
 |---|---|
 | `notenpapier.tex` | Basis für das Notenpapier, nicht allein kompilierbar (Schnipsel) |
-| `vorlage_lied_haenschen.tex` | kompletter Liedsatz „Hänschen klein“ (F-Dur) mit Liedtext und Akkorden, großes System, 4 Takte pro Zeile – Muster für eigene Lieder |
-| `vorlage_lied_entchen.tex` | Liedblatt „Alle meine Entchen“ (C-Dur): 1. Strophe unter den Noten, Strophen 2–5 als Text – Muster für Lieder mit vielen Strophen |
+| `vorlage_lied_haenschen.tex` | Liedblatt „Hänschen klein“ (F-Dur) mit Liedtext und Akkorden, großes System, 4 Takte pro Zeile, Strophen 2–3 zweispaltig darunter – Muster für eigene Lieder |
+| `vorlage_lied_entchen.tex` | Liedblatt „Alle meine Entchen“ (C-Dur), Strophen 2–5 zweispaltig – Muster für Lieder mit vielen Strophen |
+| `vorlage_lied_haensel_gretel.tex` | Liedblatt „Hänsel und Gretel“ (G-Dur, 2/4) – Muster für Achtelpaare mit Balken, Viertel- und Achtelpause |
+| `vorlage_lied_gruen.tex` | Liedblatt „Grün, grün, grün sind alle meine Kleider“ (G-Dur, 2/4), 6 Strophen – Muster für Melismen mit Bindebogen |
+| `vorlage_akkorde_klavier.tex` | Klavierakkorde: 12 Grundtöne × Dur, Moll, 7, maj7, m7; jede Klaviatur zwei Oktaven, Akkordtöne hellgrün, unten Tastennamen |
+| `vorlage_akkorde_noten.tex` | alle Dur- und Molldreiklänge in Noten mit enharmonischen Schreibweisen und Tonnamen (Notensystem in TikZ) |
+| `vorlage_akkorde_grundakkorde.tex` | Grundakkorde in Quintenzirkel-Reihenfolge, Seite 1 Dur, Seite 2 Moll: Notenzeile mit Vorzeichen, Klaviatur, Tonnamen, kleiner farbiger Quintenzirkel |
+| `vorlage_akkorde_gitarre.tex` | 28 Gitarren-Griffbilder (C–H als Dur, 7, Moll, m7), Grundtöne hellgrün, Finger, Barré |
+| `akkord-makros.tex` | Schnipsel für die vier Akkordblätter (per `\input`, selber Ordner), nicht allein kompilierbar |
 | `vorlage_quintenzirkel.tex` | Quintenzirkel in TikZ: großer Kreis, Dur außen, parallele Moll innen, außen je ein Notenlinien-Ausschnitt mit den Vorzeichen (Ges links, Fis rechts), Eselsbrücken und Merkregeln darunter; Schlüssel/Vorzeichen aus der Schrift `musix24` (`\char71/52/50`), **kein** `\usepackage{musixtex}` |
-| `vorlage_notenpapier_a5_{hoch,quer}_{mit,ohne}_schluessel.tex` | Blanko-Notenpapier A5; setzen nur zwei Schalter und laden `notenpapier.tex` (dort Linien- und Systemabstand einstellen). Druckfertige PDFs in `druckvorlagen/musik/` |
+| `vorlage_notenpapier_a5_{hoch,quer}_{mit,ohne}_schluessel.tex` | Blanko-Notenpapier A5; setzen nur zwei Schalter und laden `notenpapier.tex` (dort Linien- und Systemabstand einstellen). Druckfertige PDFs gleichnamig daneben |
+
+## Akkordblätter (`akkord-makros.tex`)
+
+Eigenständige Blätter mit eigenem `\documentclass`, nur TikZ und die Schrift
+`musix24` – **kein** `\usepackage{musixtex}`, ein pdflatex-Lauf. Alle Befehle
+innerhalb von `tikzpicture` (getestet):
+
+| Befehl | Wirkung |
+|---|---|
+| `\Klaviatur[shift={(x,y)}, x=2.3mm, y=11mm]{0,4,7}` | zwei Oktaven ab C; Töne als Halbtonschritte (C=0 … H=11, c'=12 …), Rechenausdrücke wie `9+4` erlaubt; `x` = Tastenbreite, `y` = Tastenhöhe |
+| `\Notenlinien{Länge}`, `\Taktstrich[Stil]{x}` | Fünfliniensystem mit Violinschlüssel, Einheit pt (`[x=1pt,y=1pt]`), Linienabstand 6pt |
+| `\Vorzeichnung{x}{n}` | Tonart-Vorzeichen: n>0 Kreuze, n<0 Bes |
+| `\Dreiklang{x}{Stufe}{V1}{V2}{V3}` | ganze Noten auf Stufe, +2, +4 (0 = e', -2 = c' mit Hilfslinie); Vorzeichen als Zeichennummer 0/52/50/53/51, automatisch gestaffelt |
+| `\Griff[shift={(x,y)}]{Name}{Grundton}{Bund}{Saiten}{Barré}` | Gitarren-Griffbild; Saiten = sechs Einträge `Bund/Finger` ab tiefer E-Saite (`-1/0` = ×, `0/0` = leer); Barré = `Bund/vonSaite/bisSaite` oder leer |
+
+- `shift` muss **vor** `x=`/`y=` stehen, sonst wird die Verschiebung in den
+  neuen Einheiten gerechnet (Griffbilder liegen dann übereinander).
+- Farben in einer `\foreach`-Schleife mit `\xglobal\definecolor` anlegen,
+  sonst sind sie nach der Schleife wieder weg.
 
 ## Stolpersteine
 

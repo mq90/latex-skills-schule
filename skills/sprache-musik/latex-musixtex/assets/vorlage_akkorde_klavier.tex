@@ -1,0 +1,67 @@
+% ===================================================================
+%  Minimalbeispiel: Klavierakkorde – alle 12 Grundtöne mit Dur, Moll,
+%  Dominantseptakkord, großem Septakkord (maj7) und Mollseptakkord (m7).
+%  Jede Klaviatur zeigt zwei Oktaven, die Akkordtöne sind hellgrün.
+%  Braucht nur akkord-makros.tex aus demselben Ordner (keine header.tex).
+%  Ein Durchlauf pdflatex genügt.
+% ===================================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{lmodern}
+\usepackage[margin=1.2cm]{geometry}
+\usepackage{tikz}
+\input{akkord-makros.tex}   % liegt im selben Ordner
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+% Eine Zeile: \Akkordzeile{Zeilennummer}{Name links}{Symbolstamm}{Grundton 0–11}
+\newcommand{\Akkordzeile}[4]{%
+  \node[font=\sffamily\bfseries\large, anchor=east, align=right] at (-0.25,{-1.75*#1+0.55}) {#2};
+  \foreach \zusatz/\toene [count=\sp from 0] in {
+      {}/{#4,#4+4,#4+7}, m/{#4,#4+3,#4+7}, 7/{#4,#4+4,#4+7,#4+10},
+      maj7/{#4,#4+4,#4+7,#4+11}, m7/{#4,#4+3,#4+7,#4+10}}{
+    \node[font=\sffamily\small, anchor=base west, inner sep=0] at ({3.42*\sp},{-1.75*#1+1.22}) {#3\zusatz};
+    \Klaviatur[shift={({3.42*\sp cm},{-1.75*#1 cm})}, x=2.3mm, y=11mm]{\toene}
+  }
+}
+
+\begin{document}
+\begin{center}
+{\Huge\bfseries\sffamily Klavierakkorde}\\[3pt]
+{\small\sffamily Grundstellung über zwei Oktaven \textbullet\ Akkordtöne hellgrün}
+\end{center}
+\vspace{2mm}
+
+\centering
+\begin{tikzpicture}
+  % Spaltenköpfe
+  \fill[akkordgruen!45, rounded corners=2pt] (-1.55,0.15) rectangle (16.95,0.95);
+  \node[font=\sffamily\bfseries\small, anchor=east] at (-0.25,0.55) {Grundton};
+  \foreach \kopf [count=\sp from 0] in {Dur, Moll, Dominant 7, Major 7 (maj7), Moll 7 (m7)}{
+    \node[font=\sffamily\bfseries\small] at ({3.42*\sp+1.61},0.55) {\kopf}; }
+  \Akkordzeile{1}{C}{C}{0}
+  \Akkordzeile{2}{Cis\\[-2pt]Des}{Des}{1}
+  \Akkordzeile{3}{D}{D}{2}
+  \Akkordzeile{4}{Dis\\[-2pt]Es}{Es}{3}
+  \Akkordzeile{5}{E}{E}{4}
+  \Akkordzeile{6}{F}{F}{5}
+  \Akkordzeile{7}{Fis\\[-2pt]Ges}{Fis}{6}
+  \Akkordzeile{8}{G}{G}{7}
+  \Akkordzeile{9}{Gis\\[-2pt]As}{As}{8}
+  \Akkordzeile{10}{A}{A}{9}
+  \Akkordzeile{11}{Ais\\[-2pt]B}{B}{10}
+  \Akkordzeile{12}{H}{H}{11}
+
+  % Legende: Tastennamen über zwei Oktaven
+  \begin{scope}[shift={(1.1,-24.0)}]
+    \Klaviatur[x=9mm, y=20mm]{}
+    \foreach \n [count=\i from 0] in {C,D,E,F,G,A,H,C,D,E,F,G,A,H}{
+      \node[font=\sffamily\bfseries\small] at ({0.9*\i+0.45},0.3) {\n}; }
+    \foreach \o/\u/\w in {Cis/Des/0, Dis/Es/1, Fis/Ges/3, Gis/As/4, Ais/B/5,
+                          Cis/Des/7, Dis/Es/8, Fis/Ges/10, Gis/As/11, Ais/B/12}{
+      \node[font=\sffamily\tiny, align=center, anchor=south, inner sep=1pt] at ({0.9*\w+0.9},2.0) {\o\\[-3pt]\u}; }
+  \end{scope}
+\end{tikzpicture}
+
+\end{document}
