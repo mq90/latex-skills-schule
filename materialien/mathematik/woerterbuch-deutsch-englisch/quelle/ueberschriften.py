@@ -11,7 +11,7 @@ RS = '"ri:dIN @n "spi:kIN '
 RF = '"ri:dIN "fO:mjuli:, '
 UEB = {
 # Teile und wiederkehrende Zwischenüberschriften
-"Wörterbuch": ("Dictionary", '"dIkS@n@ri'),
+"Wörterbuch": ("Dictionary", '"dIkS@nri'),
 "Register": ("Index", '"Indeks'),
 "Mathematik lesen und sprechen": ("Reading and speaking mathematics", RS + '""m\\ae T@"m\\ae tIks'),
 "Physik lesen und sprechen": ("Reading and speaking physics", RS + '"fIzIks'),
@@ -100,7 +100,7 @@ UEB = {
 "Chemische Bindung": ("Chemical bonding", '"kemIk=l "b6ndIN'),
 "Chemische Reaktionen": ("Chemical reactions", '"kemIk=l ri"\\ae kS=nz'),
 "Säuren, Basen und Salze": ("Acids, bases and salts", '"\\ae sIdz, "beIsIz @n "sO:lts'),
-"Redoxreaktionen und Elektrochemie": ("Redox reactions and electrochemistry", '"red6ks ri"\\ae kS=nz @n I""lektr@U"kemIstri'),
+"Redoxreaktionen und Elektrochemie": ("Redox reactions and electrochemistry", '"ri:d6ks ri"\\ae kS=nz @n I""lektr@U"kemIstri'),
 "Organische Chemie": ("Organic chemistry", 'O:"g\\ae nIk "kemIstri'),
 "Stoffmenge und chemisches Rechnen": ("Amount of substance and chemical calculations", '@"maUnt @v "s2bst@ns @n "kemIk=l ""k\\ae lkju"leIS=nz'),
 "Die Elemente: Namen und Aussprache": ("The elements: names and pronunciation", 'Di "elIm@nts, "neImz @n pr@""n2nsi"eIS=n'),
