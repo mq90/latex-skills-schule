@@ -1,0 +1,1691 @@
+\input{../../../skills/grundlagen/latex-grundstil/assets/header.tex}
+\input{../../../skills/grundlagen/latex-grundstil/assets/newcommands.tex}
+
+% Chemisches Wörterbuch Deutsch – Englisch mit Lautschrift
+% Skills: latex-grundstil, latex-lautschrift (tipa, \ipa), latex-chemie (mhchem \ce, chemfig),
+%         latex-funktionsgraphen, latex-tikz-grundlagen
+% Kompilieren mit pdflatex (dreimal, wegen Inhaltsverzeichnis und Seitenzahlen im Register).
+
+%----------------------------------------------------------------------------------------------------%
+% Dokumentspezifische Befehle (nur für dieses Wörterbuch, deshalb lokal und nicht in newcommands.tex)
+%----------------------------------------------------------------------------------------------------%
+
+% \eintrag{Marke}{Artikel}{Begriff}{english term}{Lautschrift EN}{Formel/Skizze}
+% Schaltet das babel-Kürzel " aus, BEVOR die Argumente gelesen werden – dadurch darf die Lautschrift
+% wie bei \ipa{...} mit " (Hauptbetonung) und "" (Nebenbetonung) geschrieben werden.
+\makeatletter
+\newcommand\eintrag{\begingroup\shorthandoff{"}\eintrag@aux}
+\newcommand\eintrag@aux[6]{\endgroup
+	#2 \textbf{#3}\phantomsection\label{e:#1}
+	& \textbf{#4}\newline{\small\color{black!70}\ipa{#5}}
+	& #6 \\ \midrule}
+% \lies{Ausdruck}{english reading}{deutsche Lesart}
+\newcommand\lies{\begingroup\shorthandoff{"}\lies@aux}
+\newcommand\lies@aux[3]{\endgroup #1 & #2\newline{\color{black!60}#3} \\[4.5pt]}
+\makeatother
+
+% Tabellenkopf für jedes Kapitel in Teil I (wird auf jeder Folgeseite wiederholt)
+\newenvironment{woerter}{%
+	\arrayrulecolor{black!20}%
+	\begin{longtable}{>{\raggedright\arraybackslash}m{5.3cm} >{\raggedright\arraybackslash}m{6.1cm} >{\centering\arraybackslash}m{4.6cm}}
+		\rowcolor{cornflower!15}\textbf{Deutsch} & \textbf{Englisch} & \textbf{Formel \,/\, Skizze} \\ \midrule
+		\endhead}{%
+	\end{longtable}\arrayrulecolor{black}}
+
+% Liste ohne Linien und Rahmen (Teil II): links der Ausdruck, rechts Englisch (schwarz) und Deutsch (grau)
+\newenvironment{lesen}{%
+	\begin{longtable}{@{}>{\raggedright\arraybackslash}p{4.6cm} >{\raggedright\arraybackslash}p{12.1cm}@{}}}{%
+	\end{longtable}\vspace{-1.2em}}
+
+\newcommand{\anmerkung}[1]{\par\smallskip\noindent{\small\sloppy\textbf{Hinweis:} #1\par}\smallskip}
+% Verhindert, dass eine Zwischenüberschrift allein am Seitenende steht
+\newcommand{\platz}{\par\ifdim\dimexpr\pagegoal-\pagetotal\relax<5.5cm \newpage\fi}
+% Einheit aufrecht im Mathemodus
+\newcommand{\eh}[1]{\,\mathrm{#1}}
+
+% Kleine Skizzen: Gegenstand blau, Hervorhebung (der Begriff selbst) rot, Hilfslinien gestrichelt
+\tikzset{
+	fig/.style={blue, very thick},
+	mass/.style={red, thick},
+	hilf/.style={dashed},
+	achse/.style={-{Stealth[length=4pt]}, thin},
+	kraft/.style={red, very thick, -{Stealth[length=5pt]}},
+}
+\newcommand{\skizze}[1]{\tikz[baseline=(current bounding box.center), scale=0.45, line cap=round,
+	line join=round, every node/.style={font=\scriptsize}, outer sep=0pt]{#1}}
+\newcommand{\achsen}[6]{\draw[achse] (#1,0) -- (#2,0) node[below left] {$#5$}; \draw[achse] (0,#3) -- (0,#4) node[below left] {$#6$};}
+
+% Strukturformel in kleiner Größe
+\newcommand{\struktur}[1]{{\footnotesize\setchemfig{atom sep=1.7em, bond offset=1.5pt}\chemfig{#1}}}
+\newcommand{\fl}[2]{\fill[blue!12] #1; \draw[blue!60, thin] #2;}
+
+% Laborgeräte
+\newcommand{\skReagenzglas}{\skizze{\fill[blue!12] (-0.25,1.1) -- (-0.25,0.25) arc[start angle=180, end angle=360, radius=0.25] -- (0.25,1.1) -- cycle;
+	\draw[fig] (-0.25,2.4) -- (-0.25,0.25) arc[start angle=180, end angle=360, radius=0.25] -- (0.25,2.4);}}
+\newcommand{\becher}[2]{\fill[blue!12] (#1-0.9,#2) rectangle (#1+0.9,#2+0.9); \draw[fig] (#1-1.05,#2+1.7) -- (#1-0.9,#2+1.6) -- (#1-0.9,#2) -- (#1+0.9,#2) -- (#1+0.9,#2+1.7);}
+\newcommand{\skBecherglas}{\skizze{\becher{0}{0} \foreach \y in {0.5,0.8,1.1} {\draw[blue, thin] (0.9,\y) -- (0.55,\y);}}}
+\newcommand{\skErlenmeyer}{\skizze{\fill[blue!12] (-0.78,0.6) -- (-1.1,0) -- (1.1,0) -- (0.78,0.6) -- cycle;
+	\draw[fig] (-0.3,2.2) -- (-0.3,1.5) -- (-1.1,0) -- (1.1,0) -- (0.3,1.5) -- (0.3,2.2);}}
+\newcommand{\skRundkolben}{\skizze{\begin{scope}\clip (-1,0) rectangle (1,0.8); \fill[blue!12] (0,0.9) circle (0.9);\end{scope}
+	\draw[fig] (-0.25,2.5) -- (-0.25,1.765) arc[start angle=106.1, end angle=433.9, radius=0.9] -- (0.25,2.5);}}
+\newcommand{\skMesszylinder}{\skizze{\fill[blue!12] (-0.3,0.15) rectangle (0.3,1.5); \draw[fig] (-0.3,2.8) -- (-0.3,0.15) -- (0.3,0.15) -- (0.3,2.8); \draw[fig] (-0.7,0.1) -- (0.7,0.1);
+	\foreach \y in {0.5,0.8,...,2.6} {\draw[blue, thin] (0.3,\y) -- (0.05,\y);}}}
+\newcommand{\trichter}[2]{\draw[fig] (#1-0.9,#2+1.5) -- (#1-0.1,#2+0.7) -- (#1-0.1,#2) (#1+0.9,#2+1.5) -- (#1+0.1,#2+0.7) -- (#1+0.1,#2+0.1);}
+\newcommand{\skTrichter}{\skizze{\trichter{0}{0}}}
+\newcommand{\brenner}[2]{\fill[orange!70] (#1,#2+1.3) .. controls (#1-0.35,#2+1.6) and (#1-0.2,#2+2.0) .. (#1,#2+2.4) .. controls (#1+0.2,#2+2.0) and (#1+0.35,#2+1.6) .. cycle;
+	\fill[blue!50] (#1,#2+1.3) .. controls (#1-0.15,#2+1.45) and (#1-0.1,#2+1.65) .. (#1,#2+1.85) .. controls (#1+0.1,#2+1.65) and (#1+0.15,#2+1.45) .. cycle;
+	\draw[fig] (#1-0.17,#2+0.2) rectangle (#1+0.17,#2+1.3); \draw[fig] (#1-0.6,#2) rectangle (#1+0.6,#2+0.2); \draw[fig, thick] (#1-0.6,#2+0.1) -- (#1-1.1,#2+0.1);}
+\newcommand{\skBrenner}{\skizze{\brenner{0}{0}}}
+\newcommand{\skDreifuss}{\skizze{\draw[fig] (-0.9,1.6) -- (0.9,1.6) (-0.8,1.6) -- (-1.1,0) (0.8,1.6) -- (1.1,0) (0,1.6) -- (0,0.15); \draw[black!60, thick, densely dashed] (-1,1.72) -- (1,1.72);}}
+\newcommand{\skAbdampfschale}{\skizze{\draw[fig] (-1.1,0.8) arc[start angle=180, end angle=360, x radius=1.1, y radius=0.8] (-1.25,0.8) -- (1.25,0.8);}}
+\newcommand{\skTiegel}{\skizze{\draw[fig] (-0.7,1.2) -- (-0.4,0) -- (0.4,0) -- (0.7,1.2) (-0.8,1.2) -- (0.8,1.2);}}
+\newcommand{\skPipette}{\skizze{\draw[fig, thick] (-0.06,2.8) -- (-0.06,1.9) .. controls (-0.3,1.7) and (-0.3,1.3) .. (-0.06,1.1) -- (-0.06,0.3) -- (0,0) -- (0.06,0.3) -- (0.06,1.1) .. controls (0.3,1.3) and (0.3,1.7) .. (0.06,1.9) -- (0.06,2.8);}}
+\newcommand{\buerette}[2]{\fill[blue!12] (#1-0.12,#2+0.9) rectangle (#1+0.12,#2+2.3); \draw[fig, thick] (#1-0.12,#2+3) -- (#1-0.12,#2+0.6) -- (#1-0.04,#2+0.45) -- (#1-0.04,#2) (#1+0.12,#2+3) -- (#1+0.12,#2+0.6) -- (#1+0.04,#2+0.45) -- (#1+0.04,#2);
+	\draw[red, very thick] (#1-0.35,#2+0.52) -- (#1+0.35,#2+0.52); \foreach \k in {0,...,6} {\draw[blue, thin] (#1+0.12,#2+1+0.3*\k) -- (#1-0.02,#2+1+0.3*\k);}}
+\newcommand{\skBuerette}{\skizze{\buerette{0}{0}}}
+\newcommand{\skSpatel}{\skizze{\draw[fig] (0,0) -- (2.3,0.9); \draw[blue, line width=2.5pt] (2.3,0.9) -- (2.9,1.13);}}
+\newcommand{\skMoerser}{\skizze{\draw[fig] (-1,1) arc[start angle=180, end angle=360, x radius=1, y radius=0.9] (-1.1,1) -- (1.1,1) (-0.4,0.1) -- (0.4,0.1);
+	\draw[blue, line width=3pt, line cap=round] (0.1,0.5) -- (0.9,1.9);}}
+\newcommand{\skUhrglas}{\skizze{\draw[fig] (-1.2,0.35) arc[start angle=200, end angle=340, x radius=1.277, y radius=0.9];}}
+\newcommand{\stativ}{\draw[black, line width=2pt] (-1.2,0) -- (0.6,0); \draw[black, line width=1.5pt] (-0.8,0) -- (-0.8,3.6);}
+\newcommand{\skStativ}{\skizze{\stativ \draw[black, thick] (-0.8,2.6) -- (0.5,2.6); \draw[fig, thick] (0.5,2.45) rectangle (0.9,2.75);}}
+\newcommand{\skThermometer}{\skizze{\draw[fig, thick, rounded corners=2pt] (-0.15,0.3) rectangle (0.15,2.8); \filldraw[fill=red, draw=blue, thick] (0,0.1) circle (0.33);
+	\fill[red] (-0.07,0.3) rectangle (0.07,1.7); \foreach \y in {0.8,1.2,...,2.5} {\draw[thin] (0.15,\y) -- (0.4,\y);}}}
+\newcommand{\skKuehler}{\skizze{\begin{scope}[rotate=-20] \draw[fig, fill=blue!10] (0,-0.3) rectangle (3,0.3); \draw[fig, thick] (-0.6,-0.08) -- (3.6,-0.08) (-0.6,0.08) -- (3.6,0.08);
+	\draw[fig, thick] (0.4,0.3) -- (0.4,0.7) (2.6,-0.3) -- (2.6,-0.7);\end{scope}}}
+\newcommand{\skSchutzbrille}{\skizze{\draw[fig, rounded corners=3pt] (-1.3,0) rectangle (-0.15,0.7) (0.15,0) rectangle (1.3,0.7); \draw[fig] (-0.15,0.45) -- (0.15,0.45) (-1.3,0.5) -- (-1.7,0.7) (1.3,0.5) -- (1.7,0.7);}}
+\newcommand{\skWaage}{\skizze{\draw[fig] (-1.2,0) rectangle (1.2,0.6); \draw[fig] (-0.9,0.8) -- (0.9,0.8) (0,0.6) -- (0,0.8); \node at (0,0.3) {\tiny 12{,}5\,g};}}
+\newcommand{\skFiltration}{\skizze{\becher{0}{0} \trichter{0}{1.3} \draw[mass, hilf] (-0.75,2.72) -- (0,1.95) -- (0.75,2.72); \fill[black!55] (-0.3,2.3) -- (0,2.0) -- (0.3,2.3) -- cycle;}}
+\newcommand{\skErhitzen}{\skizze{\brenner{0}{0} \begin{scope}[shift={(0,2.5)}, rotate=-35] \fill[blue!12] (-0.2,0.8) -- (-0.2,0.2) arc[start angle=180, end angle=360, radius=0.2] -- (0.2,0.8) -- cycle;
+	\draw[fig] (-0.2,2) -- (-0.2,0.2) arc[start angle=180, end angle=360, radius=0.2] -- (0.2,2);\end{scope}}}
+
+% Teilchen, Atome, Bindungen
+\newcommand{\rahmen}{\draw[thin] (0,0) rectangle (2.1,1.5);}
+\newcommand{\punkte}[3]{\foreach \p in {#3} {\fill[#1] \p circle (#2);}}
+\newcommand{\skElement}{\skizze{\rahmen \punkte{blue}{2.8pt}{(0.3,0.3),(0.9,0.5),(1.6,0.3),(0.5,1.0),(1.2,1.1),(1.8,0.9)}}}
+\newcommand{\molek}[2]{\fill[blue] (#1,#2) circle (2.8pt); \fill[red] (#1+0.22,#2+0.1) circle (2.8pt);}
+\newcommand{\skVerbindung}{\skizze{\rahmen \molek{0.25}{0.3} \molek{0.95}{0.45} \molek{1.6}{0.25} \molek{0.45}{1.0} \molek{1.2}{1.05}}}
+\newcommand{\skGemisch}{\skizze{\rahmen \punkte{blue}{2.8pt}{(0.3,0.3),(1.6,0.3),(1.2,1.1)} \punkte{red}{2.8pt}{(0.9,0.55),(0.5,1.05)} \punkte{green!55!black}{2.8pt}{(1.8,0.95),(0.95,0.2)}}}
+\newcommand{\skReinstoff}{\skVerbindung}
+\newcommand{\skLoesung}{\skizze{\becher{0}{0} \punkte{red}{1.6pt}{(-0.6,0.2),(-0.2,0.6),(0.3,0.25),(0.65,0.7),(-0.55,0.75),(0.1,0.45)}}}
+\newcommand{\skSuspension}{\skizze{\becher{0}{0} \punkte{black!60}{2.2pt}{(-0.6,0.1),(-0.3,0.12),(0,0.1),(0.3,0.13),(0.6,0.1),(-0.45,0.28),(0.15,0.3),(0.45,0.5)}}}
+\newcommand{\skSchalen}{\skizze{\fill[red] (0,0) circle (0.22); \foreach \r in {0.5,0.9,1.3} {\draw[thin] (0,0) circle (\r);}
+	\punkte{blue}{2pt}{(90:0.5),(270:0.5),(0:0.9),(45:0.9),(90:0.9),(135:0.9),(180:0.9),(225:0.9),(270:0.9),(315:0.9),(30:1.3)}}}
+\newcommand{\skAussenelektron}{\skizze{\fill[black!40] (0,0) circle (0.22); \foreach \r in {0.5,0.9,1.3} {\draw[thin, black!40] (0,0) circle (\r);}
+	\punkte{black!40}{2pt}{(90:0.5),(270:0.5),(0:0.9),(45:0.9),(90:0.9),(135:0.9),(180:0.9),(225:0.9),(270:0.9),(315:0.9)} \fill[red] (30:1.3) circle (3pt);}}
+\newcommand{\skPSE}{\skizze{\foreach \x in {0,...,7} {\foreach \y in {0,...,3} {\draw[thin, black!50] (0.3*\x,0.3*\y) rectangle ++(0.3,0.3);}}
+	\draw[thin, black!50] (0,1.2) rectangle (0.3,1.5) (2.1,1.2) rectangle (2.4,1.5);}}
+\newcommand{\pse}[1]{\skizze{\foreach \x in {0,...,7} {\foreach \y in {0,...,3} {\draw[thin, black!50] (0.3*\x,0.3*\y) rectangle ++(0.3,0.3);}}
+	\draw[thin, black!50] (0,1.2) rectangle (0.3,1.5) (2.1,1.2) rectangle (2.4,1.5); \fill[red, opacity=0.6] #1;}}
+\newcommand{\skGitter}{\skizze{\foreach \x in {0,...,3} {\foreach \y in {0,...,2} {\pgfmathparse{int(mod(\x+\y,2))}
+	\ifnum\pgfmathresult=0 \fill[red] (0.5*\x,0.5*\y) circle (4pt); \else \fill[blue] (0.5*\x,0.5*\y) circle (3pt); \fi}}}}
+\newcommand{\skMetall}{\skizze{\foreach \x in {0,...,3} {\foreach \y in {0,...,2} {\filldraw[fill=red!25, draw=red] (0.6*\x,0.6*\y) circle (5pt); \node[font=\tiny] at (0.6*\x,0.6*\y) {+};}}
+	\punkte{blue}{1.5pt}{(0.3,0.3),(0.9,0.25),(1.5,0.35),(0.3,0.9),(0.95,0.95),(1.5,0.85),(0.6,0.62),(1.2,0.58)}}}
+\newcommand{\skAtombindung}{\skizze{\draw[fig, fill=blue!10, fill opacity=0.6] (-0.45,0) circle (0.7) (0.45,0) circle (0.7); \punkte{red}{2.2pt}{(0,0.15),(0,-0.15)} \node at (-0.7,0) {H}; \node at (0.7,0) {H};}}
+\newcommand{\skDipol}{\skizze{\fill[red] (0,0) circle (0.42); \fill[black!30] (-0.55,-0.42) circle (0.27) (0.55,-0.42) circle (0.27); \node at (0,0.75) {$\delta^-$}; \node at (-1.05,-0.6) {$\delta^+$}; \node at (1.05,-0.6) {$\delta^+$};}}
+
+% Reaktionen
+\newcommand{\skExotherm}{\skizze{\achsen{-0.3}{3.8}{-0.3}{2.7}{}{E}\draw[fig, thick] (0.2,1.5) -- (1,1.5) (2.6,0.5) -- (3.4,0.5); \draw[fig] (1,1.5) .. controls (1.5,1.5) and (1.5,2.4) .. (1.8,2.4) .. controls (2.1,2.4) and (2.2,0.5) .. (2.6,0.5);
+	\draw[mass, -{Stealth[length=3pt]}] (3.1,1.5) -- (3.1,0.55); \draw[thin, hilf] (1,1.5) -- (3.3,1.5);}}
+\newcommand{\skEndotherm}{\skizze{\achsen{-0.3}{3.8}{-0.3}{2.7}{}{E}\draw[fig, thick] (0.2,0.5) -- (1,0.5) (2.6,1.5) -- (3.4,1.5); \draw[fig] (1,0.5) .. controls (1.5,0.5) and (1.5,2.4) .. (1.8,2.4) .. controls (2.1,2.4) and (2.2,1.5) .. (2.6,1.5);
+	\draw[mass, -{Stealth[length=3pt]}] (3.1,0.5) -- (3.1,1.45); \draw[thin, hilf] (1,0.5) -- (3.3,0.5);}}
+\newcommand{\skAktivierung}{\skizze{\achsen{-0.3}{3.8}{-0.3}{2.7}{}{E}\draw[fig, thick] (0.2,1.5) -- (1,1.5) (2.6,0.5) -- (3.4,0.5); \draw[fig] (1,1.5) .. controls (1.5,1.5) and (1.5,2.4) .. (1.8,2.4) .. controls (2.1,2.4) and (2.2,0.5) .. (2.6,0.5);
+	\draw[mass, <->] (0.6,1.5) -- node[left, inner sep=1pt] {$E_A$} (0.6,2.4); \draw[thin, hilf] (0.5,2.4) -- (1.8,2.4);}}
+\newcommand{\skKatalysator}{\skizze{\achsen{-0.3}{3.8}{-0.3}{2.7}{}{E}\draw[fig, thick] (0.2,1.5) -- (1,1.5) (2.6,0.5) -- (3.4,0.5); \draw[fig] (1,1.5) .. controls (1.5,1.5) and (1.5,2.4) .. (1.8,2.4) .. controls (2.1,2.4) and (2.2,0.5) .. (2.6,0.5);
+	\draw[mass, hilf] (1,1.5) .. controls (1.5,1.5) and (1.5,1.9) .. (1.8,1.9) .. controls (2.1,1.9) and (2.2,0.5) .. (2.6,0.5);}}
+\newcommand{\skGeschwindigkeit}{\skizze{\achsen{-0.3}{3.8}{-0.3}{2.6}{t}{c}\draw[fig, domain=0:3.5, samples=30] plot (\x,{2.2*exp(-1.1*\x)}); \draw[mass, domain=0:3.5, samples=30] plot (\x,{2.0*(1-exp(-1.1*\x))});}}
+\newcommand{\skGleichgewicht}{\skizze{\achsen{-0.3}{3.8}{-0.3}{2.6}{t}{c}\draw[fig, domain=0:3.5, samples=30] plot (\x,{1.3+0.9*exp(-1.6*\x)}); \draw[mass, domain=0:3.5, samples=30] plot (\x,{0.8*(1-exp(-1.6*\x))});}}
+\newcommand{\skNiederschlag}{\skizze{\fill[blue!12] (-0.25,1.4) -- (-0.25,0.25) arc[start angle=180, end angle=360, radius=0.25] -- (0.25,1.4) -- cycle;
+	\begin{scope}\clip (-0.25,0) rectangle (0.25,0.45); \fill[black!55] (0,0.25) circle (0.25); \fill[black!55] (-0.25,0.25) rectangle (0.25,0.45);\end{scope}
+	\draw[fig] (-0.25,2.4) -- (-0.25,0.25) arc[start angle=180, end angle=360, radius=0.25] -- (0.25,2.4);}}
+
+% Säuren und Basen
+\newcommand{\phskala}[1]{\foreach \k/\c in {0/red, 1/red!80!orange, 2/red!50!orange, 3/orange, 4/orange!60!yellow, 5/yellow, 6/yellow!60!green, 7/green!80!black, 8/green!50!blue!70, 9/blue!50!green, 10/blue!70, 11/blue, 12/blue!80!violet, 13/violet!80!blue, 14/violet}
+	{\fill[\c] (#1*\k,0) rectangle ++(#1,#1*1.4);}}
+\newcommand{\skPH}{\skizze{\phskala{0.24} \node[below] at (0.12,0) {0}; \node[below] at (1.8,0) {7}; \node[below] at (3.48,0) {14};}}
+\newcommand{\skTitration}{\skizze{\stativ \draw[black, thick] (-0.8,2.4) -- (0.2,2.4); \buerette{0.2}{1.2}
+	\fill[blue!12] (-0.33,0.25) -- (-0.5,0.05) -- (0.9,0.05) -- (0.73,0.25) -- cycle; \draw[fig, thick] (0.05,1.1) -- (0.05,0.75) -- (-0.5,0.05) -- (0.9,0.05) -- (0.35,0.75) -- (0.35,1.1);}}
+\newcommand{\skTitrationskurve}{\skizze{\achsen{-0.3}{3.8}{-0.3}{2.7}{V}{}\node[left] at (0,2.4) {pH}; \draw[fig, domain=0:3.5, samples=60] plot (\x,{1.3+0.7*rad(atan(7*(\x-1.9)))});
+	\fill[red] (1.9,1.3) circle (2.5pt);}}
+
+% Elektrochemie
+\newcommand{\skElektrolyse}{\skizze{\fill[blue!12] (-1.2,0) rectangle (1.2,1.2); \draw[fig] (-1.2,1.9) -- (-1.2,0) -- (1.2,0) -- (1.2,1.9);
+	\draw[black, line width=2pt] (-0.6,0.3) -- (-0.6,2.2) (0.6,0.3) -- (0.6,2.2); \draw[thick] (-0.6,2.2) -- (-0.6,2.8) -- (-0.12,2.8) (0.12,2.8) -- (0.6,2.8) -- (0.6,2.2);
+	\draw[thick] (-0.12,2.55) -- (-0.12,3.05); \draw[line width=1.6pt] (0.12,2.67) -- (0.12,2.93); \node at (-0.95,2.5) {$+$}; \node at (0.95,2.5) {$-$};}}
+\newcommand{\skGalvanisch}{\skizze{\fill[blue!12] (-1.9,0) rectangle (-0.5,1); \fill[blue!12] (0.5,0) rectangle (1.9,1);
+	\draw[fig] (-1.9,1.5) -- (-1.9,0) -- (-0.5,0) -- (-0.5,1.5) (0.5,1.5) -- (0.5,0) -- (1.9,0) -- (1.9,1.5);
+	\draw[black!60, line width=2.2pt] (-1.4,0.25) -- (-1.4,1.9); \draw[orange!80!black, line width=2.2pt] (1.4,0.25) -- (1.4,1.9);
+	\draw[thick] (-1.4,1.9) -- (-1.4,2.5) -- (-0.3,2.5) (0.3,2.5) -- (1.4,2.5) -- (1.4,1.9); \draw[thick] (0,2.5) circle (0.3); \node at (0,2.5) {\tiny V};
+	\draw[fig, thick] (-0.8,0.4) -- (-0.8,1.7) -- (0.8,1.7) -- (0.8,0.4);}}
+\newcommand{\skRost}{\skizze{\filldraw[fill=black!25, draw=black!60, thick] (0,0) rectangle (2.6,0.5); \fill[orange!60!brown] (0.3,0.5) .. controls (0.5,0.8) and (0.9,0.75) .. (1.1,0.5) -- cycle;
+	\fill[orange!60!brown] (1.5,0.5) .. controls (1.7,0.7) and (2.1,0.7) .. (2.3,0.5) -- cycle;}}
+\newcommand{\skKolonne}{\skizze{\draw[fig, rounded corners=4pt] (0,0) rectangle (1,3); \foreach \y in {0.6,1.2,1.8,2.4} {\draw[blue, thin] (0,\y) -- (1,\y); \draw[thick, -{Stealth[length=3pt]}] (1,\y+0.3) -- (1.9,\y+0.3);}
+	\draw[thick, -{Stealth[length=3pt]}] (-0.9,0.3) -- (0,0.3);}}
+\newcommand{\skKette}{\skizze{\foreach \k in {0,...,5} {\fill[blue] (0.55*\k,{0.18*mod(\k,2)}) circle (4pt);} \draw[blue, thick] (0,0) -- (0.55,0.18) -- (1.1,0) -- (1.65,0.18) -- (2.2,0) -- (2.75,0.18);}}
+
+
+\title{Chemisches Wörterbuch\\[0.3em] \large Deutsch -- Englisch mit englischer Lautschrift, Formeln und Skizzen}
+\author{Martin Quandt}
+\date{\today}
+\pagestyle{plain}
+\setlength{\tabcolsep}{4pt}
+
+
+% Zweisprachige Überschriften: \teil, \kapitel, \zwischen{Deutsch}{English}{Lautschrift}
+% Wie \eintrag wird " ausgeschaltet, BEVOR die Argumente gelesen werden (Betonungszeichen der Lautschrift).
+% Ins Inhaltsverzeichnis und in die PDF-Lesezeichen kommt nur „Deutsch -- English“ ohne Lautschrift.
+\makeatletter
+\newcommand\teil{\begingroup\shorthandoff{"}\teil@aux}
+\newcommand\teil@aux[3]{\endgroup\part[#1 -- #2]{\raggedright #1\\[5pt]{\normalfont\Large\color{black!55}#2\hspace{0.35em}\penalty0 \ipa{#3}}}}
+\newcommand\kapitel{\begingroup\shorthandoff{"}\kapitel@aux}
+\newcommand\kapitel@aux[3]{\endgroup\section[#1 -- #2]{\raggedright #1\\[0pt]{\normalfont\small\color{black!55}#2\hspace{0.35em}\penalty0 \ipa{#3}}}}
+\newcommand\zwischen{\begingroup\shorthandoff{"}\zwischen@aux}
+\newcommand\zwischen@aux[3]{\endgroup\subsection*{\raggedright #1 {\normalfont\small\color{black!55}\,--\, #2\hspace{0.35em}\penalty0 \ipa{#3}}}}
+% Die zweite Überschriftenzeile kostet Platz: Zeilen in den Listen und Tabellen etwas enger setzen
+\renewcommand\lies@aux[3]{\endgroup #1 & #2\newline{\color{black!60}#3} \\[1.5pt]}
+\makeatother
+\setlength{\aboverulesep}{0.15ex}\setlength{\belowrulesep}{0.3ex}\renewcommand{\arraystretch}{0.93}
+
+\begin{document}
+
+\maketitle
+
+Dieses Wörterbuch enthält 260 chemische Fachbegriffe aus der Sekundarstufe I und II,
+geordnet nach Sachgebieten. Zu jedem Begriff stehen der englische Fachausdruck mit seiner Aussprache und
+-- wo es hilft -- eine Formel, eine Reaktionsgleichung oder eine kleine Skizze. Teil~II zeigt, wie man
+Elementnamen, Formeln und Reaktionsgleichungen auf Englisch liest, wie Verbindungen benannt werden und
+wie man Experimente beschreibt. Am Ende finden Sie je ein alphabetisches Register Deutsch -- Englisch
+und Englisch -- Deutsch.
+
+\zwischen{Hinweise zur Lautschrift}{Notes on the phonetic transcription}{"n@Uts 6n D@ f@"netIk tr\ae n"skrIpS\textsyllabic{n}}
+
+Die Lautschrift folgt dem Internationalen Phonetischen Alphabet (IPA) und gibt die britische
+Aussprache wieder, wie sie in Schulwörterbüchern steht (dort wird \textipa{r} statt
+\textipa{\textturnr} geschrieben). Der Strich \textipa{\textprimstress} steht \textit{vor} der
+betonten Silbe, \textipa{\textsecstress} vor einer Silbe mit Nebenbetonung, \textipa{:} bedeutet lang.
+
+\medskip
+{\small
+\begin{tabular}{>{\centering\arraybackslash}p{0.9cm} l @{\hspace{1.2cm}} >{\centering\arraybackslash}p{0.9cm} l}
+	\toprule
+	\textbf{Laut} & \textbf{Beispiel} & \textbf{Laut} & \textbf{Beispiel} \\ \midrule
+	\textipa{@} & wat\textbf{er} \ipa{"wO:t@} & \textipa{T} & me\textbf{th}ane \ipa{"mi:TeIn} \\
+	\textipa{\ae} & \textbf{a}cid \ipa{"\ae sId} & \textipa{S} & solu\textbf{t}ion \ipa{s@"lu:S\textsyllabic{n}} \\
+	\textipa{2} & s\textbf{u}lfur \ipa{"s2lf@} & \textipa{dZ} & hydro\textbf{g}en \ipa{"haIdr@dZ@n} \\
+	\textipa{6} & s\textbf{o}lid \ipa{"s6lId} & \textipa{aI} & ox\textbf{i}de \ipa{"6ksaId} \\
+	\textipa{3:} & b\textbf{ur}ner \ipa{"b3:n@} & \textipa{eI} & sulf\textbf{a}te \ipa{"s2lfeIt} \\
+	\textipa{@U} & s\textbf{o}dium \ipa{"s@Udi@m} & \textipa{\textsyllabic{l}} & meta\textbf{l} \ipa{"met\textsyllabic{l}} \\
+	\bottomrule
+\end{tabular}}
+
+\medskip
+\textbf{Schreibweisen:} Die englischen Namen folgen den IUPAC-Empfehlungen (\textit{sulfur},
+\textit{ethanoic acid}); verbreitete ältere Namen stehen in Klammern. \textbf{Farben in den Skizzen:}
+Geräte sind blau, hervorgehobene Teile (der Begriff selbst) rot, Hilfslinien gestrichelt.
+
+\newpage
+{\footnotesize\setlength{\parskip}{0pt}\tableofcontents}
+\newpage
+
+\teil{Wörterbuch}{Dictionary}{"dIkS@nri}
+
+%%%%  STOFFE UND IHRE EIGENSCHAFTEN  %%%%
+\kapitel{Stoffe und ihre Eigenschaften}{Substances and their properties}{"s2bst@nsIz @n De@ "pr6p@tiz}
+
+\begin{woerter}
+\eintrag{1}{der}{Stoff}{substance}{"s2bst@ns}{}
+\eintrag{2}{der}{Reinstoff}{pure substance}{"pjU@ "s2bst@ns}{\skReinstoff}
+\eintrag{3}{das}{Element}{element}{"elIm@nt}{\skElement}
+\eintrag{4}{die}{Verbindung}{compound}{"k6mpaUnd}{\skVerbindung}
+\eintrag{5}{das}{Stoffgemisch}{mixture}{"mIkstS@}{\skGemisch}
+\eintrag{6}{}{homogen}{homogeneous}{""h6m@"dZi:ni@s}{}
+\eintrag{7}{}{heterogen}{heterogeneous}{""het@r@"dZi:ni@s}{}
+\eintrag{8}{die}{Lösung}{solution}{s@"lu:S\textsyllabic{n}}{\skLoesung}
+\eintrag{9}{das}{Lösungsmittel}{solvent}{"s6lv@nt}{}
+\eintrag{10}{der}{gelöste Stoff}{solute}{"s6lju:t}{}
+\eintrag{11}{}{löslich}{soluble}{"s6lj@b\textsyllabic{l}}{}
+\eintrag{12}{}{unlöslich}{insoluble}{In"s6lj@b\textsyllabic{l}}{}
+\eintrag{13}{die}{Löslichkeit}{solubility}{""s6lju"bIl@ti}{}
+\eintrag{14}{die}{gesättigte Lösung}{saturated solution}{"s\ae tS@reItId s@"lu:S\textsyllabic{n}}{}
+\eintrag{15}{die}{Suspension}{suspension}{s@"spenS\textsyllabic{n}}{\skSuspension}
+\eintrag{16}{die}{Emulsion}{emulsion}{I"m2lS\textsyllabic{n}}{}
+\eintrag{17}{die}{Legierung}{alloy}{"\ae lOI}{}
+\eintrag{18}{das}{Metall}{metal}{"met\textsyllabic{l}}{}
+\eintrag{19}{das}{Nichtmetall}{non-metal}{""n6n"met\textsyllabic{l}}{}
+\eintrag{20}{die}{Eigenschaft}{property}{"pr6p@ti}{}
+\eintrag{21}{die}{Farbe}{colour (AE: color)}{"k2l@}{}
+\eintrag{22}{der}{Geruch}{smell, odour}{smel, "@Ud@}{}
+\eintrag{23}{die}{Härte}{hardness}{"hA:dn@s}{}
+\eintrag{24}{die}{Dichte}{density}{"dens@ti}{$\varrho = \dfrac{m}{V}$}
+\eintrag{25}{die}{Schmelztemperatur}{melting point}{"meltIN pOInt}{}
+\eintrag{26}{die}{Siedetemperatur}{boiling point}{"bOIlIN pOInt}{}
+\eintrag{27}{die}{elektrische Leitfähigkeit}{electrical conductivity}{I"lektrIk\textsyllabic{l} ""k6nd2k"tIv@ti}{}
+\eintrag{28}{}{brennbar}{flammable, combustible}{"fl\ae m@b\textsyllabic{l}, k@m"b2st@b\textsyllabic{l}}{}
+\eintrag{29}{}{fest, flüssig, gasförmig}{solid, liquid, gaseous}{"s6lId, "lIkwId, "g\ae si@s}{(s), (l), (g)}
+\eintrag{30}{das}{Trennverfahren}{separation technique}{""sep@"reIS\textsyllabic{n} tek""ni:k}{}
+\eintrag{31}{das}{Filtrieren}{filtration}{fIl"treIS\textsyllabic{n}}{\skFiltration}
+\eintrag{32}{das}{Filtrat}{filtrate}{"fIltreIt}{}
+\eintrag{33}{der}{Rückstand}{residue}{"rezIdju:}{}
+\eintrag{34}{das}{Eindampfen}{evaporation}{I""v\ae p@"reIS\textsyllabic{n}}{}
+\eintrag{35}{die}{Destillation}{distillation}{""dIstI"leIS\textsyllabic{n}}{}
+\eintrag{36}{das}{Dekantieren}{decanting}{dI"k\ae ntIN}{}
+\eintrag{37}{die}{Kristallisation}{crystallisation}{""krIst@laI"zeIS\textsyllabic{n}}{}
+\eintrag{38}{die}{Chromatografie}{chromatography}{""kr@Um@"t6gr@fi}{}
+\end{woerter}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{\skElement \; \skVerbindung}{An element consists of only one kind of atom; a compound consists of two or more elements chemically combined.}{Ein Element besteht aus nur einer Atomsorte; eine Verbindung besteht aus zwei oder mehr chemisch verbundenen Elementen.}
+\lies{\skLoesung}{Salt dissolves in water: salt is the solute, water is the solvent, and salt water is the solution.}{Salz löst sich in Wasser: Salz ist der gelöste Stoff, Wasser das Lösungsmittel und Salzwasser die Lösung.}
+\lies{\skFiltration}{Sand can be separated from water by filtration: the sand stays in the filter paper as the residue, the water passes through as the filtrate.}{Sand lässt sich von Wasser durch Filtrieren trennen: Der Sand bleibt als Rückstand im Filter, das Wasser läuft als Filtrat durch.}
+\lies{Eigenschaften}{Copper is a reddish-brown metal. It is a good conductor of electricity and heat and it melts at 1085 degrees Celsius.}{Kupfer ist ein rotbraunes Metall. Es leitet den elektrischen Strom und Wärme gut und schmilzt bei 1085 Grad Celsius.}
+\lies{Destillation}{Ethanol and water can be separated by distillation because they have different boiling points.}{Ethanol und Wasser lassen sich durch Destillation trennen, weil sie verschiedene Siedetemperaturen haben.}
+\end{lesen}
+
+
+%%%%  LABORGERÄTE UND ARBEITSWEISEN  %%%%
+\newpage
+\kapitel{Laborgeräte und Arbeitsweisen}{Laboratory apparatus and techniques}{l@"b6r@tri ""\ae p@"reIt@s @n tek"ni:ks}
+
+\begin{woerter}
+\eintrag{39}{das}{Reagenzglas}{test tube}{"test tju:b}{\skReagenzglas}
+\eintrag{40}{das}{Becherglas}{beaker}{"bi:k@}{\skBecherglas}
+\eintrag{41}{der}{Erlenmeyerkolben}{conical flask}{"k6nIk\textsyllabic{l} flA:sk}{\skErlenmeyer}
+\eintrag{42}{der}{Rundkolben}{round-bottomed flask}{""raUnd"b6t@md flA:sk}{\skRundkolben}
+\eintrag{43}{der}{Messzylinder}{measuring cylinder}{"meZ@rIN ""sIlInd@}{\skMesszylinder}
+\eintrag{44}{der}{Trichter}{funnel}{"f2n\textsyllabic{l}}{\skTrichter}
+\eintrag{45}{das}{Filterpapier}{filter paper}{"fIlt@ ""peIp@}{}
+\eintrag{46}{der}{Gasbrenner}{Bunsen burner}{""b2ns\textsyllabic{n} "b3:n@}{\skBrenner}
+\eintrag{47}{der}{Dreifuß (mit Drahtnetz)}{tripod (and gauze)}{"traIp6d, gO:z}{\skDreifuss}
+\eintrag{48}{die}{Abdampfschale}{evaporating dish}{I"v\ae p@reItIN dIS}{\skAbdampfschale}
+\eintrag{49}{der}{Tiegel}{crucible}{"kru:sIb\textsyllabic{l}}{\skTiegel}
+\eintrag{50}{die}{Pipette}{pipette}{pI"pet}{\skPipette}
+\eintrag{51}{die}{Bürette}{burette}{bju"ret}{\skBuerette}
+\eintrag{52}{der}{Spatel}{spatula}{"sp\ae tS@l@}{\skSpatel}
+\eintrag{53}{der}{Glasstab}{glass rod, stirring rod}{"glA:s r6d}{}
+\eintrag{54}{der}{Mörser mit Pistill}{mortar and pestle}{"mO:t@r @n "pes\textsyllabic{l}}{\skMoerser}
+\eintrag{55}{das}{Uhrglas}{watch glass}{"w6tS glA:s}{\skUhrglas}
+\eintrag{56}{das}{Stativ}{clamp stand}{"kl\ae mp st\ae nd}{\skStativ}
+\eintrag{57}{das}{Thermometer}{thermometer}{T@"m6mIt@}{\skThermometer}
+\eintrag{58}{der}{Kühler}{condenser}{k@n"dens@}{\skKuehler}
+\eintrag{59}{die}{Waage}{balance}{"b\ae l@ns}{\skWaage}
+\eintrag{60}{der}{Stopfen}{stopper, bung}{"st6p@, b2N}{}
+\eintrag{61}{die}{Tiegelzange}{tongs}{t6Nz}{}
+\eintrag{62}{die}{Schutzbrille}{safety goggles}{"seIfti ""g6g\textsyllabic{l}z}{\skSchutzbrille}
+\eintrag{63}{der}{Abzug}{fume cupboard (AE: fume hood)}{"fju:m ""k2b@d}{}
+\eintrag{64}{die}{Chemikalie}{chemical}{"kemIk\textsyllabic{l}}{}
+\eintrag{65}{}{erhitzen}{heat}{hi:t}{\skErhitzen}
+\eintrag{66}{}{rühren}{stir}{st3:}{}
+\eintrag{67}{}{lösen}{dissolve}{dI"z6lv}{}
+\eintrag{68}{}{gießen}{pour}{pO:}{}
+\eintrag{69}{}{abwiegen}{weigh out}{""weI "aUt}{}
+\eintrag{70}{}{verdünnen}{dilute}{daI"lu:t}{}
+\eintrag{71}{}{abkühlen}{cool (down)}{ku:l}{}
+\end{woerter}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{\skMesszylinder}{Measure out fifty millilitres of water using a measuring cylinder.}{Miss mit dem Messzylinder fünfzig Milliliter Wasser ab.}
+\lies{\skErhitzen}{Heat the test tube gently in the Bunsen flame. Do not point the test tube at anyone.}{Erhitze das Reagenzglas vorsichtig in der Brennerflamme. Richte die Öffnung des Reagenzglases nicht auf Personen.}
+\lies{\skBecherglas}{Pour the solution into a beaker and stir it with a glass rod.}{Gieße die Lösung in ein Becherglas und rühre mit einem Glasstab um.}
+\lies{\skWaage}{Weigh out twelve point five grams of copper sulfate on the balance.}{Wiege auf der Waage zwölf Komma fünf Gramm Kupfersulfat ab.}
+\lies{\skSchutzbrille}{Always wear safety goggles when you are working with chemicals.}{Trage beim Arbeiten mit Chemikalien immer eine Schutzbrille.}
+\end{lesen}
+
+
+%%%%  ATOMBAU UND PERIODENSYSTEM  %%%%
+\newpage
+\kapitel{Atombau und Periodensystem}{Atomic structure and the periodic table}{@"t6mIk "str2ktS@r @n D@ ""pI@ri"6dIk "teIb\textsyllabic{l}}
+
+\begin{woerter}
+\eintrag{72}{das}{Atom}{atom}{"\ae t@m}{}
+\eintrag{73}{der}{Atomkern}{nucleus}{"nju:kli@s}{}
+\eintrag{74}{das}{Proton}{proton}{"pr@Ut6n}{$\mathrm{p^+}$}
+\eintrag{75}{das}{Neutron}{neutron}{"nju:tr6n}{$\mathrm{n}$}
+\eintrag{76}{das}{Elektron}{electron}{I"lektr6n}{$\mathrm{e^-}$}
+\eintrag{77}{die}{Elektronenschale}{electron shell}{I"lektr6n Sel}{\skSchalen}
+\eintrag{78}{das}{Außenelektron}{outer electron, valence electron}{"aUt@r I""lektr6n, "veIl@ns}{\skAussenelektron}
+\eintrag{79}{die}{Elektronenkonfiguration}{electron configuration}{I"lektr6n k@n""fIgj@"reIS\textsyllabic{n}}{Na: 2, 8, 1}
+\eintrag{80}{die}{Ordnungszahl}{atomic number, proton number}{@"t6mIk "n2mb@}{$Z$}
+\eintrag{81}{die}{Massenzahl}{mass number}{"m\ae s ""n2mb@}{$A$}
+\eintrag{82}{die}{relative Atommasse}{relative atomic mass}{"rel@tIv @"t6mIk m\ae s}{$A_r$}
+\eintrag{83}{das}{Isotop}{isotope}{"aIs@t@Up}{\ce{^{12}_{6}C}, \ce{^{14}_{6}C}}
+\eintrag{84}{das}{Elementsymbol}{chemical symbol}{"kemIk\textsyllabic{l} "sImb\textsyllabic{l}}{\ce{H}, \ce{O}, \ce{Na}}
+\eintrag{85}{das}{Periodensystem der Elemente}{periodic table}{""pI@ri"6dIk "teIb\textsyllabic{l}}{\skPSE}
+\eintrag{86}{die}{Periode}{period}{"pI@ri@d}{\pse{(0,0.6) rectangle (2.4,0.9)}}
+\eintrag{87}{die}{Hauptgruppe}{(main) group}{gru:p}{\pse{(0.9,0) rectangle (1.2,1.2)}}
+\eintrag{88}{die}{Alkalimetalle}{alkali metals}{"\ae lk@laI ""met\textsyllabic{l}z}{\pse{(0,0) rectangle (0.3,1.2)}}
+\eintrag{89}{die}{Erdalkalimetalle}{alkaline earth metals}{"\ae lk@laIn "3:T ""met\textsyllabic{l}z}{\pse{(0.3,0) rectangle (0.6,1.2)}}
+\eintrag{90}{die}{Halogene}{halogens}{"h\ae l@dZ@nz}{\pse{(1.8,0) rectangle (2.1,1.2)}}
+\eintrag{91}{die}{Edelgase}{noble gases}{"n@Ub\textsyllabic{l} ""g\ae sIz}{\pse{(2.1,0) rectangle (2.4,1.5)}}
+\eintrag{92}{die}{Übergangsmetalle}{transition metals}{tr\ae n"zIS\textsyllabic{n} ""met\textsyllabic{l}z}{\ce{Fe}, \ce{Cu}, \ce{Zn}}
+\eintrag{93}{das}{Ion}{ion}{"aI@n}{}
+\eintrag{94}{das}{Kation}{cation}{"k\ae taI@n}{\ce{Na+}}
+\eintrag{95}{das}{Anion}{anion}{"\ae naI@n}{\ce{Cl-}}
+\eintrag{96}{die}{Edelgaskonfiguration}{noble gas configuration}{"n@Ub\textsyllabic{l} "g\ae s k@n""fIgj@"reIS\textsyllabic{n}}{}
+\eintrag{97}{die}{Oktettregel}{octet rule}{6k"tet ru:l}{}
+\eintrag{98}{die}{Elektronegativität}{electronegativity}{I""lektr@U""neg@"tIv@ti}{EN}
+\eintrag{99}{die}{Ionisierungsenergie}{ionisation energy}{""aI@naI"zeIS\textsyllabic{n} ""en@dZi}{}
+\eintrag{100}{das}{Molekül}{molecule}{"m6lIkju:l}{\ce{H2O}}
+\eintrag{101}{die}{chemische Formel}{chemical formula}{"kemIk\textsyllabic{l} "fO:mj@l@}{}
+\eintrag{102}{die}{Summenformel}{molecular formula}{m@"lekj@l@ "fO:mj@l@}{\ce{C2H6O}}
+\eintrag{103}{die}{Strukturformel}{structural formula}{"str2ktS@r@l "fO:mj@l@}{\struktur{H-C(-[2]H)(-[6]H)-C(-[2]H)(-[6]H)-O-H}}
+\eintrag{104}{die}{Verhältnisformel}{empirical formula}{Im"pIrIk\textsyllabic{l} "fO:mj@l@}{\ce{NaCl}}
+\end{woerter}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{\skSchalen}{A sodium atom has eleven protons in its nucleus and eleven electrons in three shells: two, eight, one.}{Ein Natriumatom hat elf Protonen im Kern und elf Elektronen auf drei Schalen: zwei, acht, eins.}
+\lies{\ce{Na -> Na+ + e-}}{A sodium atom loses its outer electron and forms a positively charged sodium ion.}{Ein Natriumatom gibt sein Außenelektron ab und bildet ein positiv geladenes Natrium-Ion.}
+\lies{\pse{(0,0) rectangle (0.3,1.2)}}{The alkali metals are in group one of the periodic table. Their atoms have one outer electron.}{Die Alkalimetalle stehen in der ersten Hauptgruppe des Periodensystems. Ihre Atome haben ein Außenelektron.}
+\lies{\pse{(2.1,0) rectangle (2.4,1.5)}}{The noble gases have full outer shells and are very unreactive.}{Die Edelgase haben voll besetzte Außenschalen und sind sehr reaktionsträge.}
+\lies{\ce{^{35}_{17}Cl}, \ce{^{37}_{17}Cl}}{Chlorine has two isotopes: chlorine-thirty-five and chlorine-thirty-seven. They have the same number of protons but different numbers of neutrons.}{Chlor hat zwei Isotope: Chlor-35 und Chlor-37. Sie haben gleich viele Protonen, aber verschieden viele Neutronen.}
+\end{lesen}
+
+
+%%%%  CHEMISCHE BINDUNG  %%%%
+\newpage
+\kapitel{Chemische Bindung}{Chemical bonding}{"kemIk\textsyllabic{l} "b6ndIN}
+
+\begin{woerter}
+\eintrag{105}{die}{chemische Bindung}{chemical bond}{"kemIk\textsyllabic{l} b6nd}{}
+\eintrag{106}{die}{Ionenbindung}{ionic bond}{aI"6nIk b6nd}{\ce{Na+} \ce{Cl-}}
+\eintrag{107}{das}{Ionengitter}{ionic lattice}{aI"6nIk "l\ae tIs}{\skGitter}
+\eintrag{108}{der}{Kristall}{crystal}{"krIst\textsyllabic{l}}{}
+\eintrag{109}{die}{Atombindung (Elektronenpaarbindung)}{covalent bond}{""k@U"veIl@nt b6nd}{\skAtombindung}
+\eintrag{110}{das}{bindende Elektronenpaar}{bonding pair}{"b6ndIN pe@}{$\mathrm{H{-}H}$}
+\eintrag{111}{das}{freie Elektronenpaar}{lone pair}{"l@Un pe@}{$\mathrm{H{-}\overline{\underline{O}}{-}H}$}
+\eintrag{112}{die}{Einfachbindung}{single bond}{"sINg\textsyllabic{l} b6nd}{$\mathrm{H{-}H}$}
+\eintrag{113}{die}{Doppelbindung}{double bond}{"d2b\textsyllabic{l} b6nd}{$\mathrm{O{=}O}$}
+\eintrag{114}{die}{Dreifachbindung}{triple bond}{"trIp\textsyllabic{l} b6nd}{$\mathrm{N{\equiv}N}$}
+\eintrag{115}{die}{Metallbindung}{metallic bond}{m@"t\ae lIk b6nd}{\skMetall}
+\eintrag{116}{die}{polare Atombindung}{polar covalent bond}{"p@Ul@ ""k@U"veIl@nt b6nd}{$\overset{\delta+}{\mathrm{H}}{-}\overset{\delta-}{\mathrm{Cl}}$}
+\eintrag{117}{der}{Dipol}{dipole}{"daIp@Ul}{\skDipol}
+\eintrag{118}{die}{Wasserstoffbrückenbindung}{hydrogen bond}{"haIdr@dZ@n b6nd}{}
+\eintrag{119}{die}{zwischenmolekularen Kräfte}{intermolecular forces}{""Int@m@"lekj@l@ "fO:sIz}{}
+\eintrag{120}{die}{Van-der-Waals-Kräfte}{van der Waals forces}{""v\ae n d@ "wA:lz ""fO:sIz}{}
+\eintrag{121}{die}{Wertigkeit}{valency}{"veIl@nsi}{Fe(III)}
+\eintrag{122}{die}{Oxidationszahl}{oxidation number}{""6ksI"deIS\textsyllabic{n} ""n2mb@}{$\oz{+I}{H}_2\oz{-II}{O}$}
+\eintrag{123}{die}{Lewis-Formel}{Lewis structure, dot-and-cross diagram}{"lu:Is ""str2ktS@}{}
+\eintrag{124}{die}{delokalisierten Elektronen}{delocalised electrons}{di:"l@Uk@laIzd I"lektr6nz}{}
+\end{woerter}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{\skGitter}{In sodium chloride the sodium ions and the chloride ions are held together in a lattice by ionic bonds.}{Im Natriumchlorid werden die Natrium-Ionen und die Chlorid-Ionen durch Ionenbindung in einem Gitter zusammengehalten.}
+\lies{\skAtombindung}{In a hydrogen molecule the two atoms share a pair of electrons: a covalent bond.}{Im Wasserstoffmolekül teilen sich die beiden Atome ein Elektronenpaar: eine Atombindung.}
+\lies{$\mathrm{O{=}C{=}O}$}{A carbon dioxide molecule contains two double bonds.}{Ein Kohlenstoffdioxidmolekül enthält zwei Doppelbindungen.}
+\lies{\skDipol}{The water molecule is a dipole: the oxygen atom carries a partial negative charge, the hydrogen atoms a partial positive charge.}{Das Wassermolekül ist ein Dipol: Das Sauerstoffatom trägt eine negative, die Wasserstoffatome tragen eine positive Teilladung.}
+\lies{\skMetall}{Metals conduct electricity because their delocalised electrons are free to move.}{Metalle leiten den elektrischen Strom, weil ihre delokalisierten Elektronen frei beweglich sind.}
+\end{lesen}
+
+
+%%%%  CHEMISCHE REAKTIONEN  %%%%
+\newpage
+\kapitel{Chemische Reaktionen}{Chemical reactions}{"kemIk\textsyllabic{l} ri"\ae kS\textsyllabic{n}z}
+
+\begin{woerter}
+\eintrag{125}{die}{chemische Reaktion}{chemical reaction}{"kemIk\textsyllabic{l} ri"\ae kS\textsyllabic{n}}{}
+\eintrag{126}{der}{Ausgangsstoff (das Edukt)}{reactant}{ri"\ae kt@nt}{{\color{red}\ce{2 H2 + O2}} \ce{-> 2 H2O}}
+\eintrag{127}{das}{Reaktionsprodukt}{product}{"pr6d2kt}{\ce{2 H2 + O2 ->} {\color{red}\ce{2 H2O}}}
+\eintrag{128}{die}{Wortgleichung}{word equation}{"w3:d I""kweIZ\textsyllabic{n}}{}
+\eintrag{129}{die}{Reaktionsgleichung}{chemical equation}{"kemIk\textsyllabic{l} I"kweIZ\textsyllabic{n}}{\ce{2 Mg + O2 -> 2 MgO}}
+\eintrag{130}{}{ausgleichen}{balance (an equation)}{"b\ae l@ns}{}
+\eintrag{131}{der}{Koeffizient (Stöchiometriezahl)}{coefficient}{""k@UI"fIS\textsyllabic{n}t}{{\color{red}2}\,\ce{Mg + O2 ->} {\color{red}2}\,\ce{MgO}}
+\eintrag{132}{der}{Index}{subscript}{"s2bskrIpt}{$\mathrm{H_{\color{red}2}O}$}
+\eintrag{133}{die}{Synthese}{synthesis}{"sInT@sIs}{\ce{A + B -> AB}}
+\eintrag{134}{die}{Zersetzung (Analyse)}{decomposition}{""di:k6mp@"zIS\textsyllabic{n}}{\ce{AB -> A + B}}
+\eintrag{135}{die}{Verbrennung}{combustion}{k@m"b2stS@n}{\ce{C + O2 -> CO2}}
+\eintrag{136}{die}{Fällung}{precipitation}{prI""sIpI"teIS\textsyllabic{n}}{\ce{Ag+ + Cl- -> AgCl v}}
+\eintrag{137}{der}{Niederschlag}{precipitate}{prI"sIpIteIt}{\skNiederschlag}
+\eintrag{138}{}{exotherm}{exothermic}{""eks@U"T3:mIk}{$\Delta H < 0$ \newline \skExotherm}
+\eintrag{139}{}{endotherm}{endothermic}{""end@U"T3:mIk}{$\Delta H > 0$ \newline \skEndotherm}
+\eintrag{140}{die}{Reaktionsenthalpie}{enthalpy change of reaction}{"enT@lpi tSeIndZ}{$\Delta H$ in $\mathrm{kJ/mol}$}
+\eintrag{141}{die}{Aktivierungsenergie}{activation energy}{""\ae ktI"veIS\textsyllabic{n} ""en@dZi}{\skAktivierung}
+\eintrag{142}{der}{Katalysator}{catalyst}{"k\ae t@lIst}{\skKatalysator}
+\eintrag{143}{die}{Reaktionsgeschwindigkeit}{rate of reaction}{"reIt @v ri"\ae kS\textsyllabic{n}}{\skGeschwindigkeit}
+\eintrag{144}{die}{umkehrbare Reaktion}{reversible reaction}{rI"v3:s@b\textsyllabic{l} ri"\ae kS\textsyllabic{n}}{\ce{A + B <=> C + D}}
+\eintrag{145}{das}{chemische Gleichgewicht}{chemical equilibrium}{"kemIk\textsyllabic{l} ""i:kwI"lIbri@m}{\skGleichgewicht}
+\eintrag{146}{die}{Gleichgewichtskonstante}{equilibrium constant}{""i:kwI"lIbri@m ""k6nst@nt}{$K_c$}
+\eintrag{147}{das}{Massenwirkungsgesetz}{law of mass action}{"lO: @v "m\ae s ""\ae kS\textsyllabic{n}}{$K_c = \dfrac{c(\mathrm{C}) \cdot c(\mathrm{D})}{c(\mathrm{A}) \cdot c(\mathrm{B})}$}
+\eintrag{148}{das}{Prinzip von Le Chatelier}{Le Chatelier's principle}{l@ S\ae "telieIz "prIns@p\textsyllabic{l}}{}
+\eintrag{149}{das}{Gesetz von der Erhaltung der Masse}{law of conservation of mass}{""k6ns@"veIS\textsyllabic{n} @v "m\ae s}{}
+\eintrag{150}{die}{Ausbeute}{yield}{ji:ld}{}
+\eintrag{151}{der}{Nachweis}{test (for)}{test}{}
+\end{woerter}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{\ce{2 Mg + O2 -> 2 MgO}}{Magnesium reacts with oxygen to form magnesium oxide. Magnesium and oxygen are the reactants, magnesium oxide is the product.}{Magnesium reagiert mit Sauerstoff zu Magnesiumoxid. Magnesium und Sauerstoff sind die Ausgangsstoffe, Magnesiumoxid ist das Reaktionsprodukt.}
+\lies{\skExotherm}{The reaction is exothermic: energy is given out to the surroundings and the temperature rises.}{Die Reaktion ist exotherm: Es wird Energie an die Umgebung abgegeben und die Temperatur steigt.}
+\lies{\skKatalysator}{A catalyst speeds up a reaction by lowering the activation energy. It is not used up in the reaction.}{Ein Katalysator beschleunigt eine Reaktion, indem er die Aktivierungsenergie herabsetzt. Er wird dabei nicht verbraucht.}
+\lies{\ce{N2 + 3 H2 <=> 2 NH3}}{The reaction is reversible. At equilibrium the forward and the reverse reaction take place at the same rate.}{Die Reaktion ist umkehrbar. Im Gleichgewicht laufen Hin- und Rückreaktion gleich schnell ab.}
+\lies{\skNiederschlag}{When silver nitrate solution is added, a white precipitate of silver chloride forms.}{Bei Zugabe von Silbernitratlösung bildet sich ein weißer Niederschlag von Silberchlorid.}
+\end{lesen}
+
+
+%%%%  SÄUREN, BASEN UND SALZE  %%%%
+\newpage
+\kapitel{Säuren, Basen und Salze}{Acids, bases and salts}{"\ae sIdz, "beIsIz @n "sO:lts}
+
+\begin{woerter}
+\eintrag{152}{die}{Säure}{acid}{"\ae sId}{\ce{HCl}}
+\eintrag{153}{die}{Base}{base}{beIs}{\ce{NH3}}
+\eintrag{154}{die}{Lauge (alkalische Lösung)}{alkali, alkaline solution}{"\ae lk@laI, "\ae lk@laIn s@"lu:S\textsyllabic{n}}{\ce{NaOH(aq)}}
+\eintrag{155}{}{sauer}{acidic}{@"sIdIk}{pH $< 7$}
+\eintrag{156}{}{neutral}{neutral}{"nju:tr@l}{pH $= 7$}
+\eintrag{157}{}{basisch, alkalisch}{basic, alkaline}{"beIsIk, "\ae lk@laIn}{pH $> 7$}
+\eintrag{158}{der}{pH-Wert}{pH (value)}{""pi: "eItS}{\skPH}
+\eintrag{159}{der}{Indikator}{indicator}{"IndIkeIt@}{}
+\eintrag{160}{das}{Lackmus}{litmus}{"lItm@s}{}
+\eintrag{161}{der}{Universalindikator}{universal indicator}{""ju:nI"v3:s\textsyllabic{l} "IndIkeIt@}{}
+\eintrag{162}{der}{Protonendonator}{proton donor}{"pr@Ut6n ""d@Un@}{\ce{HCl -> H+ + Cl-}}
+\eintrag{163}{der}{Protonenakzeptor}{proton acceptor}{"pr@Ut6n @k""sept@}{\ce{NH3 + H+ -> NH4+}}
+\eintrag{164}{das}{Oxonium-Ion}{oxonium ion, hydronium ion}{6k"s@Uni@m ""aI@n}{\ce{H3O+}}
+\eintrag{165}{das}{Hydroxid-Ion}{hydroxide ion}{haI"dr6ksaId ""aI@n}{\ce{OH-}}
+\eintrag{166}{die}{Neutralisation}{neutralisation}{""nju:tr@laI"zeIS\textsyllabic{n}}{\ce{H3O+ + OH- -> 2 H2O}}
+\eintrag{167}{das}{Salz}{salt}{sO:lt}{\ce{NaCl}}
+\eintrag{168}{die}{starke Säure}{strong acid}{"str6N "\ae sId}{}
+\eintrag{169}{die}{schwache Säure}{weak acid}{"wi:k "\ae sId}{}
+\eintrag{170}{}{konzentriert}{concentrated}{"k6ns\textsyllabic{n}treItId}{}
+\eintrag{171}{}{verdünnt}{dilute}{daI"lu:t}{}
+\eintrag{172}{}{ätzend}{corrosive}{k@"r@UsIv}{}
+\eintrag{173}{die}{Titration}{titration}{taI"treIS\textsyllabic{n}}{\skTitration}
+\eintrag{174}{die}{Titrationskurve}{titration curve}{taI"treIS\textsyllabic{n} k3:v}{\skTitrationskurve}
+\eintrag{175}{der}{Äquivalenzpunkt}{equivalence point}{I"kwIv@l@ns pOInt}{}
+\eintrag{176}{die}{Maßlösung}{standard solution}{"st\ae nd@d s@"lu:S\textsyllabic{n}}{}
+\eintrag{177}{die}{Pufferlösung}{buffer solution}{"b2f@ s@"lu:S\textsyllabic{n}}{}
+\eintrag{178}{die}{Salzsäure}{hydrochloric acid}{""haIdr@"kl6rIk "\ae sId}{\ce{HCl(aq)}}
+\eintrag{179}{die}{Schwefelsäure}{sulfuric acid}{s2l"fjU@rIk "\ae sId}{\ce{H2SO4}}
+\eintrag{180}{die}{Salpetersäure}{nitric acid}{"naItrIk "\ae sId}{\ce{HNO3}}
+\eintrag{181}{die}{Natronlauge}{sodium hydroxide solution}{"s@Udi@m haI"dr6ksaId s@"lu:S\textsyllabic{n}}{\ce{NaOH(aq)}}
+\eintrag{182}{das}{Ammoniak}{ammonia}{@"m@Uni@}{\ce{NH3}}
+\end{woerter}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{\ce{HCl + NaOH -> NaCl + H2O}}{Hydrochloric acid reacts with sodium hydroxide solution to form sodium chloride and water: an acid and a base neutralise each other.}{Salzsäure reagiert mit Natronlauge zu Natriumchlorid und Wasser: Säure und Base neutralisieren einander.}
+\lies{\skPH}{Acidic solutions have a pH below seven, alkaline solutions have a pH above seven.}{Saure Lösungen haben einen pH-Wert unter sieben, alkalische Lösungen einen pH-Wert über sieben.}
+\lies{Lackmus}{Acids turn blue litmus red; alkalis turn red litmus blue.}{Säuren färben blaues Lackmus rot; Laugen färben rotes Lackmus blau.}
+\lies{\skTitration}{The acid is titrated with sodium hydroxide solution until the indicator changes colour.}{Die Säure wird mit Natronlauge titriert, bis der Indikator umschlägt.}
+\lies{\ce{CH3COOH}}{Ethanoic acid is a weak acid: it is only partially ionised in water.}{Essigsäure ist eine schwache Säure: Sie ist in Wasser nur teilweise dissoziiert.}
+\end{lesen}
+
+
+%%%%  REDOXREAKTIONEN UND ELEKTROCHEMIE  %%%%
+\newpage
+\kapitel{Redoxreaktionen und Elektrochemie}{Redox reactions and electrochemistry}{"ri:d6ks ri"\ae kS\textsyllabic{n}z @n I""lektr@U"kemIstri}
+
+\begin{woerter}
+\eintrag{183}{die}{Oxidation}{oxidation}{""6ksI"deIS\textsyllabic{n}}{\ce{Mg -> Mg^2+ + 2 e-}}
+\eintrag{184}{die}{Reduktion}{reduction}{rI"d2kS\textsyllabic{n}}{\ce{Cu^2+ + 2 e- -> Cu}}
+\eintrag{185}{die}{Redoxreaktion}{redox reaction}{"ri:d6ks ri""\ae kS\textsyllabic{n}}{\ce{Mg + Cu^2+ -> Mg^2+ + Cu}}
+\eintrag{186}{das}{Oxidationsmittel}{oxidising agent}{"6ksIdaIzIN ""eIdZ@nt}{}
+\eintrag{187}{das}{Reduktionsmittel}{reducing agent}{rI"dju:sIN ""eIdZ@nt}{}
+\eintrag{188}{das}{Oxid}{oxide}{"6ksaId}{\ce{MgO}}
+\eintrag{189}{der}{Elektronenübergang}{electron transfer}{I"lektr6n ""tr\ae nsf3:}{}
+\eintrag{190}{die}{Korrosion}{corrosion}{k@"r@UZ\textsyllabic{n}}{}
+\eintrag{191}{der}{Rost}{rust}{r2st}{\skRost}
+\eintrag{192}{das}{Edelmetall}{noble metal, precious metal}{"n@Ub\textsyllabic{l} "met\textsyllabic{l}, "preS@s}{\ce{Au}, \ce{Ag}, \ce{Pt}}
+\eintrag{193}{das}{unedle Metall}{base metal}{"beIs "met\textsyllabic{l}}{\ce{Zn}, \ce{Fe}, \ce{Mg}}
+\eintrag{194}{die}{Redoxreihe der Metalle}{reactivity series}{""ri:\ae k"tIv@ti ""sI@ri:z}{}
+\eintrag{195}{die}{Elektrolyse}{electrolysis}{I""lek"tr6l@sIs}{\skElektrolyse}
+\eintrag{196}{der}{Elektrolyt}{electrolyte}{I"lektr@laIt}{}
+\eintrag{197}{die}{Elektrode}{electrode}{I"lektr@Ud}{}
+\eintrag{198}{die}{Anode}{anode}{"\ae n@Ud}{}
+\eintrag{199}{die}{Kathode}{cathode}{"k\ae T@Ud}{}
+\eintrag{200}{die}{galvanische Zelle}{galvanic cell, electrochemical cell}{g\ae l"v\ae nIk sel}{\skGalvanisch}
+\eintrag{201}{die}{Halbzelle}{half-cell}{"hA:f sel}{\ce{Zn}/\ce{Zn^2+}}
+\eintrag{202}{das}{Standardpotential}{standard electrode potential}{"st\ae nd@d I"lektr@Ud p@""tenS\textsyllabic{l}}{$E^0$ in V}
+\eintrag{203}{die}{Brennstoffzelle}{fuel cell}{"fju:@l sel}{}
+\eintrag{204}{der}{Akkumulator}{rechargeable battery}{""ri:"tSA:dZ@b\textsyllabic{l} "b\ae tri}{}
+\eintrag{205}{das}{Galvanisieren}{electroplating}{I"lektr@U""pleItIN}{}
+\eintrag{206}{das}{Erz}{ore}{O:}{}
+\eintrag{207}{der}{Hochofen}{blast furnace}{"blA:st ""f3:nIs}{}
+\end{woerter}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{\ce{2 Cu + O2 -> 2 CuO}}{Copper is oxidised to copper(II) oxide: the copper atoms lose electrons.}{Kupfer wird zu Kupfer(II)-oxid oxidiert: Die Kupferatome geben Elektronen ab.}
+\lies{\ce{CuO + H2 -> Cu + H2O}}{Copper(II) oxide is reduced to copper; hydrogen is the reducing agent.}{Kupfer(II)-oxid wird zu Kupfer reduziert; Wasserstoff ist das Reduktionsmittel.}
+\lies{Merkhilfe}{OIL RIG: Oxidation Is Loss, Reduction Is Gain (of electrons).}{Oxidation ist Elektronenabgabe, Reduktion ist Elektronenaufnahme.}
+\lies{\skElektrolyse}{During electrolysis the positive ions move to the cathode and the negative ions move to the anode.}{Bei der Elektrolyse wandern die positiven Ionen zur Kathode und die negativen Ionen zur Anode.}
+\lies{\skRost}{Iron rusts in the presence of water and oxygen.}{Eisen rostet, wenn Wasser und Sauerstoff vorhanden sind.}
+\end{lesen}
+
+
+%%%%  ORGANISCHE CHEMIE  %%%%
+\newpage
+\kapitel{Organische Chemie}{Organic chemistry}{O:"g\ae nIk "kemIstri}
+
+\begin{woerter}
+\eintrag{208}{die}{organische Chemie}{organic chemistry}{O:"g\ae nIk "kemIstri}{}
+\eintrag{209}{der}{Kohlenwasserstoff}{hydrocarbon}{""haIdr@"kA:b@n}{}
+\eintrag{210}{das}{Alkan}{alkane}{"\ae lkeIn}{\ce{H3C-CH3}}
+\eintrag{211}{das}{Alken}{alkene}{"\ae lki:n}{\ce{H2C=CH2}}
+\eintrag{212}{das}{Alkin}{alkyne}{"\ae lkaIn}{\ce{HC\bond{3}CH}}
+\eintrag{213}{die}{homologe Reihe}{homologous series}{h@"m6l@g@s "sI@ri:z}{$\mathrm{C}_n\mathrm{H}_{2n+2}$}
+\eintrag{214}{}{gesättigt}{saturated}{"s\ae tS@reItId}{}
+\eintrag{215}{}{ungesättigt}{unsaturated}{2n"s\ae tS@reItId}{}
+\eintrag{216}{das}{Isomer}{isomer}{"aIs@m@}{}
+\eintrag{217}{der}{Aromat}{aromatic compound}{""\ae r@"m\ae tIk "k6mpaUnd}{\struktur{*6(-=-=-=)}}
+\eintrag{218}{die}{funktionelle Gruppe}{functional group}{"f2NkS@n\textsyllabic{l} gru:p}{}
+\eintrag{219}{der}{Alkohol}{alcohol}{"\ae lk@h6l}{\ce{R-OH}}
+\eintrag{220}{die}{Hydroxygruppe}{hydroxyl group}{haI"dr6ksIl gru:p}{\ce{-OH}}
+\eintrag{221}{das}{Aldehyd}{aldehyde}{"\ae ldIhaId}{\ce{R-CHO}}
+\eintrag{222}{das}{Keton}{ketone}{"ki:t@Un}{$\mathrm{R{-}CO{-}R'}$}
+\eintrag{223}{die}{Carbonsäure}{carboxylic acid}{""kA:b6k"sIlIk "\ae sId}{\ce{R-COOH}}
+\eintrag{224}{der}{Ester}{ester}{"est@}{$\mathrm{R{-}COO{-}R'}$}
+\eintrag{225}{die}{Veresterung}{esterification}{e""sterIfI"keIS\textsyllabic{n}}{}
+\eintrag{226}{das}{Amin}{amine}{@"mi:n}{\ce{R-NH2}}
+\eintrag{227}{die}{Aminosäure}{amino acid}{@""mi:n@U "\ae sId}{}
+\eintrag{228}{die}{Additionsreaktion}{addition reaction}{@"dIS\textsyllabic{n} ri""\ae kS\textsyllabic{n}}{}
+\eintrag{229}{die}{Substitutionsreaktion}{substitution reaction}{""s2bstI"tju:S\textsyllabic{n} ri""\ae kS\textsyllabic{n}}{}
+\eintrag{230}{die}{Eliminierung}{elimination}{I""lImI"neIS\textsyllabic{n}}{}
+\eintrag{231}{das}{Erdöl}{crude oil}{""kru:d "OIl}{}
+\eintrag{232}{das}{Erdgas}{natural gas}{"n\ae tSr@l g\ae s}{}
+\eintrag{233}{die}{fraktionierte Destillation}{fractional distillation}{"fr\ae kS@n\textsyllabic{l} ""dIstI"leIS\textsyllabic{n}}{\skKolonne}
+\eintrag{234}{das}{Cracken}{cracking}{"kr\ae kIN}{}
+\eintrag{235}{das}{Benzin}{petrol (AE: gasoline)}{"petr@l}{}
+\eintrag{236}{das}{Monomer}{monomer}{"m6n@m@}{}
+\eintrag{237}{das}{Polymer}{polymer}{"p6lIm@}{\skKette}
+\eintrag{238}{die}{Polymerisation}{polymerisation}{""p6lIm@raI"zeIS\textsyllabic{n}}{}
+\eintrag{239}{der}{Kunststoff}{plastic}{"pl\ae stIk}{}
+\eintrag{240}{das}{Fett}{fat}{f\ae t}{}
+\eintrag{241}{das}{Kohlenhydrat}{carbohydrate}{""kA:b@U"haIdreIt}{}
+\eintrag{242}{der}{Traubenzucker (die Glucose)}{glucose}{"glu:k@Us}{\ce{C6H12O6}}
+\eintrag{243}{die}{Stärke}{starch}{stA:tS}{}
+\eintrag{244}{das}{Eiweiß (Protein)}{protein}{"pr@Uti:n}{}
+\eintrag{245}{die}{Seife}{soap}{s@Up}{}
+\eintrag{246}{das}{Tensid}{surfactant, detergent}{s3:"f\ae kt@nt, dI"t3:dZ@nt}{}
+\eintrag{247}{die}{alkoholische Gärung}{fermentation}{""f3:men"teIS\textsyllabic{n}}{}
+\end{woerter}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{\ce{CH4 + 2 O2 -> CO2 + 2 H2O}}{Methane burns in oxygen to form carbon dioxide and water.}{Methan verbrennt mit Sauerstoff zu Kohlenstoffdioxid und Wasser.}
+\lies{\ce{H2C=CH2}}{Ethene is an unsaturated hydrocarbon: its molecule contains a carbon–carbon double bond. It decolourises bromine water.}{Ethen ist ein ungesättigter Kohlenwasserstoff: Sein Molekül enthält eine C=C-Doppelbindung. Es entfärbt Bromwasser.}
+\end{lesen}
+
+
+%%%%  STOFFMENGE UND CHEMISCHES RECHNEN  %%%%
+\newpage
+\kapitel{Stoffmenge und chemisches Rechnen}{Amount of substance and chemical calculations}{@"maUnt @v "s2bst@ns @n "kemIk\textsyllabic{l} ""k\ae lkju"leIS\textsyllabic{n}z}
+
+\begin{woerter}
+\eintrag{248}{die}{Stoffmenge}{amount of substance}{@"maUnt @v "s2bst@ns}{$n$ in $\mathrm{mol}$}
+\eintrag{249}{das}{Mol}{mole}{m@Ul}{$1\eh{mol} \mathrel{\widehat{=}} 6{,}022 \cdot 10^{23}$ Teilchen}
+\eintrag{250}{die}{Avogadro-Konstante}{Avogadro constant}{""\ae v@"gA:dr@U ""k6nst@nt}{\small$N_A = 6{,}022 \cdot 10^{23}\eh{mol^{-1}}$}
+\eintrag{251}{die}{Teilchenanzahl}{number of particles}{"n2mb@r @v "pA:tIk\textsyllabic{l}z}{$N = n \cdot N_A$}
+\eintrag{252}{die}{molare Masse}{molar mass}{"m@Ul@ m\ae s}{$M$ in $\mathrm{g/mol}$ \newline $M = \dfrac{m}{n}$}
+\eintrag{253}{das}{molare Volumen}{molar volume}{"m@Ul@ "v6lju:m}{$V_m = 22{,}4\eh{l/mol}$}
+\eintrag{254}{die}{relative Molekülmasse}{relative molecular mass}{"rel@tIv m@"lekj@l@ m\ae s}{$M_r$}
+\eintrag{255}{die}{Stoffmengenkonzentration}{concentration}{""k6ns\textsyllabic{n}"treIS\textsyllabic{n}}{$c$ in $\mathrm{mol/l}$ \newline $c = \dfrac{n}{V}$}
+\eintrag{256}{die}{Massenkonzentration}{mass concentration}{"m\ae s ""k6ns\textsyllabic{n}"treIS\textsyllabic{n}}{$\beta$ in $\mathrm{g/l}$}
+\eintrag{257}{der}{Massenanteil}{mass fraction, percentage by mass}{"m\ae s ""fr\ae kS\textsyllabic{n}}{$w = \dfrac{m(\text{Stoff})}{m(\text{Gemisch})}$}
+\eintrag{258}{die}{Stöchiometrie}{stoichiometry}{""stOIki"6m@tri}{}
+\eintrag{259}{das}{Stoffmengenverhältnis}{mole ratio}{"m@Ul ""reISi@U}{$n(\mathrm{Mg}) : n(\mathrm{O_2}) = 2 : 1$}
+\eintrag{260}{der}{Überschuss}{excess}{Ik"ses}{}
+\end{woerter}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{$M(\mathrm{H_2O}) = 18\eh{g/mol}$}{The molar mass of water is eighteen grams per mole.}{Die molare Masse von Wasser beträgt achtzehn Gramm pro Mol.}
+\lies{$n = \dfrac{m}{M} = \dfrac{36\eh{g}}{18\eh{g/mol}} = 2\eh{mol}$}{Thirty-six grams of water contain two moles of water molecules.}{Sechsunddreißig Gramm Wasser enthalten zwei Mol Wassermoleküle.}
+\lies{$c = \dfrac{n}{V} = \dfrac{0{,}5\eh{mol}}{2\eh{l}} = 0{,}25\eh{mol/l}$}{The concentration of the solution is nought point two five moles per litre.}{Die Konzentration der Lösung beträgt null Komma zwei fünf Mol pro Liter.}
+\lies{$V = n \cdot V_m = 2\eh{mol} \cdot 22{,}4\eh{l/mol}$ \newline $V = 44{,}8\eh{l}$}{Under standard conditions two moles of a gas occupy forty-four point eight litres.}{Unter Normbedingungen nehmen zwei Mol eines Gases vierundvierzig Komma acht Liter ein.}
+\end{lesen}
+
+
+
+%%%%  TEIL II: CHEMIE LESEN UND SPRECHEN  %%%%
+\newpage
+\teil{Chemie lesen und sprechen}{Reading and speaking chemistry}{"ri:dIN @n "spi:kIN "kemIstri}
+
+In diesem Teil steht, wie man Elementnamen, Formeln und Reaktionsgleichungen auf Englisch (und zum
+Vergleich auf Deutsch) liest, wie Verbindungen benannt werden und wie man Experimente beschreibt.
+Links steht der Ausdruck, rechts die englische Lesart und darunter grau die deutsche.
+
+%--------------------------------------------------------------------------------------------------
+\kapitel{Die Elemente: Namen und Aussprache}{The elements: names and pronunciation}{Di "elIm@nts, "neImz @n pr@""n2nsi"eIS\textsyllabic{n}}
+
+Viele Elemente heißen im Englischen anders als im Deutschen oder werden deutlich anders
+ausgesprochen. Das Elementsymbol ist in beiden Sprachen gleich.
+
+\begin{center}
+{\small\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}l l l @{\hspace{1cm}} l l l@{}}
+	\toprule
+	& \textbf{Englisch} & \textbf{Deutsch} & & \textbf{Englisch} & \textbf{Deutsch} \\ \midrule
+	H & hydrogen \ipa{"haIdr@dZ@n} & Wasserstoff & K & potassium \ipa{p@"t\ae si@m} & Kalium \\
+	He & helium \ipa{"hi:li@m} & Helium & Ca & calcium \ipa{"k\ae lsi@m} & Calcium \\
+	Li & lithium \ipa{"lITi@m} & Lithium & Cr & chromium \ipa{"kr@Umi@m} & Chrom \\
+	C & carbon \ipa{"kA:b@n} & Kohlenstoff & Mn & manganese \ipa{"m\ae Ng@ni:z} & Mangan \\
+	N & nitrogen \ipa{"naItr@dZ@n} & Stickstoff & Fe & iron \ipa{"aI@n} & Eisen \\
+	O & oxygen \ipa{"6ksIdZ@n} & Sauerstoff & Cu & copper \ipa{"k6p@} & Kupfer \\
+	F & fluorine \ipa{"flO:ri:n} & Fluor & Zn & zinc \ipa{zINk} & Zink \\
+	Ne & neon \ipa{"ni:6n} & Neon & Br & bromine \ipa{"br@Umi:n} & Brom \\
+	Na & sodium \ipa{"s@Udi@m} & Natrium & Ag & silver \ipa{"sIlv@} & Silber \\
+	Mg & magnesium \ipa{m\ae g"ni:zi@m} & Magnesium & Sn & tin \ipa{tIn} & Zinn \\
+	Al & aluminium \ipa{""\ae lj@"mIni@m} & Aluminium & I & iodine \ipa{"aI@di:n} & Iod \\
+	Si & silicon \ipa{"sIlIk@n} & Silicium & Ba & barium \ipa{"be@ri@m} & Barium \\
+	P & phosphorus \ipa{"f6sf@r@s} & Phosphor & W & tungsten \ipa{"t2Nst@n} & Wolfram \\
+	S & sulfur \ipa{"s2lf@} & Schwefel & Pt & platinum \ipa{"pl\ae tIn@m} & Platin \\
+	Cl & chlorine \ipa{"klO:ri:n} & Chlor & Au & gold \ipa{g@Uld} & Gold \\
+	Ar & argon \ipa{"A:g6n} & Argon & Hg & mercury \ipa{"m3:kj@ri} & Quecksilber \\
+	 & & & Pb & lead \ipa{led} & Blei \\
+	\bottomrule
+\end{tabular}}
+\end{center}
+
+\anmerkung{Die Halogene enden im Englischen auf \textit{-ine} (\textit{chlorine}), ihre Ionen auf
+\textit{-ide} (\textit{chloride}). Die IUPAC empfiehlt die Schreibung \textit{sulfur}; in älteren
+britischen Texten steht \textit{sulphur}. Amerikanisch: \textit{aluminum} \ipa{@"lu:mIn@m}. Im Deutschen
+gelten heute Iod (früher Jod), Calcium (Kalzium), Oxid (Oxyd) und Ethan (Äthan).}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{Na}{Sodium is a soft, silvery metal which reacts vigorously with water.}{Natrium ist ein weiches, silbrig glänzendes Metall, das heftig mit Wasser reagiert.}
+\lies{Fe}{Iron \ipa{"aI@n} is the most widely used metal. (The r is silent.)}{Eisen ist das am häufigsten verwendete Metall.}
+\lies{Pb}{Lead \ipa{led} is a heavy, soft metal -- not to be confused with the verb \textit{to lead} \ipa{li:d}.}{Blei ist ein schweres, weiches Metall.}
+\lies{\ce{N2}, \ce{O2}}{Air is a mixture of about seventy-eight per cent nitrogen and twenty-one per cent oxygen.}{Luft ist ein Gemisch aus etwa achtundsiebzig Prozent Stickstoff und einundzwanzig Prozent Sauerstoff.}
+\lies{Hg, Br}{Mercury and bromine are the only elements that are liquid at room temperature.}{Quecksilber und Brom sind die einzigen Elemente, die bei Raumtemperatur flüssig sind.}
+\end{lesen}
+
+%--------------------------------------------------------------------------------------------------
+\newpage
+\kapitel{Formeln und Reaktionsgleichungen lesen}{Reading formulae and equations}{"ri:dIN "fO:mjuli: @n I"kweIZ\textsyllabic{n}z}
+
+\begin{center}
+\begin{tikzpicture}[font=\small]
+	\node[font=\LARGE] (g) at (0,0) {$\color{red}2\,\color{black}\mathrm{H}_{\color{blue}2}\mathrm{O}\,\color{green!50!black}\mathrm{(l)}$};
+	\node[align=center] (a) at (-3.6,1.2) {coefficient\\[-2pt]\color{black!60}Koeffizient};
+	\node[align=center] (b) at (0,1.6) {chemical symbol\\[-2pt]\color{black!60}Elementsymbol};
+	\node[align=center] (c) at (-2.6,-1.3) {subscript\\[-2pt]\color{black!60}Index};
+	\node[align=center] (d) at (3.6,1.2) {state symbol\\[-2pt]\color{black!60}Zustandssymbol};
+	\draw[-{Stealth}, thin] (a) -- (-1.05,0.2); \draw[-{Stealth}, thin] (b) -- (-0.45,0.35); \draw[-{Stealth}, thin] (c) -- (-0.15,-0.3); \draw[-{Stealth}, thin] (d) -- (1.0,0.25);
+\end{tikzpicture}
+\end{center}
+
+\begin{lesen}
+\lies{\ce{H2O}}{H two O -- water}{H zwei O -- Wasser}
+\lies{\ce{CO2}}{C O two -- carbon dioxide}{C O zwei -- Kohlenstoffdioxid}
+\lies{\ce{H2SO4}}{H two S O four -- sulfuric acid}{H zwei S O vier -- Schwefelsäure}
+\lies{\ce{Ca(OH)2}}{C A, O H twice \;/\; C A, open bracket O H close bracket two -- calcium hydroxide}{C A, O H zweimal \;/\; C A, in Klammern O H, zwei -- Calciumhydroxid}
+\lies{\ce{Na+}, \ce{Cl-}}{N A plus -- a sodium ion; C L minus -- a chloride ion}{N A plus -- ein Natrium-Ion; C L minus -- ein Chlorid-Ion}
+\lies{\ce{SO4^2-}}{S O four two minus -- the sulfate ion}{S O vier zwei minus -- das Sulfat-Ion}
+\lies{(s), (l), (g), (aq)}{state symbols: solid, liquid, gas, aqueous \ipa{"eIkwi@s} (dissolved in water)}{Zustandssymbole: fest, flüssig, gasförmig, in Wasser gelöst}
+\lies{\ce{->}}{gives \;/\; yields \;/\; reacts to form}{reagiert zu}
+\lies{\ce{<=>}}{is in equilibrium with (a reversible reaction)}{steht im Gleichgewicht mit (umkehrbare Reaktion)}
+\lies{\ce{^}, \ce{v}}{a gas is given off; a precipitate is formed}{ein Gas entweicht; ein Niederschlag fällt aus}
+\lies{\ce{2 H2 + O2 -> 2 H2O}}{two H two plus O two gives two H two O. \newline In words: Hydrogen reacts with oxygen to form water.}{zwei H zwei plus O zwei reagiert zu zwei H zwei O. \newline In Worten: Wasserstoff reagiert mit Sauerstoff zu Wasser.}
+\lies{$\Delta H = -286\eh{kJ/mol}$}{delta H equals minus two hundred and eighty-six kilojoules per mole: the reaction is exothermic}{Delta H gleich minus zweihundertsechsundachtzig Kilojoule pro Mol: Die Reaktion ist exotherm}
+\end{lesen}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{\ce{Zn(s) + 2 HCl(aq) -> ZnCl2(aq) + H2(g)}}{Zinc reacts with hydrochloric acid to form zinc chloride solution and hydrogen gas.}{Zink reagiert mit Salzsäure zu Zinkchloridlösung und gasförmigem Wasserstoff.}
+\lies{\ce{CaCO3 -> CaO + CO2 ^}}{On heating, calcium carbonate decomposes into calcium oxide and carbon dioxide.}{Beim Erhitzen zerfällt Calciumcarbonat in Calciumoxid und Kohlenstoffdioxid.}
+\lies{\ce{N2 + 3 H2 <=> 2 NH3}}{Nitrogen and hydrogen react to form ammonia; the reaction is reversible.}{Stickstoff und Wasserstoff reagieren zu Ammoniak; die Reaktion ist umkehrbar.}
+\lies{\ce{Ba^2+ + SO4^2- -> BaSO4 v}}{Barium ions and sulfate ions form a white precipitate of barium sulfate.}{Barium-Ionen und Sulfat-Ionen bilden einen weißen Niederschlag von Bariumsulfat.}
+\lies{Ausgleichen}{Balance the equation: there must be the same number of atoms of each element on both sides.}{Gleiche die Reaktionsgleichung aus: Auf beiden Seiten müssen von jedem Element gleich viele Atome stehen.}
+\end{lesen}
+
+%--------------------------------------------------------------------------------------------------
+\newpage
+\kapitel{Verbindungen aus zwei Elementen benennen}{Naming binary compounds}{"neImIN "baIn@ri "k6mpaUndz}
+
+Der Name eines Salzes aus zwei Elementen besteht aus dem Namen des Metalls (Kation), bei Bedarf
+seiner Wertigkeit als römischer Zahl und dem Namen des Nichtmetalls (Anion) mit der Endung
+\textit{-ide} (deutsch: \textit{-id}).
+
+\begin{center}
+\begin{tikzpicture}[font=\small]
+	\node[font=\LARGE, text=blue] (fe) at (0,0) {Fe};
+	\node[font=\LARGE, text=red, anchor=west, inner sep=0pt] (cl) at (0.42,0) {Cl$_3$};
+	\node[font=\Large, anchor=west] (n1) at (3.6,0.5) {\textcolor{blue}{iron}\textcolor{green!45!black}{(III)} \textcolor{red}{chloride}};
+	\node[font=\Large, anchor=west, text=black!60] (n2) at (3.6,-0.5) {\textcolor{blue!50}{Eisen}\textcolor{green!45!black!60}{(III)}-\textcolor{red!55}{chlorid}};
+	\draw[-{Stealth}, thick] (1.6,0) -- (3.3,0);
+	\node[align=center, text=blue] (l1) at (2.6,1.9) {metal (cation)\\[-2pt]\color{black!60}Metall (Kation)};
+	\node[align=center, text=green!45!black] (l2) at (5.0,1.9) {valency\\[-2pt]\color{black!60}Wertigkeit};
+	\node[align=center, text=red] (l3) at (7.6,1.9) {non-metal + \textit{-ide}\\[-2pt]\color{black!60}Nichtmetall + \textit{-id}};
+	\draw[thin, blue] (l1.south) -- (4.0,0.8); \draw[thin, green!45!black] (l2.south) -- (4.95,0.8); \draw[thin, red] (l3.south) -- (6.1,0.8);
+\end{tikzpicture}
+\end{center}
+
+\begin{lesen}
+\lies{\ce{NaCl}}{sodium chloride \ipa{"klO:raId}}{Natriumchlorid}
+\lies{\ce{MgO}}{magnesium oxide \ipa{"6ksaId}}{Magnesiumoxid}
+\lies{\ce{CaF2}}{calcium fluoride \ipa{"flO:raId}}{Calciumfluorid}
+\lies{\ce{KBr}, \ce{KI}}{potassium bromide \ipa{"br@UmaId}, potassium iodide \ipa{"aI@daId}}{Kaliumbromid, Kaliumiodid}
+\lies{\ce{ZnS}}{zinc sulfide \ipa{"s2lfaId}}{Zinksulfid}
+\lies{\ce{FeCl2}, \ce{FeCl3}}{iron(II) chloride, iron(III) chloride -- read: iron two chloride, iron three chloride}{Eisen(II)-chlorid, Eisen(III)-chlorid -- lies: Eisen-zwei-chlorid, Eisen-drei-chlorid}
+\lies{\ce{Cu2O}, \ce{CuO}}{copper(I) oxide, copper(II) oxide}{Kupfer(I)-oxid, Kupfer(II)-oxid}
+\lies{\ce{PbO2}}{lead(IV) oxide \ipa{""led "fO:r "6ksaId}}{Blei(IV)-oxid}
+\end{lesen}
+
+\platz\zwischen{Zahlwörter bei Verbindungen aus Nichtmetallen}{Number prefixes for non-metal compounds}{"n2mb@ "pri:fIksIz f@ ""n6n"met\textsyllabic{l} "k6mpaUndz}
+
+\begin{center}
+{\small
+\begin{tabular}{@{}l *{10}{c}@{}}
+	\toprule
+	 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\ \midrule
+	englisch & mono- & di- & tri- & tetra- & penta- & hexa- & hepta- & octa- & nona- & deca- \\
+	 & \ipa{"m6n@U} & \ipa{daI} & \ipa{traI} & \ipa{"tetr@} & \ipa{"pent@} & \ipa{"heks@} & \ipa{"hept@} & \ipa{"6kt@} & \ipa{"n6n@} & \ipa{"dek@} \\
+	deutsch & mono- & di- & tri- & tetra- & penta- & hexa- & hepta- & octa- & nona- & deca- \\
+	\bottomrule
+\end{tabular}}
+\end{center}
+
+\begin{lesen}
+\lies{\ce{CO}}{carbon monoxide \ipa{m@"n6ksaId}}{Kohlenstoffmonoxid}
+\lies{\ce{CO2}}{carbon dioxide \ipa{daI"6ksaId}}{Kohlenstoffdioxid}
+\lies{\ce{SO2}, \ce{SO3}}{sulfur dioxide, sulfur trioxide \ipa{traI"6ksaId}}{Schwefeldioxid, Schwefeltrioxid}
+\lies{\ce{N2O}}{dinitrogen \ipa{daI"naItr@dZ@n} monoxide \;/\; nitrous oxide (laughing gas)}{Distickstoffmonoxid (Lachgas)}
+\lies{\ce{NO}, \ce{NO2}}{nitrogen monoxide, nitrogen dioxide}{Stickstoffmonoxid, Stickstoffdioxid}
+\lies{\ce{N2O4}}{dinitrogen tetroxide \ipa{te"tr6ksaId}}{Distickstofftetraoxid}
+\lies{\ce{N2O5}}{dinitrogen pentoxide \ipa{pen"t6ksaId}}{Distickstoffpentaoxid}
+\lies{\ce{HCl}, \ce{H2S}}{hydrogen chloride, hydrogen sulfide}{Chlorwasserstoff, Schwefelwasserstoff}
+\lies{\ce{NH3}, \ce{CH4}}{ammonia \ipa{@"m@Uni@}, methane \ipa{"mi:TeIn}}{Ammoniak, Methan}
+\end{lesen}
+
+\anmerkung{In älteren englischen Texten stehen statt der römischen Zahlen lateinische Namen: die
+Endung \textit{-ous} für die niedrigere, \textit{-ic} für die höhere Wertigkeit -- \textit{ferrous}
+\ipa{"fer@s} \textit{chloride} = iron(II) chloride, \textit{ferric} \ipa{"ferIk} \textit{chloride} =
+iron(III) chloride, \textit{cuprous} \ipa{"kju:pr@s} und \textit{cupric} \ipa{"kju:prIk} für Kupfer(I) und Kupfer(II).}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{\ce{Al2O3}}{aluminium oxide -- no Roman numeral is needed, because aluminium always has a valency of three}{Aluminiumoxid -- die römische Zahl entfällt, weil Aluminium immer dreiwertig ist}
+\lies{\ce{Fe2O3}}{iron(III) oxide: the main constituent of rust}{Eisen(III)-oxid: der Hauptbestandteil von Rost}
+\lies{\ce{P4O10}}{tetraphosphorus decoxide}{Tetraphosphordecaoxid}
+\lies{\ce{CCl4}}{carbon tetrachloride \;/\; tetrachloromethane}{Tetrachlormethan}
+\lies{\ce{CO}}{Carbon monoxide is a colourless, odourless and very poisonous gas.}{Kohlenstoffmonoxid ist ein farbloses, geruchloses und sehr giftiges Gas.}
+\end{lesen}
+
+%--------------------------------------------------------------------------------------------------
+\newpage
+\kapitel{Säuren, Basen und ihre Salze benennen}{Naming acids, bases and their salts}{"neImIN "\ae sIdz, "beIsIz @n De@ "sO:lts}
+
+\begin{center}
+\begin{tikzpicture}[font=\small]
+	\foreach \y/\a/\s/\da/\ds in {1.6/hydro\ldots\textbf{ic} acid/\ldots\textbf{ide}/\ldots wasserstoffsäure/\ldots\textbf{id},
+			0.8/\ldots\textbf{ic} acid/\ldots\textbf{ate}/\ldots säure/\ldots\textbf{at}, 0/\ldots\textbf{ous} acid/\ldots\textbf{ite}/\ldots ige Säure/\ldots\textbf{it}} {
+		\node[anchor=east] at (0,\y) {\a}; \draw[-{Stealth}, thick, red] (0.3,\y) -- (1.5,\y); \node[anchor=west] at (1.8,\y) {\s};
+		\node[anchor=east, black!60] at (8.6,\y) {\da}; \draw[-{Stealth}, thick, red!50] (8.9,\y) -- (10.1,\y); \node[anchor=west, black!60] at (10.4,\y) {\ds};}
+	\node[font=\small\bfseries] at (0.9,2.35) {acid $\rightarrow$ salt}; \node[font=\small\bfseries, black!60] at (9.5,2.35) {Säure $\rightarrow$ Salz};
+\end{tikzpicture}
+\end{center}
+
+\begin{center}
+{\small\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}>{\raggedright}p{1.9cm} >{\raggedright}p{4.5cm} >{\raggedright}p{3.7cm} >{\raggedright}p{3.2cm} >{\raggedright\arraybackslash}p{2.1cm}@{}}
+	\toprule
+	\textbf{Formel} & \textbf{Säure (englisch)} & \textbf{Säure (deutsch)} & \textbf{Salz (englisch)} & \textbf{Salz (deutsch)} \\ \midrule
+	\ce{HF} & hydrofluoric acid \ipa{""haIdr@"flO:rIk} & Flusssäure & fluoride & Fluorid \\
+	\ce{HCl} & hydrochloric acid \ipa{""haIdr@"kl6rIk} & Salzsäure & chloride & Chlorid \\
+	\ce{HBr} & hydrobromic acid \ipa{""haIdr@"br@UmIk} & Bromwasserstoffsäure & bromide & Bromid \\
+	\ce{H2S} & hydrogen sulfide (solution) & Schwefelwasserstoff & sulfide & Sulfid \\
+	\ce{H2SO4} & sulfuric acid \ipa{s2l"fjU@rIk} & Schwefelsäure & sulfate \ipa{"s2lfeIt} & Sulfat \\
+	\ce{H2SO3} & sulfurous acid \ipa{"s2lf@r@s} & schweflige Säure & sulfite \ipa{"s2lfaIt} & Sulfit \\
+	\ce{HNO3} & nitric acid \ipa{"naItrIk} & Salpetersäure & nitrate \ipa{"naItreIt} & Nitrat \\
+	\ce{HNO2} & nitrous acid \ipa{"naItr@s} & salpetrige Säure & nitrite \ipa{"naItraIt} & Nitrit \\
+	\ce{H3PO4} & phosphoric acid \ipa{f6s"f6rIk} & Phosphorsäure & phosphate \ipa{"f6sfeIt} & Phosphat \\
+	\ce{H2CO3} & carbonic acid \ipa{kA:"b6nIk} & Kohlensäure & carbonate \ipa{"kA:b@neIt} & Carbonat \\
+	\ce{HClO} & hypochlorous acid \ipa{""haIp@"klO:r@s} & hypochlorige Säure & hypochlorite \ipa{""haIp@"klO:raIt} & Hypochlorit \\
+	\ce{HClO3} & chloric acid \ipa{"klO:rIk} & Chlorsäure & chlorate \ipa{"klO:reIt} & Chlorat \\
+	\ce{HClO4} & perchloric acid \ipa{p@"klO:rIk} & Perchlorsäure & perchlorate \ipa{p@"klO:reIt} & Perchlorat \\
+	\ce{CH3COOH} & ethanoic acid \ipa{""eT@"n@UIk} \newline (acetic acid \ipa{@"si:tIk}) & Essigsäure (Ethansäure) & ethanoate \ipa{""eT@"n@UeIt} (acetate \ipa{"\ae sIteIt}) & Acetat (Ethanoat) \\
+	\bottomrule
+\end{tabular}}
+\end{center}
+
+\platz\zwischen{Basen und bekannte Salze}{Bases and common salts}{"beIsIz @n "k6m@n "sO:lts}
+
+\begin{lesen}
+\lies{\ce{NaOH}}{sodium hydroxide \ipa{haI"dr6ksaId} (caustic soda \ipa{""kO:stIk "s@Ud@}); in water: sodium hydroxide solution}{Natriumhydroxid (Ätznatron); in Wasser gelöst: Natronlauge}
+\lies{\ce{KOH}}{potassium hydroxide (caustic potash \ipa{"p6t\ae S}); in water: potassium hydroxide solution}{Kaliumhydroxid (Ätzkali); in Wasser gelöst: Kalilauge}
+\lies{\ce{Ca(OH)2}}{calcium hydroxide (slaked lime \ipa{""sleIkt "laIm}); its solution is called limewater}{Calciumhydroxid (gelöschter Kalk); die Lösung heißt Kalkwasser}
+\lies{\ce{NH3(aq)}}{ammonia solution (aqueous ammonia)}{Ammoniaklösung (Ammoniakwasser)}
+\lies{\ce{NaCl}}{sodium chloride (common salt, table salt)}{Natriumchlorid (Kochsalz)}
+\lies{\ce{CaCO3}}{calcium carbonate (limestone, chalk, marble)}{Calciumcarbonat (Kalkstein, Kreide, Marmor)}
+\lies{\ce{NaHCO3}}{sodium hydrogencarbonate (sodium bicarbonate, baking soda)}{Natriumhydrogencarbonat (Natron)}
+\lies{\ce{KNO3}}{potassium nitrate (saltpetre \ipa{""sO:lt"pi:t@})}{Kaliumnitrat (Kalisalpeter)}
+\lies{\ce{CuSO4.5H2O}}{copper(II) sulfate pentahydrate \ipa{""pent@"haIdreIt} (hydrated copper sulfate)}{Kupfer(II)-sulfat-Pentahydrat (blaues Kupfersulfat)}
+\end{lesen}
+
+\anmerkung{Für \ce{HCl} gibt es zwei Namen: Das Gas heißt \textit{hydrogen chloride}, seine Lösung in
+Wasser \textit{hydrochloric acid}. Die Endung \textit{-ide} wird \ipa{aId} gesprochen, \textit{-ate}
+\ipa{eIt} und \textit{-ite} \ipa{aIt} -- \textit{sulfide, sulfate, sulfite} klingen also deutlich verschieden.}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{\ce{H2SO4 + 2 NaOH -> Na2SO4 + 2 H2O}}{Sulfuric acid reacts with sodium hydroxide to form sodium sulfate and water.}{Schwefelsäure reagiert mit Natriumhydroxid zu Natriumsulfat und Wasser.}
+\end{lesen}
+
+%--------------------------------------------------------------------------------------------------
+\newpage
+\kapitel{Der pH-Wert und Indikatoren}{pH and indicators}{""pi: "eItS @n "IndIkeIt@z}
+
+\begin{center}
+\begin{tikzpicture}[font=\small]
+	\phskala{0.9}
+	\foreach \k in {0,...,14} {\node[below] at (0.9*\k+0.45,0) {\k};}
+	\draw[{Stealth}-, thick] (0,1.6) -- node[above] {acidic -- \color{black!60}sauer} (5.9,1.6);
+	\draw[-{Stealth}, thick] (7.6,1.6) -- node[above] {alkaline -- \color{black!60}alkalisch (basisch)} (13.5,1.6);
+	\node[above] at (6.75,1.5) {neutral};
+	\foreach \k/\e/\d/\y in {1/stomach acid/Magensäure/-0.75, 3/vinegar/Essig/-1.75, 5/rain/Regen/-0.75, 7/pure water/reines Wasser/-1.75, 9/soap solution/Seifenlösung/-0.75, 11/ammonia solution/Ammoniaklösung/-1.75, 13/drain cleaner/Rohrreiniger/-0.75}
+		{\draw[thin] (0.9*\k+0.45,-0.45) -- (0.9*\k+0.45,\y); \node[align=center, font=\footnotesize, anchor=north] at (0.9*\k+0.45,\y) {\e\\[-2pt]\color{black!60}\d};}
+\end{tikzpicture}
+\end{center}
+
+\begin{lesen}
+\lies{pH $= 3$}{p H three: the solution is acidic}{p H drei: Die Lösung ist sauer}
+\lies{$\mathrm{pH} = -\lg c(\ce{H3O+})$}{pH equals minus log of the concentration of oxonium ions}{pH gleich minus Logarithmus der Konzentration der Oxonium-Ionen}
+\lies{Lackmus}{litmus \ipa{"lItm@s}: red in acidic solutions, blue in alkaline solutions}{Lackmus: in saurer Lösung rot, in alkalischer Lösung blau}
+\lies{Phenolphthalein}{phenolphthalein \ipa{""fi:n6l"TeIli:n}: colourless in acidic and neutral solutions, pink in alkaline solutions}{Phenolphthalein: in saurer und neutraler Lösung farblos, in alkalischer Lösung rosa bis pink}
+\lies{Bromthymolblau}{bromothymol \ipa{""br@Um@U"TaIm6l} blue: yellow in acidic, green in neutral and blue in alkaline solutions}{Bromthymolblau: in saurer Lösung gelb, in neutraler grün und in alkalischer blau}
+\end{lesen}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{$c(\ce{H3O+}) = 0{,}01\eh{mol/l}$ \newline pH $= 2$}{The concentration of oxonium ions is nought point nought one moles per litre, so the pH is two.}{Die Konzentration der Oxonium-Ionen beträgt null Komma null eins Mol pro Liter, der pH-Wert ist also zwei.}
+\lies{pH $3 \rightarrow$ pH $2$}{A decrease of one pH unit means that the solution is ten times more acidic.}{Sinkt der pH-Wert um eine Einheit, ist die Lösung zehnmal so sauer.}
+\end{lesen}
+
+%--------------------------------------------------------------------------------------------------
+\newpage
+\kapitel{Organische Verbindungen benennen}{Naming organic compounds}{"neImIN O:"g\ae nIk "k6mpaUndz}
+
+Der Stamm des Namens gibt die Zahl der Kohlenstoffatome an, die Endung die Stoffklasse.
+
+\begin{center}
+{\small\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}c l l l @{\hspace{1cm}} c l l l@{}}
+	\toprule
+	\textbf{C} & \textbf{Formel} & \textbf{Englisch} & \textbf{Deutsch} & \textbf{C} & \textbf{Formel} & \textbf{Englisch} & \textbf{Deutsch} \\ \midrule
+	1 & \ce{CH4} & methane \ipa{"mi:TeIn} & Methan & 6 & \ce{C6H14} & hexane \ipa{"hekseIn} & Hexan \\
+	2 & \ce{C2H6} & ethane \ipa{"i:TeIn} & Ethan & 7 & \ce{C7H16} & heptane \ipa{"hepteIn} & Heptan \\
+	3 & \ce{C3H8} & propane \ipa{"pr@UpeIn} & Propan & 8 & \ce{C8H18} & octane \ipa{"6kteIn} & Octan \\
+	4 & \ce{C4H10} & butane \ipa{"bju:teIn} & Butan & 9 & \ce{C9H20} & nonane \ipa{"n@UneIn} & Nonan \\
+	5 & \ce{C5H12} & pentane \ipa{"penteIn} & Pentan & 10 & \ce{C10H22} & decane \ipa{"dekeIn} & Decan \\
+	\bottomrule
+\end{tabular}}
+\end{center}
+
+\begin{center}
+{\footnotesize\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}l l l l l@{}}
+	\toprule
+	\textbf{Stoffklasse (englisch)} & \textbf{deutsch} & \textbf{Endung} & \textbf{Beispiel (englisch)} & \textbf{deutsch} \\ \midrule
+	alkanes & Alkane & -ane \,/\, -an & ethane & Ethan \\
+	alkenes & Alkene & -ene \,/\, -en & ethene \ipa{"eTi:n} & Ethen \\
+	alkynes & Alkine & -yne \,/\, -in & ethyne \ipa{"i:TaIn} & Ethin \\
+	alcohols & Alkohole (Alkanole) & -ol \,/\, -ol & ethanol \ipa{"eT@n6l} & Ethanol \\
+	aldehydes & Aldehyde (Alkanale) & -al \,/\, -al & ethanal \ipa{"eT@n\ae l} & Ethanal \\
+	ketones & Ketone (Alkanone) & -one \,/\, -on & propanone & Propanon \\
+	carboxylic acids & Carbonsäuren & -oic acid \,/\, -säure & ethanoic acid & Ethansäure \\
+	esters & Ester & -yl -oate \,/\, -ester & ethyl ethanoate & Ethansäureethylester \\
+	\bottomrule
+\end{tabular}}
+\end{center}
+
+\begin{lesen}
+\lies{\struktur{C(-[:120]H)(-[:240]H)=C(-[:60]H)(-[:-60]H)}}{ethene (common name: ethylene \ipa{"eT@li:n})}{Ethen (Trivialname: Ethylen)}
+\lies{\struktur{H-C~C-H}}{ethyne (common name: acetylene \ipa{@"set@li:n})}{Ethin (Trivialname: Acetylen)}
+\lies{\struktur{H_3C-CH(-[6]CH_3)-CH_3}}{2-methylpropane -- read: two methyl \ipa{"meTIl} propane (common name: isobutane)}{2-Methylpropan -- lies: zwei Methylpropan (Trivialname: Isobutan)}
+\lies{\struktur{H_3C-CH_2-OH}}{ethanol (ethyl alcohol)}{Ethanol (Ethylalkohol, Trinkalkohol)}
+\lies{\struktur{HO-CH_2-CH(-[6]OH)-CH_2-OH}}{propane-1,2,3-triol -- read: propane one two three triol (common name: glycerol \ipa{"glIs@r6l})}{Propan-1,2,3-triol (Trivialname: Glycerin)}
+\lies{\struktur{H-C(=[2]O)-H}}{methanal (common name: formaldehyde \ipa{fO:"m\ae ldIhaId})}{Methanal (Trivialname: Formaldehyd)}
+\lies{\struktur{H_3C-C(=[2]O)-CH_3}}{propanone (common name: acetone \ipa{"\ae sIt@Un})}{Propanon (Trivialname: Aceton)}
+\lies{\struktur{H-C(=[2]O)-OH}}{methanoic acid \ipa{""meT@"n@UIk} (common name: formic \ipa{"fO:mIk} acid)}{Methansäure (Trivialname: Ameisensäure)}
+\lies{\struktur{H_3C-C(=[2]O)-OH}}{ethanoic acid (common name: acetic acid)}{Ethansäure (Trivialname: Essigsäure)}
+\lies{\struktur{H_3C-C(=[2]O)-O-CH_2-CH_3}}{ethyl ethanoate (common name: ethyl acetate)}{Ethansäureethylester (Trivialname: Essigsäureethylester)}
+\lies{\struktur{*6(-=-=-=)}}{benzene \ipa{"benzi:n}}{Benzol (Benzen)}
+\lies{\struktur{*6(-=-=(-CH_3)-=)}}{methylbenzene (common name: toluene \ipa{"t6lju:i:n})}{Methylbenzol (Trivialname: Toluol)}
+\lies{\struktur{*6(-=-=(-OH)-=)}}{phenol \ipa{"fi:n6l}}{Phenol (Hydroxybenzol)}
+\end{lesen}
+
+\anmerkung{Falsche Freunde: Benzol heißt auf Englisch \textit{benzene}; das deutsche Benzin ist
+\textit{petrol} (britisch) bzw.\ \textit{gasoline} (amerikanisch). Das englische \textit{benzine}
+bezeichnet Waschbenzin. Stellungsziffern liest man einzeln: \textit{but-1-ene} -- „but one ene“,
+\textit{propan-2-ol} -- „propan two ol“, \textit{2,2-dimethylpropane} -- „two two dimethylpropane“.}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{\ce{C3H8}}{Propane is the third member of the homologous series of the alkanes.}{Propan ist das dritte Glied der homologen Reihe der Alkane.}
+\lies{\ce{CH3-CH=CH2}}{propene: an alkene with three carbon atoms}{Propen: ein Alken mit drei Kohlenstoffatomen}
+\lies{\ce{CH3-CH(OH)-CH3}}{propan-2-ol: the hydroxyl group is attached to the second carbon atom}{Propan-2-ol: Die Hydroxygruppe sitzt am zweiten Kohlenstoffatom}
+\lies{\ce{CH2Cl-CH2Cl}}{1,2-dichloroethane -- read: one two dichloro ethane}{1,2-Dichlorethan -- lies: eins zwei Dichlorethan}
+\lies{\ce{C2H5OH + CH3COOH <=> CH3COOC2H5 + H2O}}{Ethanol reacts with ethanoic acid to form ethyl ethanoate and water (esterification).}{Ethanol reagiert mit Ethansäure zu Ethansäureethylester und Wasser (Veresterung).}
+\end{lesen}
+
+%--------------------------------------------------------------------------------------------------
+\newpage
+\kapitel{Rechnen mit Stoffmengen}{Calculating with moles}{"k\ae lkjuleItIN wID "m@Ulz}
+
+\begin{lesen}
+\lies{$n = \dfrac{m}{M}$}{$n$ equals $m$ over capital $M$: the amount of substance equals the mass divided by the molar mass}{$n$ gleich $m$ durch groß $M$: Die Stoffmenge ist die Masse durch die molare Masse}
+\lies{$N = n \cdot N_A$}{the number of particles equals the amount of substance times the Avogadro constant}{die Teilchenanzahl ist die Stoffmenge mal die Avogadro-Konstante}
+\lies{$c = \dfrac{n}{V}$}{$c$ equals $n$ over $V$: the concentration equals the amount of substance divided by the volume of the solution}{$c$ gleich $n$ durch $V$: Die Konzentration ist die Stoffmenge durch das Volumen der Lösung}
+\lies{$V = n \cdot V_m$}{the volume of a gas equals the amount of substance times the molar volume}{das Volumen eines Gases ist die Stoffmenge mal das molare Volumen}
+\lies{$c(\ce{HCl}) = 0{,}1\eh{mol/l}$}{the concentration of the hydrochloric acid is nought point one moles per litre (nought point one molar)}{die Konzentration der Salzsäure beträgt null Komma eins Mol pro Liter}
+\lies{$M(\ce{NaCl}) = 58{,}5\eh{g/mol}$}{the molar mass of sodium chloride is fifty-eight point five grams per mole}{die molare Masse von Natriumchlorid beträgt achtundfünfzig Komma fünf Gramm pro Mol}
+\end{lesen}
+
+\anmerkung{Im Englischen schreibt man die Konzentration meist in $\mathrm{mol/dm^3}$ oder kurz M
+(\textit{molar}): $0{,}1\eh{mol/l} = 0.1\eh{mol\,dm^{-3}} = 0.1\eh{M}$. Eckige Klammern stehen für
+Konzentrationen: $[\ce{H3O+}]$.}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{$M(\ce{CO2}) = (12 + 2 \cdot 16)\eh{g/mol}$ \newline $M(\ce{CO2}) = 44\eh{g/mol}$}{To find the molar mass, add up the atomic masses: twelve plus two times sixteen is forty-four grams per mole.}{Für die molare Masse addiert man die Atommassen: zwölf plus zwei mal sechzehn ergibt vierundvierzig Gramm pro Mol.}
+\lies{\ce{2 Mg + O2 -> 2 MgO} \newline $n(\ce{Mg}) = 1\eh{mol}$}{What mass of magnesium oxide is formed when twenty-four point three grams of magnesium burn? First calculate the amount of magnesium: one mole.}{Welche Masse Magnesiumoxid entsteht, wenn vierundzwanzig Komma drei Gramm Magnesium verbrennen? Berechne zuerst die Stoffmenge des Magnesiums: ein Mol.}
+\lies{$n(\ce{MgO}) = n(\ce{Mg}) = 1\eh{mol}$ \newline $m(\ce{MgO}) = 1\eh{mol} \cdot 40{,}3\eh{g/mol}$ \newline $m(\ce{MgO}) = 40{,}3\eh{g}$}{From the equation, two moles of magnesium give two moles of magnesium oxide. So forty point three grams of magnesium oxide are formed.}{Nach der Reaktionsgleichung entstehen aus zwei Mol Magnesium zwei Mol Magnesiumoxid. Es entstehen also vierzig Komma drei Gramm Magnesiumoxid.}
+\lies{$m = c \cdot V \cdot M$ \newline $m = 0{,}1\eh{\tfrac{mol}{l}} \cdot 1\eh{l} \cdot 40\eh{\tfrac{g}{mol}} = 4\eh{g}$}{To make one litre of sodium hydroxide solution with a concentration of nought point one moles per litre, dissolve four grams of sodium hydroxide in water and make the solution up to one litre.}{Für einen Liter Natronlauge der Konzentration null Komma eins Mol pro Liter löst man vier Gramm Natriumhydroxid in Wasser und füllt auf einen Liter auf.}
+\lies{$c(\ce{HCl}) = \dfrac{0{,}1\eh{mol/l} \cdot 25\eh{ml}}{20\eh{ml}}$ \newline $c(\ce{HCl}) = 0{,}125\eh{mol/l}$}{Twenty millilitres of hydrochloric acid are neutralised by twenty-five millilitres of sodium hydroxide solution of concentration nought point one moles per litre. The concentration of the acid is nought point one two five moles per litre.}{Zwanzig Milliliter Salzsäure werden von fünfundzwanzig Millilitern Natronlauge der Konzentration null Komma eins Mol pro Liter neutralisiert. Die Konzentration der Säure beträgt null Komma eins zwei fünf Mol pro Liter.}
+\end{lesen}
+
+%--------------------------------------------------------------------------------------------------
+\newpage
+\kapitel{Experimente beschreiben und sicher arbeiten}{Describing experiments and working safely}{dI"skraIbIN Ik"sperIm@nts @n "w3:kIN "seIfli}
+
+\begin{center}
+\begin{tikzpicture}[font=\small, line cap=round, line join=round]
+	\begin{scope}[scale=1.15]
+		\brenner{0}{0}
+		\draw[black, very thick] (-1.3,2.6) -- (1.3,2.6) (-1.15,2.6) -- (-1.5,0) (1.15,2.6) -- (1.5,0);
+		\draw[black!60, thick, densely dashed] (-1.4,2.72) -- (1.4,2.72);
+		\fill[blue!12] (-0.9,2.78) rectangle (0.9,3.8); \draw[blue, very thick] (-1.05,4.7) -- (-0.9,4.6) -- (-0.9,2.78) -- (0.9,2.78) -- (0.9,4.7);
+		\draw[blue, thick, rounded corners=1.5pt] (0.3,3.1) rectangle (0.48,5.3); \fill[red] (0.39,3.1) circle (0.13); \fill[red] (0.36,3.1) rectangle (0.42,4.2);
+	\end{scope}
+	\foreach \y/\e/\d/\px/\py in {5.4/thermometer/Thermometer/0.6/5.6, 4.5/beaker/Becherglas/1.1/4.6, 3.6/gauze/Drahtnetz/1.5/3.15, 2.7/tripod/Dreifuß/1.6/1.9, 1.8/Bunsen burner/Gasbrenner/0.3/1.0, 0.9/gas supply/Gaszufuhr/-1.1/0.15}
+		{\node[anchor=west] (n) at (4,\y) {\e{} -- \color{black!60}\d}; \draw[-{Stealth}, thin] (n.west) -- (\px,\py);}
+\end{tikzpicture}
+\end{center}
+
+Die Teile eines Versuchsprotokolls (\textit{lab report}):
+
+\begin{lesen}
+\lies{\textbf{Aufgabe}}{\textbf{Aim:} To investigate how temperature affects the solubility of potassium nitrate in water.}{Untersuche, wie die Temperatur die Löslichkeit von Kaliumnitrat in Wasser beeinflusst.}
+\lies{\textbf{Geräte und Chemikalien}}{\textbf{Apparatus and chemicals:} beaker, tripod, gauze, Bunsen burner, thermometer, balance; potassium nitrate, distilled water}{Becherglas, Dreifuß, Drahtnetz, Gasbrenner, Thermometer, Waage; Kaliumnitrat, destilliertes Wasser}
+\lies{\textbf{Durchführung}}{\textbf{Method:} Pour fifty millilitres of water into the beaker. Add potassium nitrate a spatula at a time and stir until no more dissolves. Heat the mixture and repeat.}{Gib fünfzig Milliliter Wasser in das Becherglas. Füge spatelweise Kaliumnitrat hinzu und rühre, bis sich nichts mehr löst. Erwärme das Gemisch und wiederhole den Vorgang.}
+\lies{\textbf{Beobachtung}}{\textbf{Observations:} More potassium nitrate dissolves in hot water than in cold water. On cooling, crystals form.}{In heißem Wasser löst sich mehr Kaliumnitrat als in kaltem. Beim Abkühlen bilden sich Kristalle.}
+\lies{\textbf{Auswertung}}{\textbf{Conclusion:} The solubility of potassium nitrate increases with temperature.}{Die Löslichkeit von Kaliumnitrat nimmt mit steigender Temperatur zu.}
+\end{lesen}
+
+\platz\zwischen{Beobachtungen und Nachweise}{Observations and tests}{""6bz@"veIS\textsyllabic{n}z @n "tests}
+
+\begin{lesen}
+\lies{Gasentwicklung}{Bubbles of gas are given off (effervescence \ipa{""ef@"ves=ns}).}{Es steigen Gasblasen auf (die Lösung schäumt).}
+\lies{Farbänderung}{The solution turns from blue to colourless.}{Die Lösung entfärbt sich von Blau nach Farblos.}
+\lies{Niederschlag}{A white precipitate forms.}{Es bildet sich ein weißer Niederschlag.}
+\lies{Sauerstoff}{Test for oxygen: a glowing splint relights.}{Nachweis von Sauerstoff (Glimmspanprobe): Ein glimmender Holzspan flammt auf.}
+\lies{Wasserstoff}{Test for hydrogen: a lighted splint gives a squeaky pop.}{Nachweis von Wasserstoff (Knallgasprobe): Ein brennender Span erzeugt ein pfeifendes Geräusch.}
+\lies{Kohlenstoffdioxid}{Test for carbon dioxide: limewater turns milky.}{Nachweis von Kohlenstoffdioxid: Kalkwasser trübt sich.}
+\lies{Flammenfärbung}{Flame test: sodium compounds colour the flame yellow, potassium compounds lilac.}{Flammenfärbung: Natriumverbindungen färben die Flamme gelb, Kaliumverbindungen violett.}
+\end{lesen}
+
+\platz\zwischen{Gefahren und Sicherheit}{Hazards and safety}{"h\ae z@dz @n "seIfti}
+
+\begin{lesen}
+\lies{entzündbar}{flammable \ipa{"fl\ae m@b=l}}{}
+\lies{ätzend}{corrosive \ipa{k@"r@UsIv}}{}
+\lies{giftig}{toxic \ipa{"t6ksIk}}{}
+\lies{gesundheitsschädlich, reizend}{harmful, irritant \ipa{"IrIt@nt}}{}
+\lies{brandfördernd}{oxidising \ipa{"6ksIdaIzIN}}{}
+\lies{explosiv}{explosive \ipa{Ik"spl@UsIv}}{}
+\lies{umweltgefährlich}{hazardous to the environment \ipa{"h\ae z@d@s}}{}
+\end{lesen}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{Schutz}{Wear safety goggles and tie back long hair.}{Trage eine Schutzbrille und binde lange Haare zusammen.}
+\lies{Verdünnen}{Always add acid to water, never water to acid.}{Gib immer die Säure ins Wasser, nie das Wasser in die Säure.}
+\lies{Geruchsprobe}{To smell a substance, waft the vapour towards your nose with your hand.}{Fächle dir zur Geruchsprobe die Dämpfe mit der Hand zu.}
+\lies{Abzug}{Carry out the experiment in a fume cupboard.}{Führe den Versuch unter dem Abzug durch.}
+\lies{Entsorgung}{Do not pour the residues down the sink; put them in the waste container.}{Gieße die Reste nicht in den Ausguss; gib sie in den Sammelbehälter.}
+\end{lesen}
+
+
+\newpage
+%%%%  REGISTER  %%%%
+\teil{Register}{Index}{"Indeks}
+\section{Register Deutsch -- Englisch}
+\begin{multicols}{2}\small\raggedright
+
+\medskip{\large\textbf{\color{cornflower}A}}\par\nopagebreak
+\textbf{Abdampfschale} (die) -- evaporating dish\dotfill\hyperref[e:48]{\pageref*{e:48}}\par
+\textbf{abkühlen} -- cool (down)\dotfill\hyperref[e:71]{\pageref*{e:71}}\par
+\textbf{abwiegen} -- weigh out\dotfill\hyperref[e:69]{\pageref*{e:69}}\par
+\textbf{Abzug} (der) -- fume cupboard (AE: fume hood)\dotfill\hyperref[e:63]{\pageref*{e:63}}\par
+\textbf{Additionsreaktion} (die) -- addition reaction\dotfill\hyperref[e:228]{\pageref*{e:228}}\par
+\textbf{Akkumulator} (der) -- rechargeable battery\dotfill\hyperref[e:204]{\pageref*{e:204}}\par
+\textbf{Aktivierungsenergie} (die) -- activation energy\dotfill\hyperref[e:141]{\pageref*{e:141}}\par
+\textbf{Aldehyd} (das) -- aldehyde\dotfill\hyperref[e:221]{\pageref*{e:221}}\par
+\textbf{Alkalimetalle} (die) -- alkali metals\dotfill\hyperref[e:88]{\pageref*{e:88}}\par
+\textbf{Alkan} (das) -- alkane\dotfill\hyperref[e:210]{\pageref*{e:210}}\par
+\textbf{Alken} (das) -- alkene\dotfill\hyperref[e:211]{\pageref*{e:211}}\par
+\textbf{Alkin} (das) -- alkyne\dotfill\hyperref[e:212]{\pageref*{e:212}}\par
+\textbf{Alkohol} (der) -- alcohol\dotfill\hyperref[e:219]{\pageref*{e:219}}\par
+\textbf{alkoholische Gärung} (die) -- fermentation\dotfill\hyperref[e:247]{\pageref*{e:247}}\par
+\textbf{Amin} (das) -- amine\dotfill\hyperref[e:226]{\pageref*{e:226}}\par
+\textbf{Aminosäure} (die) -- amino acid\dotfill\hyperref[e:227]{\pageref*{e:227}}\par
+\textbf{Ammoniak} (das) -- ammonia\dotfill\hyperref[e:182]{\pageref*{e:182}}\par
+\textbf{Anion} (das) -- anion\dotfill\hyperref[e:95]{\pageref*{e:95}}\par
+\textbf{Anode} (die) -- anode\dotfill\hyperref[e:198]{\pageref*{e:198}}\par
+\textbf{Äquivalenzpunkt} (der) -- equivalence point\dotfill\hyperref[e:175]{\pageref*{e:175}}\par
+\textbf{Aromat} (der) -- aromatic compound\dotfill\hyperref[e:217]{\pageref*{e:217}}\par
+\textbf{Atom} (das) -- atom\dotfill\hyperref[e:72]{\pageref*{e:72}}\par
+\textbf{Atombindung (Elektronenpaarbindung)} (die) -- covalent bond\dotfill\hyperref[e:109]{\pageref*{e:109}}\par
+\textbf{Atomkern} (der) -- nucleus\dotfill\hyperref[e:73]{\pageref*{e:73}}\par
+\textbf{ätzend} -- corrosive\dotfill\hyperref[e:172]{\pageref*{e:172}}\par
+\textbf{Ausbeute} (die) -- yield\dotfill\hyperref[e:150]{\pageref*{e:150}}\par
+\textbf{Ausgangsstoff (das Edukt)} (der) -- reactant\dotfill\hyperref[e:126]{\pageref*{e:126}}\par
+\textbf{ausgleichen} -- balance (an equation)\dotfill\hyperref[e:130]{\pageref*{e:130}}\par
+\textbf{Außenelektron} (das) -- outer electron, valence electron\dotfill\hyperref[e:78]{\pageref*{e:78}}\par
+\textbf{Avogadro-Konstante} (die) -- Avogadro constant\dotfill\hyperref[e:250]{\pageref*{e:250}}\par
+
+\medskip{\large\textbf{\color{cornflower}B}}\par\nopagebreak
+\textbf{Base} (die) -- base\dotfill\hyperref[e:153]{\pageref*{e:153}}\par
+\textbf{basisch, alkalisch} -- basic, alkaline\dotfill\hyperref[e:157]{\pageref*{e:157}}\par
+\textbf{Becherglas} (das) -- beaker\dotfill\hyperref[e:40]{\pageref*{e:40}}\par
+\textbf{Benzin} (das) -- petrol (AE: gasoline)\dotfill\hyperref[e:235]{\pageref*{e:235}}\par
+\textbf{bindende Elektronenpaar} (das) -- bonding pair\dotfill\hyperref[e:110]{\pageref*{e:110}}\par
+\textbf{brennbar} -- flammable, combustible\dotfill\hyperref[e:28]{\pageref*{e:28}}\par
+\textbf{Brennstoffzelle} (die) -- fuel cell\dotfill\hyperref[e:203]{\pageref*{e:203}}\par
+\textbf{Bürette} (die) -- burette\dotfill\hyperref[e:51]{\pageref*{e:51}}\par
+
+\medskip{\large\textbf{\color{cornflower}C}}\par\nopagebreak
+\textbf{Carbonsäure} (die) -- carboxylic acid\dotfill\hyperref[e:223]{\pageref*{e:223}}\par
+\textbf{Chemikalie} (die) -- chemical\dotfill\hyperref[e:64]{\pageref*{e:64}}\par
+\textbf{chemische Bindung} (die) -- chemical bond\dotfill\hyperref[e:105]{\pageref*{e:105}}\par
+\textbf{chemische Formel} (die) -- chemical formula\dotfill\hyperref[e:101]{\pageref*{e:101}}\par
+\textbf{chemische Gleichgewicht} (das) -- chemical equilibrium\dotfill\hyperref[e:145]{\pageref*{e:145}}\par
+\textbf{chemische Reaktion} (die) -- chemical reaction\dotfill\hyperref[e:125]{\pageref*{e:125}}\par
+\textbf{Chromatografie} (die) -- chromatography\dotfill\hyperref[e:38]{\pageref*{e:38}}\par
+\textbf{Cracken} (das) -- cracking\dotfill\hyperref[e:234]{\pageref*{e:234}}\par
+
+\medskip{\large\textbf{\color{cornflower}D}}\par\nopagebreak
+\textbf{Dekantieren} (das) -- decanting\dotfill\hyperref[e:36]{\pageref*{e:36}}\par
+\textbf{delokalisierten Elektronen} (die) -- delocalised electrons\dotfill\hyperref[e:124]{\pageref*{e:124}}\par
+\textbf{Destillation} (die) -- distillation\dotfill\hyperref[e:35]{\pageref*{e:35}}\par
+\textbf{Dichte} (die) -- density\dotfill\hyperref[e:24]{\pageref*{e:24}}\par
+\textbf{Dipol} (der) -- dipole\dotfill\hyperref[e:117]{\pageref*{e:117}}\par
+\textbf{Doppelbindung} (die) -- double bond\dotfill\hyperref[e:113]{\pageref*{e:113}}\par
+\textbf{Dreifachbindung} (die) -- triple bond\dotfill\hyperref[e:114]{\pageref*{e:114}}\par
+\textbf{Dreifuß (mit Drahtnetz)} (der) -- tripod (and gauze)\dotfill\hyperref[e:47]{\pageref*{e:47}}\par
+
+\medskip{\large\textbf{\color{cornflower}E}}\par\nopagebreak
+\textbf{Edelgase} (die) -- noble gases\dotfill\hyperref[e:91]{\pageref*{e:91}}\par
+\textbf{Edelgaskonfiguration} (die) -- noble gas configuration\dotfill\hyperref[e:96]{\pageref*{e:96}}\par
+\textbf{Edelmetall} (das) -- noble metal, precious metal\dotfill\hyperref[e:192]{\pageref*{e:192}}\par
+\textbf{Eigenschaft} (die) -- property\dotfill\hyperref[e:20]{\pageref*{e:20}}\par
+\textbf{Eindampfen} (das) -- evaporation\dotfill\hyperref[e:34]{\pageref*{e:34}}\par
+\textbf{Einfachbindung} (die) -- single bond\dotfill\hyperref[e:112]{\pageref*{e:112}}\par
+\textbf{Eiweiß (Protein)} (das) -- protein\dotfill\hyperref[e:244]{\pageref*{e:244}}\par
+\textbf{elektrische Leitfähigkeit} (die) -- electrical conductivity\dotfill\hyperref[e:27]{\pageref*{e:27}}\par
+\textbf{Elektrode} (die) -- electrode\dotfill\hyperref[e:197]{\pageref*{e:197}}\par
+\textbf{Elektrolyse} (die) -- electrolysis\dotfill\hyperref[e:195]{\pageref*{e:195}}\par
+\textbf{Elektrolyt} (der) -- electrolyte\dotfill\hyperref[e:196]{\pageref*{e:196}}\par
+\textbf{Elektron} (das) -- electron\dotfill\hyperref[e:76]{\pageref*{e:76}}\par
+\textbf{Elektronegativität} (die) -- electronegativity\dotfill\hyperref[e:98]{\pageref*{e:98}}\par
+\textbf{Elektronenkonfiguration} (die) -- electron configuration\dotfill\hyperref[e:79]{\pageref*{e:79}}\par
+\textbf{Elektronenschale} (die) -- electron shell\dotfill\hyperref[e:77]{\pageref*{e:77}}\par
+\textbf{Elektronenübergang} (der) -- electron transfer\dotfill\hyperref[e:189]{\pageref*{e:189}}\par
+\textbf{Element} (das) -- element\dotfill\hyperref[e:3]{\pageref*{e:3}}\par
+\textbf{Elementsymbol} (das) -- chemical symbol\dotfill\hyperref[e:84]{\pageref*{e:84}}\par
+\textbf{Eliminierung} (die) -- elimination\dotfill\hyperref[e:230]{\pageref*{e:230}}\par
+\textbf{Emulsion} (die) -- emulsion\dotfill\hyperref[e:16]{\pageref*{e:16}}\par
+\textbf{endotherm} -- endothermic\dotfill\hyperref[e:139]{\pageref*{e:139}}\par
+\textbf{Erdalkalimetalle} (die) -- alkaline earth metals\dotfill\hyperref[e:89]{\pageref*{e:89}}\par
+\textbf{Erdgas} (das) -- natural gas\dotfill\hyperref[e:232]{\pageref*{e:232}}\par
+\textbf{Erdöl} (das) -- crude oil\dotfill\hyperref[e:231]{\pageref*{e:231}}\par
+\textbf{erhitzen} -- heat\dotfill\hyperref[e:65]{\pageref*{e:65}}\par
+\textbf{Erlenmeyerkolben} (der) -- conical flask\dotfill\hyperref[e:41]{\pageref*{e:41}}\par
+\textbf{Erz} (das) -- ore\dotfill\hyperref[e:206]{\pageref*{e:206}}\par
+\textbf{Ester} (der) -- ester\dotfill\hyperref[e:224]{\pageref*{e:224}}\par
+\textbf{exotherm} -- exothermic\dotfill\hyperref[e:138]{\pageref*{e:138}}\par
+
+\medskip{\large\textbf{\color{cornflower}F}}\par\nopagebreak
+\textbf{Fällung} (die) -- precipitation\dotfill\hyperref[e:136]{\pageref*{e:136}}\par
+\textbf{Farbe} (die) -- colour (AE: color)\dotfill\hyperref[e:21]{\pageref*{e:21}}\par
+\textbf{fest, flüssig, gasförmig} -- solid, liquid, gaseous\dotfill\hyperref[e:29]{\pageref*{e:29}}\par
+\textbf{Fett} (das) -- fat\dotfill\hyperref[e:240]{\pageref*{e:240}}\par
+\textbf{Filterpapier} (das) -- filter paper\dotfill\hyperref[e:45]{\pageref*{e:45}}\par
+\textbf{Filtrat} (das) -- filtrate\dotfill\hyperref[e:32]{\pageref*{e:32}}\par
+\textbf{Filtrieren} (das) -- filtration\dotfill\hyperref[e:31]{\pageref*{e:31}}\par
+\textbf{fraktionierte Destillation} (die) -- fractional distillation\dotfill\hyperref[e:233]{\pageref*{e:233}}\par
+\textbf{freie Elektronenpaar} (das) -- lone pair\dotfill\hyperref[e:111]{\pageref*{e:111}}\par
+\textbf{funktionelle Gruppe} (die) -- functional group\dotfill\hyperref[e:218]{\pageref*{e:218}}\par
+
+\medskip{\large\textbf{\color{cornflower}G}}\par\nopagebreak
+\textbf{galvanische Zelle} (die) -- galvanic cell, electrochemical cell\dotfill\hyperref[e:200]{\pageref*{e:200}}\par
+\textbf{Galvanisieren} (das) -- electroplating\dotfill\hyperref[e:205]{\pageref*{e:205}}\par
+\textbf{Gasbrenner} (der) -- Bunsen burner\dotfill\hyperref[e:46]{\pageref*{e:46}}\par
+\textbf{gelöste Stoff} (der) -- solute\dotfill\hyperref[e:10]{\pageref*{e:10}}\par
+\textbf{Geruch} (der) -- smell, odour\dotfill\hyperref[e:22]{\pageref*{e:22}}\par
+\textbf{gesättigt} -- saturated\dotfill\hyperref[e:214]{\pageref*{e:214}}\par
+\textbf{gesättigte Lösung} (die) -- saturated solution\dotfill\hyperref[e:14]{\pageref*{e:14}}\par
+\textbf{Gesetz von der Erhaltung der Masse} (das) -- law of conservation of mass\dotfill\hyperref[e:149]{\pageref*{e:149}}\par
+\textbf{gießen} -- pour\dotfill\hyperref[e:68]{\pageref*{e:68}}\par
+\textbf{Glasstab} (der) -- glass rod, stirring rod\dotfill\hyperref[e:53]{\pageref*{e:53}}\par
+\textbf{Gleichgewichtskonstante} (die) -- equilibrium constant\dotfill\hyperref[e:146]{\pageref*{e:146}}\par
+
+\medskip{\large\textbf{\color{cornflower}H}}\par\nopagebreak
+\textbf{Halbzelle} (die) -- half-cell\dotfill\hyperref[e:201]{\pageref*{e:201}}\par
+\textbf{Halogene} (die) -- halogens\dotfill\hyperref[e:90]{\pageref*{e:90}}\par
+\textbf{Härte} (die) -- hardness\dotfill\hyperref[e:23]{\pageref*{e:23}}\par
+\textbf{Hauptgruppe} (die) -- (main) group\dotfill\hyperref[e:87]{\pageref*{e:87}}\par
+\textbf{heterogen} -- heterogeneous\dotfill\hyperref[e:7]{\pageref*{e:7}}\par
+\textbf{Hochofen} (der) -- blast furnace\dotfill\hyperref[e:207]{\pageref*{e:207}}\par
+\textbf{homogen} -- homogeneous\dotfill\hyperref[e:6]{\pageref*{e:6}}\par
+\textbf{homologe Reihe} (die) -- homologous series\dotfill\hyperref[e:213]{\pageref*{e:213}}\par
+\textbf{Hydroxid-Ion} (das) -- hydroxide ion\dotfill\hyperref[e:165]{\pageref*{e:165}}\par
+\textbf{Hydroxygruppe} (die) -- hydroxyl group\dotfill\hyperref[e:220]{\pageref*{e:220}}\par
+
+\medskip{\large\textbf{\color{cornflower}I}}\par\nopagebreak
+\textbf{Index} (der) -- subscript\dotfill\hyperref[e:132]{\pageref*{e:132}}\par
+\textbf{Indikator} (der) -- indicator\dotfill\hyperref[e:159]{\pageref*{e:159}}\par
+\textbf{Ion} (das) -- ion\dotfill\hyperref[e:93]{\pageref*{e:93}}\par
+\textbf{Ionenbindung} (die) -- ionic bond\dotfill\hyperref[e:106]{\pageref*{e:106}}\par
+\textbf{Ionengitter} (das) -- ionic lattice\dotfill\hyperref[e:107]{\pageref*{e:107}}\par
+\textbf{Ionisierungsenergie} (die) -- ionisation energy\dotfill\hyperref[e:99]{\pageref*{e:99}}\par
+\textbf{Isomer} (das) -- isomer\dotfill\hyperref[e:216]{\pageref*{e:216}}\par
+\textbf{Isotop} (das) -- isotope\dotfill\hyperref[e:83]{\pageref*{e:83}}\par
+
+\medskip{\large\textbf{\color{cornflower}K}}\par\nopagebreak
+\textbf{Katalysator} (der) -- catalyst\dotfill\hyperref[e:142]{\pageref*{e:142}}\par
+\textbf{Kathode} (die) -- cathode\dotfill\hyperref[e:199]{\pageref*{e:199}}\par
+\textbf{Kation} (das) -- cation\dotfill\hyperref[e:94]{\pageref*{e:94}}\par
+\textbf{Keton} (das) -- ketone\dotfill\hyperref[e:222]{\pageref*{e:222}}\par
+\textbf{Koeffizient (Stöchiometriezahl)} (der) -- coefficient\dotfill\hyperref[e:131]{\pageref*{e:131}}\par
+\textbf{Kohlenhydrat} (das) -- carbohydrate\dotfill\hyperref[e:241]{\pageref*{e:241}}\par
+\textbf{Kohlenwasserstoff} (der) -- hydrocarbon\dotfill\hyperref[e:209]{\pageref*{e:209}}\par
+\textbf{konzentriert} -- concentrated\dotfill\hyperref[e:170]{\pageref*{e:170}}\par
+\textbf{Korrosion} (die) -- corrosion\dotfill\hyperref[e:190]{\pageref*{e:190}}\par
+\textbf{Kristall} (der) -- crystal\dotfill\hyperref[e:108]{\pageref*{e:108}}\par
+\textbf{Kristallisation} (die) -- crystallisation\dotfill\hyperref[e:37]{\pageref*{e:37}}\par
+\textbf{Kühler} (der) -- condenser\dotfill\hyperref[e:58]{\pageref*{e:58}}\par
+\textbf{Kunststoff} (der) -- plastic\dotfill\hyperref[e:239]{\pageref*{e:239}}\par
+
+\medskip{\large\textbf{\color{cornflower}L}}\par\nopagebreak
+\textbf{Lackmus} (das) -- litmus\dotfill\hyperref[e:160]{\pageref*{e:160}}\par
+\textbf{Lauge (alkalische Lösung)} (die) -- alkali, alkaline solution\dotfill\hyperref[e:154]{\pageref*{e:154}}\par
+\textbf{Legierung} (die) -- alloy\dotfill\hyperref[e:17]{\pageref*{e:17}}\par
+\textbf{Lewis-Formel} (die) -- Lewis structure, dot-and-cross diagram\dotfill\hyperref[e:123]{\pageref*{e:123}}\par
+\textbf{lösen} -- dissolve\dotfill\hyperref[e:67]{\pageref*{e:67}}\par
+\textbf{löslich} -- soluble\dotfill\hyperref[e:11]{\pageref*{e:11}}\par
+\textbf{Löslichkeit} (die) -- solubility\dotfill\hyperref[e:13]{\pageref*{e:13}}\par
+\textbf{Lösung} (die) -- solution\dotfill\hyperref[e:8]{\pageref*{e:8}}\par
+\textbf{Lösungsmittel} (das) -- solvent\dotfill\hyperref[e:9]{\pageref*{e:9}}\par
+
+\medskip{\large\textbf{\color{cornflower}M}}\par\nopagebreak
+\textbf{Massenanteil} (der) -- mass fraction, percentage by mass\dotfill\hyperref[e:257]{\pageref*{e:257}}\par
+\textbf{Massenkonzentration} (die) -- mass concentration\dotfill\hyperref[e:256]{\pageref*{e:256}}\par
+\textbf{Massenwirkungsgesetz} (das) -- law of mass action\dotfill\hyperref[e:147]{\pageref*{e:147}}\par
+\textbf{Massenzahl} (die) -- mass number\dotfill\hyperref[e:81]{\pageref*{e:81}}\par
+\textbf{Maßlösung} (die) -- standard solution\dotfill\hyperref[e:176]{\pageref*{e:176}}\par
+\textbf{Messzylinder} (der) -- measuring cylinder\dotfill\hyperref[e:43]{\pageref*{e:43}}\par
+\textbf{Metall} (das) -- metal\dotfill\hyperref[e:18]{\pageref*{e:18}}\par
+\textbf{Metallbindung} (die) -- metallic bond\dotfill\hyperref[e:115]{\pageref*{e:115}}\par
+\textbf{Mol} (das) -- mole\dotfill\hyperref[e:249]{\pageref*{e:249}}\par
+\textbf{molare Masse} (die) -- molar mass\dotfill\hyperref[e:252]{\pageref*{e:252}}\par
+\textbf{molare Volumen} (das) -- molar volume\dotfill\hyperref[e:253]{\pageref*{e:253}}\par
+\textbf{Molekül} (das) -- molecule\dotfill\hyperref[e:100]{\pageref*{e:100}}\par
+\textbf{Monomer} (das) -- monomer\dotfill\hyperref[e:236]{\pageref*{e:236}}\par
+\textbf{Mörser mit Pistill} (der) -- mortar and pestle\dotfill\hyperref[e:54]{\pageref*{e:54}}\par
+
+\medskip{\large\textbf{\color{cornflower}N}}\par\nopagebreak
+\textbf{Nachweis} (der) -- test (for)\dotfill\hyperref[e:151]{\pageref*{e:151}}\par
+\textbf{Natronlauge} (die) -- sodium hydroxide solution\dotfill\hyperref[e:181]{\pageref*{e:181}}\par
+\textbf{neutral} -- neutral\dotfill\hyperref[e:156]{\pageref*{e:156}}\par
+\textbf{Neutralisation} (die) -- neutralisation\dotfill\hyperref[e:166]{\pageref*{e:166}}\par
+\textbf{Neutron} (das) -- neutron\dotfill\hyperref[e:75]{\pageref*{e:75}}\par
+\textbf{Nichtmetall} (das) -- non-metal\dotfill\hyperref[e:19]{\pageref*{e:19}}\par
+\textbf{Niederschlag} (der) -- precipitate\dotfill\hyperref[e:137]{\pageref*{e:137}}\par
+
+\medskip{\large\textbf{\color{cornflower}O}}\par\nopagebreak
+\textbf{Oktettregel} (die) -- octet rule\dotfill\hyperref[e:97]{\pageref*{e:97}}\par
+\textbf{Ordnungszahl} (die) -- atomic number, proton number\dotfill\hyperref[e:80]{\pageref*{e:80}}\par
+\textbf{organische Chemie} (die) -- organic chemistry\dotfill\hyperref[e:208]{\pageref*{e:208}}\par
+\textbf{Oxid} (das) -- oxide\dotfill\hyperref[e:188]{\pageref*{e:188}}\par
+\textbf{Oxidation} (die) -- oxidation\dotfill\hyperref[e:183]{\pageref*{e:183}}\par
+\textbf{Oxidationsmittel} (das) -- oxidising agent\dotfill\hyperref[e:186]{\pageref*{e:186}}\par
+\textbf{Oxidationszahl} (die) -- oxidation number\dotfill\hyperref[e:122]{\pageref*{e:122}}\par
+\textbf{Oxonium-Ion} (das) -- oxonium ion, hydronium ion\dotfill\hyperref[e:164]{\pageref*{e:164}}\par
+
+\medskip{\large\textbf{\color{cornflower}P}}\par\nopagebreak
+\textbf{Periode} (die) -- period\dotfill\hyperref[e:86]{\pageref*{e:86}}\par
+\textbf{Periodensystem der Elemente} (das) -- periodic table\dotfill\hyperref[e:85]{\pageref*{e:85}}\par
+\textbf{pH-Wert} (der) -- pH (value)\dotfill\hyperref[e:158]{\pageref*{e:158}}\par
+\textbf{Pipette} (die) -- pipette\dotfill\hyperref[e:50]{\pageref*{e:50}}\par
+\textbf{polare Atombindung} (die) -- polar covalent bond\dotfill\hyperref[e:116]{\pageref*{e:116}}\par
+\textbf{Polymer} (das) -- polymer\dotfill\hyperref[e:237]{\pageref*{e:237}}\par
+\textbf{Polymerisation} (die) -- polymerisation\dotfill\hyperref[e:238]{\pageref*{e:238}}\par
+\textbf{Prinzip von Le Chatelier} (das) -- Le Chatelier's principle\dotfill\hyperref[e:148]{\pageref*{e:148}}\par
+\textbf{Proton} (das) -- proton\dotfill\hyperref[e:74]{\pageref*{e:74}}\par
+\textbf{Protonenakzeptor} (der) -- proton acceptor\dotfill\hyperref[e:163]{\pageref*{e:163}}\par
+\textbf{Protonendonator} (der) -- proton donor\dotfill\hyperref[e:162]{\pageref*{e:162}}\par
+\textbf{Pufferlösung} (die) -- buffer solution\dotfill\hyperref[e:177]{\pageref*{e:177}}\par
+
+\medskip{\large\textbf{\color{cornflower}R}}\par\nopagebreak
+\textbf{Reagenzglas} (das) -- test tube\dotfill\hyperref[e:39]{\pageref*{e:39}}\par
+\textbf{Reaktionsenthalpie} (die) -- enthalpy change of reaction\dotfill\hyperref[e:140]{\pageref*{e:140}}\par
+\textbf{Reaktionsgeschwindigkeit} (die) -- rate of reaction\dotfill\hyperref[e:143]{\pageref*{e:143}}\par
+\textbf{Reaktionsgleichung} (die) -- chemical equation\dotfill\hyperref[e:129]{\pageref*{e:129}}\par
+\textbf{Reaktionsprodukt} (das) -- product\dotfill\hyperref[e:127]{\pageref*{e:127}}\par
+\textbf{Redoxreaktion} (die) -- redox reaction\dotfill\hyperref[e:185]{\pageref*{e:185}}\par
+\textbf{Redoxreihe der Metalle} (die) -- reactivity series\dotfill\hyperref[e:194]{\pageref*{e:194}}\par
+\textbf{Reduktion} (die) -- reduction\dotfill\hyperref[e:184]{\pageref*{e:184}}\par
+\textbf{Reduktionsmittel} (das) -- reducing agent\dotfill\hyperref[e:187]{\pageref*{e:187}}\par
+\textbf{Reinstoff} (der) -- pure substance\dotfill\hyperref[e:2]{\pageref*{e:2}}\par
+\textbf{relative Atommasse} (die) -- relative atomic mass\dotfill\hyperref[e:82]{\pageref*{e:82}}\par
+\textbf{relative Molekülmasse} (die) -- relative molecular mass\dotfill\hyperref[e:254]{\pageref*{e:254}}\par
+\textbf{Rost} (der) -- rust\dotfill\hyperref[e:191]{\pageref*{e:191}}\par
+\textbf{Rückstand} (der) -- residue\dotfill\hyperref[e:33]{\pageref*{e:33}}\par
+\textbf{rühren} -- stir\dotfill\hyperref[e:66]{\pageref*{e:66}}\par
+\textbf{Rundkolben} (der) -- round-bottomed flask\dotfill\hyperref[e:42]{\pageref*{e:42}}\par
+
+\medskip{\large\textbf{\color{cornflower}S}}\par\nopagebreak
+\textbf{Salpetersäure} (die) -- nitric acid\dotfill\hyperref[e:180]{\pageref*{e:180}}\par
+\textbf{Salz} (das) -- salt\dotfill\hyperref[e:167]{\pageref*{e:167}}\par
+\textbf{Salzsäure} (die) -- hydrochloric acid\dotfill\hyperref[e:178]{\pageref*{e:178}}\par
+\textbf{sauer} -- acidic\dotfill\hyperref[e:155]{\pageref*{e:155}}\par
+\textbf{Säure} (die) -- acid\dotfill\hyperref[e:152]{\pageref*{e:152}}\par
+\textbf{Schmelztemperatur} (die) -- melting point\dotfill\hyperref[e:25]{\pageref*{e:25}}\par
+\textbf{Schutzbrille} (die) -- safety goggles\dotfill\hyperref[e:62]{\pageref*{e:62}}\par
+\textbf{schwache Säure} (die) -- weak acid\dotfill\hyperref[e:169]{\pageref*{e:169}}\par
+\textbf{Schwefelsäure} (die) -- sulfuric acid\dotfill\hyperref[e:179]{\pageref*{e:179}}\par
+\textbf{Seife} (die) -- soap\dotfill\hyperref[e:245]{\pageref*{e:245}}\par
+\textbf{Siedetemperatur} (die) -- boiling point\dotfill\hyperref[e:26]{\pageref*{e:26}}\par
+\textbf{Spatel} (der) -- spatula\dotfill\hyperref[e:52]{\pageref*{e:52}}\par
+\textbf{Standardpotential} (das) -- standard electrode potential\dotfill\hyperref[e:202]{\pageref*{e:202}}\par
+\textbf{Stärke} (die) -- starch\dotfill\hyperref[e:243]{\pageref*{e:243}}\par
+\textbf{starke Säure} (die) -- strong acid\dotfill\hyperref[e:168]{\pageref*{e:168}}\par
+\textbf{Stativ} (das) -- clamp stand\dotfill\hyperref[e:56]{\pageref*{e:56}}\par
+\textbf{Stöchiometrie} (die) -- stoichiometry\dotfill\hyperref[e:258]{\pageref*{e:258}}\par
+\textbf{Stoff} (der) -- substance\dotfill\hyperref[e:1]{\pageref*{e:1}}\par
+\textbf{Stoffgemisch} (das) -- mixture\dotfill\hyperref[e:5]{\pageref*{e:5}}\par
+\textbf{Stoffmenge} (die) -- amount of substance\dotfill\hyperref[e:248]{\pageref*{e:248}}\par
+\textbf{Stoffmengenkonzentration} (die) -- concentration\dotfill\hyperref[e:255]{\pageref*{e:255}}\par
+\textbf{Stoffmengenverhältnis} (das) -- mole ratio\dotfill\hyperref[e:259]{\pageref*{e:259}}\par
+\textbf{Stopfen} (der) -- stopper, bung\dotfill\hyperref[e:60]{\pageref*{e:60}}\par
+\textbf{Strukturformel} (die) -- structural formula\dotfill\hyperref[e:103]{\pageref*{e:103}}\par
+\textbf{Substitutionsreaktion} (die) -- substitution reaction\dotfill\hyperref[e:229]{\pageref*{e:229}}\par
+\textbf{Summenformel} (die) -- molecular formula\dotfill\hyperref[e:102]{\pageref*{e:102}}\par
+\textbf{Suspension} (die) -- suspension\dotfill\hyperref[e:15]{\pageref*{e:15}}\par
+\textbf{Synthese} (die) -- synthesis\dotfill\hyperref[e:133]{\pageref*{e:133}}\par
+
+\medskip{\large\textbf{\color{cornflower}T}}\par\nopagebreak
+\textbf{Teilchenanzahl} (die) -- number of particles\dotfill\hyperref[e:251]{\pageref*{e:251}}\par
+\textbf{Tensid} (das) -- surfactant, detergent\dotfill\hyperref[e:246]{\pageref*{e:246}}\par
+\textbf{Thermometer} (das) -- thermometer\dotfill\hyperref[e:57]{\pageref*{e:57}}\par
+\textbf{Tiegel} (der) -- crucible\dotfill\hyperref[e:49]{\pageref*{e:49}}\par
+\textbf{Tiegelzange} (die) -- tongs\dotfill\hyperref[e:61]{\pageref*{e:61}}\par
+\textbf{Titration} (die) -- titration\dotfill\hyperref[e:173]{\pageref*{e:173}}\par
+\textbf{Titrationskurve} (die) -- titration curve\dotfill\hyperref[e:174]{\pageref*{e:174}}\par
+\textbf{Traubenzucker (die Glucose)} (der) -- glucose\dotfill\hyperref[e:242]{\pageref*{e:242}}\par
+\textbf{Trennverfahren} (das) -- separation technique\dotfill\hyperref[e:30]{\pageref*{e:30}}\par
+\textbf{Trichter} (der) -- funnel\dotfill\hyperref[e:44]{\pageref*{e:44}}\par
+
+\medskip{\large\textbf{\color{cornflower}U}}\par\nopagebreak
+\textbf{Übergangsmetalle} (die) -- transition metals\dotfill\hyperref[e:92]{\pageref*{e:92}}\par
+\textbf{Überschuss} (der) -- excess\dotfill\hyperref[e:260]{\pageref*{e:260}}\par
+\textbf{Uhrglas} (das) -- watch glass\dotfill\hyperref[e:55]{\pageref*{e:55}}\par
+\textbf{umkehrbare Reaktion} (die) -- reversible reaction\dotfill\hyperref[e:144]{\pageref*{e:144}}\par
+\textbf{unedle Metall} (das) -- base metal\dotfill\hyperref[e:193]{\pageref*{e:193}}\par
+\textbf{ungesättigt} -- unsaturated\dotfill\hyperref[e:215]{\pageref*{e:215}}\par
+\textbf{Universalindikator} (der) -- universal indicator\dotfill\hyperref[e:161]{\pageref*{e:161}}\par
+\textbf{unlöslich} -- insoluble\dotfill\hyperref[e:12]{\pageref*{e:12}}\par
+
+\medskip{\large\textbf{\color{cornflower}V}}\par\nopagebreak
+\textbf{Van-der-Waals-Kräfte} (die) -- van der Waals forces\dotfill\hyperref[e:120]{\pageref*{e:120}}\par
+\textbf{Verbindung} (die) -- compound\dotfill\hyperref[e:4]{\pageref*{e:4}}\par
+\textbf{Verbrennung} (die) -- combustion\dotfill\hyperref[e:135]{\pageref*{e:135}}\par
+\textbf{verdünnen} -- dilute\dotfill\hyperref[e:70]{\pageref*{e:70}}\par
+\textbf{verdünnt} -- dilute\dotfill\hyperref[e:171]{\pageref*{e:171}}\par
+\textbf{Veresterung} (die) -- esterification\dotfill\hyperref[e:225]{\pageref*{e:225}}\par
+\textbf{Verhältnisformel} (die) -- empirical formula\dotfill\hyperref[e:104]{\pageref*{e:104}}\par
+
+\medskip{\large\textbf{\color{cornflower}W}}\par\nopagebreak
+\textbf{Waage} (die) -- balance\dotfill\hyperref[e:59]{\pageref*{e:59}}\par
+\textbf{Wasserstoffbrückenbindung} (die) -- hydrogen bond\dotfill\hyperref[e:118]{\pageref*{e:118}}\par
+\textbf{Wertigkeit} (die) -- valency\dotfill\hyperref[e:121]{\pageref*{e:121}}\par
+\textbf{Wortgleichung} (die) -- word equation\dotfill\hyperref[e:128]{\pageref*{e:128}}\par
+
+\medskip{\large\textbf{\color{cornflower}Z}}\par\nopagebreak
+\textbf{Zersetzung (Analyse)} (die) -- decomposition\dotfill\hyperref[e:134]{\pageref*{e:134}}\par
+\textbf{zwischenmolekularen Kräfte} (die) -- intermolecular forces\dotfill\hyperref[e:119]{\pageref*{e:119}}\par
+\end{multicols}
+
+\newpage
+\section{Index English -- German}
+\begin{multicols}{2}\small\raggedright
+
+\medskip{\large\textbf{\color{cornflower}(}}\par\nopagebreak
+\textbf{(main) group} -- die Hauptgruppe\dotfill\hyperref[e:87]{\pageref*{e:87}}\par
+
+\medskip{\large\textbf{\color{cornflower}A}}\par\nopagebreak
+\textbf{acid} -- die Säure\dotfill\hyperref[e:152]{\pageref*{e:152}}\par
+\textbf{acidic} -- sauer\dotfill\hyperref[e:155]{\pageref*{e:155}}\par
+\textbf{activation energy} -- die Aktivierungsenergie\dotfill\hyperref[e:141]{\pageref*{e:141}}\par
+\textbf{addition reaction} -- die Additionsreaktion\dotfill\hyperref[e:228]{\pageref*{e:228}}\par
+\textbf{alcohol} -- der Alkohol\dotfill\hyperref[e:219]{\pageref*{e:219}}\par
+\textbf{aldehyde} -- das Aldehyd\dotfill\hyperref[e:221]{\pageref*{e:221}}\par
+\textbf{alkali metals} -- die Alkalimetalle\dotfill\hyperref[e:88]{\pageref*{e:88}}\par
+\textbf{alkali, alkaline solution} -- die Lauge (alkalische Lösung)\dotfill\hyperref[e:154]{\pageref*{e:154}}\par
+\textbf{alkaline earth metals} -- die Erdalkalimetalle\dotfill\hyperref[e:89]{\pageref*{e:89}}\par
+\textbf{alkane} -- das Alkan\dotfill\hyperref[e:210]{\pageref*{e:210}}\par
+\textbf{alkene} -- das Alken\dotfill\hyperref[e:211]{\pageref*{e:211}}\par
+\textbf{alkyne} -- das Alkin\dotfill\hyperref[e:212]{\pageref*{e:212}}\par
+\textbf{alloy} -- die Legierung\dotfill\hyperref[e:17]{\pageref*{e:17}}\par
+\textbf{amine} -- das Amin\dotfill\hyperref[e:226]{\pageref*{e:226}}\par
+\textbf{amino acid} -- die Aminosäure\dotfill\hyperref[e:227]{\pageref*{e:227}}\par
+\textbf{ammonia} -- das Ammoniak\dotfill\hyperref[e:182]{\pageref*{e:182}}\par
+\textbf{amount of substance} -- die Stoffmenge\dotfill\hyperref[e:248]{\pageref*{e:248}}\par
+\textbf{anion} -- das Anion\dotfill\hyperref[e:95]{\pageref*{e:95}}\par
+\textbf{anode} -- die Anode\dotfill\hyperref[e:198]{\pageref*{e:198}}\par
+\textbf{aromatic compound} -- der Aromat\dotfill\hyperref[e:217]{\pageref*{e:217}}\par
+\textbf{atom} -- das Atom\dotfill\hyperref[e:72]{\pageref*{e:72}}\par
+\textbf{atomic number, proton number} -- die Ordnungszahl\dotfill\hyperref[e:80]{\pageref*{e:80}}\par
+\textbf{Avogadro constant} -- die Avogadro-Konstante\dotfill\hyperref[e:250]{\pageref*{e:250}}\par
+
+\medskip{\large\textbf{\color{cornflower}B}}\par\nopagebreak
+\textbf{balance} -- die Waage\dotfill\hyperref[e:59]{\pageref*{e:59}}\par
+\textbf{balance (an equation)} -- ausgleichen\dotfill\hyperref[e:130]{\pageref*{e:130}}\par
+\textbf{base} -- die Base\dotfill\hyperref[e:153]{\pageref*{e:153}}\par
+\textbf{base metal} -- das unedle Metall\dotfill\hyperref[e:193]{\pageref*{e:193}}\par
+\textbf{basic, alkaline} -- basisch, alkalisch\dotfill\hyperref[e:157]{\pageref*{e:157}}\par
+\textbf{beaker} -- das Becherglas\dotfill\hyperref[e:40]{\pageref*{e:40}}\par
+\textbf{blast furnace} -- der Hochofen\dotfill\hyperref[e:207]{\pageref*{e:207}}\par
+\textbf{boiling point} -- die Siedetemperatur\dotfill\hyperref[e:26]{\pageref*{e:26}}\par
+\textbf{bonding pair} -- das bindende Elektronenpaar\dotfill\hyperref[e:110]{\pageref*{e:110}}\par
+\textbf{buffer solution} -- die Pufferlösung\dotfill\hyperref[e:177]{\pageref*{e:177}}\par
+\textbf{Bunsen burner} -- der Gasbrenner\dotfill\hyperref[e:46]{\pageref*{e:46}}\par
+\textbf{burette} -- die Bürette\dotfill\hyperref[e:51]{\pageref*{e:51}}\par
+
+\medskip{\large\textbf{\color{cornflower}C}}\par\nopagebreak
+\textbf{carbohydrate} -- das Kohlenhydrat\dotfill\hyperref[e:241]{\pageref*{e:241}}\par
+\textbf{carboxylic acid} -- die Carbonsäure\dotfill\hyperref[e:223]{\pageref*{e:223}}\par
+\textbf{catalyst} -- der Katalysator\dotfill\hyperref[e:142]{\pageref*{e:142}}\par
+\textbf{cathode} -- die Kathode\dotfill\hyperref[e:199]{\pageref*{e:199}}\par
+\textbf{cation} -- das Kation\dotfill\hyperref[e:94]{\pageref*{e:94}}\par
+\textbf{chemical} -- die Chemikalie\dotfill\hyperref[e:64]{\pageref*{e:64}}\par
+\textbf{chemical bond} -- die chemische Bindung\dotfill\hyperref[e:105]{\pageref*{e:105}}\par
+\textbf{chemical equation} -- die Reaktionsgleichung\dotfill\hyperref[e:129]{\pageref*{e:129}}\par
+\textbf{chemical equilibrium} -- das chemische Gleichgewicht\dotfill\hyperref[e:145]{\pageref*{e:145}}\par
+\textbf{chemical formula} -- die chemische Formel\dotfill\hyperref[e:101]{\pageref*{e:101}}\par
+\textbf{chemical reaction} -- die chemische Reaktion\dotfill\hyperref[e:125]{\pageref*{e:125}}\par
+\textbf{chemical symbol} -- das Elementsymbol\dotfill\hyperref[e:84]{\pageref*{e:84}}\par
+\textbf{chromatography} -- die Chromatografie\dotfill\hyperref[e:38]{\pageref*{e:38}}\par
+\textbf{clamp stand} -- das Stativ\dotfill\hyperref[e:56]{\pageref*{e:56}}\par
+\textbf{coefficient} -- der Koeffizient (Stöchiometriezahl)\dotfill\hyperref[e:131]{\pageref*{e:131}}\par
+\textbf{colour (AE: color)} -- die Farbe\dotfill\hyperref[e:21]{\pageref*{e:21}}\par
+\textbf{combustion} -- die Verbrennung\dotfill\hyperref[e:135]{\pageref*{e:135}}\par
+\textbf{compound} -- die Verbindung\dotfill\hyperref[e:4]{\pageref*{e:4}}\par
+\textbf{concentrated} -- konzentriert\dotfill\hyperref[e:170]{\pageref*{e:170}}\par
+\textbf{concentration} -- die Stoffmengenkonzentration\dotfill\hyperref[e:255]{\pageref*{e:255}}\par
+\textbf{condenser} -- der Kühler\dotfill\hyperref[e:58]{\pageref*{e:58}}\par
+\textbf{conical flask} -- der Erlenmeyerkolben\dotfill\hyperref[e:41]{\pageref*{e:41}}\par
+\textbf{cool (down)} -- abkühlen\dotfill\hyperref[e:71]{\pageref*{e:71}}\par
+\textbf{corrosion} -- die Korrosion\dotfill\hyperref[e:190]{\pageref*{e:190}}\par
+\textbf{corrosive} -- ätzend\dotfill\hyperref[e:172]{\pageref*{e:172}}\par
+\textbf{covalent bond} -- die Atombindung (Elektronenpaarbindung)\dotfill\hyperref[e:109]{\pageref*{e:109}}\par
+\textbf{cracking} -- das Cracken\dotfill\hyperref[e:234]{\pageref*{e:234}}\par
+\textbf{crucible} -- der Tiegel\dotfill\hyperref[e:49]{\pageref*{e:49}}\par
+\textbf{crude oil} -- das Erdöl\dotfill\hyperref[e:231]{\pageref*{e:231}}\par
+\textbf{crystal} -- der Kristall\dotfill\hyperref[e:108]{\pageref*{e:108}}\par
+\textbf{crystallisation} -- die Kristallisation\dotfill\hyperref[e:37]{\pageref*{e:37}}\par
+
+\medskip{\large\textbf{\color{cornflower}D}}\par\nopagebreak
+\textbf{decanting} -- das Dekantieren\dotfill\hyperref[e:36]{\pageref*{e:36}}\par
+\textbf{decomposition} -- die Zersetzung (Analyse)\dotfill\hyperref[e:134]{\pageref*{e:134}}\par
+\textbf{delocalised electrons} -- die delokalisierten Elektronen\dotfill\hyperref[e:124]{\pageref*{e:124}}\par
+\textbf{density} -- die Dichte\dotfill\hyperref[e:24]{\pageref*{e:24}}\par
+\textbf{dilute} -- verdünnen\dotfill\hyperref[e:70]{\pageref*{e:70}}\par
+\textbf{dilute} -- verdünnt\dotfill\hyperref[e:171]{\pageref*{e:171}}\par
+\textbf{dipole} -- der Dipol\dotfill\hyperref[e:117]{\pageref*{e:117}}\par
+\textbf{dissolve} -- lösen\dotfill\hyperref[e:67]{\pageref*{e:67}}\par
+\textbf{distillation} -- die Destillation\dotfill\hyperref[e:35]{\pageref*{e:35}}\par
+\textbf{double bond} -- die Doppelbindung\dotfill\hyperref[e:113]{\pageref*{e:113}}\par
+
+\medskip{\large\textbf{\color{cornflower}E}}\par\nopagebreak
+\textbf{electrical conductivity} -- die elektrische Leitfähigkeit\dotfill\hyperref[e:27]{\pageref*{e:27}}\par
+\textbf{electrode} -- die Elektrode\dotfill\hyperref[e:197]{\pageref*{e:197}}\par
+\textbf{electrolysis} -- die Elektrolyse\dotfill\hyperref[e:195]{\pageref*{e:195}}\par
+\textbf{electrolyte} -- der Elektrolyt\dotfill\hyperref[e:196]{\pageref*{e:196}}\par
+\textbf{electron} -- das Elektron\dotfill\hyperref[e:76]{\pageref*{e:76}}\par
+\textbf{electron configuration} -- die Elektronenkonfiguration\dotfill\hyperref[e:79]{\pageref*{e:79}}\par
+\textbf{electron shell} -- die Elektronenschale\dotfill\hyperref[e:77]{\pageref*{e:77}}\par
+\textbf{electron transfer} -- der Elektronenübergang\dotfill\hyperref[e:189]{\pageref*{e:189}}\par
+\textbf{electronegativity} -- die Elektronegativität\dotfill\hyperref[e:98]{\pageref*{e:98}}\par
+\textbf{electroplating} -- das Galvanisieren\dotfill\hyperref[e:205]{\pageref*{e:205}}\par
+\textbf{element} -- das Element\dotfill\hyperref[e:3]{\pageref*{e:3}}\par
+\textbf{elimination} -- die Eliminierung\dotfill\hyperref[e:230]{\pageref*{e:230}}\par
+\textbf{empirical formula} -- die Verhältnisformel\dotfill\hyperref[e:104]{\pageref*{e:104}}\par
+\textbf{emulsion} -- die Emulsion\dotfill\hyperref[e:16]{\pageref*{e:16}}\par
+\textbf{endothermic} -- endotherm\dotfill\hyperref[e:139]{\pageref*{e:139}}\par
+\textbf{enthalpy change of reaction} -- die Reaktionsenthalpie\dotfill\hyperref[e:140]{\pageref*{e:140}}\par
+\textbf{equilibrium constant} -- die Gleichgewichtskonstante\dotfill\hyperref[e:146]{\pageref*{e:146}}\par
+\textbf{equivalence point} -- der Äquivalenzpunkt\dotfill\hyperref[e:175]{\pageref*{e:175}}\par
+\textbf{ester} -- der Ester\dotfill\hyperref[e:224]{\pageref*{e:224}}\par
+\textbf{esterification} -- die Veresterung\dotfill\hyperref[e:225]{\pageref*{e:225}}\par
+\textbf{evaporating dish} -- die Abdampfschale\dotfill\hyperref[e:48]{\pageref*{e:48}}\par
+\textbf{evaporation} -- das Eindampfen\dotfill\hyperref[e:34]{\pageref*{e:34}}\par
+\textbf{excess} -- der Überschuss\dotfill\hyperref[e:260]{\pageref*{e:260}}\par
+\textbf{exothermic} -- exotherm\dotfill\hyperref[e:138]{\pageref*{e:138}}\par
+
+\medskip{\large\textbf{\color{cornflower}F}}\par\nopagebreak
+\textbf{fat} -- das Fett\dotfill\hyperref[e:240]{\pageref*{e:240}}\par
+\textbf{fermentation} -- die alkoholische Gärung\dotfill\hyperref[e:247]{\pageref*{e:247}}\par
+\textbf{filter paper} -- das Filterpapier\dotfill\hyperref[e:45]{\pageref*{e:45}}\par
+\textbf{filtrate} -- das Filtrat\dotfill\hyperref[e:32]{\pageref*{e:32}}\par
+\textbf{filtration} -- das Filtrieren\dotfill\hyperref[e:31]{\pageref*{e:31}}\par
+\textbf{flammable, combustible} -- brennbar\dotfill\hyperref[e:28]{\pageref*{e:28}}\par
+\textbf{fractional distillation} -- die fraktionierte Destillation\dotfill\hyperref[e:233]{\pageref*{e:233}}\par
+\textbf{fuel cell} -- die Brennstoffzelle\dotfill\hyperref[e:203]{\pageref*{e:203}}\par
+\textbf{fume cupboard (AE: fume hood)} -- der Abzug\dotfill\hyperref[e:63]{\pageref*{e:63}}\par
+\textbf{functional group} -- die funktionelle Gruppe\dotfill\hyperref[e:218]{\pageref*{e:218}}\par
+\textbf{funnel} -- der Trichter\dotfill\hyperref[e:44]{\pageref*{e:44}}\par
+
+\medskip{\large\textbf{\color{cornflower}G}}\par\nopagebreak
+\textbf{galvanic cell, electrochemical cell} -- die galvanische Zelle\dotfill\hyperref[e:200]{\pageref*{e:200}}\par
+\textbf{glass rod, stirring rod} -- der Glasstab\dotfill\hyperref[e:53]{\pageref*{e:53}}\par
+\textbf{glucose} -- der Traubenzucker (die Glucose)\dotfill\hyperref[e:242]{\pageref*{e:242}}\par
+
+\medskip{\large\textbf{\color{cornflower}H}}\par\nopagebreak
+\textbf{half-cell} -- die Halbzelle\dotfill\hyperref[e:201]{\pageref*{e:201}}\par
+\textbf{halogens} -- die Halogene\dotfill\hyperref[e:90]{\pageref*{e:90}}\par
+\textbf{hardness} -- die Härte\dotfill\hyperref[e:23]{\pageref*{e:23}}\par
+\textbf{heat} -- erhitzen\dotfill\hyperref[e:65]{\pageref*{e:65}}\par
+\textbf{heterogeneous} -- heterogen\dotfill\hyperref[e:7]{\pageref*{e:7}}\par
+\textbf{homogeneous} -- homogen\dotfill\hyperref[e:6]{\pageref*{e:6}}\par
+\textbf{homologous series} -- die homologe Reihe\dotfill\hyperref[e:213]{\pageref*{e:213}}\par
+\textbf{hydrocarbon} -- der Kohlenwasserstoff\dotfill\hyperref[e:209]{\pageref*{e:209}}\par
+\textbf{hydrochloric acid} -- die Salzsäure\dotfill\hyperref[e:178]{\pageref*{e:178}}\par
+\textbf{hydrogen bond} -- die Wasserstoffbrückenbindung\dotfill\hyperref[e:118]{\pageref*{e:118}}\par
+\textbf{hydroxide ion} -- das Hydroxid-Ion\dotfill\hyperref[e:165]{\pageref*{e:165}}\par
+\textbf{hydroxyl group} -- die Hydroxygruppe\dotfill\hyperref[e:220]{\pageref*{e:220}}\par
+
+\medskip{\large\textbf{\color{cornflower}I}}\par\nopagebreak
+\textbf{indicator} -- der Indikator\dotfill\hyperref[e:159]{\pageref*{e:159}}\par
+\textbf{insoluble} -- unlöslich\dotfill\hyperref[e:12]{\pageref*{e:12}}\par
+\textbf{intermolecular forces} -- die zwischenmolekularen Kräfte\dotfill\hyperref[e:119]{\pageref*{e:119}}\par
+\textbf{ion} -- das Ion\dotfill\hyperref[e:93]{\pageref*{e:93}}\par
+\textbf{ionic bond} -- die Ionenbindung\dotfill\hyperref[e:106]{\pageref*{e:106}}\par
+\textbf{ionic lattice} -- das Ionengitter\dotfill\hyperref[e:107]{\pageref*{e:107}}\par
+\textbf{ionisation energy} -- die Ionisierungsenergie\dotfill\hyperref[e:99]{\pageref*{e:99}}\par
+\textbf{isomer} -- das Isomer\dotfill\hyperref[e:216]{\pageref*{e:216}}\par
+\textbf{isotope} -- das Isotop\dotfill\hyperref[e:83]{\pageref*{e:83}}\par
+
+\medskip{\large\textbf{\color{cornflower}K}}\par\nopagebreak
+\textbf{ketone} -- das Keton\dotfill\hyperref[e:222]{\pageref*{e:222}}\par
+
+\medskip{\large\textbf{\color{cornflower}L}}\par\nopagebreak
+\textbf{law of conservation of mass} -- das Gesetz von der Erhaltung der Masse\dotfill\hyperref[e:149]{\pageref*{e:149}}\par
+\textbf{law of mass action} -- das Massenwirkungsgesetz\dotfill\hyperref[e:147]{\pageref*{e:147}}\par
+\textbf{Le Chatelier's principle} -- das Prinzip von Le Chatelier\dotfill\hyperref[e:148]{\pageref*{e:148}}\par
+\textbf{Lewis structure, dot-and-cross diagram} -- die Lewis-Formel\dotfill\hyperref[e:123]{\pageref*{e:123}}\par
+\textbf{litmus} -- das Lackmus\dotfill\hyperref[e:160]{\pageref*{e:160}}\par
+\textbf{lone pair} -- das freie Elektronenpaar\dotfill\hyperref[e:111]{\pageref*{e:111}}\par
+
+\medskip{\large\textbf{\color{cornflower}M}}\par\nopagebreak
+\textbf{mass concentration} -- die Massenkonzentration\dotfill\hyperref[e:256]{\pageref*{e:256}}\par
+\textbf{mass fraction, percentage by mass} -- der Massenanteil\dotfill\hyperref[e:257]{\pageref*{e:257}}\par
+\textbf{mass number} -- die Massenzahl\dotfill\hyperref[e:81]{\pageref*{e:81}}\par
+\textbf{measuring cylinder} -- der Messzylinder\dotfill\hyperref[e:43]{\pageref*{e:43}}\par
+\textbf{melting point} -- die Schmelztemperatur\dotfill\hyperref[e:25]{\pageref*{e:25}}\par
+\textbf{metal} -- das Metall\dotfill\hyperref[e:18]{\pageref*{e:18}}\par
+\textbf{metallic bond} -- die Metallbindung\dotfill\hyperref[e:115]{\pageref*{e:115}}\par
+\textbf{mixture} -- das Stoffgemisch\dotfill\hyperref[e:5]{\pageref*{e:5}}\par
+\textbf{molar mass} -- die molare Masse\dotfill\hyperref[e:252]{\pageref*{e:252}}\par
+\textbf{molar volume} -- das molare Volumen\dotfill\hyperref[e:253]{\pageref*{e:253}}\par
+\textbf{mole} -- das Mol\dotfill\hyperref[e:249]{\pageref*{e:249}}\par
+\textbf{mole ratio} -- das Stoffmengenverhältnis\dotfill\hyperref[e:259]{\pageref*{e:259}}\par
+\textbf{molecular formula} -- die Summenformel\dotfill\hyperref[e:102]{\pageref*{e:102}}\par
+\textbf{molecule} -- das Molekül\dotfill\hyperref[e:100]{\pageref*{e:100}}\par
+\textbf{monomer} -- das Monomer\dotfill\hyperref[e:236]{\pageref*{e:236}}\par
+\textbf{mortar and pestle} -- der Mörser mit Pistill\dotfill\hyperref[e:54]{\pageref*{e:54}}\par
+
+\medskip{\large\textbf{\color{cornflower}N}}\par\nopagebreak
+\textbf{natural gas} -- das Erdgas\dotfill\hyperref[e:232]{\pageref*{e:232}}\par
+\textbf{neutral} -- neutral\dotfill\hyperref[e:156]{\pageref*{e:156}}\par
+\textbf{neutralisation} -- die Neutralisation\dotfill\hyperref[e:166]{\pageref*{e:166}}\par
+\textbf{neutron} -- das Neutron\dotfill\hyperref[e:75]{\pageref*{e:75}}\par
+\textbf{nitric acid} -- die Salpetersäure\dotfill\hyperref[e:180]{\pageref*{e:180}}\par
+\textbf{noble gas configuration} -- die Edelgaskonfiguration\dotfill\hyperref[e:96]{\pageref*{e:96}}\par
+\textbf{noble gases} -- die Edelgase\dotfill\hyperref[e:91]{\pageref*{e:91}}\par
+\textbf{noble metal, precious metal} -- das Edelmetall\dotfill\hyperref[e:192]{\pageref*{e:192}}\par
+\textbf{non-metal} -- das Nichtmetall\dotfill\hyperref[e:19]{\pageref*{e:19}}\par
+\textbf{nucleus} -- der Atomkern\dotfill\hyperref[e:73]{\pageref*{e:73}}\par
+\textbf{number of particles} -- die Teilchenanzahl\dotfill\hyperref[e:251]{\pageref*{e:251}}\par
+
+\medskip{\large\textbf{\color{cornflower}O}}\par\nopagebreak
+\textbf{octet rule} -- die Oktettregel\dotfill\hyperref[e:97]{\pageref*{e:97}}\par
+\textbf{ore} -- das Erz\dotfill\hyperref[e:206]{\pageref*{e:206}}\par
+\textbf{organic chemistry} -- die organische Chemie\dotfill\hyperref[e:208]{\pageref*{e:208}}\par
+\textbf{outer electron, valence electron} -- das Außenelektron\dotfill\hyperref[e:78]{\pageref*{e:78}}\par
+\textbf{oxidation} -- die Oxidation\dotfill\hyperref[e:183]{\pageref*{e:183}}\par
+\textbf{oxidation number} -- die Oxidationszahl\dotfill\hyperref[e:122]{\pageref*{e:122}}\par
+\textbf{oxide} -- das Oxid\dotfill\hyperref[e:188]{\pageref*{e:188}}\par
+\textbf{oxidising agent} -- das Oxidationsmittel\dotfill\hyperref[e:186]{\pageref*{e:186}}\par
+\textbf{oxonium ion, hydronium ion} -- das Oxonium-Ion\dotfill\hyperref[e:164]{\pageref*{e:164}}\par
+
+\medskip{\large\textbf{\color{cornflower}P}}\par\nopagebreak
+\textbf{period} -- die Periode\dotfill\hyperref[e:86]{\pageref*{e:86}}\par
+\textbf{periodic table} -- das Periodensystem der Elemente\dotfill\hyperref[e:85]{\pageref*{e:85}}\par
+\textbf{petrol (AE: gasoline)} -- das Benzin\dotfill\hyperref[e:235]{\pageref*{e:235}}\par
+\textbf{pH (value)} -- der pH-Wert\dotfill\hyperref[e:158]{\pageref*{e:158}}\par
+\textbf{pipette} -- die Pipette\dotfill\hyperref[e:50]{\pageref*{e:50}}\par
+\textbf{plastic} -- der Kunststoff\dotfill\hyperref[e:239]{\pageref*{e:239}}\par
+\textbf{polar covalent bond} -- die polare Atombindung\dotfill\hyperref[e:116]{\pageref*{e:116}}\par
+\textbf{polymer} -- das Polymer\dotfill\hyperref[e:237]{\pageref*{e:237}}\par
+\textbf{polymerisation} -- die Polymerisation\dotfill\hyperref[e:238]{\pageref*{e:238}}\par
+\textbf{pour} -- gießen\dotfill\hyperref[e:68]{\pageref*{e:68}}\par
+\textbf{precipitate} -- der Niederschlag\dotfill\hyperref[e:137]{\pageref*{e:137}}\par
+\textbf{precipitation} -- die Fällung\dotfill\hyperref[e:136]{\pageref*{e:136}}\par
+\textbf{product} -- das Reaktionsprodukt\dotfill\hyperref[e:127]{\pageref*{e:127}}\par
+\textbf{property} -- die Eigenschaft\dotfill\hyperref[e:20]{\pageref*{e:20}}\par
+\textbf{protein} -- das Eiweiß (Protein)\dotfill\hyperref[e:244]{\pageref*{e:244}}\par
+\textbf{proton} -- das Proton\dotfill\hyperref[e:74]{\pageref*{e:74}}\par
+\textbf{proton acceptor} -- der Protonenakzeptor\dotfill\hyperref[e:163]{\pageref*{e:163}}\par
+\textbf{proton donor} -- der Protonendonator\dotfill\hyperref[e:162]{\pageref*{e:162}}\par
+\textbf{pure substance} -- der Reinstoff\dotfill\hyperref[e:2]{\pageref*{e:2}}\par
+
+\medskip{\large\textbf{\color{cornflower}R}}\par\nopagebreak
+\textbf{rate of reaction} -- die Reaktionsgeschwindigkeit\dotfill\hyperref[e:143]{\pageref*{e:143}}\par
+\textbf{reactant} -- der Ausgangsstoff (das Edukt)\dotfill\hyperref[e:126]{\pageref*{e:126}}\par
+\textbf{reactivity series} -- die Redoxreihe der Metalle\dotfill\hyperref[e:194]{\pageref*{e:194}}\par
+\textbf{rechargeable battery} -- der Akkumulator\dotfill\hyperref[e:204]{\pageref*{e:204}}\par
+\textbf{redox reaction} -- die Redoxreaktion\dotfill\hyperref[e:185]{\pageref*{e:185}}\par
+\textbf{reducing agent} -- das Reduktionsmittel\dotfill\hyperref[e:187]{\pageref*{e:187}}\par
+\textbf{reduction} -- die Reduktion\dotfill\hyperref[e:184]{\pageref*{e:184}}\par
+\textbf{relative atomic mass} -- die relative Atommasse\dotfill\hyperref[e:82]{\pageref*{e:82}}\par
+\textbf{relative molecular mass} -- die relative Molekülmasse\dotfill\hyperref[e:254]{\pageref*{e:254}}\par
+\textbf{residue} -- der Rückstand\dotfill\hyperref[e:33]{\pageref*{e:33}}\par
+\textbf{reversible reaction} -- die umkehrbare Reaktion\dotfill\hyperref[e:144]{\pageref*{e:144}}\par
+\textbf{round-bottomed flask} -- der Rundkolben\dotfill\hyperref[e:42]{\pageref*{e:42}}\par
+\textbf{rust} -- der Rost\dotfill\hyperref[e:191]{\pageref*{e:191}}\par
+
+\medskip{\large\textbf{\color{cornflower}S}}\par\nopagebreak
+\textbf{safety goggles} -- die Schutzbrille\dotfill\hyperref[e:62]{\pageref*{e:62}}\par
+\textbf{salt} -- das Salz\dotfill\hyperref[e:167]{\pageref*{e:167}}\par
+\textbf{saturated} -- gesättigt\dotfill\hyperref[e:214]{\pageref*{e:214}}\par
+\textbf{saturated solution} -- die gesättigte Lösung\dotfill\hyperref[e:14]{\pageref*{e:14}}\par
+\textbf{separation technique} -- das Trennverfahren\dotfill\hyperref[e:30]{\pageref*{e:30}}\par
+\textbf{single bond} -- die Einfachbindung\dotfill\hyperref[e:112]{\pageref*{e:112}}\par
+\textbf{smell, odour} -- der Geruch\dotfill\hyperref[e:22]{\pageref*{e:22}}\par
+\textbf{soap} -- die Seife\dotfill\hyperref[e:245]{\pageref*{e:245}}\par
+\textbf{sodium hydroxide solution} -- die Natronlauge\dotfill\hyperref[e:181]{\pageref*{e:181}}\par
+\textbf{solid, liquid, gaseous} -- fest, flüssig, gasförmig\dotfill\hyperref[e:29]{\pageref*{e:29}}\par
+\textbf{solubility} -- die Löslichkeit\dotfill\hyperref[e:13]{\pageref*{e:13}}\par
+\textbf{soluble} -- löslich\dotfill\hyperref[e:11]{\pageref*{e:11}}\par
+\textbf{solute} -- der gelöste Stoff\dotfill\hyperref[e:10]{\pageref*{e:10}}\par
+\textbf{solution} -- die Lösung\dotfill\hyperref[e:8]{\pageref*{e:8}}\par
+\textbf{solvent} -- das Lösungsmittel\dotfill\hyperref[e:9]{\pageref*{e:9}}\par
+\textbf{spatula} -- der Spatel\dotfill\hyperref[e:52]{\pageref*{e:52}}\par
+\textbf{standard electrode potential} -- das Standardpotential\dotfill\hyperref[e:202]{\pageref*{e:202}}\par
+\textbf{standard solution} -- die Maßlösung\dotfill\hyperref[e:176]{\pageref*{e:176}}\par
+\textbf{starch} -- die Stärke\dotfill\hyperref[e:243]{\pageref*{e:243}}\par
+\textbf{stir} -- rühren\dotfill\hyperref[e:66]{\pageref*{e:66}}\par
+\textbf{stoichiometry} -- die Stöchiometrie\dotfill\hyperref[e:258]{\pageref*{e:258}}\par
+\textbf{stopper, bung} -- der Stopfen\dotfill\hyperref[e:60]{\pageref*{e:60}}\par
+\textbf{strong acid} -- die starke Säure\dotfill\hyperref[e:168]{\pageref*{e:168}}\par
+\textbf{structural formula} -- die Strukturformel\dotfill\hyperref[e:103]{\pageref*{e:103}}\par
+\textbf{subscript} -- der Index\dotfill\hyperref[e:132]{\pageref*{e:132}}\par
+\textbf{substance} -- der Stoff\dotfill\hyperref[e:1]{\pageref*{e:1}}\par
+\textbf{substitution reaction} -- die Substitutionsreaktion\dotfill\hyperref[e:229]{\pageref*{e:229}}\par
+\textbf{sulfuric acid} -- die Schwefelsäure\dotfill\hyperref[e:179]{\pageref*{e:179}}\par
+\textbf{surfactant, detergent} -- das Tensid\dotfill\hyperref[e:246]{\pageref*{e:246}}\par
+\textbf{suspension} -- die Suspension\dotfill\hyperref[e:15]{\pageref*{e:15}}\par
+\textbf{synthesis} -- die Synthese\dotfill\hyperref[e:133]{\pageref*{e:133}}\par
+
+\medskip{\large\textbf{\color{cornflower}T}}\par\nopagebreak
+\textbf{test (for)} -- der Nachweis\dotfill\hyperref[e:151]{\pageref*{e:151}}\par
+\textbf{test tube} -- das Reagenzglas\dotfill\hyperref[e:39]{\pageref*{e:39}}\par
+\textbf{thermometer} -- das Thermometer\dotfill\hyperref[e:57]{\pageref*{e:57}}\par
+\textbf{titration} -- die Titration\dotfill\hyperref[e:173]{\pageref*{e:173}}\par
+\textbf{titration curve} -- die Titrationskurve\dotfill\hyperref[e:174]{\pageref*{e:174}}\par
+\textbf{tongs} -- die Tiegelzange\dotfill\hyperref[e:61]{\pageref*{e:61}}\par
+\textbf{transition metals} -- die Übergangsmetalle\dotfill\hyperref[e:92]{\pageref*{e:92}}\par
+\textbf{triple bond} -- die Dreifachbindung\dotfill\hyperref[e:114]{\pageref*{e:114}}\par
+\textbf{tripod (and gauze)} -- der Dreifuß (mit Drahtnetz)\dotfill\hyperref[e:47]{\pageref*{e:47}}\par
+
+\medskip{\large\textbf{\color{cornflower}U}}\par\nopagebreak
+\textbf{universal indicator} -- der Universalindikator\dotfill\hyperref[e:161]{\pageref*{e:161}}\par
+\textbf{unsaturated} -- ungesättigt\dotfill\hyperref[e:215]{\pageref*{e:215}}\par
+
+\medskip{\large\textbf{\color{cornflower}V}}\par\nopagebreak
+\textbf{valency} -- die Wertigkeit\dotfill\hyperref[e:121]{\pageref*{e:121}}\par
+\textbf{van der Waals forces} -- die Van-der-Waals-Kräfte\dotfill\hyperref[e:120]{\pageref*{e:120}}\par
+
+\medskip{\large\textbf{\color{cornflower}W}}\par\nopagebreak
+\textbf{watch glass} -- das Uhrglas\dotfill\hyperref[e:55]{\pageref*{e:55}}\par
+\textbf{weak acid} -- die schwache Säure\dotfill\hyperref[e:169]{\pageref*{e:169}}\par
+\textbf{weigh out} -- abwiegen\dotfill\hyperref[e:69]{\pageref*{e:69}}\par
+\textbf{word equation} -- die Wortgleichung\dotfill\hyperref[e:128]{\pageref*{e:128}}\par
+
+\medskip{\large\textbf{\color{cornflower}Y}}\par\nopagebreak
+\textbf{yield} -- die Ausbeute\dotfill\hyperref[e:150]{\pageref*{e:150}}\par
+\end{multicols}
+
+\end{document}

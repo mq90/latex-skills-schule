@@ -1,0 +1,1868 @@
+\input{../../../skills/grundlagen/latex-grundstil/assets/header.tex}
+\input{../../../skills/grundlagen/latex-grundstil/assets/newcommands.tex}
+
+% Physikalisches Wörterbuch Deutsch – Englisch mit Lautschrift
+% Skills: latex-grundstil, latex-lautschrift (tipa, \ipa), latex-physik (circuitikz, Federn, Linsen),
+%         latex-funktionsgraphen, latex-tikz-grundlagen
+% Kompilieren mit pdflatex (dreimal, wegen Inhaltsverzeichnis und Seitenzahlen im Register).
+
+%----------------------------------------------------------------------------------------------------%
+% Dokumentspezifische Befehle (nur für dieses Wörterbuch, deshalb lokal und nicht in newcommands.tex)
+%----------------------------------------------------------------------------------------------------%
+
+% \eintrag{Marke}{Artikel}{Begriff}{english term}{Lautschrift EN}{Formelzeichen/Skizze}
+% Schaltet das babel-Kürzel " aus, BEVOR die Argumente gelesen werden – dadurch darf die Lautschrift
+% wie bei \ipa{...} mit " (Hauptbetonung) und "" (Nebenbetonung) geschrieben werden.
+\makeatletter
+\newcommand\eintrag{\begingroup\shorthandoff{"}\eintrag@aux}
+\newcommand\eintrag@aux[6]{\endgroup
+	#2 \textbf{#3}\phantomsection\label{e:#1}
+	& \textbf{#4}\newline{\small\color{black!70}\ipa{#5}}
+	& #6 \\ \midrule}
+% \lies{Ausdruck}{english reading}{deutsche Lesart}
+\newcommand\lies{\begingroup\shorthandoff{"}\lies@aux}
+\newcommand\lies@aux[3]{\endgroup #1 & #2\newline{\color{black!60}#3} \\[4.5pt]}
+\makeatother
+
+% Tabellenkopf für jedes Kapitel in Teil I (wird auf jeder Folgeseite wiederholt)
+\newenvironment{woerter}{%
+	\arrayrulecolor{black!20}%
+	\begin{longtable}{>{\raggedright\arraybackslash}m{5.3cm} >{\raggedright\arraybackslash}m{6.1cm} >{\centering\arraybackslash}m{4.6cm}}
+		\rowcolor{cornflower!15}\textbf{Deutsch} & \textbf{Englisch} & \textbf{Formelzeichen \,/\, Skizze} \\ \midrule
+		\endhead}{%
+	\end{longtable}\arrayrulecolor{black}}
+
+% Liste ohne Linien und Rahmen (Teil II): links der Ausdruck, rechts Englisch (schwarz) und Deutsch (grau)
+\newenvironment{lesen}{%
+	\begin{longtable}{@{}>{\raggedright\arraybackslash}p{4.6cm} >{\raggedright\arraybackslash}p{12.1cm}@{}}}{%
+	\end{longtable}\vspace{-1.2em}}
+
+\newcommand{\anmerkung}[1]{\par\smallskip\noindent{\small\sloppy\textbf{Hinweis:} #1\par}\smallskip}
+% Verhindert, dass eine Zwischenüberschrift allein am Seitenende steht
+\newcommand{\platz}{\par\ifdim\dimexpr\pagegoal-\pagetotal\relax<5.5cm \newpage\fi}
+% Einheit aufrecht im Mathemodus
+\newcommand{\eh}[1]{\,\mathrm{#1}}
+
+% Kleine Skizzen: Gegenstand blau, Hervorhebung (der Begriff selbst) rot, Hilfslinien gestrichelt
+\tikzset{
+	fig/.style={blue, very thick},
+	mass/.style={red, thick},
+	hilf/.style={dashed},
+	achse/.style={-{Stealth[length=4pt]}, thin},
+	kraft/.style={red, very thick, -{Stealth[length=5pt]}},
+}
+\newcommand{\skizze}[1]{\tikz[baseline=(current bounding box.center), scale=0.45, line cap=round,
+	line join=round, every node/.style={font=\scriptsize}, outer sep=0pt]{#1}}
+\newcommand{\achsen}[6]{\draw[achse] (#1,0) -- (#2,0) node[below left] {$#5$}; \draw[achse] (0,#3) -- (0,#4) node[below left] {$#6$};}
+% Schaltzeichen (circuitikz, europäische Symbole)
+\newcommand{\sz}[1]{\tikz[baseline=-0.6ex]{\ctikzset{bipoles/length=0.9cm}\draw (0,0) to[#1] (1.7,0);}}
+
+% Messen und Auswerten
+\newcommand{\skSkala}{\skizze{\draw[fig, thick] (0,0) rectangle (5,0.9);
+	\foreach \x in {0,...,10} {\draw[blue] ({0.25+0.45*\x},0.9) -- ++(0,-0.3);}
+	\foreach \x in {0,5,10} {\draw[blue, thick] ({0.25+0.45*\x},0.9) -- ++(0,-0.5) node[below, black] {\x};}}}
+\newcommand{\messpunkte}{\foreach \x/\y in {0.5/0.45, 1/0.6, 1.5/1.15, 2/1.2, 2.5/1.75, 3/1.9} {\draw[blue, thick] (\x-0.08,\y-0.08) -- (\x+0.08,\y+0.08) (\x-0.08,\y+0.08) -- (\x+0.08,\y-0.08);}}
+\newcommand{\skDiagramm}{\skizze{\achsen{-0.3}{3.6}{-0.3}{2.5}{x}{y}\messpunkte}}
+\newcommand{\skAusgleich}{\skizze{\achsen{-0.3}{3.6}{-0.3}{2.5}{x}{y}\messpunkte \draw[mass] (0,0.1) -- (3.4,2.15);}}
+\newcommand{\skProp}{\skizze{\achsen{-0.3}{3.4}{-0.3}{2.4}{s}{F}\draw[fig] (0,0) -- (3.1,2.1);}}
+\newcommand{\skAntiprop}{\skizze{\achsen{-0.3}{3.4}{-0.3}{2.4}{V}{p}\draw[fig, domain=0.3:3.2, samples=30] plot (\x,{0.65/\x});}}
+
+% Bewegungen
+\newcommand{\skST}{\skizze{\achsen{-0.3}{3.4}{-0.3}{2.4}{t}{s}\draw[fig] (0,0) -- (3.1,2.1);}}
+\newcommand{\skSTParabel}{\skizze{\achsen{-0.3}{3.4}{-0.3}{2.4}{t}{s}\draw[fig, domain=0:3, samples=30] plot (\x,{0.24*\x*\x});}}
+\newcommand{\skVT}{\skizze{\achsen{-0.3}{3.4}{-0.3}{2.4}{t}{v}\draw[fig] (0,0) -- (3.1,2.1);}}
+\newcommand{\skVTkonst}{\skizze{\achsen{-0.3}{3.4}{-0.3}{2.4}{t}{v}\draw[fig] (0,1.4) -- (3.1,1.4);}}
+\newcommand{\skWurf}{\skizze{\draw[thick] (0,0) -- (4,0); \draw[thick] (0,0) -- (0,1.9) -- (-0.8,1.9);
+	\draw[fig, domain=0:3.4, samples=30] plot (\x,{1.9-0.164*\x*\x}); \draw[kraft] (0,1.9) -- (1.1,1.9) node[above] {$v_0$};
+	\fill[blue] (0,1.9) circle (3pt);}}
+\newcommand{\skKreisbew}{\skizze{\draw[fig, hilf, thick] (0,0) circle (1.2); \fill (0,0) circle (1.5pt);
+	\draw[thin] (0,0) -- node[below, inner sep=1.5pt] {$r$} (30:1.2); \fill[blue] (30:1.2) circle (3.5pt);
+	\draw[kraft] (30:1.2) -- ++(120:1.2) node[above right, inner sep=1pt] {$v$};}}
+\newcommand{\skBahn}{\skizze{\draw[fig, hilf, thick] (0,0) .. controls (1,1.6) and (2.2,-0.6) .. (3.6,0.9); \fill[blue] (3.6,0.9) circle (3.5pt);}}
+
+% Kräfte
+\newcommand{\klotz}[2]{\filldraw[fill=blue!15, draw=blue, very thick] (#1,#2) rectangle ++(1.2,0.8);}
+\newcommand{\skKraft}{\skizze{\klotz{0}{0} \draw[kraft] (1.2,0.4) -- (3.2,0.4) node[above left] {$\vec{F}$};}}
+\newcommand{\skAngriff}{\skizze{\klotz{0}{0} \draw[blue, thick, -{Stealth}] (1.2,0.4) -- (3.2,0.4); \fill[red] (1.2,0.4) circle (3.5pt);}}
+\newcommand{\skGewicht}{\skizze{\klotz{0}{0} \draw[kraft] (0.6,0.4) -- (0.6,-1.4) node[right] {$\vec{F}_G$}; \fill (0.6,0.4) circle (2pt);}}
+\newcommand{\skNormal}{\skizze{\draw[thick] (-0.8,0) -- (2,0); \klotz{0}{0} \draw[kraft] (0.6,0) -- (0.6,1.9) node[right] {$\vec{F}_N$};}}
+\newcommand{\skReibung}{\skizze{\draw[thick] (-1.6,0) -- (3,0); \klotz{0}{0} \draw[blue, thick, -{Stealth}] (1.2,0.4) -- (2.8,0.4) node[above] {$\vec{F}$};
+	\draw[kraft] (0,0.12) -- (-1.4,0.12) node[above] {$\vec{F}_R$};}}
+\newcommand{\feder}[2]{\draw[blue, thick, decorate, decoration={zigzag, segment length=3.2pt, amplitude=3pt}] #1 -- #2;}
+\newcommand{\skFeder}{\skizze{\draw[thick] (-0.7,2.4) -- (0.7,2.4); \feder{(0,2.4)}{(0,0.8)} \filldraw[fill=blue!15, draw=blue, very thick] (-0.4,0.1) rectangle (0.4,0.8);}}
+\newcommand{\skDehnung}{\skizze{\draw[thick] (-0.7,2.4) -- (2.2,2.4); \feder{(0,2.4)}{(0,1.3)} \feder{(1.5,2.4)}{(1.5,0.5)}
+	\filldraw[fill=blue!15, draw=blue, very thick] (1.1,-0.2) rectangle (1.9,0.5);
+	\draw[hilf, thin] (-0.3,1.3) -- (2.6,1.3) (1.5,0.5) -- (2.6,0.5); \draw[mass, <->] (2.4,1.3) -- node[right] {$s$} (2.4,0.5);}}
+\newcommand{\skResultierende}{\skizze{\draw[hilf, thin] (2.2,0) -- (2.9,1.5) -- (0.7,1.5);
+	\draw[blue, very thick, -{Stealth}] (0,0) -- (2.2,0) node[below] {$\vec{F}_1$}; \draw[blue, very thick, -{Stealth}] (0,0) -- (0.7,1.5) node[left] {$\vec{F}_2$};
+	\draw[kraft] (0,0) -- (2.9,1.5) node[right] {$\vec{F}_{\mathrm{res}}$};}}
+\newcommand{\hebel}{\draw[fig] (-2,0.5) -- (1.4,0.5); \filldraw[fill=black!20, draw=black, thick] (0,0.45) -- (-0.35,-0.2) -- (0.35,-0.2) -- cycle;}
+\newcommand{\skHebel}{\skizze{\hebel \draw[kraft] (-1.8,0.5) -- (-1.8,-0.5) node[left] {$F_1$}; \draw[kraft] (1.2,0.5) -- (1.2,-0.9) node[right] {$F_2$};}}
+\newcommand{\skHebelarm}{\skizze{\hebel \draw[mass, |<->|] (-1.8,0.95) -- node[above] {$r_1$} (0,0.95); \draw[mass, |<->|] (0,0.95) -- node[above] {$r_2$} (1.2,0.95);}}
+\newcommand{\skDrehpunkt}{\skizze{\hebel \fill[red] (0,0.5) circle (4pt);}}
+\newcommand{\skEbene}{\skizze{\draw[thick] (0,0) -- (3.6,0) -- (3.6,1.8) -- cycle; \draw[mass] (1,0) arc[start angle=0, end angle=26.57, radius=1]; \node at (13:1.4) {$\alpha$};
+	\begin{scope}[shift={(1.8,0.9)}, rotate=26.57] \filldraw[fill=blue!15, draw=blue, very thick] (-0.5,0) rectangle (0.5,0.7);\end{scope}}}
+\newcommand{\skRolle}{\skizze{\draw[thick] (-0.8,2.5) -- (0.8,2.5) (0,2.5) -- (0,1.7); \draw[fig] (0,1.7) circle (0.55); \fill (0,1.7) circle (2pt);
+	\draw[blue, thick] (-0.55,1.7) -- (-0.55,0.5); \filldraw[fill=blue!15, draw=blue, very thick] (-0.9,-0.1) rectangle (-0.2,0.5);
+	\draw[blue, thick] (0.55,1.7) -- (0.55,0.9); \draw[kraft] (0.55,0.9) -- (0.55,-0.1) node[right] {$F$};}}
+\newcommand{\skAuftrieb}{\skizze{\fill[blue!12] (-1.4,-1) rectangle (1.4,0.9); \draw[thick] (-1.4,1.3) -- (-1.4,-1) -- (1.4,-1) -- (1.4,1.3); \draw[blue, thick] (-1.4,0.9) -- (1.4,0.9);
+	\filldraw[fill=white, draw=blue, very thick] (-0.4,-0.5) rectangle (0.4,0.2); \draw[kraft] (0,0.2) -- (0,1.6) node[right] {$F_A$};}}
+\newcommand{\skDruck}{\skizze{\draw[thick] (-1.5,0) -- (1.5,0); \filldraw[fill=blue!15, draw=blue, very thick] (-0.8,0) rectangle (0.8,0.8);
+	\draw[kraft] (0,2) -- (0,0.85) node[pos=0.1, right] {$F$}; \draw[red, line width=2pt] (-0.8,0) -- (0.8,0); \node[below] at (0,0) {$A$};}}
+
+% Wärme
+\newcommand{\skThermometer}{\skizze{\draw[fig, thick, rounded corners=2pt] (-0.15,0.3) rectangle (0.15,2.8); \filldraw[fill=red, draw=blue, thick] (0,0.1) circle (0.33);
+	\fill[red] (-0.07,0.3) rectangle (0.07,1.7); \foreach \y in {0.8,1.2,...,2.5} {\draw[thin] (0.15,\y) -- (0.4,\y);}}}
+\newcommand{\teilchen}[1]{\foreach \p in {#1} {\fill[blue] \p circle (2.6pt);}}
+\newcommand{\skFest}{\skizze{\draw[thin] (0,0) rectangle (1.9,1.5); \teilchen{(0.3,0.25),(0.75,0.25),(1.2,0.25),(1.65,0.25),(0.3,0.7),(0.75,0.7),(1.2,0.7),(1.65,0.7),(0.3,1.15),(0.75,1.15),(1.2,1.15),(1.65,1.15)}}}
+\newcommand{\skFluessig}{\skizze{\draw[thin] (0,0) rectangle (1.9,1.5); \teilchen{(0.25,0.22),(0.7,0.3),(1.15,0.2),(1.6,0.28),(0.4,0.68),(0.9,0.72),(1.4,0.62),(0.22,1.05),(0.75,1.1),(1.25,1.02),(1.68,0.95)}}}
+\newcommand{\skGas}{\skizze{\draw[thin] (0,0) rectangle (1.9,1.5); \teilchen{(0.3,0.3),(1.5,0.5),(0.8,1.2),(1.6,1.25),(0.4,0.95)}}}
+
+% Elektrizität und Magnetismus
+\newcommand{\skStromkreis}{\tikz[baseline=(current bounding box.center)]{\ctikzset{bipoles/length=0.8cm}
+	\draw (0,0) to[battery1] (0,1.3) -- (1.9,1.3) to[lamp] (1.9,0) to[nos] (0,0);}}
+\newcommand{\skReihe}{\tikz[baseline=(current bounding box.center)]{\ctikzset{bipoles/length=0.75cm}
+	\draw (0,0) to[battery1] (0,1.2) to[R, l=\scriptsize$R_1$] (1.5,1.2) to[R, l=\scriptsize$R_2$] (3,1.2) -- (3,0) -- (0,0);}}
+\newcommand{\skParallel}{\tikz[baseline=(current bounding box.center)]{\ctikzset{bipoles/length=0.75cm}
+	\draw (0,0) to[battery1] (0,1.3) -- (1.3,1.3) to[R, l_=\scriptsize$R_1$, *-*] (1.3,0) -- (0,0);
+	\draw (1.3,1.3) -- (2.6,1.3) to[R, l=\scriptsize$R_2$] (2.6,0) -- (1.3,0);}}
+\newcommand{\skMagnet}{\skizze{\filldraw[fill=red!60, draw=black, thick] (-1.3,-0.35) rectangle (0,0.35); \filldraw[fill=green!50!black!60, draw=black, thick] (0,-0.35) rectangle (1.3,0.35);
+	\node at (-0.65,0) {N}; \node at (0.65,0) {S};}}
+\newcommand{\skMagnetfeld}{\skizze{\foreach \h in {0.9,1.5} {\draw[blue, thick, -{Stealth[length=3pt]}] (-1.1,0.35) .. controls (-1.6,\h+0.3) and (1.6,\h+0.3) .. (1.1,0.35);
+		\draw[blue, thick, -{Stealth[length=3pt]}] (-1.1,-0.35) .. controls (-1.6,-\h-0.3) and (1.6,-\h-0.3) .. (1.1,-0.35);}
+	\filldraw[fill=red!60, draw=black, thick] (-1.3,-0.35) rectangle (0,0.35); \filldraw[fill=green!50!black!60, draw=black, thick] (0,-0.35) rectangle (1.3,0.35);
+	\node at (-0.65,0) {N}; \node at (0.65,0) {S};}}
+\newcommand{\skEFeld}{\skizze{\draw[red, line width=2pt] (0,0) -- (0,2) node[above] {$+$}; \draw[blue, line width=2pt] (2.4,0) -- (2.4,2) node[above] {$-$};
+	\foreach \y in {0.3,0.77,1.23,1.7} {\draw[thick, -{Stealth[length=3pt]}] (0.1,\y) -- (2.25,\y);}}}
+
+% Schwingungen und Wellen
+\newcommand{\skPendel}{\skizze{\draw[thick] (-0.9,2.6) -- (0.9,2.6); \draw[hilf, thin] (0,2.6) -- (0,0.2); \draw[blue, thick] (0,2.6) -- ++(-65:2.3) coordinate (m);
+	\fill[blue] (m) circle (5pt); \draw[mass] (0,1.6) arc[start angle=-90, end angle=-65, radius=1]; \draw[hilf, thin, blue] (0,2.6) -- ++(-115:2.3);}}
+\newcommand{\sinus}{\achsen{-0.3}{4.6}{-1.3}{1.5}{}{}\draw[fig, domain=0:4.2, samples=60] plot (\x,{sin(180*\x)});}
+\newcommand{\skAmplitude}{\skizze{\sinus \draw[mass, <->] (0.5,0) -- node[right, inner sep=1.5pt] {$\hat{y}$} (0.5,1);}}
+\newcommand{\skPeriode}{\skizze{\sinus \draw[mass, |<->|] (0.5,1.3) -- node[above] {$T$} (2.5,1.3); \node[below] at (4.4,0) {$t$};}}
+\newcommand{\skWellenlaenge}{\skizze{\sinus \draw[mass, |<->|] (0.5,1.3) -- node[above] {$\lambda$} (2.5,1.3); \node[below] at (4.4,0) {$x$};}}
+\newcommand{\skBergTal}{\skizze{\sinus \fill[red] (0.5,1) circle (3pt) (2.5,1) circle (3pt); \filldraw[fill=white, draw=red, thick] (1.5,-1) circle (3pt) (3.5,-1) circle (3pt);}}
+\newcommand{\skGedaempft}{\skizze{\achsen{-0.3}{4.6}{-1.3}{1.5}{t}{y}\draw[fig, domain=0:4.2, samples=80] plot (\x,{1.2*exp(-0.55*\x)*cos(360*\x)});}}
+\newcommand{\skStehend}{\skizze{\draw[thick] (0,-1) -- (0,1) (4,-1) -- (4,1); \draw[fig, domain=0:4, samples=50] plot (\x,{0.8*sin(90*\x)});
+	\draw[fig, hilf, thick, domain=0:4, samples=50] plot (\x,{-0.8*sin(90*\x)});}}
+\newcommand{\skLaengswelle}{\skizze{\foreach \k in {0,...,24} {\pgfmathsetmacro{\x}{0.17*\k+0.12*sin(30*\k)} \draw[blue, thick] (\x,-0.5) -- (\x,0.5);}}}
+
+% Optik
+\newcommand{\skReflexion}{\skizze{\draw[thick] (-2,0) -- (2,0); \foreach \x in {-1.9,-1.6,...,1.9} {\draw[thin] (\x,0) -- ++(-0.15,-0.2);}
+	\draw[hilf, thin] (0,0) -- (0,2); \draw[fig, -{Stealth}] (130:2.3) -- (130:1.1); \draw[fig] (130:1.2) -- (0,0); \draw[fig, -{Stealth}] (0,0) -- (50:1.3); \draw[fig] (50:1.2) -- (50:2.3);
+	\draw[mass] (90:0.9) arc[start angle=90, end angle=130, radius=0.9]; \draw[mass] (90:0.9) arc[start angle=90, end angle=50, radius=0.9];
+	\node at (110:1.25) {$\alpha$}; \node at (70:1.25) {$\alpha'$};}}
+\newcommand{\skBrechung}{\skizze{\fill[blue!12] (-2,-1.7) rectangle (2,0); \draw[thick] (-2,0) -- (2,0); \draw[hilf, thin] (0,-1.7) -- (0,1.8);
+	\draw[fig, -{Stealth}] (130:2.2) -- (130:1); \draw[fig] (130:1.1) -- (0,0) -- (-65:1.9);
+	\draw[mass] (90:0.8) arc[start angle=90, end angle=130, radius=0.8]; \draw[mass] (-90:0.9) arc[start angle=-90, end angle=-65, radius=0.9];
+	\node at (110:1.15) {$\alpha$}; \node at (-78:1.3) {$\beta$};}}
+\newcommand{\skLot}{\skizze{\draw[thick] (-2,0) -- (2,0); \foreach \x in {-1.9,-1.6,...,1.9} {\draw[thin] (\x,0) -- ++(-0.15,-0.2);}
+	\draw[red, very thick, hilf] (0,0) -- (0,2); \draw[fig] (130:2.3) -- (0,0) -- (50:2.3);}}
+\newcommand{\linse}{\draw[fig, fill=blue!12] (0,1.3) arc[start angle=140, end angle=220, radius=2.022] arc[start angle=-40, end angle=40, radius=2.022];}
+\newcommand{\skSammellinse}{\skizze{\draw[thin, dash dot] (-2.2,0) -- (3,0); \linse
+	\foreach \y in {0.7,-0.7} {\draw[red, thick] (-2.2,\y) -- (0,\y) -- (2.8,-\y);} \fill (1.4,0) circle (2pt) node[below] {$F$};}}
+\newcommand{\skZerstreuungslinse}{\skizze{\draw[thin, dash dot] (-2.4,0) -- (2.8,0);
+	\draw[fig, fill=blue!12] (-0.45,1.3) -- (0.45,1.3) arc[start angle=150, end angle=210, radius=2.6] -- (-0.45,-1.3) arc[start angle=-30, end angle=30, radius=2.6];
+	\foreach \s in {1,-1} {\draw[red, thick] (-2.4,0.7*\s) -- (0,0.7*\s) -- (2.6,1.7*\s); \draw[red, thin, hilf] (0,0.7*\s) -- (-1.8,0);} \fill (-1.8,0) circle (2pt) node[below] {$F$};}}
+\newcommand{\skBrennweite}{\skizze{\draw[thin, dash dot] (-1.2,0) -- (3,0); \linse \fill (1.9,0) circle (2pt) node[above] {$F$}; \draw[mass, |<->|] (0,-0.6) -- node[below] {$f$} (1.9,-0.6);}}
+\newcommand{\skPrisma}{\skizze{\draw[fig, fill=blue!10] (0,0) -- (2.4,0) -- (1.2,2.08) -- cycle; \draw[thick] (-1.6,0.6) -- (0.6,1.04);
+	\draw[red, thick] (0.6,1.04) -- (1.75,1.12) -- (3.4,0.7); \draw[green!60!black, thick] (0.6,1.04) -- (1.82,1.0) -- (3.4,0.4); \draw[blue!70!red, thick] (0.6,1.04) -- (1.89,0.88) -- (3.4,0.1);}}
+\newcommand{\skSchatten}{\skizze{\fill[black!25] (1.5,0.5) -- (4,1.25) -- (4,-1.25) -- (1.5,-0.5) -- cycle; \fill[yellow!80!orange, draw=black] (0,0) circle (0.22);
+	\draw[thin] (0,0) -- (4,1.25) (0,0) -- (4,-1.25); \filldraw[fill=blue!40, draw=blue, thick] (1.5,0) circle (0.5); \draw[thick] (4,-1.6) -- (4,1.6);}}
+
+% Atom- und Kernphysik
+\newcommand{\skAtom}{\skizze{\draw[thin] (0,0) circle (0.75) circle (1.3); \fill[red] (0,0) circle (0.25); \fill[blue] (40:0.75) circle (3pt) (200:0.75) circle (3pt) (100:1.3) circle (3pt) (300:1.3) circle (3pt);}}
+\newcommand{\skKern}{\skizze{\draw[thin, black!40] (0,0) circle (1.2); \foreach \w/\c in {0/red, 60/black!45, 120/red, 180/black!45, 240/red, 300/black!45} {\fill[\c] (\w:0.3) circle (0.17);} \fill[black!45] (0,0) circle (0.17);}}
+\newcommand{\skHuelle}{\skizze{\draw[red, very thick] (0,0) circle (0.75) circle (1.3); \fill[black!45] (0,0) circle (0.25);}}
+\newcommand{\skZerfall}{\skizze{\achsen{-0.3}{4.4}{-0.3}{2.6}{t}{N}\draw[fig, domain=0:4.1, samples=40] plot (\x,{1.9*exp(-0.693*\x/1.2)});
+	\draw[mass, hilf] (0,0.95) -- (1.2,0.95) -- (1.2,0) node[below] {$T_{1/2}$}; \node[left] at (0,1.9) {$N_0$};}}
+\newcommand{\skNiveaus}{\skizze{\foreach \y/\n in {0/1, 1.3/2, 1.9/3, 2.2/4} {\draw[fig, thick] (0,\y) -- (2.4,\y) node[right, black] {$n=\n$};}
+	\draw[mass, -{Stealth}, decorate, decoration={snake, amplitude=1.2pt, segment length=4pt, post length=3pt}] (1.2,1.3) -- (1.2,0.05);}}
+\newcommand{\skSpaltung}{\skizze{\fill[black!45] (-2,0) circle (0.14); \draw[thin, -{Stealth}] (-1.8,0) -- (-1,0); \filldraw[fill=red!35, draw=red, thick] (0,0) circle (0.7);
+	\draw[thin, -{Stealth}] (0.9,0.3) -- (1.6,0.7); \draw[thin, -{Stealth}] (0.9,-0.3) -- (1.6,-0.7); \filldraw[fill=red!35, draw=red, thick] (2.1,0.95) circle (0.45) (2.1,-0.95) circle (0.38);}}
+
+
+\title{Physikalisches Wörterbuch\\[0.3em] \large Deutsch -- Englisch mit englischer Lautschrift, Formelzeichen und Skizzen}
+\author{Martin Quandt}
+\date{\today}
+\pagestyle{plain}
+\setlength{\tabcolsep}{4pt}
+
+
+% Zweisprachige Überschriften: \teil, \kapitel, \zwischen{Deutsch}{English}{Lautschrift}
+% Wie \eintrag wird " ausgeschaltet, BEVOR die Argumente gelesen werden (Betonungszeichen der Lautschrift).
+% Ins Inhaltsverzeichnis und in die PDF-Lesezeichen kommt nur „Deutsch -- English“ ohne Lautschrift.
+\makeatletter
+\newcommand\teil{\begingroup\shorthandoff{"}\teil@aux}
+\newcommand\teil@aux[3]{\endgroup\part[#1 -- #2]{\raggedright #1\\[5pt]{\normalfont\Large\color{black!55}#2\hspace{0.35em}\penalty0 \ipa{#3}}}}
+\newcommand\kapitel{\begingroup\shorthandoff{"}\kapitel@aux}
+\newcommand\kapitel@aux[3]{\endgroup\section[#1 -- #2]{\raggedright #1\\[0pt]{\normalfont\small\color{black!55}#2\hspace{0.35em}\penalty0 \ipa{#3}}}}
+\newcommand\zwischen{\begingroup\shorthandoff{"}\zwischen@aux}
+\newcommand\zwischen@aux[3]{\endgroup\subsection*{\raggedright #1 {\normalfont\small\color{black!55}\,--\, #2\hspace{0.35em}\penalty0 \ipa{#3}}}}
+% Die zweite Überschriftenzeile kostet Platz: Zeilen in den Listen und Tabellen etwas enger setzen
+\renewcommand\lies@aux[3]{\endgroup #1 & #2\newline{\color{black!60}#3} \\[1.5pt]}
+\makeatother
+\setlength{\aboverulesep}{0.15ex}\setlength{\belowrulesep}{0.3ex}\renewcommand{\arraystretch}{0.93}
+
+\begin{document}
+
+\maketitle
+
+Dieses Wörterbuch enthält 295 physikalische Fachbegriffe aus der Sekundarstufe I und II,
+geordnet nach Sachgebieten. Zu jedem Begriff stehen der englische Fachausdruck mit seiner Aussprache und
+-- wo es hilft -- das Formelzeichen mit Einheit, eine Formel oder eine kleine Skizze. Teil~II zeigt, wie
+man Einheiten, Größenangaben und Formeln auf Englisch vorliest und wie man Experimente und Diagramme
+beschreibt. Am Ende finden Sie je ein alphabetisches Register Deutsch -- Englisch und Englisch -- Deutsch.
+
+\zwischen{Hinweise zur Lautschrift}{Notes on the phonetic transcription}{"n@Uts 6n D@ f@"netIk tr\ae n"skrIpS\textsyllabic{n}}
+
+Die Lautschrift folgt dem Internationalen Phonetischen Alphabet (IPA) und gibt die britische
+Aussprache wieder, wie sie in Schulwörterbüchern steht (dort wird \textipa{r} statt
+\textipa{\textturnr} geschrieben). Der Strich \textipa{\textprimstress} steht \textit{vor} der
+betonten Silbe, \textipa{\textsecstress} vor einer Silbe mit Nebenbetonung, \textipa{:} bedeutet lang.
+
+\medskip
+{\small
+\begin{tabular}{>{\centering\arraybackslash}p{0.9cm} l @{\hspace{1.2cm}} >{\centering\arraybackslash}p{0.9cm} l}
+	\toprule
+	\textbf{Laut} & \textbf{Beispiel} & \textbf{Laut} & \textbf{Beispiel} \\ \midrule
+	\textipa{@} & pow\textbf{er} \ipa{"paU@} & \textipa{T} & \textbf{th}ermal \ipa{"T3:m\textsyllabic{l}} \\
+	\textipa{\ae} & m\textbf{a}ss \ipa{m\ae s} & \textipa{S} & pre\textbf{ss}ure \ipa{"preS@} \\
+	\textipa{2} & c\textbf{u}rrent \ipa{"k2r@nt} & \textipa{Z} & mea\textbf{s}ure \ipa{"meZ@} \\
+	\textipa{6} & v\textbf{o}lume \ipa{"v6lju:m} & \textipa{dZ} & \textbf{j}oule \ipa{dZu:l} \\
+	\textipa{3:} & w\textbf{or}k \ipa{w3:k} & \textipa{N} & spri\textbf{ng} \ipa{sprIN} \\
+	\textipa{@U} & \textbf{oh}m \ipa{@Um} & \textipa{\textsyllabic{l}} & partic\textbf{le} \ipa{"pA:tIk\textsyllabic{l}} \\
+	\bottomrule
+\end{tabular}}
+
+\medskip
+\textbf{Dritte Spalte:} Das Formelzeichen ist das im deutschen Unterricht übliche; weicht das
+englische Zeichen ab, steht es klein darunter. \textbf{Farben in den Skizzen:} Gegenstände sind blau,
+hervorgehobene Teile (der Begriff selbst, Kräfte, Maße) rot, Hilfslinien gestrichelt.
+
+\newpage
+{\footnotesize\setlength{\parskip}{0pt}\tableofcontents}
+\newpage
+
+\teil{Wörterbuch}{Dictionary}{"dIkS@nri}
+
+%%%%  GRÖSSEN, EINHEITEN UND MESSEN  %%%%
+\kapitel{Größen, Einheiten und Messen}{Quantities, units and measurement}{"kw6nt@tiz, "ju:nIts @n "meZ@m@nt}
+
+\begin{woerter}
+\eintrag{1}{die}{physikalische Größe}{physical quantity}{"fIzIk\textsyllabic{l} "kw6nt@ti}{$l = 2{,}5\eh{m}$}
+\eintrag{2}{der}{Zahlenwert}{numerical value}{nju:"merIk\textsyllabic{l} "v\ae lju:}{$l = \frot{2{,}5}\eh{m}$}
+\eintrag{3}{die}{Einheit}{unit}{"ju:nIt}{$l = 2{,}5\,\frot{\mathrm{m}}$}
+\eintrag{4}{die}{Basiseinheit}{base unit}{"beIs ""ju:nIt}{m, kg, s, A, K, mol, cd}
+\eintrag{5}{die}{abgeleitete Einheit}{derived unit}{dI"raIvd "ju:nIt}{$1\eh{N} = 1\eh{kg \cdot m/s^2}$}
+\eintrag{6}{das}{Formelzeichen}{symbol}{"sImb\textsyllabic{l}}{$F;\ m;\ a$}
+\eintrag{7}{der}{Vorsatz}{prefix}{"pri:fIks}{k, M, m, $\mu$}
+\eintrag{8}{}{messen}{measure}{"meZ@}{}
+\eintrag{9}{die}{Messung}{measurement}{"meZ@m@nt}{}
+\eintrag{10}{der}{Messwert}{reading, measured value}{"ri:dIN, "meZ@d "v\ae lju:}{}
+\eintrag{11}{das}{Messgerät}{measuring instrument}{"meZ@rIN "Instr@m@nt}{}
+\eintrag{12}{die}{Skala}{scale}{skeIl}{\skSkala}
+\eintrag{13}{die}{Messgenauigkeit}{accuracy}{"\ae kj@r@si}{}
+\eintrag{14}{die}{Messunsicherheit}{uncertainty (of measurement)}{2n"s3:t\textsyllabic{n}ti}{$l = (2{,}50 \pm 0{,}01)\eh{m}$}
+\eintrag{15}{der}{Mittelwert}{mean (value)}{mi:n}{$\bar{x}$}
+\eintrag{16}{der}{Versuch, das Experiment}{experiment}{Ik"sperIm@nt}{}
+\eintrag{17}{der}{Versuchsaufbau}{experimental set-up}{Ik""sperI"ment\textsyllabic{l} "set2p}{}
+\eintrag{18}{die}{Beobachtung}{observation}{""6bz@"veIS\textsyllabic{n}}{}
+\eintrag{19}{die}{Auswertung}{analysis, evaluation}{@"n\ae l@sIs, I""v\ae lju"eIS\textsyllabic{n}}{}
+\eintrag{20}{die}{Vermutung, die Hypothese}{hypothesis}{haI"p6T@sIs}{}
+\eintrag{21}{das}{Gesetz}{law}{lO:}{}
+\eintrag{22}{das}{Modell}{model}{"m6d\textsyllabic{l}}{}
+\eintrag{23}{das}{Diagramm}{graph}{grA:f}{\skDiagramm}
+\eintrag{24}{die}{Ausgleichsgerade}{line of best fit}{"laIn @v ""best "fIt}{\skAusgleich}
+\eintrag{25}{}{proportional}{directly proportional}{d@"rektli pr@"pO:S@n\textsyllabic{l}}{$F \sim s$ \newline \skProp}
+\eintrag{26}{}{umgekehrt proportional}{inversely proportional}{In"v3:sli pr@"pO:S@n\textsyllabic{l}}{$p \sim \dfrac{1}{V}$ \newline \skAntiprop}
+\eintrag{27}{die}{Konstante}{constant}{"k6nst@nt}{}
+\eintrag{28}{der}{Körper}{body, object}{"b6di, "6bdZIkt}{}
+\eintrag{29}{der}{Stoff}{substance, material}{"s2bst@ns, m@"tI@ri@l}{}
+\end{woerter}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{$l = 2{,}5\eh{m}$}{The length is two point five metres. Two point five is the numerical value, the metre is the unit.}{Die Länge beträgt zwei Komma fünf Meter. Zwei Komma fünf ist der Zahlenwert, Meter die Einheit.}
+\lies{\skSkala}{Read the scale of the measuring instrument. Take the reading at eye level.}{Lies die Skala des Messgeräts ab. Lies den Messwert auf Augenhöhe ab.}
+\lies{$t_1;\ t_2;\ \ldots;\ t_5$ \newline $\bar{t} = 1{,}42\eh{s}$}{Repeat the measurement five times and calculate the mean.}{Wiederhole die Messung fünfmal und berechne den Mittelwert.}
+\lies{$F \sim s$}{The force is directly proportional to the extension: if the extension doubles, the force doubles.}{Die Kraft ist proportional zur Verlängerung: Verdoppelt sich die Verlängerung, so verdoppelt sich die Kraft.}
+\lies{\skAusgleich}{Plot the readings and draw the line of best fit.}{Trage die Messwerte in ein Diagramm ein und zeichne die Ausgleichsgerade.}
+\end{lesen}
+
+
+%%%%  BEWEGUNGEN  %%%%
+\newpage
+\kapitel{Bewegungen}{Motion}{"m@US\textsyllabic{n}}
+
+\begin{woerter}
+\eintrag{30}{die}{Bewegung}{motion}{"m@US\textsyllabic{n}}{}
+\eintrag{31}{die}{Ruhe}{rest}{rest}{$v = 0$}
+\eintrag{32}{das}{Bezugssystem}{frame of reference}{"freIm @v "refr@ns}{}
+\eintrag{33}{die}{Bahn}{path, trajectory}{pA:T, tr@"dZekt@ri}{\skBahn}
+\eintrag{34}{der}{Ort}{position}{p@"zIS\textsyllabic{n}}{$x$ in $\mathrm{m}$}
+\eintrag{35}{der}{Weg}{distance}{"dIst@ns}{$s$ in $\mathrm{m}$}
+\eintrag{36}{die}{Zeit}{time}{taIm}{$t$ in $\mathrm{s}$}
+\eintrag{37}{die}{Geschwindigkeit}{velocity, speed}{v@"l6s@ti, spi:d}{$v$ in $\mathrm{m/s}$ \newline $v = \dfrac{s}{t}$}
+\eintrag{38}{die}{Durchschnittsgeschwindigkeit}{average speed}{"\ae v@rIdZ spi:d}{$\bar{v} = \dfrac{\Delta s}{\Delta t}$}
+\eintrag{39}{die}{Momentangeschwindigkeit}{instantaneous velocity}{""Inst@n"teIni@s v@"l6s@ti}{}
+\eintrag{40}{die}{Beschleunigung}{acceleration}{@k""sel@"reIS\textsyllabic{n}}{$a$ in $\mathrm{m/s^2}$ \newline $a = \dfrac{\Delta v}{\Delta t}$}
+\eintrag{41}{die}{Verzögerung}{deceleration}{""di:sel@"reIS\textsyllabic{n}}{$a < 0$}
+\eintrag{42}{die}{gleichförmige Bewegung}{uniform motion}{"ju:nIfO:m "m@US\textsyllabic{n}}{$s = v \cdot t$ \newline \skVTkonst}
+\eintrag{43}{die}{gleichmäßig beschleunigte Bewegung}{uniformly accelerated motion}{"ju:nIfO:mli @k"sel@reItId "m@US\textsyllabic{n}}{$s = \dfrac{a}{2} \cdot t^2$ \newline \skSTParabel}
+\eintrag{44}{das}{Weg-Zeit-Diagramm}{distance–time graph}{"dIst@ns "taIm grA:f}{\skST}
+\eintrag{45}{das}{Geschwindigkeit-Zeit-Diagramm}{velocity–time graph}{v@"l6s@ti "taIm grA:f}{\skVT}
+\eintrag{46}{der}{freie Fall}{free fall}{""fri: "fO:l}{$s = \dfrac{g}{2} \cdot t^2$}
+\eintrag{47}{die}{Fallbeschleunigung}{acceleration due to gravity}{@k""sel@"reIS\textsyllabic{n} dju: t@ "gr\ae v@ti}{$g = 9{,}81\eh{m/s^2}$}
+\eintrag{48}{der}{waagerechte Wurf}{horizontal projection}{""h6rI"z6nt\textsyllabic{l} pr@"dZekS\textsyllabic{n}}{\skWurf}
+\eintrag{49}{die}{Wurfweite}{range}{reIndZ}{}
+\eintrag{50}{die}{Kreisbewegung}{circular motion}{"s3:kj@l@ "m@US\textsyllabic{n}}{\skKreisbew}
+\eintrag{51}{die}{Umlaufzeit}{period}{"pI@ri@d}{$T$ in $\mathrm{s}$}
+\eintrag{52}{die}{Frequenz}{frequency}{"fri:kw@nsi}{$f$ in $\mathrm{Hz}$ \newline $f = \dfrac{1}{T}$}
+\eintrag{53}{die}{Drehzahl}{rotational speed}{r@U"teIS@n\textsyllabic{l} spi:d}{$n$ in $\mathrm{1/min}$}
+\eintrag{54}{die}{Winkelgeschwindigkeit}{angular velocity}{"\ae Ngj@l@ v@"l6s@ti}{$\omega$ in $\mathrm{1/s}$ \newline $\omega = \dfrac{2\pi}{T}$}
+\eintrag{55}{die}{Bahngeschwindigkeit}{tangential speed}{t\ae n"dZenS\textsyllabic{l} spi:d}{$v = \omega \cdot r$}
+\end{woerter}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{$s = 100\eh{m},\ t = 12{,}5\eh{s}$ \newline $v = \dfrac{s}{t} = 8\eh{m/s}$}{A sprinter covers one hundred metres in twelve point five seconds. Her average speed is eight metres per second.}{Eine Sprinterin legt hundert Meter in zwölf Komma fünf Sekunden zurück. Ihre Durchschnittsgeschwindigkeit beträgt acht Meter pro Sekunde.}
+\lies{$a = \dfrac{20\eh{m/s}}{5\eh{s}} = 4\eh{m/s^2}$}{The car accelerates from rest to twenty metres per second in five seconds. Its acceleration is four metres per second squared.}{Das Auto beschleunigt aus der Ruhe in fünf Sekunden auf zwanzig Meter pro Sekunde. Seine Beschleunigung beträgt vier Meter pro Sekunde zum Quadrat.}
+\lies{\skVTkonst}{The body moves at constant velocity: the velocity–time graph is a horizontal line.}{Der Körper bewegt sich gleichförmig: Das Geschwindigkeit-Zeit-Diagramm ist eine waagerechte Gerade.}
+\lies{$s = \dfrac{g}{2} \cdot t^2 = 4{,}9\eh{m/s^2} \cdot (2\eh{s})^2$ \newline $s \approx 19{,}6\eh{m}$}{A stone is dropped from a bridge. After two seconds it has fallen about nineteen point six metres.}{Ein Stein wird von einer Brücke fallen gelassen. Nach zwei Sekunden ist er etwa neunzehn Komma sechs Meter gefallen.}
+\lies{$T = 0{,}5\eh{s}$ \newline $f = \dfrac{1}{T} = 2\eh{Hz}$}{The wheel completes one revolution in half a second, so its frequency is two hertz.}{Das Rad braucht für eine Umdrehung eine halbe Sekunde, seine Frequenz beträgt also zwei Hertz.}
+\end{lesen}
+
+
+%%%%  KRÄFTE UND IHRE WIRKUNGEN  %%%%
+\newpage
+\kapitel{Kräfte und ihre Wirkungen}{Forces and their effects}{"fO:sIz @n De@r I"fekts}
+
+\begin{woerter}
+\eintrag{56}{die}{Masse}{mass}{m\ae s}{$m$ in $\mathrm{kg}$}
+\eintrag{57}{das}{Volumen}{volume}{"v6lju:m}{$V$ in $\mathrm{m^3}$}
+\eintrag{58}{die}{Dichte}{density}{"dens@ti}{$\varrho$ in $\mathrm{kg/m^3}$ \newline $\varrho = \dfrac{m}{V}$}
+\eintrag{59}{die}{Kraft}{force}{fO:s}{$F$ in $\mathrm{N}$ \newline \skKraft}
+\eintrag{60}{der}{Angriffspunkt}{point of application}{"pOInt @v ""\ae plI"keIS\textsyllabic{n}}{\skAngriff}
+\eintrag{61}{der}{Betrag (einer Kraft)}{magnitude}{"m\ae gnItju:d}{$|\vec{F}| = F$}
+\eintrag{62}{die}{Richtung}{direction}{d@"rekS\textsyllabic{n}}{}
+\eintrag{63}{die}{Gewichtskraft}{weight}{weIt}{$F_G = m \cdot g$ \newline \skGewicht}
+\eintrag{64}{die}{Normalkraft}{normal force}{"nO:m\textsyllabic{l} fO:s}{\skNormal}
+\eintrag{65}{die}{Reibungskraft}{friction, frictional force}{"frIkS\textsyllabic{n}}{$F_R = \mu \cdot F_N$ \newline \skReibung}
+\eintrag{66}{die}{Reibungszahl}{coefficient of friction}{""k@UI"fIS\textsyllabic{n}t @v "frIkS\textsyllabic{n}}{$\mu$}
+\eintrag{67}{die}{Haftreibung}{static friction}{"st\ae tIk "frIkS\textsyllabic{n}}{}
+\eintrag{68}{die}{Gleitreibung}{sliding friction}{"slaIdIN "frIkS\textsyllabic{n}}{}
+\eintrag{69}{der}{Luftwiderstand}{air resistance, drag}{"e@ rI""zIst@ns, dr\ae g}{}
+\eintrag{70}{die}{Feder}{spring}{sprIN}{\skFeder}
+\eintrag{71}{die}{Dehnung, die Verlängerung}{extension}{Ik"stenS\textsyllabic{n}}{\skDehnung}
+\eintrag{72}{die}{Federkonstante}{spring constant}{"sprIN ""k6nst@nt}{$D$ in $\mathrm{N/m}$ \newline \footnotesize engl. $k$}
+\eintrag{73}{das}{hookesche Gesetz}{Hooke's law}{"hUks lO:}{$F = D \cdot s$}
+\eintrag{74}{die}{resultierende Kraft}{resultant force, net force}{rI"z2lt@nt fO:s}{\skResultierende}
+\eintrag{75}{das}{Kräftegleichgewicht}{equilibrium}{""i:kwI"lIbri@m}{$\vec{F}_{\mathrm{res}} = \vec{0}$}
+\eintrag{76}{die}{Trägheit}{inertia}{I"n3:S@}{}
+\eintrag{77}{das}{newtonsche Grundgesetz}{Newton's second law}{"nju:t\textsyllabic{n}z "sek@nd lO:}{$F = m \cdot a$}
+\eintrag{78}{das}{Wechselwirkungsgesetz}{Newton's third law (action and reaction)}{"\ae kS\textsyllabic{n} @nd ri"\ae kS\textsyllabic{n}}{$\vec{F}_{AB} = -\vec{F}_{BA}$}
+\eintrag{79}{der}{Impuls}{momentum}{m@"ment@m}{$p$ in $\mathrm{kg \cdot m/s}$ \newline $p = m \cdot v$}
+\eintrag{80}{der}{Kraftstoß}{impulse}{"Imp2ls}{$F \cdot \Delta t = \Delta p$}
+\eintrag{81}{das}{Drehmoment}{torque, moment (of a force)}{tO:k, "m@Um@nt}{$M$ in $\mathrm{N \cdot m}$ \newline $M = F \cdot r$}
+\eintrag{82}{der}{Hebel}{lever}{"li:v@}{$F_1 \cdot r_1 = F_2 \cdot r_2$ \newline \skHebel}
+\eintrag{83}{der}{Hebelarm}{lever arm}{"li:v@r A:m}{\skHebelarm}
+\eintrag{84}{der}{Drehpunkt}{pivot, fulcrum}{"pIv@t, "fUlkr@m}{\skDrehpunkt}
+\eintrag{85}{die}{geneigte Ebene}{inclined plane}{In"klaInd pleIn}{\skEbene}
+\eintrag{86}{die}{Rolle}{pulley}{"pUli}{\skRolle}
+\eintrag{87}{der}{Flaschenzug}{block and tackle}{"bl6k @n "t\ae k\textsyllabic{l}}{}
+\eintrag{88}{der}{Schwerpunkt}{centre of gravity}{"sent@r @v "gr\ae v@ti}{}
+\eintrag{89}{der}{Druck}{pressure}{"preS@}{$p$ in $\mathrm{Pa}$ \newline $p = \dfrac{F}{A}$ \newline \skDruck}
+\eintrag{90}{der}{Schweredruck}{hydrostatic pressure}{""haIdr@"st\ae tIk "preS@}{$p = \varrho \cdot g \cdot h$}
+\eintrag{91}{der}{Luftdruck}{atmospheric pressure}{""\ae tm@s"ferIk "preS@}{$p_0 \approx 1013\eh{hPa}$}
+\eintrag{92}{der}{Auftrieb}{buoyancy, upthrust}{"bOI@nsi, "2pTr2st}{$F_A = \varrho \cdot g \cdot V$ \newline \skAuftrieb}
+\eintrag{93}{die}{Gravitation}{gravitation, gravity}{""gr\ae vI"teIS\textsyllabic{n}, "gr\ae v@ti}{$F = G \cdot \dfrac{m_1 \cdot m_2}{r^2}$}
+\eintrag{94}{die}{Radialkraft}{centripetal force}{sen"trIpIt\textsyllabic{l} fO:s}{$F = \dfrac{m \cdot v^2}{r}$}
+\end{woerter}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{$m = 5\eh{kg}$ \newline $F_G = m \cdot g \approx 49\eh{N}$}{The weight of a five-kilogram mass is about forty-nine newtons.}{Die Gewichtskraft eines Körpers der Masse fünf Kilogramm beträgt etwa neunundvierzig Newton.}
+\lies{$F = m \cdot a$ \newline $F = 1200\eh{kg} \cdot 2\eh{m/s^2} = 2400\eh{N}$}{A force of two thousand four hundred newtons is needed to accelerate the car at two metres per second squared.}{Um das Auto mit zwei Meter pro Sekunde zum Quadrat zu beschleunigen, ist eine Kraft von zweitausendvierhundert Newton nötig.}
+\lies{$D = \dfrac{F}{s} = \dfrac{2\eh{N}}{0{,}05\eh{m}} = 40\eh{N/m}$}{A force of two newtons stretches the spring by five centimetres. The spring constant is forty newtons per metre.}{Eine Kraft von zwei Newton dehnt die Feder um fünf Zentimeter. Die Federkonstante beträgt vierzig Newton pro Meter.}
+\lies{\skHebel}{The lever is balanced when the clockwise moment equals the anticlockwise moment.}{Der Hebel ist im Gleichgewicht, wenn rechtsdrehendes und linksdrehendes Drehmoment gleich groß sind.}
+\lies{$p = \dfrac{F}{A} = \dfrac{600\eh{N}}{0{,}03\eh{m^2}}$ \newline $p = 20\,000\eh{Pa}$}{The pressure is the force divided by the area: twenty thousand pascals.}{Der Druck ist der Quotient aus Kraft und Fläche: zwanzigtausend Pascal.}
+\end{lesen}
+
+
+%%%%  ENERGIE, ARBEIT UND LEISTUNG  %%%%
+\newpage
+\kapitel{Energie, Arbeit und Leistung}{Energy, work and power}{"en@dZi, "w3:k @n "paU@}
+
+\begin{woerter}
+\eintrag{95}{die}{Energie}{energy}{"en@dZi}{$E$ in $\mathrm{J}$}
+\eintrag{96}{die}{Arbeit}{work}{w3:k}{$W$ in $\mathrm{J}$ \newline $W = F \cdot s$}
+\eintrag{97}{die}{potentielle Energie}{(gravitational) potential energy}{p@"tenS\textsyllabic{l} "en@dZi}{$E_{\mathrm{pot}} = m \cdot g \cdot h$}
+\eintrag{98}{die}{kinetische Energie}{kinetic energy}{kI"netIk "en@dZi}{$E_{\mathrm{kin}} = \dfrac{1}{2} \cdot m \cdot v^2$}
+\eintrag{99}{die}{Spannenergie}{elastic potential energy}{I"l\ae stIk p@"tenS\textsyllabic{l} "en@dZi}{$E_{\mathrm{sp}} = \dfrac{1}{2} \cdot D \cdot s^2$}
+\eintrag{100}{die}{thermische Energie}{thermal energy}{"T3:m\textsyllabic{l} "en@dZi}{}
+\eintrag{101}{die}{elektrische Energie}{electrical energy}{I"lektrIk\textsyllabic{l} "en@dZi}{$E = U \cdot I \cdot t$}
+\eintrag{102}{die}{chemische Energie}{chemical energy}{"kemIk\textsyllabic{l} "en@dZi}{}
+\eintrag{103}{die}{Energieumwandlung}{energy conversion, energy transfer}{"en@dZi k@n"v3:S\textsyllabic{n}}{}
+\eintrag{104}{der}{Energieerhaltungssatz}{law of conservation of energy}{""k6ns@"veIS\textsyllabic{n} @v "en@dZi}{$E_{\mathrm{ges}} = \text{konstant}$}
+\eintrag{105}{die}{Leistung}{power}{"paU@}{$P$ in $\mathrm{W}$ \newline $P = \dfrac{W}{t}$}
+\eintrag{106}{der}{Wirkungsgrad}{efficiency}{I"fIS\textsyllabic{n}si}{$\eta = \dfrac{E_{\mathrm{nutz}}}{E_{\mathrm{zu}}}$}
+\eintrag{107}{die}{Nutzenergie}{useful energy}{"ju:sf\textsyllabic{l} "en@dZi}{}
+\eintrag{108}{die}{Abwärme}{waste heat}{"weIst hi:t}{}
+\eintrag{109}{der}{Energieträger}{energy source}{"en@dZi sO:s}{}
+\eintrag{110}{die}{erneuerbare Energie}{renewable energy}{rI"nju:@b\textsyllabic{l} "en@dZi}{}
+\eintrag{111}{das}{Kraftwerk}{power station}{"paU@ ""steIS\textsyllabic{n}}{}
+\eintrag{112}{die}{Kilowattstunde}{kilowatt-hour}{"kIl@w6t ""aU@}{$1\eh{kWh} = 3{,}6\eh{MJ}$}
+\end{woerter}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{$W = F \cdot s$ \newline $W = 50\eh{N} \cdot 4\eh{m} = 200\eh{J}$}{The work done is the force times the distance moved in the direction of the force: two hundred joules.}{Die verrichtete Arbeit ist Kraft mal Weg in Kraftrichtung: zweihundert Joule.}
+\lies{$E_{\mathrm{pot}} = 2\eh{kg} \cdot 9{,}81\eh{m/s^2} \cdot 10\eh{m}$ \newline $E_{\mathrm{pot}} \approx 196\eh{J}$}{A two-kilogram mass is lifted ten metres. Its potential energy increases by about one hundred and ninety-six joules.}{Ein Körper der Masse zwei Kilogramm wird zehn Meter angehoben. Seine potentielle Energie nimmt um etwa hundertsechsundneunzig Joule zu.}
+\lies{$E_{\mathrm{pot}} \rightarrow E_{\mathrm{kin}}$}{As the ball falls, potential energy is converted into kinetic energy.}{Beim Fallen des Balls wird potentielle Energie in kinetische Energie umgewandelt.}
+\lies{$P = \dfrac{W}{t} = \dfrac{3000\eh{J}}{60\eh{s}} = 50\eh{W}$}{The power is the work done per unit time: fifty watts.}{Die Leistung ist die pro Zeit verrichtete Arbeit: fünfzig Watt.}
+\lies{$\eta = \dfrac{30\eh{J}}{100\eh{J}} = 0{,}3 = 30\,\%$}{The efficiency of the engine is thirty per cent; seventy per cent of the energy is transferred as waste heat.}{Der Wirkungsgrad des Motors beträgt dreißig Prozent; siebzig Prozent der Energie werden als Abwärme abgegeben.}
+\end{lesen}
+
+
+%%%%  WÄRMELEHRE  %%%%
+\newpage
+\kapitel{Wärmelehre}{Thermal physics}{"T3:m\textsyllabic{l} "fIzIks}
+
+\begin{woerter}
+\eintrag{113}{die}{Temperatur}{temperature}{"tempr@tS@}{$\vartheta$ in $\mathrm{\degree C}$}
+\eintrag{114}{die}{absolute Temperatur}{absolute temperature, thermodynamic temperature}{"\ae bs@lu:t "tempr@tS@}{$T$ in $\mathrm{K}$}
+\eintrag{115}{der}{absolute Nullpunkt}{absolute zero}{"\ae bs@lu:t "zI@r@U}{$0\eh{K} = -273{,}15\eh{\degree C}$}
+\eintrag{116}{das}{Thermometer}{thermometer}{T@"m6mIt@}{\skThermometer}
+\eintrag{117}{die}{Wärme}{heat}{hi:t}{$Q$ in $\mathrm{J}$}
+\eintrag{118}{die}{innere Energie}{internal energy}{In"t3:n\textsyllabic{l} "en@dZi}{$U$ in $\mathrm{J}$}
+\eintrag{119}{die}{spezifische Wärmekapazität}{specific heat capacity}{sp@"sIfIk "hi:t k@""p\ae s@ti}{$c$ in $\mathrm{J/(kg \cdot K)}$ \newline $Q = c \cdot m \cdot \Delta T$}
+\eintrag{120}{die}{Wärmeleitung}{conduction}{k@n"d2kS\textsyllabic{n}}{}
+\eintrag{121}{die}{Wärmeströmung, die Konvektion}{convection}{k@n"vekS\textsyllabic{n}}{}
+\eintrag{122}{die}{Wärmestrahlung}{thermal radiation}{"T3:m\textsyllabic{l} ""reIdi"eIS\textsyllabic{n}}{}
+\eintrag{123}{die}{Wärmedämmung}{thermal insulation}{"T3:m\textsyllabic{l} ""Insju"leIS\textsyllabic{n}}{}
+\eintrag{124}{das}{Teilchenmodell}{particle model}{"pA:tIk\textsyllabic{l} ""m6d\textsyllabic{l}}{}
+\eintrag{125}{der}{Aggregatzustand}{state of matter}{"steIt @v "m\ae t@}{}
+\eintrag{126}{}{fest}{solid}{"s6lId}{\skFest}
+\eintrag{127}{}{flüssig}{liquid}{"lIkwId}{\skFluessig}
+\eintrag{128}{}{gasförmig}{gaseous}{"g\ae si@s}{\skGas}
+\eintrag{129}{}{schmelzen}{melt}{melt}{fest $\rightarrow$ flüssig}
+\eintrag{130}{}{erstarren}{freeze, solidify}{fri:z, s@"lIdIfaI}{flüssig $\rightarrow$ fest}
+\eintrag{131}{}{verdampfen}{evaporate, vaporise}{I"v\ae p@reIt, "veIp@raIz}{flüssig $\rightarrow$ gasförmig}
+\eintrag{132}{}{sieden}{boil}{bOIl}{}
+\eintrag{133}{}{kondensieren}{condense}{k@n"dens}{gasförmig $\rightarrow$ flüssig}
+\eintrag{134}{}{sublimieren}{sublime}{s@"blaIm}{fest $\rightarrow$ gasförmig}
+\eintrag{135}{die}{Schmelztemperatur}{melting point}{"meltIN pOInt}{Eis: $0\eh{\degree C}$}
+\eintrag{136}{die}{Siedetemperatur}{boiling point}{"bOIlIN pOInt}{Wasser: $100\eh{\degree C}$}
+\eintrag{137}{die}{Schmelzwärme}{latent heat of fusion}{"leIt\textsyllabic{n}t "hi:t @v "fju:Z\textsyllabic{n}}{$Q = q_s \cdot m$}
+\eintrag{138}{die}{Verdampfungswärme}{latent heat of vaporisation}{"leIt\textsyllabic{n}t "hi:t @v ""veIp@raI"zeIS\textsyllabic{n}}{$Q = q_v \cdot m$}
+\eintrag{139}{die}{Längenausdehnung}{linear expansion}{"lIni@r Ik"sp\ae nS\textsyllabic{n}}{$\Delta l = \alpha \cdot l_0 \cdot \Delta T$}
+\eintrag{140}{das}{ideale Gas}{ideal gas}{aI"dI@l g\ae s}{$\dfrac{p \cdot V}{T} = \text{konstant}$}
+\eintrag{141}{die}{Wärmekraftmaschine}{heat engine}{"hi:t ""endZIn}{}
+\eintrag{142}{die}{Entropie}{entropy}{"entr@pi}{$S$ in $\mathrm{J/K}$}
+\end{woerter}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{$\vartheta = 20\eh{\degree C}$ \newline $T = 293{,}15\eh{K}$}{Twenty degrees Celsius corresponds to two hundred and ninety-three point one five kelvin.}{Zwanzig Grad Celsius entsprechen zweihundertdreiundneunzig Komma eins fünf Kelvin.}
+\lies{$Q = c \cdot m \cdot \Delta T$ \newline $Q = 4{,}19\eh{\tfrac{kJ}{kg \cdot K}} \cdot 2\eh{kg} \cdot 30\eh{K}$ \newline $Q \approx 251\eh{kJ}$}{About two hundred and fifty-one kilojoules of heat are needed to raise the temperature of two kilograms of water by thirty kelvin.}{Um zwei Kilogramm Wasser um dreißig Kelvin zu erwärmen, sind etwa zweihunderteinundfünfzig Kilojoule Wärme nötig.}
+\lies{\skFest \; \skFluessig \; \skGas}{In a solid the particles vibrate about fixed positions; in a liquid they can move past each other; in a gas they move freely.}{In einem festen Körper schwingen die Teilchen um feste Plätze; in einer Flüssigkeit sind sie gegeneinander verschiebbar; in einem Gas bewegen sie sich frei.}
+\lies{$100\eh{\degree C}$}{Water boils at one hundred degrees Celsius. While it is boiling, its temperature stays constant.}{Wasser siedet bei hundert Grad Celsius. Während des Siedens bleibt die Temperatur konstant.}
+\lies{Wärmeleitung}{Metals are good conductors of heat; air is a good insulator.}{Metalle sind gute Wärmeleiter; Luft ist ein guter Isolator.}
+\end{lesen}
+
+
+%%%%  ELEKTRIZITÄT UND MAGNETISMUS  %%%%
+\newpage
+\kapitel{Elektrizität und Magnetismus}{Electricity and magnetism}{I""lek"trIs@ti @n "m\ae gn@tIz@m}
+
+\begin{woerter}
+\eintrag{143}{die}{elektrische Ladung}{electric charge}{I"lektrIk tSA:dZ}{$Q$ in $\mathrm{C}$}
+\eintrag{144}{die}{elektrische Stromstärke}{electric current}{I"lektrIk "k2r@nt}{$I$ in $\mathrm{A}$ \newline $I = \dfrac{Q}{t}$}
+\eintrag{145}{die}{elektrische Spannung}{voltage, potential difference}{"v@UltIdZ, p@"tenS\textsyllabic{l} "dIfr@ns}{$U$ in $\mathrm{V}$ \newline \footnotesize engl. $V$}
+\eintrag{146}{der}{elektrische Widerstand}{resistance}{rI"zIst@ns}{$R$ in $\mathrm{\Omega}$ \newline $R = \dfrac{U}{I}$}
+\eintrag{147}{das}{ohmsche Gesetz}{Ohm's law}{"@Umz lO:}{$U = R \cdot I$}
+\eintrag{148}{der}{spezifische Widerstand}{resistivity}{""ri:zIs"tIv@ti}{$R = \varrho \cdot \dfrac{l}{A}$}
+\eintrag{149}{der}{Leitwert}{conductance}{k@n"d2kt@ns}{$G$ in $\mathrm{S}$}
+\eintrag{150}{der}{Leiter}{conductor}{k@n"d2kt@}{}
+\eintrag{151}{der}{Isolator, der Nichtleiter}{insulator}{"InsjuleIt@}{}
+\eintrag{152}{der}{Halbleiter}{semiconductor}{""semik@n"d2kt@}{}
+\eintrag{153}{der}{Stromkreis}{electric circuit}{I"lektrIk "s3:kIt}{\skStromkreis}
+\eintrag{154}{der}{Schaltplan}{circuit diagram}{"s3:kIt ""daI@gr\ae m}{}
+\eintrag{155}{die}{Spannungsquelle}{voltage source, power supply}{"v@UltIdZ sO:s, "paU@ s@""plaI}{\sz{battery1}}
+\eintrag{156}{die}{Batterie}{battery, cell}{"b\ae tri, sel}{\sz{battery1}}
+\eintrag{157}{der}{Schalter}{switch}{swItS}{\sz{nos}}
+\eintrag{158}{die}{Glühlampe}{lamp, bulb}{l\ae mp, b2lb}{\sz{lamp}}
+\eintrag{159}{der}{Widerstand (Bauteil)}{resistor}{rI"zIst@}{\sz{R}}
+\eintrag{160}{der}{Strommesser}{ammeter}{"\ae mi:t@}{\sz{rmeter, t=A}}
+\eintrag{161}{der}{Spannungsmesser}{voltmeter}{"v@Ult""mi:t@}{\sz{rmeter, t=V}}
+\eintrag{162}{die}{Reihenschaltung}{series connection}{"sI@ri:z k@"nekS\textsyllabic{n}}{$R = R_1 + R_2$ \newline \skReihe}
+\eintrag{163}{die}{Parallelschaltung}{parallel connection}{"p\ae r@lel k@"nekS\textsyllabic{n}}{$\dfrac{1}{R} = \dfrac{1}{R_1} + \dfrac{1}{R_2}$ \newline \skParallel}
+\eintrag{164}{der}{Kurzschluss}{short circuit}{""SO:t "s3:kIt}{}
+\eintrag{165}{die}{Sicherung}{fuse}{fju:z}{}
+\eintrag{166}{der}{Gleichstrom}{direct current (DC)}{d@"rekt "k2r@nt}{}
+\eintrag{167}{der}{Wechselstrom}{alternating current (AC)}{"O:lt@neItIN "k2r@nt}{}
+\eintrag{168}{die}{elektrische Leistung}{electrical power}{I"lektrIk\textsyllabic{l} "paU@}{$P = U \cdot I$}
+\eintrag{169}{der}{Kondensator}{capacitor}{k@"p\ae sIt@}{\sz{C}}
+\eintrag{170}{die}{Kapazität}{capacitance}{k@"p\ae sIt@ns}{$C$ in $\mathrm{F}$ \newline $C = \dfrac{Q}{U}$}
+\eintrag{171}{das}{elektrische Feld}{electric field}{I"lektrIk fi:ld}{\skEFeld}
+\eintrag{172}{die}{elektrische Feldstärke}{electric field strength}{I"lektrIk "fi:ld streNT}{$E$ in $\mathrm{V/m}$ \newline $E = \dfrac{F}{Q}$}
+\eintrag{173}{die}{Feldlinie}{field line}{"fi:ld laIn}{}
+\eintrag{174}{der}{Magnet}{magnet}{"m\ae gn@t}{\skMagnet}
+\eintrag{175}{der}{Dauermagnet}{permanent magnet}{"p3:m@n@nt "m\ae gn@t}{}
+\eintrag{176}{der}{Elektromagnet}{electromagnet}{I"lektr@U""m\ae gn@t}{}
+\eintrag{177}{der}{Nordpol, der Südpol}{north pole, south pole}{"nO:T p@Ul, "saUT p@Ul}{N, S}
+\eintrag{178}{das}{Magnetfeld}{magnetic field}{m\ae g"netIk fi:ld}{\skMagnetfeld}
+\eintrag{179}{die}{magnetische Flussdichte}{magnetic flux density}{m\ae g"netIk "fl2ks ""dens@ti}{$B$ in $\mathrm{T}$}
+\eintrag{180}{der}{magnetische Fluss}{magnetic flux}{m\ae g"netIk fl2ks}{$\Phi$ in $\mathrm{Wb}$ \newline $\Phi = B \cdot A$}
+\eintrag{181}{die}{Spule}{coil}{kOIl}{\sz{cute inductor}}
+\eintrag{182}{die}{Windungszahl}{number of turns}{"n2mb@r @v "t3:nz}{$N$}
+\eintrag{183}{die}{Induktivität}{inductance}{In"d2kt@ns}{$L$ in $\mathrm{H}$}
+\eintrag{184}{die}{elektromagnetische Induktion}{electromagnetic induction}{I""lektr@Um\ae g"netIk In"d2kS\textsyllabic{n}}{$U_{\mathrm{ind}} = -N \cdot \dfrac{\Delta\Phi}{\Delta t}$}
+\eintrag{185}{die}{Lorentzkraft}{Lorentz force}{"l6r@nts fO:s}{$F = Q \cdot v \cdot B$}
+\eintrag{186}{der}{Elektromotor}{electric motor}{I"lektrIk "m@Ut@}{}
+\eintrag{187}{der}{Generator}{generator}{"dZen@reIt@}{}
+\eintrag{188}{der}{Transformator}{transformer}{tr\ae ns"fO:m@}{$\dfrac{U_1}{U_2} = \dfrac{N_1}{N_2}$}
+\eintrag{189}{die}{Erdung}{earth (BE), ground (AE)}{3:T, graUnd}{}
+\end{woerter}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{$R = \dfrac{U}{I} = \dfrac{12\eh{V}}{0{,}5\eh{A}} = 24\eh{\Omega}$}{The voltage across the resistor is twelve volts and the current through it is half an ampere. Its resistance is twenty-four ohms.}{Am Widerstand liegt eine Spannung von zwölf Volt an, die Stromstärke beträgt ein halbes Ampere. Der Widerstand beträgt vierundzwanzig Ohm.}
+\lies{\skReihe}{The two resistors are connected in series: the current through them is the same.}{Die beiden Widerstände sind in Reihe geschaltet: Die Stromstärke ist überall gleich.}
+\lies{\skParallel}{The two resistors are connected in parallel: the voltage across them is the same.}{Die beiden Widerstände sind parallel geschaltet: An beiden liegt die gleiche Spannung an.}
+\lies{\sz{rmeter, t=A} \; \sz{rmeter, t=V}}{An ammeter is connected in series, a voltmeter in parallel with the component.}{Ein Strommesser wird in Reihe, ein Spannungsmesser parallel zum Bauteil geschaltet.}
+\lies{\skMagnet}{Like poles repel each other, unlike poles attract each other.}{Gleichnamige Pole stoßen einander ab, ungleichnamige Pole ziehen einander an.}
+\end{lesen}
+
+
+%%%%  SCHWINGUNGEN UND WELLEN  %%%%
+\newpage
+\kapitel{Schwingungen und Wellen}{Oscillations and waves}{""6sI"leIS\textsyllabic{n}z @n "weIvz}
+
+\begin{woerter}
+\eintrag{190}{die}{Schwingung}{oscillation, vibration}{""6sI"leIS\textsyllabic{n}, vaI"breIS\textsyllabic{n}}{}
+\eintrag{191}{das}{Fadenpendel}{simple pendulum}{"sImp\textsyllabic{l} "pendj@l@m}{$T = 2\pi \cdot \sqrt{\dfrac{l}{g}}$ \newline \skPendel}
+\eintrag{192}{der}{Federschwinger}{mass on a spring}{"m\ae s 6n @ "sprIN}{$T = 2\pi \cdot \sqrt{\dfrac{m}{D}}$}
+\eintrag{193}{die}{Ruhelage}{equilibrium position}{""i:kwI"lIbri@m p@"zIS\textsyllabic{n}}{}
+\eintrag{194}{die}{Auslenkung}{displacement}{dIs"pleIsm@nt}{$y$ in $\mathrm{m}$}
+\eintrag{195}{die}{Amplitude}{amplitude}{"\ae mplItju:d}{$\hat{y}$ \newline \skAmplitude}
+\eintrag{196}{die}{Periodendauer}{period}{"pI@ri@d}{$T$ in $\mathrm{s}$ \newline \skPeriode}
+\eintrag{197}{die}{Frequenz}{frequency}{"fri:kw@nsi}{$f$ in $\mathrm{Hz}$ \newline $f = \dfrac{1}{T}$}
+\eintrag{198}{die}{gedämpfte Schwingung}{damped oscillation}{"d\ae mpt ""6sI"leIS\textsyllabic{n}}{\skGedaempft}
+\eintrag{199}{die}{Eigenfrequenz}{natural frequency}{"n\ae tSr@l "fri:kw@nsi}{$f_0$}
+\eintrag{200}{die}{Resonanz}{resonance}{"rez@n@ns}{}
+\eintrag{201}{die}{Welle}{wave}{weIv}{}
+\eintrag{202}{die}{Wellenlänge}{wavelength}{"weIvleNT}{$\lambda$ in $\mathrm{m}$ \newline \skWellenlaenge}
+\eintrag{203}{die}{Ausbreitungsgeschwindigkeit}{wave speed}{"weIv spi:d}{$c = \lambda \cdot f$}
+\eintrag{204}{der}{Wellenberg, das Wellental}{crest, trough}{krest, tr6f}{\skBergTal}
+\eintrag{205}{die}{Querwelle (Transversalwelle)}{transverse wave}{"tr\ae nzv3:s weIv}{}
+\eintrag{206}{die}{Längswelle (Longitudinalwelle)}{longitudinal wave}{""l6ndZI"tju:dIn\textsyllabic{l} weIv}{\skLaengswelle}
+\eintrag{207}{die}{Reflexion}{reflection}{rI"flekS\textsyllabic{n}}{}
+\eintrag{208}{die}{Beugung}{diffraction}{dI"fr\ae kS\textsyllabic{n}}{}
+\eintrag{209}{die}{Interferenz}{interference}{""Int@"fI@r@ns}{}
+\eintrag{210}{die}{Überlagerung}{superposition}{""su:p@p@"zIS\textsyllabic{n}}{}
+\eintrag{211}{die}{stehende Welle}{standing wave, stationary wave}{"st\ae ndIN weIv}{\skStehend}
+\eintrag{212}{der}{Schall}{sound}{saUnd}{}
+\eintrag{213}{die}{Schallgeschwindigkeit}{speed of sound}{"spi:d @v "saUnd}{Luft: $c \approx 340\eh{m/s}$}
+\eintrag{214}{die}{Tonhöhe}{pitch}{pItS}{}
+\eintrag{215}{die}{Lautstärke}{loudness, volume}{"laUdn@s, "v6lju:m}{}
+\eintrag{216}{der}{Schallpegel}{sound level}{"saUnd ""lev\textsyllabic{l}}{$L$ in $\mathrm{dB}$}
+\eintrag{217}{das}{Echo}{echo}{"ek@U}{}
+\eintrag{218}{der}{Ultraschall}{ultrasound}{"2ltr@saUnd}{$f > 20\eh{kHz}$}
+\eintrag{219}{der}{Doppler-Effekt}{Doppler effect}{"d6pl@r I""fekt}{}
+\end{woerter}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{$l = 1\eh{m}$ \newline $T = 2\pi \cdot \sqrt{\dfrac{l}{g}} \approx 2{,}0\eh{s}$}{A simple pendulum one metre long has a period of about two seconds.}{Ein Fadenpendel von einem Meter Länge hat eine Periodendauer von etwa zwei Sekunden.}
+\lies{$f = 440\eh{Hz}$ \newline $\lambda = \dfrac{c}{f} = \dfrac{340\eh{m/s}}{440\eh{Hz}} \approx 0{,}77\eh{m}$}{The note A has a frequency of four hundred and forty hertz. In air its wavelength is about seventy-seven centimetres.}{Der Ton a hat eine Frequenz von vierhundertvierzig Hertz. In Luft beträgt seine Wellenlänge etwa siebenundsiebzig Zentimeter.}
+\lies{\skAmplitude}{The larger the amplitude, the louder the sound; the higher the frequency, the higher the pitch.}{Je größer die Amplitude, desto lauter der Ton; je höher die Frequenz, desto höher der Ton.}
+\lies{\skLaengswelle}{Sound is a longitudinal wave: the particles oscillate parallel to the direction of travel.}{Schall ist eine Längswelle: Die Teilchen schwingen parallel zur Ausbreitungsrichtung.}
+\lies{$s = \dfrac{340\eh{m/s} \cdot 2\eh{s}}{2} = 340\eh{m}$}{The echo returns after two seconds, so the wall is three hundred and forty metres away.}{Das Echo kommt nach zwei Sekunden zurück, die Wand ist also dreihundertvierzig Meter entfernt.}
+\end{lesen}
+
+
+%%%%  OPTIK  %%%%
+\newpage
+\kapitel{Optik}{Optics}{"6ptIks}
+
+\begin{woerter}
+\eintrag{220}{das}{Licht}{light}{laIt}{}
+\eintrag{221}{die}{Lichtquelle}{light source}{"laIt sO:s}{}
+\eintrag{222}{der}{Lichtstrahl}{ray of light, light ray}{"reI @v "laIt}{}
+\eintrag{223}{das}{Lichtbündel}{beam of light}{"bi:m @v "laIt}{}
+\eintrag{224}{die}{Lichtgeschwindigkeit}{speed of light}{"spi:d @v "laIt}{$c \approx 3 \cdot 10^8\eh{m/s}$}
+\eintrag{225}{der}{Schatten}{shadow}{"S\ae d@U}{\skSchatten}
+\eintrag{226}{der}{Kernschatten, der Halbschatten}{umbra, penumbra}{"2mbr@, pI"n2mbr@}{}
+\eintrag{227}{die}{Reflexion}{reflection}{rI"flekS\textsyllabic{n}}{\skReflexion}
+\eintrag{228}{das}{Reflexionsgesetz}{law of reflection}{"lO: @v rI"flekS\textsyllabic{n}}{$\alpha = \alpha'$}
+\eintrag{229}{das}{Einfallslot}{normal}{"nO:m\textsyllabic{l}}{\skLot}
+\eintrag{230}{der}{Einfallswinkel}{angle of incidence}{"\ae Ng\textsyllabic{l} @v "InsId@ns}{$\alpha$}
+\eintrag{231}{der}{Reflexionswinkel}{angle of reflection}{"\ae Ng\textsyllabic{l} @v rI"flekS\textsyllabic{n}}{$\alpha'$}
+\eintrag{232}{der}{Spiegel}{mirror}{"mIr@}{}
+\eintrag{233}{der}{Hohlspiegel, der Wölbspiegel}{concave mirror, convex mirror}{"k6nkeIv "mIr@, "k6nveks "mIr@}{}
+\eintrag{234}{die}{Brechung}{refraction}{rI"fr\ae kS\textsyllabic{n}}{\skBrechung}
+\eintrag{235}{der}{Brechungswinkel}{angle of refraction}{"\ae Ng\textsyllabic{l} @v rI"fr\ae kS\textsyllabic{n}}{$\beta$}
+\eintrag{236}{die}{Brechzahl}{refractive index}{rI"fr\ae ktIv "Indeks}{$n = \dfrac{c_0}{c}$}
+\eintrag{237}{das}{Brechungsgesetz}{Snell's law, law of refraction}{"snelz lO:}{$\dfrac{\sin\alpha}{\sin\beta} = \dfrac{n_2}{n_1}$}
+\eintrag{238}{die}{Totalreflexion}{total internal reflection}{"t@Ut\textsyllabic{l} In"t3:n\textsyllabic{l} rI"flekS\textsyllabic{n}}{}
+\eintrag{239}{der}{Grenzwinkel}{critical angle}{"krItIk\textsyllabic{l} "\ae Ng\textsyllabic{l}}{$\alpha_G$}
+\eintrag{240}{die}{Linse}{lens}{lenz}{}
+\eintrag{241}{die}{Sammellinse}{converging lens, convex lens}{k@n"v3:dZIN lenz}{\skSammellinse}
+\eintrag{242}{die}{Zerstreuungslinse}{diverging lens, concave lens}{daI"v3:dZIN lenz}{\skZerstreuungslinse}
+\eintrag{243}{die}{optische Achse}{principal axis}{"prIns@p\textsyllabic{l} "\ae ksIs}{}
+\eintrag{244}{der}{Brennpunkt}{focal point, principal focus}{"f@Uk\textsyllabic{l} pOInt}{$F$}
+\eintrag{245}{die}{Brennweite}{focal length}{"f@Uk\textsyllabic{l} leNT}{$f$ in $\mathrm{m}$ \newline \skBrennweite}
+\eintrag{246}{die}{Gegenstandsweite}{object distance}{"6bdZIkt ""dIst@ns}{$g$ in $\mathrm{m}$ \newline \footnotesize engl. $u$}
+\eintrag{247}{die}{Bildweite}{image distance}{"ImIdZ ""dIst@ns}{$b$ in $\mathrm{m}$ \newline \footnotesize engl. $v$}
+\eintrag{248}{die}{Linsengleichung}{lens equation}{"lenz I""kweIZ\textsyllabic{n}}{$\dfrac{1}{f} = \dfrac{1}{g} + \dfrac{1}{b}$}
+\eintrag{249}{das}{Bild}{image}{"ImIdZ}{}
+\eintrag{250}{das}{reelle Bild}{real image}{"ri:@l "ImIdZ}{}
+\eintrag{251}{das}{virtuelle Bild}{virtual image}{"v3:tSu@l "ImIdZ}{}
+\eintrag{252}{der}{Abbildungsmaßstab}{magnification}{""m\ae gnIfI"keIS\textsyllabic{n}}{$A = \dfrac{B}{G} = \dfrac{b}{g}$}
+\eintrag{253}{die}{Lupe}{magnifying glass}{"m\ae gnIfaIIN glA:s}{}
+\eintrag{254}{das}{Prisma}{prism}{"prIz@m}{\skPrisma}
+\eintrag{255}{das}{Spektrum}{spectrum}{"spektr@m}{}
+\eintrag{256}{die}{Farbzerlegung, die Dispersion}{dispersion}{dI"sp3:S\textsyllabic{n}}{}
+\eintrag{257}{die}{Lichtstärke}{luminous intensity}{"lu:mIn@s In"tens@ti}{$I_v$ in $\mathrm{cd}$}
+\eintrag{258}{die}{Beleuchtungsstärke}{illuminance}{I"lu:mIn@ns}{$E_v$ in $\mathrm{lx}$}
+\end{woerter}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{\skReflexion}{The angle of incidence equals the angle of reflection. Both angles are measured from the normal.}{Der Einfallswinkel ist gleich dem Reflexionswinkel. Beide Winkel werden zum Lot gemessen.}
+\lies{\skBrechung}{When light passes from air into water, it is refracted towards the normal.}{Beim Übergang von Luft in Wasser wird das Licht zum Lot hin gebrochen.}
+\lies{\skSammellinse}{Rays parallel to the principal axis are refracted through the focal point.}{Parallelstrahlen werden so gebrochen, dass sie durch den Brennpunkt verlaufen.}
+\lies{$f = 10\eh{cm},\ g = 30\eh{cm}$ \newline $\dfrac{1}{b} = \dfrac{1}{f} - \dfrac{1}{g}$ \newline $b = 15\eh{cm}$}{The object is thirty centimetres from the lens. The image is formed fifteen centimetres behind the lens; it is real, inverted and diminished.}{Der Gegenstand steht dreißig Zentimeter vor der Linse. Das Bild entsteht fünfzehn Zentimeter hinter der Linse; es ist reell, umgekehrt und verkleinert.}
+\lies{\skPrisma}{A prism splits white light into the colours of the spectrum.}{Ein Prisma zerlegt weißes Licht in die Spektralfarben.}
+\end{lesen}
+
+
+%%%%  ATOM- UND KERNPHYSIK  %%%%
+\newpage
+\kapitel{Atom- und Kernphysik}{Atomic and nuclear physics}{@"t6mIk @n "nju:kli@ "fIzIks}
+
+\begin{woerter}
+\eintrag{259}{das}{Atom}{atom}{"\ae t@m}{\skAtom}
+\eintrag{260}{der}{Atomkern}{nucleus}{"nju:kli@s}{\skKern}
+\eintrag{261}{die}{Atomhülle}{electron shell}{I"lektr6n Sel}{\skHuelle}
+\eintrag{262}{das}{Elektron}{electron}{I"lektr6n}{$\mathrm{e^-}$}
+\eintrag{263}{das}{Proton}{proton}{"pr@Ut6n}{$\mathrm{p}$}
+\eintrag{264}{das}{Neutron}{neutron}{"nju:tr6n}{$\mathrm{n}$}
+\eintrag{265}{das}{Nukleon}{nucleon}{"nju:kli6n}{}
+\eintrag{266}{die}{Elementarladung}{elementary charge}{""elI"mentri tSA:dZ}{\small$e = 1{,}602 \cdot 10^{-19}\eh{C}$}
+\eintrag{267}{die}{Kernladungszahl, die Ordnungszahl}{atomic number, proton number}{@"t6mIk "n2mb@}{$Z$}
+\eintrag{268}{die}{Massenzahl}{mass number, nucleon number}{"m\ae s ""n2mb@}{$A$}
+\eintrag{269}{die}{Neutronenzahl}{neutron number}{"nju:tr6n ""n2mb@}{$N = A - Z$}
+\eintrag{270}{das}{Nuklid}{nuclide}{"nju:klaId}{$^{A}_{Z}\mathrm{X}$, z.\,B.\ $^{14}_{\ 6}\mathrm{C}$}
+\eintrag{271}{das}{Isotop}{isotope}{"aIs@t@Up}{$^{12}_{\ 6}\mathrm{C}$, $^{14}_{\ 6}\mathrm{C}$}
+\eintrag{272}{das}{Ion}{ion}{"aI@n}{$\mathrm{Na^+}$}
+\eintrag{273}{die}{Radioaktivität}{radioactivity}{""reIdi@U\ae k"tIv@ti}{}
+\eintrag{274}{der}{radioaktive Zerfall}{radioactive decay}{""reIdi@U"\ae ktIv dI"keI}{}
+\eintrag{275}{die}{Alphastrahlung}{alpha radiation}{"\ae lf@ ""reIdi"eIS\textsyllabic{n}}{$\alpha$: $^{4}_{2}\mathrm{He}$}
+\eintrag{276}{die}{Betastrahlung}{beta radiation}{"bi:t@ ""reIdi"eIS\textsyllabic{n}}{$\beta^-$: $\mathrm{e^-}$}
+\eintrag{277}{die}{Gammastrahlung}{gamma radiation}{"g\ae m@ ""reIdi"eIS\textsyllabic{n}}{$\gamma$}
+\eintrag{278}{die}{ionisierende Strahlung}{ionising radiation}{"aI@naIzIN ""reIdi"eIS\textsyllabic{n}}{}
+\eintrag{279}{das}{Zählrohr}{Geiger counter}{"gaIg@ ""kaUnt@}{}
+\eintrag{280}{die}{Halbwertszeit}{half-life}{"hA:f laIf}{$T_{1/2}$ \newline \skZerfall}
+\eintrag{281}{das}{Zerfallsgesetz}{decay law}{dI"keI lO:}{$N = N_0 \cdot \mathrm{e}^{-\lambda \cdot t}$}
+\eintrag{282}{die}{Zerfallskonstante}{decay constant}{dI"keI ""k6nst@nt}{$\lambda = \dfrac{\ln 2}{T_{1/2}}$}
+\eintrag{283}{die}{Aktivität}{activity}{\ae k"tIv@ti}{$A$ in $\mathrm{Bq}$}
+\eintrag{284}{die}{Äquivalentdosis}{equivalent dose}{I"kwIv@l@nt d@Us}{$H$ in $\mathrm{Sv}$}
+\eintrag{285}{die}{Kernspaltung}{nuclear fission}{"nju:kli@ "fIS\textsyllabic{n}}{\skSpaltung}
+\eintrag{286}{die}{Kernfusion}{nuclear fusion}{"nju:kli@ "fju:Z\textsyllabic{n}}{}
+\eintrag{287}{die}{Kettenreaktion}{chain reaction}{"tSeIn ri""\ae kS\textsyllabic{n}}{}
+\eintrag{288}{der}{Kernreaktor}{nuclear reactor}{"nju:kli@ ri"\ae kt@}{}
+\eintrag{289}{der}{Massendefekt}{mass defect}{"m\ae s ""di:fekt}{$E = \Delta m \cdot c^2$}
+\eintrag{290}{die}{Bindungsenergie}{binding energy}{"baIndIN ""en@dZi}{}
+\eintrag{291}{das}{Photon}{photon}{"f@Ut6n}{$E = h \cdot f$}
+\eintrag{292}{das}{plancksche Wirkungsquantum}{Planck constant}{"pl\ae Nk ""k6nst@nt}{\small$h = 6{,}626 \cdot 10^{-34}\eh{J \cdot s}$}
+\eintrag{293}{der}{Fotoeffekt}{photoelectric effect}{""f@Ut@UI"lektrIk I"fekt}{}
+\eintrag{294}{das}{Energieniveau}{energy level}{"en@dZi ""lev\textsyllabic{l}}{\skNiveaus}
+\eintrag{295}{die}{Hauptquantenzahl}{principal quantum number}{"prIns@p\textsyllabic{l} "kw6nt@m ""n2mb@}{$n = 1;\ 2;\ 3;\ \ldots$}
+\end{woerter}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{$^{14}_{\ 6}\mathrm{C}$}{carbon-fourteen: the nucleus contains six protons and eight neutrons}{Kohlenstoff-14: Der Kern enthält sechs Protonen und acht Neutronen}
+\lies{$^{226}_{\ 88}\mathrm{Ra} \rightarrow {}^{222}_{\ 86}\mathrm{Rn} + {}^{4}_{2}\mathrm{He}$}{Radium-two two six decays into radon-two two two by emitting an alpha particle.}{Radium-226 zerfällt unter Aussendung eines Alphateilchens in Radon-222.}
+\lies{$T_{1/2} = 8\eh{d}$}{The half-life of iodine-one three one is eight days: after eight days half of the nuclei have decayed, after sixteen days three quarters.}{Die Halbwertszeit von Iod-131 beträgt acht Tage: Nach acht Tagen ist die Hälfte der Kerne zerfallen, nach sechzehn Tagen drei Viertel.}
+\lies{$\alpha,\ \beta,\ \gamma$}{Alpha radiation is stopped by a sheet of paper, beta radiation by a few millimetres of aluminium; gamma radiation is only reduced by thick lead.}{Alphastrahlung wird durch ein Blatt Papier abgeschirmt, Betastrahlung durch einige Millimeter Aluminium; Gammastrahlung wird erst durch dickes Blei geschwächt.}
+\lies{$E = h \cdot f$}{The energy of a photon equals the Planck constant times the frequency.}{Die Energie eines Photons ist gleich dem planckschen Wirkungsquantum mal der Frequenz.}
+\end{lesen}
+
+
+
+%%%%  TEIL II: PHYSIK LESEN UND SPRECHEN  %%%%
+\newpage
+\teil{Physik lesen und sprechen}{Reading and speaking physics}{"ri:dIN @n "spi:kIN "fIzIks}
+
+In diesem Teil steht, wie man Einheiten, Größenangaben und Formeln auf Englisch (und zum Vergleich
+auf Deutsch) vorliest und wie man Experimente und Diagramme beschreibt. Links steht der Ausdruck,
+rechts die englische Lesart und darunter grau die deutsche.
+
+%--------------------------------------------------------------------------------------------------
+\kapitel{Die Basiseinheiten des SI}{The SI base units}{Di ""es "aI "beIs ""ju:nIts}
+
+Das Internationale Einheitensystem (\textit{International System of Units}, SI) hat sieben
+Basiseinheiten. Alle anderen Einheiten werden daraus abgeleitet.
+
+\begin{lesen}
+\lies{$\mathrm{m}$}{metre \ipa{"mi:t@} (AE: meter) -- the unit of length}{Meter -- die Einheit der Länge}
+\lies{$\mathrm{kg}$}{kilogram \ipa{"kIl@gr\ae m} -- the unit of mass}{Kilogramm -- die Einheit der Masse}
+\lies{$\mathrm{s}$}{second \ipa{"sek@nd} -- the unit of time}{Sekunde -- die Einheit der Zeit}
+\lies{$\mathrm{A}$}{ampere \ipa{"\ae mpe@} (short: amp) -- the unit of electric current}{Ampere -- die Einheit der elektrischen Stromstärke}
+\lies{$\mathrm{K}$}{kelvin \ipa{"kelvIn} -- the unit of thermodynamic temperature}{Kelvin -- die Einheit der absoluten Temperatur}
+\lies{$\mathrm{mol}$}{mole \ipa{m@Ul} -- the unit of amount of substance}{Mol -- die Einheit der Stoffmenge}
+\lies{$\mathrm{cd}$}{candela \ipa{k\ae n"del@} -- the unit of luminous intensity}{Candela -- die Einheit der Lichtstärke}
+\end{lesen}
+
+\anmerkung{Einheitennamen schreibt man im Englischen klein, auch wenn sie nach Personen benannt sind
+(\textit{newton, joule, watt, kelvin}); nur das Einheitenzeichen ist groß (N, J, W, K). Es heißt
+\textit{kelvin}, nicht \textit{degree Kelvin} -- das „Grad“ wurde 1968 abgeschafft.}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{$1{,}80\eh{m}$}{one point eight metres \;/\; one metre eighty}{ein Meter achtzig}
+\lies{$75\eh{kg}$}{seventy-five kilograms (short: kilos)}{fünfundsiebzig Kilogramm}
+\lies{$0{,}5\eh{A}$}{nought point five amperes \;/\; half an amp}{null Komma fünf Ampere}
+\end{lesen}
+
+%--------------------------------------------------------------------------------------------------
+\newpage
+\kapitel{Abgeleitete Einheiten mit eigenem Namen}{Derived units with special names}{dI"raIvd "ju:nIts wID "speS\textsyllabic{l} "neImz}
+
+\begin{lesen}
+\lies{$1\eh{Hz} = 1\eh{s^{-1}}$}{hertz \ipa{h3:ts} -- the unit of frequency: one hertz is one per second}{Hertz -- die Einheit der Frequenz: ein Hertz ist eins durch Sekunde}
+\lies{$1\eh{N} = 1\eh{kg \cdot m/s^2}$}{newton \ipa{"nju:t\textsyllabic{n}} -- the unit of force: one newton is one kilogram metre per second squared}{Newton -- die Einheit der Kraft: ein Newton ist ein Kilogramm mal Meter durch Sekunde zum Quadrat}
+\lies{$1\eh{Pa} = 1\eh{N/m^2}$}{pascal \ipa{p\ae s"k\ae l} -- the unit of pressure: one pascal is one newton per square metre}{Pascal -- die Einheit des Drucks: ein Pascal ist ein Newton pro Quadratmeter}
+\lies{$1\eh{J} = 1\eh{N \cdot m}$}{joule \ipa{dZu:l} -- the unit of energy and work: one joule is one newton metre}{Joule -- die Einheit von Energie und Arbeit: ein Joule ist ein Newtonmeter}
+\lies{$1\eh{W} = 1\eh{J/s}$}{watt \ipa{w6t} -- the unit of power: one watt is one joule per second}{Watt -- die Einheit der Leistung: ein Watt ist ein Joule pro Sekunde}
+\lies{$1\eh{C} = 1\eh{A \cdot s}$}{coulomb \ipa{"ku:l6m} -- the unit of electric charge: one coulomb is one ampere second}{Coulomb -- die Einheit der elektrischen Ladung: ein Coulomb ist eine Amperesekunde}
+\lies{$1\eh{V} = 1\eh{W/A}$}{volt \ipa{v@Ult} -- the unit of voltage: one volt is one watt per ampere}{Volt -- die Einheit der elektrischen Spannung: ein Volt ist ein Watt pro Ampere}
+\lies{$1\eh{\Omega} = 1\eh{V/A}$}{ohm \ipa{@Um} -- the unit of resistance: one ohm is one volt per ampere}{Ohm -- die Einheit des elektrischen Widerstands: ein Ohm ist ein Volt pro Ampere}
+\lies{$1\eh{F} = 1\eh{C/V}$}{farad \ipa{"f\ae r\ae d} -- the unit of capacitance: one farad is one coulomb per volt}{Farad -- die Einheit der Kapazität: ein Farad ist ein Coulomb pro Volt}
+\lies{$1\eh{T} = 1\eh{V \cdot s/m^2}$}{tesla \ipa{"tesl@} -- the unit of magnetic flux density}{Tesla -- die Einheit der magnetischen Flussdichte}
+\lies{$1\eh{Wb} = 1\eh{V \cdot s}$}{weber \ipa{"veIb@} -- the unit of magnetic flux: one weber is one volt second}{Weber -- die Einheit des magnetischen Flusses: ein Weber ist eine Voltsekunde}
+\lies{$1\eh{H} = 1\eh{V \cdot s/A}$}{henry \ipa{"henri} -- the unit of inductance}{Henry -- die Einheit der Induktivität}
+\lies{$1\eh{Bq} = 1\eh{s^{-1}}$}{becquerel \ipa{"bek@rel} -- the unit of activity: one decay per second}{Becquerel -- die Einheit der Aktivität: ein Zerfall pro Sekunde}
+\lies{$\mathrm{lm},\ \mathrm{lx}$}{lumen \ipa{"lu:mIn} and lux \ipa{l2ks} -- the units of luminous flux and illuminance}{Lumen und Lux -- die Einheiten von Lichtstrom und Beleuchtungsstärke}
+\lies{$\mathrm{\degree C}$}{degree Celsius \ipa{"selsi@s} -- the everyday unit of temperature}{Grad Celsius -- die Einheit der Temperatur im Alltag}
+\end{lesen}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{$230\eh{V}$}{The mains voltage is two hundred and thirty volts.}{Die Netzspannung beträgt zweihundertdreißig Volt.}
+\lies{$50\eh{Hz}$}{The mains frequency is fifty hertz.}{Die Netzfrequenz beträgt fünfzig Hertz.}
+\lies{$9{,}81\eh{N}$}{A mass of one kilogram has a weight of nine point eight one newtons.}{Ein Körper der Masse ein Kilogramm hat eine Gewichtskraft von neun Komma acht eins Newton.}
+\lies{$1013\eh{hPa}$}{Standard atmospheric pressure is one thousand and thirteen hectopascals.}{Der Normalluftdruck beträgt eintausenddreizehn Hektopascal.}
+\lies{$60\eh{W}$}{a sixty-watt lamp}{eine Sechzig-Watt-Lampe}
+\end{lesen}
+
+%--------------------------------------------------------------------------------------------------
+\newpage
+\kapitel{Vorsätze für Einheiten}{Prefixes for units}{"pri:fIksIz f@ "ju:nIts}
+
+Vorsätze (\textit{prefixes}) bezeichnen dezimale Vielfache und Teile einer Einheit.
+
+\begin{center}
+{\small\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}c l l @{\hspace{1.4cm}} c l l@{}}
+	\toprule
+	\textbf{Zeichen} & \textbf{Vorsatz (engl.)} & \textbf{Faktor} & \textbf{Zeichen} & \textbf{Vorsatz (engl.)} & \textbf{Faktor} \\ \midrule
+	T & tera- \ipa{"ter@} & $10^{12}$ & d & deci- \ipa{"desI} & $10^{-1}$ \\
+	G & giga- \ipa{"gIg@} & $10^{9}$ & c & centi- \ipa{"sentI} & $10^{-2}$ \\
+	M & mega- \ipa{"meg@} & $10^{6}$ & m & milli- \ipa{"mIlI} & $10^{-3}$ \\
+	k & kilo- \ipa{"kIl@} & $10^{3}$ & $\mu$ & micro- \ipa{"maIkr@U} & $10^{-6}$ \\
+	h & hecto- \ipa{"hekt@U} & $10^{2}$ & n & nano- \ipa{"n\ae n@U} & $10^{-9}$ \\
+	da & deca- \ipa{"dek@} & $10^{1}$ & p & pico- \ipa{"pi:k@U} & $10^{-12}$ \\
+	\bottomrule
+\end{tabular}}
+\end{center}
+
+\anmerkung{Die Betonung liegt im Englischen fast immer auf dem Vorsatz: \textit{kilometre}
+\ipa{"kIl@mi:t@} (häufig auch \ipa{kI"l6mIt@}), \textit{millimetre} \ipa{"mIlimi:t@},
+\textit{megawatt} \ipa{"meg@w6t}.}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{$5\eh{km} = 5000\eh{m}$}{five kilometres equals five thousand metres}{fünf Kilometer sind fünftausend Meter}
+\lies{$3\eh{ms} = 0{,}003\eh{s}$}{three milliseconds equals nought point nought nought three seconds}{drei Millisekunden sind null Komma null null drei Sekunden}
+\lies{$2{,}2\eh{k\Omega}$}{two point two kilohms \ipa{"kIl@Umz}}{zwei Komma zwei Kiloohm}
+\lies{$470\eh{\mu F}$}{four hundred and seventy microfarads}{vierhundertsiebzig Mikrofarad}
+\lies{$650\eh{nm}$}{six hundred and fifty nanometres (the wavelength of red light)}{sechshundertfünfzig Nanometer (die Wellenlänge von rotem Licht)}
+\lies{$1{,}2\eh{GW}$}{one point two gigawatts}{eins Komma zwei Gigawatt}
+\end{lesen}
+
+%--------------------------------------------------------------------------------------------------
+\newpage
+\kapitel{Einheiten und Größenangaben lesen}{Reading units and quantities}{"ri:dIN "ju:nIts @n "kw6nt@tiz}
+
+\begin{lesen}
+\lies{$\mathrm{m/s}$ \;oder\; $\mathrm{m \cdot s^{-1}}$}{metres per second}{Meter pro Sekunde \;/\; Meter durch Sekunde}
+\lies{$\mathrm{m/s^2}$}{metres per second squared \;/\; metres per second per second}{Meter pro Sekunde zum Quadrat \;/\; Meter pro Quadratsekunde}
+\lies{$\mathrm{km/h}$}{kilometres per hour}{Kilometer pro Stunde}
+\lies{$\mathrm{m^2},\ \mathrm{m^3}$}{square metres, cubic metres}{Quadratmeter, Kubikmeter}
+\lies{$\mathrm{kg/m^3}$}{kilograms per cubic metre}{Kilogramm pro Kubikmeter}
+\lies{$\mathrm{N \cdot m}$}{newton metres}{Newtonmeter}
+\lies{$\mathrm{N/m}$}{newtons per metre}{Newton pro Meter}
+\lies{$\mathrm{J/(kg \cdot K)}$}{joules per kilogram kelvin}{Joule pro Kilogramm und Kelvin}
+\lies{$\mathrm{kWh}$}{kilowatt-hours}{Kilowattstunden}
+\lies{$20\eh{\degree C}$}{twenty degrees Celsius}{zwanzig Grad Celsius}
+\lies{$3 \cdot 10^8\eh{m/s}$ \newline \footnotesize engl. $3 \times 10^8\eh{m/s}$}{three times ten to the eight metres per second}{drei mal zehn hoch acht Meter pro Sekunde}
+\lies{$1{,}6 \cdot 10^{-19}\eh{C}$}{one point six times ten to the minus nineteen coulombs}{eins Komma sechs mal zehn hoch minus neunzehn Coulomb}
+\lies{$(2{,}50 \pm 0{,}01)\eh{m}$}{two point five nought plus or minus nought point nought one metres}{zwei Komma fünf null plus minus null Komma null eins Meter}
+\end{lesen}
+
+\anmerkung{Gesprochen stehen Einheiten im Englischen im Plural, sobald der Zahlenwert nicht genau 1
+ist: \textit{five newtons, nought point five volts}. Das Einheitenzeichen bekommt nie ein Plural-s
+(5\,N, nicht 5\,Ns). Unverändert bleiben \textit{hertz, lux, siemens} und meist \textit{kelvin}.}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{$v = 72\eh{km/h} = 20\eh{m/s}$}{seventy-two kilometres per hour equals twenty metres per second}{zweiundsiebzig Kilometer pro Stunde sind zwanzig Meter pro Sekunde}
+\lies{$\varrho = 1000\eh{kg/m^3}$}{The density of water is one thousand kilograms per cubic metre.}{Die Dichte von Wasser beträgt eintausend Kilogramm pro Kubikmeter.}
+\end{lesen}
+
+%--------------------------------------------------------------------------------------------------
+\newpage
+\kapitel{Angloamerikanische Einheiten}{Imperial and US units}{Im"pI@ri@l @n ""ju: "es "ju:nIts}
+
+In Großbritannien und vor allem in den USA sind neben den SI-Einheiten ältere Einheiten im
+Gebrauch (\textit{imperial units} bzw.\ \textit{US customary units}).
+
+\begin{center}
+\begin{tikzpicture}[font=\footnotesize, x=1cm]
+	\draw[blue, thick, fill=blue!6] (0,0) rectangle (13.2,2.1);
+	\foreach \k in {0,...,5} {\draw[blue, thick] (0.25+2.54*\k,2.1) -- ++(0,-0.45) node[below, black] {\k};}
+	\foreach \k in {0,...,19} {\draw[blue] (0.25+0.635*\k,2.1) -- ++(0,-0.22);}
+	\foreach \k in {0,...,12} {\draw[red, thick] (0.25+\k,0) -- ++(0,0.35) node[above, black] {\k};}
+	\foreach \k in {0,...,24} {\draw[red] (0.25+0.5*\k,0) -- ++(0,0.2);}
+	\node[anchor=west] at (13.4,1.8) {inches -- \color{black!60}Zoll};
+	\node[anchor=west] at (13.4,0.25) {centimetres -- \color{black!60}Zentimeter};
+\end{tikzpicture}
+\end{center}
+
+\platz\zwischen{Länge}{Length}{leNT}
+\begin{lesen}
+\lies{$1\eh{in} = 2{,}54\eh{cm}$ \newline \footnotesize auch $1''$}{one inch \ipa{IntS} equals two point five four centimetres}{ein Zoll sind zwei Komma fünf vier Zentimeter}
+\lies{$1\eh{ft} = 12\eh{in} = 30{,}48\eh{cm}$ \newline \footnotesize auch $1'$}{one foot (plural: feet) equals twelve inches}{ein Fuß sind zwölf Zoll}
+\lies{$1\eh{yd} = 3\eh{ft} = 91{,}44\eh{cm}$}{one yard \ipa{jA:d} equals three feet}{ein Yard sind drei Fuß}
+\lies{$1\eh{mi} = 1760\eh{yd} \approx 1{,}609\eh{km}$}{one mile equals one thousand seven hundred and sixty yards}{eine Meile sind eintausendsiebenhundertsechzig Yard}
+\end{lesen}
+
+\platz\zwischen{Volumen und Masse}{Volume and mass}{"v6lju:m @n "m\ae s}
+\begin{lesen}
+\lies{$1\eh{pt} \approx 568\eh{ml}$ (GB) \newline $1\eh{pt} \approx 473\eh{ml}$ (US)}{one pint \ipa{paInt}}{ein Pint}
+\lies{$1\eh{gal} \approx 4{,}546\eh{l}$ (GB) \newline $1\eh{gal} \approx 3{,}785\eh{l}$ (US)}{one gallon \ipa{"g\ae l@n} equals eight pints}{eine Gallone sind acht Pints}
+\lies{$1\eh{oz} \approx 28{,}35\eh{g}$}{one ounce \ipa{aUns}}{eine Unze}
+\lies{$1\eh{lb} = 16\eh{oz} \approx 453{,}6\eh{g}$}{one pound \ipa{paUnd} equals sixteen ounces}{ein Pfund sind sechzehn Unzen}
+\lies{$1\eh{st} = 14\eh{lb} \approx 6{,}35\eh{kg}$}{one stone equals fourteen pounds (used in Britain for body weight)}{ein Stone sind vierzehn Pfund (in Großbritannien für das Körpergewicht)}
+\end{lesen}
+
+\platz\zwischen{Geschwindigkeit, Druck, Leistung, Energie}{Speed, pressure, power, energy}{"spi:d, "preS@, "paU@, "en@dZi}
+\begin{lesen}
+\lies{$1\eh{mph} \approx 1{,}609\eh{km/h}$}{one mile per hour}{eine Meile pro Stunde}
+\lies{$1\eh{psi} \approx 6895\eh{Pa}$}{one pound per square inch}{ein Pfund pro Quadratzoll}
+\lies{$1\eh{hp} \approx 746\eh{W}$}{one horsepower \ipa{"hO:spaU@}}{eine (britische) Pferdestärke; $1\eh{PS} \approx 735{,}5\eh{W}$}
+\lies{$1\eh{Btu} \approx 1055\eh{J}$}{one British thermal unit}{eine britische Wärmeeinheit}
+\lies{$1\eh{cal} \approx 4{,}19\eh{J}$}{one calorie \ipa{"k\ae l@ri}}{eine Kalorie}
+\end{lesen}
+
+\anmerkung{Vorsicht bei \textit{gallon} und \textit{pint}: Die britischen Einheiten sind etwa 20\,\%
+größer als die amerikanischen. Körpergröße wird in \textit{feet} und \textit{inches} angegeben:
+$5'\,11''$ -- \textit{five foot eleven}.}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{$6\eh{ft} \approx 1{,}83\eh{m}$}{He is six feet tall, that is about one metre eighty-three.}{Er ist sechs Fuß groß, das sind etwa ein Meter dreiundachtzig.}
+\lies{$70\eh{mph} \approx 113\eh{km/h}$}{The speed limit on British motorways is seventy miles per hour.}{Auf britischen Autobahnen gilt ein Tempolimit von siebzig Meilen pro Stunde.}
+\lies{$27\eh{in} \approx 68{,}6\eh{cm}$}{a twenty-seven-inch monitor}{ein Siebenundzwanzig-Zoll-Monitor}
+\lies{$32\eh{psi} \approx 2{,}2\eh{bar}$}{The tyre pressure should be thirty-two pounds per square inch.}{Der Reifendruck soll etwa zwei Komma zwei Bar betragen.}
+\lies{$150\eh{lb} \approx 68\eh{kg}$}{one hundred and fifty pounds is about sixty-eight kilograms}{hundertfünfzig Pfund sind etwa achtundsechzig Kilogramm}
+\end{lesen}
+
+%--------------------------------------------------------------------------------------------------
+\newpage
+\kapitel{Temperaturskalen}{Temperature scales}{"tempr@tS@ skeIlz}
+
+\begin{center}
+\begin{tikzpicture}[font=\small]
+	\foreach \y in {0.3,2.4,3.6,5.0} {\draw[black!30, thin] (-0.3,\y) -- (9.2,\y);}
+	\foreach \x/\name in {0/Kelvin, 3.4/Celsius, 6.8/Fahrenheit} {
+		\draw[blue, very thick] (\x,0) -- (\x,1.0); \draw[blue, very thick, dashed] (\x,1.0) -- (\x,1.7); \draw[blue, very thick] (\x,1.7) -- (\x,5.5);
+		\node[above, font=\small\bfseries] at (\x,5.6) {\name};
+		\foreach \y in {0.3,2.4,3.6,5.0} {\draw[blue, thick] (\x-0.12,\y) -- (\x+0.12,\y);}}
+	\foreach \y/\k/\c/\f in {0.3/0\eh{K}/-273{,}15\eh{\degree C}/-459{,}67\eh{\degree F}, 2.4/273{,}15\eh{K}/0\eh{\degree C}/32\eh{\degree F},
+			3.6/310{,}15\eh{K}/37\eh{\degree C}/98{,}6\eh{\degree F}, 5.0/373{,}15\eh{K}/100\eh{\degree C}/212\eh{\degree F}} {
+		\node[right, fill=white, inner sep=2pt, xshift=5pt] at (0,\y) {$\k$}; \node[right, fill=white, inner sep=2pt, xshift=5pt] at (3.4,\y) {$\c$};
+		\node[right, fill=white, inner sep=2pt, xshift=5pt] at (6.8,\y) {$\f$};}
+	\node[anchor=west] at (9.4,0.3) {absolute zero -- \color{black!60}absoluter Nullpunkt};
+	\node[anchor=west] at (9.4,2.4) {freezing point of water -- \color{black!60}Gefrierpunkt};
+	\node[anchor=west] at (9.4,3.6) {body temperature -- \color{black!60}Körpertemperatur};
+	\node[anchor=west] at (9.4,5.0) {boiling point of water -- \color{black!60}Siedepunkt};
+\end{tikzpicture}
+\end{center}
+
+\begin{lesen}
+\lies{$\vartheta_C,\ \vartheta_F$}{the temperature in degrees Celsius \ipa{"selsi@s} and in degrees Fahrenheit \ipa{"f\ae r@nhaIt}}{die Temperatur in Grad Celsius und in Grad Fahrenheit}
+\lies{$T$}{the absolute (thermodynamic) temperature in kelvin}{die absolute (thermodynamische) Temperatur in Kelvin}
+\lies{$T = \vartheta_C + 273{,}15$}{To convert degrees Celsius into kelvin, add two hundred and seventy-three point one five.}{Zur Umrechnung von Grad Celsius in Kelvin addiert man zweihundertdreiundsiebzig Komma eins fünf.}
+\lies{$\vartheta_F = \dfrac{9}{5} \cdot \vartheta_C + 32$}{To convert degrees Celsius into degrees Fahrenheit, multiply by nine fifths and add thirty-two.}{Zur Umrechnung von Grad Celsius in Grad Fahrenheit multipliziert man mit neun Fünfteln und addiert zweiunddreißig.}
+\lies{$\vartheta_C = \dfrac{5}{9} \cdot (\vartheta_F - 32)$}{To convert degrees Fahrenheit into degrees Celsius, subtract thirty-two and multiply by five ninths.}{Zur Umrechnung von Grad Fahrenheit in Grad Celsius subtrahiert man zweiunddreißig und multipliziert mit fünf Neunteln.}
+\lies{$\Delta T = 15\eh{K}$}{a temperature difference (a rise in temperature) of fifteen kelvin}{eine Temperaturdifferenz (ein Temperaturanstieg) von fünfzehn Kelvin}
+\end{lesen}
+
+\anmerkung{Die Umrechnungsformeln sind Zahlenwertgleichungen: Man setzt nur die Zahlenwerte ein.
+Statt \textit{degrees Celsius} hört man im Alltag auch noch \textit{degrees centigrade}
+\ipa{"sentIgreId}. Temperaturdifferenzen gibt man in Kelvin an.}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{$68\eh{\degree F} \mathrel{\widehat{=}} 20\eh{\degree C}$}{Sixty-eight degrees Fahrenheit corresponds to twenty degrees Celsius: sixty-eight minus thirty-two is thirty-six; thirty-six times five ninths is twenty.}{Achtundsechzig Grad Fahrenheit entsprechen zwanzig Grad Celsius: achtundsechzig minus zweiunddreißig ist sechsunddreißig; sechsunddreißig mal fünf Neuntel ist zwanzig.}
+\lies{$-40\eh{\degree C} \mathrel{\widehat{=}} -40\eh{\degree F}$}{At minus forty degrees the Celsius and the Fahrenheit scales show the same value.}{Bei minus vierzig Grad zeigen die Celsius- und die Fahrenheit-Skala denselben Wert.}
+\lies{$-5\eh{\degree C}$}{minus five degrees Celsius \;/\; five degrees below zero}{minus fünf Grad Celsius \;/\; fünf Grad unter null}
+\lies{$0\eh{K}$}{Absolute zero is the lowest possible temperature.}{Der absolute Nullpunkt ist die tiefste mögliche Temperatur.}
+\end{lesen}
+
+%--------------------------------------------------------------------------------------------------
+\newpage
+\kapitel{Formeln lesen: Mechanik}{Reading formulae: mechanics}{"ri:dIN "fO:mjuli:, mI"k\ae nIks}
+
+\begin{lesen}
+\lies{$v = \dfrac{s}{t}$}{$v$ equals $s$ over $t$: speed equals distance divided by time}{$v$ gleich $s$ durch $t$: Geschwindigkeit gleich Weg durch Zeit}
+\lies{$a = \dfrac{\Delta v}{\Delta t}$}{$a$ equals delta $v$ over delta $t$: acceleration is the change in velocity divided by the time taken}{$a$ gleich Delta $v$ durch Delta $t$: Die Beschleunigung ist die Geschwindigkeitsänderung durch die dafür benötigte Zeit}
+\lies{$s = \dfrac{1}{2} \cdot a \cdot t^2$}{$s$ equals a half $a$ $t$ squared}{$s$ gleich ein Halb $a$ $t$ Quadrat}
+\lies{$F = m \cdot a$}{$F$ equals $m$ $a$: force equals mass times acceleration}{$F$ gleich $m$ mal $a$: Kraft gleich Masse mal Beschleunigung}
+\lies{$F_G = m \cdot g$}{weight equals mass times the acceleration due to gravity}{Gewichtskraft gleich Masse mal Fallbeschleunigung}
+\lies{$\varrho = \dfrac{m}{V}$}{rho equals $m$ over $V$: density equals mass divided by volume}{Rho gleich $m$ durch $V$: Dichte gleich Masse durch Volumen}
+\lies{$p = \dfrac{F}{A}$}{$p$ equals $F$ over $A$: pressure equals force divided by area}{$p$ gleich $F$ durch $A$: Druck gleich Kraft durch Fläche}
+\lies{$W = F \cdot s$}{work done equals force times distance (moved in the direction of the force)}{Arbeit gleich Kraft mal Weg (in Kraftrichtung)}
+\lies{$E_{\mathrm{kin}} = \dfrac{1}{2} \cdot m \cdot v^2$}{kinetic energy equals a half $m$ $v$ squared}{kinetische Energie gleich ein Halb $m$ $v$ Quadrat}
+\lies{$E_{\mathrm{pot}} = m \cdot g \cdot h$}{potential energy equals $m$ $g$ $h$}{potentielle Energie gleich $m$ $g$ $h$}
+\lies{$P = \dfrac{W}{t}$}{power equals work done divided by time taken}{Leistung gleich Arbeit durch Zeit}
+\lies{$F = G \cdot \dfrac{m_1 \cdot m_2}{r^2}$}{$F$ equals capital $G$ times $m$ one $m$ two over $r$ squared}{$F$ gleich groß $G$ mal $m$ eins mal $m$ zwei durch $r$ Quadrat}
+\end{lesen}
+
+\anmerkung{Einige Formelzeichen unterscheiden sich: Im Englischen steht meist $d$ oder $s$ für den
+Weg (\textit{distance, displacement}), $k$ für die Federkonstante, $W$ für die Gewichtskraft
+(\textit{weight}) und $u$ für die Anfangsgeschwindigkeit: $v = u + a\,t$.}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{\textit{Gegeben -- gesucht}}{\textit{Given:} $m$ equals two kilograms, $a$ equals three metres per second squared. \textit{Find:} the force $F$.}{\textit{Gegeben:} $m$ gleich zwei Kilogramm, $a$ gleich drei Meter pro Sekunde zum Quadrat. \textit{Gesucht:} die Kraft $F$.}
+\lies{$F = m \cdot a$ \newline $F = 2\eh{kg} \cdot 3\eh{m/s^2}$}{Write down the equation and substitute the values.}{Schreibe die Gleichung auf und setze die Werte ein.}
+\lies{$F = 6\eh{N}$}{The force is six newtons.}{Die Kraft beträgt sechs Newton.}
+\lies{$v = \dfrac{s}{t} \ \Rightarrow\ t = \dfrac{s}{v}$}{Rearrange the equation to make $t$ the subject \;/\; solve the equation for $t$.}{Stelle die Gleichung nach $t$ um \;/\; löse die Gleichung nach $t$ auf.}
+\lies{$E_{\mathrm{kin}} = \frac12 \cdot 1000\eh{kg} \cdot (20\eh{m/s})^2$ \newline $E_{\mathrm{kin}} = 200\eh{kJ}$}{A car with a mass of one thousand kilograms travelling at twenty metres per second has a kinetic energy of two hundred kilojoules.}{Ein Auto der Masse eintausend Kilogramm hat bei zwanzig Meter pro Sekunde eine kinetische Energie von zweihundert Kilojoule.}
+\end{lesen}
+
+%--------------------------------------------------------------------------------------------------
+\newpage
+\kapitel{Formeln lesen: Elektrizitätslehre}{Reading formulae: electricity}{"ri:dIN "fO:mjuli:, I""lek"trIs@ti}
+
+\begin{center}
+\begin{circuitikz}[font=\footnotesize]
+	\draw (0,0) to[battery1, l=$U$] (0,2.6) to[rmeter, t=A] (2.6,2.6) to[lamp, l=$L_1$] (5.2,2.6) to[R, l=$R$] (5.2,0) to[nos] (2.6,0) -- (0,0);
+	\draw (5.2,2.6) -- (6.7,2.6) to[rmeter, t=V] (6.7,0) -- (5.2,0);
+	\fill (5.2,2.6) circle (1.6pt) (5.2,0) circle (1.6pt);
+	\node[anchor=west, align=left] at (8,2.5) {\sz{battery1}\; cell, battery -- \color{black!60}Batterie};
+	\node[anchor=west, align=left] at (8,1.95) {\sz{nos}\; switch -- \color{black!60}Schalter};
+	\node[anchor=west, align=left] at (8,1.4) {\sz{lamp}\; lamp -- \color{black!60}Lampe};
+	\node[anchor=west, align=left] at (8,0.85) {\sz{R}\; resistor -- \color{black!60}Widerstand};
+	\node[anchor=west, align=left] at (8,0.3) {\sz{rmeter, t=A}\; ammeter -- \color{black!60}Strommesser};
+	\node[anchor=west, align=left] at (8,-0.25) {\sz{rmeter, t=V}\; voltmeter -- \color{black!60}Spannungsmesser};
+\end{circuitikz}
+\end{center}
+
+\begin{lesen}
+\lies{$I = \dfrac{Q}{t}$}{$I$ equals $Q$ over $t$: current is the charge flowing per unit time}{$I$ gleich $Q$ durch $t$: Die Stromstärke ist die pro Zeit fließende Ladung}
+\lies{$U = R \cdot I$ \newline \footnotesize engl. $V = I\,R$}{$V$ equals $I$ $R$: voltage equals current times resistance (Ohm's law)}{$U$ gleich $R$ mal $I$: Spannung gleich Widerstand mal Stromstärke (ohmsches Gesetz)}
+\lies{$P = U \cdot I$ \newline \footnotesize engl. $P = I\,V$}{power equals current times voltage}{Leistung gleich Spannung mal Stromstärke}
+\lies{$E = U \cdot I \cdot t$}{energy transferred equals voltage times current times time}{elektrische Energie gleich Spannung mal Stromstärke mal Zeit}
+\lies{$R_{\mathrm{ges}} = R_1 + R_2$}{in series: the total resistance equals $R$ one plus $R$ two}{Reihenschaltung: Der Gesamtwiderstand ist gleich $R$ eins plus $R$ zwei}
+\lies{$\dfrac{1}{R_{\mathrm{ges}}} = \dfrac{1}{R_1} + \dfrac{1}{R_2}$}{in parallel: one over the total resistance equals one over $R$ one plus one over $R$ two}{Parallelschaltung: eins durch $R$ gesamt gleich eins durch $R$ eins plus eins durch $R$ zwei}
+\lies{$C = \dfrac{Q}{U}$}{capacitance equals charge divided by voltage}{Kapazität gleich Ladung durch Spannung}
+\lies{$\dfrac{U_1}{U_2} = \dfrac{N_1}{N_2}$}{the ratio of the voltages equals the ratio of the numbers of turns (transformer equation)}{die Spannungen verhalten sich wie die Windungszahlen (Transformatorgleichung)}
+\end{lesen}
+
+\anmerkung{Im Englischen ist das Formelzeichen für die Spannung $V$ (\textit{voltage}), nicht $U$ --
+Zeichen und Einheit sehen dann gleich aus: $V = 12\eh{V}$. Man sagt \textit{the voltage across
+the lamp} (an der Lampe) und \textit{the current through the lamp} (durch die Lampe).}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{$I = \dfrac{U}{R} = \dfrac{6\eh{V}}{12\eh{\Omega}} = 0{,}5\eh{A}$}{A six-volt battery is connected to a twelve-ohm resistor. The current is nought point five amperes.}{An eine Sechs-Volt-Batterie wird ein Zwölf-Ohm-Widerstand angeschlossen. Die Stromstärke beträgt null Komma fünf Ampere.}
+\lies{$R_{\mathrm{ges}} = 100\eh{\Omega} + 220\eh{\Omega} = 320\eh{\Omega}$}{Two resistors of one hundred ohms and two hundred and twenty ohms in series have a total resistance of three hundred and twenty ohms.}{Zwei Widerstände von hundert Ohm und zweihundertzwanzig Ohm in Reihe haben einen Gesamtwiderstand von dreihundertzwanzig Ohm.}
+\lies{$R_{\mathrm{ges}} = \dfrac{60\eh{\Omega} \cdot 30\eh{\Omega}}{60\eh{\Omega} + 30\eh{\Omega}} = 20\eh{\Omega}$}{Sixty ohms and thirty ohms in parallel give a total resistance of twenty ohms.}{Sechzig Ohm und dreißig Ohm parallel ergeben einen Gesamtwiderstand von zwanzig Ohm.}
+\lies{$E = 2\eh{kW} \cdot 0{,}5\eh{h} = 1\eh{kWh}$}{A two-kilowatt kettle switched on for half an hour transfers one kilowatt-hour of energy.}{Ein Wasserkocher mit zwei Kilowatt, der eine halbe Stunde eingeschaltet ist, wandelt eine Kilowattstunde Energie um.}
+\lies{Schalter}{Close the switch: the circuit is complete and the lamp lights up. Open the switch: the lamp goes out.}{Schließe den Schalter: Der Stromkreis ist geschlossen und die Lampe leuchtet. Öffne den Schalter: Die Lampe erlischt.}
+\end{lesen}
+
+%--------------------------------------------------------------------------------------------------
+\newpage
+\kapitel{Formeln lesen: Wärme, Wellen, Optik und Atome}{Reading formulae: heat, waves, optics and atoms}{"ri:dIN "fO:mjuli:, "hi:t, "weIvz, "6ptIks @n "\ae t@mz}
+
+\begin{lesen}
+\lies{$Q = c \cdot m \cdot \Delta T$}{$Q$ equals $c$ $m$ delta $T$: heat equals specific heat capacity times mass times temperature change}{$Q$ gleich $c$ mal $m$ mal Delta $T$: Wärme gleich spezifische Wärmekapazität mal Masse mal Temperaturänderung}
+\lies{$\dfrac{p_1 \cdot V_1}{T_1} = \dfrac{p_2 \cdot V_2}{T_2}$}{$p$ one $V$ one over $T$ one equals $p$ two $V$ two over $T$ two}{$p$ eins mal $V$ eins durch $T$ eins gleich $p$ zwei mal $V$ zwei durch $T$ zwei}
+\lies{$f = \dfrac{1}{T}$}{frequency equals one over the period}{Frequenz gleich eins durch Periodendauer}
+\lies{$c = \lambda \cdot f$ \newline \footnotesize engl. $v = f\,\lambda$}{wave speed equals frequency times wavelength \;/\; $v$ equals $f$ lambda}{Ausbreitungsgeschwindigkeit gleich Wellenlänge mal Frequenz \;/\; $c$ gleich Lambda mal $f$}
+\lies{$T = 2\pi \cdot \sqrt{\dfrac{l}{g}}$}{$T$ equals two pi times the square root of $l$ over $g$}{$T$ gleich zwei pi mal Wurzel aus $l$ durch $g$}
+\lies{$\dfrac{1}{f} = \dfrac{1}{g} + \dfrac{1}{b}$ \newline \footnotesize engl. $\frac{1}{f} = \frac{1}{u} + \frac{1}{v}$}{one over $f$ equals one over $u$ plus one over $v$ (the lens equation)}{eins durch $f$ gleich eins durch $g$ plus eins durch $b$ (die Linsengleichung)}
+\lies{$n = \dfrac{\sin\alpha}{\sin\beta}$}{the refractive index equals sine alpha over sine beta \;/\; sine $i$ over sine $r$}{die Brechzahl ist gleich Sinus Alpha durch Sinus Beta}
+\lies{$E = h \cdot f$}{$E$ equals $h$ $f$: the energy of a photon equals the Planck constant times the frequency}{$E$ gleich $h$ mal $f$: Die Energie eines Photons ist das plancksche Wirkungsquantum mal die Frequenz}
+\lies{$E = m \cdot c^2$}{$E$ equals $m$ $c$ squared}{$E$ gleich $m$ $c$ Quadrat}
+\lies{$N = N_0 \cdot \left(\dfrac{1}{2}\right)^{t/T_{1/2}}$}{$N$ equals $N$ nought times one half to the power of $t$ over the half-life}{$N$ gleich $N$ null mal ein Halb hoch $t$ durch die Halbwertszeit}
+\lies{$^{238}_{\ 92}\mathrm{U}$}{uranium-two three eight: mass number two hundred and thirty-eight, atomic number ninety-two}{Uran-238: Massenzahl zweihundertachtunddreißig, Kernladungszahl zweiundneunzig}
+\end{lesen}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{$\lambda = \dfrac{c}{f} = \dfrac{3 \cdot 10^8\eh{m/s}}{100\eh{MHz}} = 3\eh{m}$}{A radio station broadcasts at one hundred megahertz. The wavelength is three metres.}{Ein Radiosender sendet mit hundert Megahertz. Die Wellenlänge beträgt drei Meter.}
+\lies{$Q = 0{,}5\eh{kg} \cdot 4{,}19\eh{\tfrac{kJ}{kg \cdot K}} \cdot 80\eh{K}$ \newline $Q \approx 168\eh{kJ}$}{About one hundred and sixty-eight kilojoules are needed to heat half a kilogram of water from twenty to one hundred degrees Celsius.}{Um ein halbes Kilogramm Wasser von zwanzig auf hundert Grad Celsius zu erwärmen, sind etwa hundertachtundsechzig Kilojoule nötig.}
+\lies{$N = N_0 \cdot \left(\frac12\right)^3 = \dfrac{N_0}{8}$}{After three half-lives one eighth of the original nuclei are left.}{Nach drei Halbwertszeiten ist noch ein Achtel der ursprünglichen Kerne vorhanden.}
+\lies{$n = \dfrac{c_0}{c} = \dfrac{3{,}00 \cdot 10^8}{2{,}25 \cdot 10^8} \approx 1{,}33$}{The refractive index of water is about one point three three.}{Die Brechzahl von Wasser beträgt etwa eins Komma drei drei.}
+\end{lesen}
+
+%--------------------------------------------------------------------------------------------------
+\newpage
+\kapitel{Experimente beschreiben}{Describing experiments}{dI"skraIbIN Ik"sperIm@nts}
+
+\begin{center}
+\begin{tikzpicture}[font=\small]
+	\draw[black, line width=2.5pt] (-1.3,0) -- (1.2,0);
+	\draw[black, line width=2pt] (-0.8,0) -- (-0.8,5.2); \draw[black, line width=2pt] (-0.8,4.8) -- (1.9,4.8);
+	\draw[blue, thick, decorate, decoration={zigzag, segment length=5pt, amplitude=5pt}] (1.5,4.8) -- (1.5,2.5);
+	\draw[blue, thick] (1.5,2.5) -- (1.5,2.2); \filldraw[fill=blue!20, draw=blue, very thick] (1.15,1.5) rectangle (1.85,2.2);
+	\draw[thick, fill=yellow!20] (2.4,0.3) rectangle (2.8,5.0); \foreach \y in {0.5,0.8,...,4.9} {\draw (2.4,\y) -- (2.55,\y);}
+	\draw[red, thick, -{Stealth}] (1.5,1.5) -- (1.5,0.5) node[left] {$\vec{F}_G$};
+	\node[anchor=west, align=left] (a) at (4.2,4.7) {clamp stand -- \color{black!60}Stativ};
+	\node[anchor=west, align=left] (b) at (4.2,3.8) {spring -- \color{black!60}Feder};
+	\node[anchor=west, align=left] (c) at (4.2,2.9) {ruler -- \color{black!60}Lineal};
+	\node[anchor=west, align=left] (d) at (4.2,2.0) {mass (slotted masses) -- \color{black!60}Massestück};
+	\node[anchor=west, align=left] (e) at (4.2,1.1) {weight (force) -- \color{black!60}Gewichtskraft};
+	\draw[-{Stealth}, thin] (a.west) -- (1.0,4.9); \draw[-{Stealth}, thin] (b.west) -- (1.75,3.7); \draw[-{Stealth}, thin] (c.west) -- (2.85,2.9);
+	\draw[-{Stealth}, thin] (d.west) -- (1.95,1.9); \draw[-{Stealth}, thin] (e.west) -- (1.65,1.0);
+\end{tikzpicture}
+\end{center}
+
+Die Teile eines Versuchsprotokolls (\textit{lab report}):
+
+\begin{lesen}
+\lies{\textbf{Aufgabe}}{\textbf{Aim:} To investigate how the extension of a spring depends on the force applied.}{Untersuche, wie die Verlängerung einer Feder von der wirkenden Kraft abhängt.}
+\lies{\textbf{Vermutung}}{\textbf{Hypothesis / Prediction:} The greater the force, the greater the extension.}{Je größer die Kraft, desto größer die Verlängerung.}
+\lies{\textbf{Geräte}}{\textbf{Apparatus:} clamp stand, spring, slotted masses, ruler}{Stativ, Feder, Massestücke, Lineal}
+\lies{\textbf{Durchführung}}{\textbf{Method:} Set up the apparatus as shown in the diagram. Measure the length of the unloaded spring. Add the masses one at a time and record the length of the spring each time.}{Baue den Versuch wie in der Skizze auf. Miss die Länge der unbelasteten Feder. Hänge nacheinander die Massestücke an und notiere jeweils die Länge der Feder.}
+\lies{\textbf{Messwerte}}{\textbf{Results:} Record your readings in a table.}{Trage die Messwerte in eine Tabelle ein.}
+\lies{\textbf{Auswertung}}{\textbf{Analysis / Conclusion:} Plot a graph of force against extension. The graph is a straight line through the origin, so the force is directly proportional to the extension.}{Zeichne ein Kraft-Verlängerungs-Diagramm. Der Graph ist eine Ursprungsgerade, also ist die Kraft proportional zur Verlängerung.}
+\lies{\textbf{Fehlerbetrachtung}}{\textbf{Evaluation:} Sources of error are reading the ruler (parallax error) and the oscillation of the spring.}{Fehlerquellen sind das Ablesen am Lineal (Parallaxenfehler) und das Schwingen der Feder.}
+\end{lesen}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{Variablen}{Change only one variable at a time and keep all the other variables constant (a fair test).}{Ändere immer nur eine Größe und halte alle anderen Größen konstant.}
+\lies{Messen}{Measure the time for ten oscillations and divide by ten.}{Miss die Zeit für zehn Schwingungen und dividiere durch zehn.}
+\lies{Wiederholen}{Repeat each measurement three times and calculate the mean.}{Wiederhole jede Messung dreimal und berechne den Mittelwert.}
+\lies{Beobachten}{What do you observe? -- The lamp gets brighter as the voltage increases.}{Was beobachtest du? -- Die Lampe leuchtet heller, wenn die Spannung steigt.}
+\lies{Sicherheit}{Safety: wear safety goggles. Do not look directly into the laser beam.}{Sicherheit: Trage eine Schutzbrille. Blicke nicht direkt in den Laserstrahl.}
+\end{lesen}
+
+%--------------------------------------------------------------------------------------------------
+\newpage
+\kapitel{Diagramme beschreiben}{Describing graphs}{dI"skraIbIN "grA:fs}
+
+\begin{center}
+\begin{tikzpicture}[font=\small, scale=1.05]
+	\draw[black!15, very thin, step=0.5] (0,0) grid (6,4);
+	\draw[achse] (-0.3,0) -- (6.5,0) node[right] {$s$ in cm}; \draw[achse] (0,-0.3) -- (0,4.5) node[above] {$F$ in N};
+	\foreach \x in {1,...,6} {\node[below, font=\footnotesize] at (\x,0) {\x};}
+	\foreach \y/\l in {1/0{,}5, 2/1{,}0, 3/1{,}5, 4/2{,}0} {\node[left, font=\footnotesize] at (0,\y) {$\l$};}
+	\draw[red, thick] (0,0) -- (6.2,4.03);
+	\foreach \x/\y in {1/0.75, 2/1.2, 3/2.05, 4/2.5, 5/3.35, 6/3.85} {\draw[blue, very thick] (\x-0.1,\y-0.1) -- (\x+0.1,\y+0.1) (\x-0.1,\y+0.1) -- (\x+0.1,\y-0.1);}
+	\draw[black!70] (2,1.3) -- (5,1.3) node[midway, below, font=\footnotesize] {$\Delta s$} -- (5,3.25) node[midway, right, font=\footnotesize] {$\Delta F$};
+	\node[anchor=west, align=left] (a) at (7.6,3.9) {line of best fit -- \color{black!60}Ausgleichsgerade};
+	\node[anchor=west, align=left] (b) at (7.6,3.1) {data point (reading) -- \color{black!60}Messpunkt};
+	\node[anchor=west, align=left] (c) at (7.6,2.3) {gradient triangle -- \color{black!60}Anstiegsdreieck};
+	\node[anchor=west, align=left] (d) at (7.6,1.5) {$x$-axis: independent variable\\\color{black!60}Rechtsachse: unabhängige Größe};
+	\node[anchor=west, align=left] (e) at (7.6,0.5) {origin -- \color{black!60}Koordinatenursprung};
+	\draw[-{Stealth}, thin] (a.west) -- (5.9,3.9); \draw[-{Stealth}, thin] (b.west) -- (5.2,3.3); \draw[-{Stealth}, thin] (c.west) -- (5.15,2.3);
+	\draw[-{Stealth}, thin] (e.west) -- (0.15,0.1);
+\end{tikzpicture}
+\end{center}
+
+\begin{lesen}
+\lies{Achsen}{The extension is plotted on the $x$-axis (horizontal axis), the force on the $y$-axis (vertical axis).}{Auf der Rechtsachse ist die Verlängerung abgetragen, auf der Hochachse die Kraft.}
+\lies{Auftragen}{Plot a graph of force against extension \;/\; plot $F$ against $s$.}{Zeichne ein $F$-$s$-Diagramm \;/\; trage $F$ über $s$ auf.}
+\lies{Gerade}{The graph is a straight line through the origin: $F$ is directly proportional to $s$.}{Der Graph ist eine Ursprungsgerade: $F$ ist proportional zu $s$.}
+\lies{$D = \dfrac{\Delta F}{\Delta s}$}{The gradient (slope) of the line gives the spring constant.}{Der Anstieg der Geraden ergibt die Federkonstante.}
+\lies{Verlauf}{The curve rises steeply at first and then levels off.}{Die Kurve steigt zunächst steil an und flacht dann ab.}
+\lies{Verlauf}{The current increases \;/\; decreases \;/\; remains constant as the voltage increases.}{Die Stromstärke steigt \;/\; sinkt \;/\; bleibt konstant, wenn die Spannung zunimmt.}
+\lies{Fläche}{The area under a velocity–time graph gives the distance travelled.}{Die Fläche unter dem Graphen im $v$-$t$-Diagramm entspricht dem zurückgelegten Weg.}
+\lies{Ausreißer}{This reading is an anomalous result (an outlier); it is ignored when drawing the line of best fit.}{Dieser Messwert ist ein Ausreißer; er wird beim Zeichnen der Ausgleichsgeraden nicht berücksichtigt.}
+\end{lesen}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{$D = \dfrac{1{,}0\eh{N}}{3{,}1\eh{cm}} \approx 32\eh{N/m}$}{From the gradient triangle the spring constant is about thirty-two newtons per metre.}{Aus dem Anstiegsdreieck ergibt sich eine Federkonstante von etwa zweiunddreißig Newton pro Meter.}
+\lies{\skST}{The distance–time graph is a straight line: the object moves at constant speed.}{Das Weg-Zeit-Diagramm ist eine Gerade: Der Körper bewegt sich mit konstanter Geschwindigkeit.}
+\lies{\skVT}{The velocity increases uniformly with time: the acceleration is constant.}{Die Geschwindigkeit nimmt gleichmäßig mit der Zeit zu: Die Beschleunigung ist konstant.}
+\lies{\skAntiprop}{The pressure is inversely proportional to the volume: if the volume is halved, the pressure doubles.}{Der Druck ist umgekehrt proportional zum Volumen: Wird das Volumen halbiert, verdoppelt sich der Druck.}
+\lies{\skZerfall}{The number of undecayed nuclei decreases exponentially with time.}{Die Anzahl der noch nicht zerfallenen Kerne nimmt exponentiell mit der Zeit ab.}
+\end{lesen}
+
+%--------------------------------------------------------------------------------------------------
+\newpage
+\kapitel{Griechische Buchstaben in der Physik}{Greek letters in physics}{"gri:k "let@z In "fIzIks}
+
+\begin{center}
+{\small\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}c l l l@{}}
+	\toprule
+	\textbf{Zeichen} & \textbf{Englisch} & \textbf{steht für (englisch)} & \textbf{steht für (deutsch)} \\ \midrule
+	$\alpha$ & alpha \ipa{"\ae lf@} & angle; alpha particle & Winkel; Alphateilchen \\
+	$\beta$ & beta \ipa{"bi:t@} & angle; beta particle & Winkel; Betateilchen \\
+	$\gamma$ & gamma \ipa{"g\ae m@} & gamma radiation & Gammastrahlung \\
+	$\Delta$ & delta \ipa{"delt@} & change in, difference & Änderung, Differenz \\
+	$\varepsilon$ & epsilon \ipa{"epsIl6n} & permittivity & Permittivität (Dielektrizitätszahl) \\
+	$\eta$ & eta \ipa{"i:t@} & efficiency & Wirkungsgrad \\
+	$\vartheta$ & theta \ipa{"Ti:t@} & temperature; angle & Temperatur; Winkel \\
+	$\lambda$ & lambda \ipa{"l\ae md@} & wavelength; decay constant & Wellenlänge; Zerfallskonstante \\
+	$\mu$ & mu \ipa{mju:} & coefficient of friction; micro- & Reibungszahl; Mikro- \\
+	$\varrho$ & rho \ipa{r@U} & density; resistivity & Dichte; spezifischer Widerstand \\
+	$\sigma$ & sigma \ipa{"sIgm@} & stress; conductivity & mechanische Spannung; Leitfähigkeit \\
+	$\tau$ & tau \ipa{taU} & time constant & Zeitkonstante \\
+	$\varphi$ & phi \ipa{faI} & angle; phase; potential & Winkel; Phase; Potential \\
+	$\Phi$ & capital phi & magnetic flux & magnetischer Fluss \\
+	$\omega$ & omega \ipa{"@UmIg@} & angular velocity & Winkelgeschwindigkeit \\
+	$\Omega$ & capital omega & ohm & Ohm \\
+	\bottomrule
+\end{tabular}}
+\end{center}
+
+\platz\zwischen{Beispiele}{Examples}{Ig"zA:mp\textsyllabic{l}z}
+
+\begin{lesen}
+\lies{$\Delta T = T_2 - T_1$}{delta $T$ equals $T$ two minus $T$ one: the change in temperature}{Delta $T$ gleich $T$ zwei minus $T$ eins: die Temperaturänderung}
+\lies{$\eta = 0{,}85$}{eta equals nought point eight five: the efficiency is eighty-five per cent}{Eta gleich null Komma acht fünf: Der Wirkungsgrad beträgt fünfundachtzig Prozent}
+\lies{$\lambda = 589\eh{nm}$}{lambda equals five hundred and eighty-nine nanometres (yellow sodium light)}{Lambda gleich fünfhundertneunundachtzig Nanometer (gelbes Natriumlicht)}
+\lies{$\varrho = 7{,}87\eh{g/cm^3}$}{rho equals seven point eight seven grams per cubic centimetre (the density of iron)}{Rho gleich sieben Komma acht sieben Gramm pro Kubikzentimeter (die Dichte von Eisen)}
+\lies{$R = 47\eh{\Omega}$}{$R$ equals forty-seven ohms}{$R$ gleich siebenundvierzig Ohm}
+\end{lesen}
+
+
+\newpage
+%%%%  REGISTER  %%%%
+\teil{Register}{Index}{"Indeks}
+\section{Register Deutsch -- Englisch}
+\begin{multicols}{2}\small\raggedright
+
+\medskip{\large\textbf{\color{cornflower}A}}\par\nopagebreak
+\textbf{Abbildungsmaßstab} (der) -- magnification\dotfill\hyperref[e:252]{\pageref*{e:252}}\par
+\textbf{abgeleitete Einheit} (die) -- derived unit\dotfill\hyperref[e:5]{\pageref*{e:5}}\par
+\textbf{absolute Nullpunkt} (der) -- absolute zero\dotfill\hyperref[e:115]{\pageref*{e:115}}\par
+\textbf{absolute Temperatur} (die) -- absolute temperature, thermodynamic temperature\dotfill\hyperref[e:114]{\pageref*{e:114}}\par
+\textbf{Abwärme} (die) -- waste heat\dotfill\hyperref[e:108]{\pageref*{e:108}}\par
+\textbf{Aggregatzustand} (der) -- state of matter\dotfill\hyperref[e:125]{\pageref*{e:125}}\par
+\textbf{Aktivität} (die) -- activity\dotfill\hyperref[e:283]{\pageref*{e:283}}\par
+\textbf{Alphastrahlung} (die) -- alpha radiation\dotfill\hyperref[e:275]{\pageref*{e:275}}\par
+\textbf{Amplitude} (die) -- amplitude\dotfill\hyperref[e:195]{\pageref*{e:195}}\par
+\textbf{Angriffspunkt} (der) -- point of application\dotfill\hyperref[e:60]{\pageref*{e:60}}\par
+\textbf{Äquivalentdosis} (die) -- equivalent dose\dotfill\hyperref[e:284]{\pageref*{e:284}}\par
+\textbf{Arbeit} (die) -- work\dotfill\hyperref[e:96]{\pageref*{e:96}}\par
+\textbf{Atom} (das) -- atom\dotfill\hyperref[e:259]{\pageref*{e:259}}\par
+\textbf{Atomhülle} (die) -- electron shell\dotfill\hyperref[e:261]{\pageref*{e:261}}\par
+\textbf{Atomkern} (der) -- nucleus\dotfill\hyperref[e:260]{\pageref*{e:260}}\par
+\textbf{Auftrieb} (der) -- buoyancy, upthrust\dotfill\hyperref[e:92]{\pageref*{e:92}}\par
+\textbf{Ausbreitungsgeschwindigkeit} (die) -- wave speed\dotfill\hyperref[e:203]{\pageref*{e:203}}\par
+\textbf{Ausgleichsgerade} (die) -- line of best fit\dotfill\hyperref[e:24]{\pageref*{e:24}}\par
+\textbf{Auslenkung} (die) -- displacement\dotfill\hyperref[e:194]{\pageref*{e:194}}\par
+\textbf{Auswertung} (die) -- analysis, evaluation\dotfill\hyperref[e:19]{\pageref*{e:19}}\par
+
+\medskip{\large\textbf{\color{cornflower}B}}\par\nopagebreak
+\textbf{Bahn} (die) -- path, trajectory\dotfill\hyperref[e:33]{\pageref*{e:33}}\par
+\textbf{Bahngeschwindigkeit} (die) -- tangential speed\dotfill\hyperref[e:55]{\pageref*{e:55}}\par
+\textbf{Basiseinheit} (die) -- base unit\dotfill\hyperref[e:4]{\pageref*{e:4}}\par
+\textbf{Batterie} (die) -- battery, cell\dotfill\hyperref[e:156]{\pageref*{e:156}}\par
+\textbf{Beleuchtungsstärke} (die) -- illuminance\dotfill\hyperref[e:258]{\pageref*{e:258}}\par
+\textbf{Beobachtung} (die) -- observation\dotfill\hyperref[e:18]{\pageref*{e:18}}\par
+\textbf{Beschleunigung} (die) -- acceleration\dotfill\hyperref[e:40]{\pageref*{e:40}}\par
+\textbf{Betastrahlung} (die) -- beta radiation\dotfill\hyperref[e:276]{\pageref*{e:276}}\par
+\textbf{Betrag (einer Kraft)} (der) -- magnitude\dotfill\hyperref[e:61]{\pageref*{e:61}}\par
+\textbf{Beugung} (die) -- diffraction\dotfill\hyperref[e:208]{\pageref*{e:208}}\par
+\textbf{Bewegung} (die) -- motion\dotfill\hyperref[e:30]{\pageref*{e:30}}\par
+\textbf{Bezugssystem} (das) -- frame of reference\dotfill\hyperref[e:32]{\pageref*{e:32}}\par
+\textbf{Bild} (das) -- image\dotfill\hyperref[e:249]{\pageref*{e:249}}\par
+\textbf{Bildweite} (die) -- image distance\dotfill\hyperref[e:247]{\pageref*{e:247}}\par
+\textbf{Bindungsenergie} (die) -- binding energy\dotfill\hyperref[e:290]{\pageref*{e:290}}\par
+\textbf{Brechung} (die) -- refraction\dotfill\hyperref[e:234]{\pageref*{e:234}}\par
+\textbf{Brechungsgesetz} (das) -- Snell's law, law of refraction\dotfill\hyperref[e:237]{\pageref*{e:237}}\par
+\textbf{Brechungswinkel} (der) -- angle of refraction\dotfill\hyperref[e:235]{\pageref*{e:235}}\par
+\textbf{Brechzahl} (die) -- refractive index\dotfill\hyperref[e:236]{\pageref*{e:236}}\par
+\textbf{Brennpunkt} (der) -- focal point, principal focus\dotfill\hyperref[e:244]{\pageref*{e:244}}\par
+\textbf{Brennweite} (die) -- focal length\dotfill\hyperref[e:245]{\pageref*{e:245}}\par
+
+\medskip{\large\textbf{\color{cornflower}C}}\par\nopagebreak
+\textbf{chemische Energie} (die) -- chemical energy\dotfill\hyperref[e:102]{\pageref*{e:102}}\par
+
+\medskip{\large\textbf{\color{cornflower}D}}\par\nopagebreak
+\textbf{Dauermagnet} (der) -- permanent magnet\dotfill\hyperref[e:175]{\pageref*{e:175}}\par
+\textbf{Dehnung, die Verlängerung} (die) -- extension\dotfill\hyperref[e:71]{\pageref*{e:71}}\par
+\textbf{Diagramm} (das) -- graph\dotfill\hyperref[e:23]{\pageref*{e:23}}\par
+\textbf{Dichte} (die) -- density\dotfill\hyperref[e:58]{\pageref*{e:58}}\par
+\textbf{Doppler-Effekt} (der) -- Doppler effect\dotfill\hyperref[e:219]{\pageref*{e:219}}\par
+\textbf{Drehmoment} (das) -- torque, moment (of a force)\dotfill\hyperref[e:81]{\pageref*{e:81}}\par
+\textbf{Drehpunkt} (der) -- pivot, fulcrum\dotfill\hyperref[e:84]{\pageref*{e:84}}\par
+\textbf{Drehzahl} (die) -- rotational speed\dotfill\hyperref[e:53]{\pageref*{e:53}}\par
+\textbf{Druck} (der) -- pressure\dotfill\hyperref[e:89]{\pageref*{e:89}}\par
+\textbf{Durchschnittsgeschwindigkeit} (die) -- average speed\dotfill\hyperref[e:38]{\pageref*{e:38}}\par
+
+\medskip{\large\textbf{\color{cornflower}E}}\par\nopagebreak
+\textbf{Echo} (das) -- echo\dotfill\hyperref[e:217]{\pageref*{e:217}}\par
+\textbf{Eigenfrequenz} (die) -- natural frequency\dotfill\hyperref[e:199]{\pageref*{e:199}}\par
+\textbf{Einfallslot} (das) -- normal\dotfill\hyperref[e:229]{\pageref*{e:229}}\par
+\textbf{Einfallswinkel} (der) -- angle of incidence\dotfill\hyperref[e:230]{\pageref*{e:230}}\par
+\textbf{Einheit} (die) -- unit\dotfill\hyperref[e:3]{\pageref*{e:3}}\par
+\textbf{elektrische Energie} (die) -- electrical energy\dotfill\hyperref[e:101]{\pageref*{e:101}}\par
+\textbf{elektrische Feld} (das) -- electric field\dotfill\hyperref[e:171]{\pageref*{e:171}}\par
+\textbf{elektrische Feldstärke} (die) -- electric field strength\dotfill\hyperref[e:172]{\pageref*{e:172}}\par
+\textbf{elektrische Ladung} (die) -- electric charge\dotfill\hyperref[e:143]{\pageref*{e:143}}\par
+\textbf{elektrische Leistung} (die) -- electrical power\dotfill\hyperref[e:168]{\pageref*{e:168}}\par
+\textbf{elektrische Spannung} (die) -- voltage, potential difference\dotfill\hyperref[e:145]{\pageref*{e:145}}\par
+\textbf{elektrische Stromstärke} (die) -- electric current\dotfill\hyperref[e:144]{\pageref*{e:144}}\par
+\textbf{elektrische Widerstand} (der) -- resistance\dotfill\hyperref[e:146]{\pageref*{e:146}}\par
+\textbf{Elektromagnet} (der) -- electromagnet\dotfill\hyperref[e:176]{\pageref*{e:176}}\par
+\textbf{elektromagnetische Induktion} (die) -- electromagnetic induction\dotfill\hyperref[e:184]{\pageref*{e:184}}\par
+\textbf{Elektromotor} (der) -- electric motor\dotfill\hyperref[e:186]{\pageref*{e:186}}\par
+\textbf{Elektron} (das) -- electron\dotfill\hyperref[e:262]{\pageref*{e:262}}\par
+\textbf{Elementarladung} (die) -- elementary charge\dotfill\hyperref[e:266]{\pageref*{e:266}}\par
+\textbf{Energie} (die) -- energy\dotfill\hyperref[e:95]{\pageref*{e:95}}\par
+\textbf{Energieerhaltungssatz} (der) -- law of conservation of energy\dotfill\hyperref[e:104]{\pageref*{e:104}}\par
+\textbf{Energieniveau} (das) -- energy level\dotfill\hyperref[e:294]{\pageref*{e:294}}\par
+\textbf{Energieträger} (der) -- energy source\dotfill\hyperref[e:109]{\pageref*{e:109}}\par
+\textbf{Energieumwandlung} (die) -- energy conversion, energy transfer\dotfill\hyperref[e:103]{\pageref*{e:103}}\par
+\textbf{Entropie} (die) -- entropy\dotfill\hyperref[e:142]{\pageref*{e:142}}\par
+\textbf{Erdung} (die) -- earth (BE), ground (AE)\dotfill\hyperref[e:189]{\pageref*{e:189}}\par
+\textbf{erneuerbare Energie} (die) -- renewable energy\dotfill\hyperref[e:110]{\pageref*{e:110}}\par
+\textbf{erstarren} -- freeze, solidify\dotfill\hyperref[e:130]{\pageref*{e:130}}\par
+
+\medskip{\large\textbf{\color{cornflower}F}}\par\nopagebreak
+\textbf{Fadenpendel} (das) -- simple pendulum\dotfill\hyperref[e:191]{\pageref*{e:191}}\par
+\textbf{Fallbeschleunigung} (die) -- acceleration due to gravity\dotfill\hyperref[e:47]{\pageref*{e:47}}\par
+\textbf{Farbzerlegung, die Dispersion} (die) -- dispersion\dotfill\hyperref[e:256]{\pageref*{e:256}}\par
+\textbf{Feder} (die) -- spring\dotfill\hyperref[e:70]{\pageref*{e:70}}\par
+\textbf{Federkonstante} (die) -- spring constant\dotfill\hyperref[e:72]{\pageref*{e:72}}\par
+\textbf{Federschwinger} (der) -- mass on a spring\dotfill\hyperref[e:192]{\pageref*{e:192}}\par
+\textbf{Feldlinie} (die) -- field line\dotfill\hyperref[e:173]{\pageref*{e:173}}\par
+\textbf{fest} -- solid\dotfill\hyperref[e:126]{\pageref*{e:126}}\par
+\textbf{Flaschenzug} (der) -- block and tackle\dotfill\hyperref[e:87]{\pageref*{e:87}}\par
+\textbf{flüssig} -- liquid\dotfill\hyperref[e:127]{\pageref*{e:127}}\par
+\textbf{Formelzeichen} (das) -- symbol\dotfill\hyperref[e:6]{\pageref*{e:6}}\par
+\textbf{Fotoeffekt} (der) -- photoelectric effect\dotfill\hyperref[e:293]{\pageref*{e:293}}\par
+\textbf{freie Fall} (der) -- free fall\dotfill\hyperref[e:46]{\pageref*{e:46}}\par
+\textbf{Frequenz} (die) -- frequency\dotfill\hyperref[e:52]{\pageref*{e:52}}\par
+\textbf{Frequenz} (die) -- frequency\dotfill\hyperref[e:197]{\pageref*{e:197}}\par
+
+\medskip{\large\textbf{\color{cornflower}G}}\par\nopagebreak
+\textbf{Gammastrahlung} (die) -- gamma radiation\dotfill\hyperref[e:277]{\pageref*{e:277}}\par
+\textbf{gasförmig} -- gaseous\dotfill\hyperref[e:128]{\pageref*{e:128}}\par
+\textbf{gedämpfte Schwingung} (die) -- damped oscillation\dotfill\hyperref[e:198]{\pageref*{e:198}}\par
+\textbf{Gegenstandsweite} (die) -- object distance\dotfill\hyperref[e:246]{\pageref*{e:246}}\par
+\textbf{geneigte Ebene} (die) -- inclined plane\dotfill\hyperref[e:85]{\pageref*{e:85}}\par
+\textbf{Generator} (der) -- generator\dotfill\hyperref[e:187]{\pageref*{e:187}}\par
+\textbf{Geschwindigkeit} (die) -- velocity, speed\dotfill\hyperref[e:37]{\pageref*{e:37}}\par
+\textbf{Geschwindigkeit-Zeit-Diagramm} (das) -- velocity–time graph\dotfill\hyperref[e:45]{\pageref*{e:45}}\par
+\textbf{Gesetz} (das) -- law\dotfill\hyperref[e:21]{\pageref*{e:21}}\par
+\textbf{Gewichtskraft} (die) -- weight\dotfill\hyperref[e:63]{\pageref*{e:63}}\par
+\textbf{gleichförmige Bewegung} (die) -- uniform motion\dotfill\hyperref[e:42]{\pageref*{e:42}}\par
+\textbf{gleichmäßig beschleunigte Bewegung} (die) -- uniformly accelerated motion\dotfill\hyperref[e:43]{\pageref*{e:43}}\par
+\textbf{Gleichstrom} (der) -- direct current (DC)\dotfill\hyperref[e:166]{\pageref*{e:166}}\par
+\textbf{Gleitreibung} (die) -- sliding friction\dotfill\hyperref[e:68]{\pageref*{e:68}}\par
+\textbf{Glühlampe} (die) -- lamp, bulb\dotfill\hyperref[e:158]{\pageref*{e:158}}\par
+\textbf{Gravitation} (die) -- gravitation, gravity\dotfill\hyperref[e:93]{\pageref*{e:93}}\par
+\textbf{Grenzwinkel} (der) -- critical angle\dotfill\hyperref[e:239]{\pageref*{e:239}}\par
+
+\medskip{\large\textbf{\color{cornflower}H}}\par\nopagebreak
+\textbf{Haftreibung} (die) -- static friction\dotfill\hyperref[e:67]{\pageref*{e:67}}\par
+\textbf{Halbleiter} (der) -- semiconductor\dotfill\hyperref[e:152]{\pageref*{e:152}}\par
+\textbf{Halbwertszeit} (die) -- half-life\dotfill\hyperref[e:280]{\pageref*{e:280}}\par
+\textbf{Hauptquantenzahl} (die) -- principal quantum number\dotfill\hyperref[e:295]{\pageref*{e:295}}\par
+\textbf{Hebel} (der) -- lever\dotfill\hyperref[e:82]{\pageref*{e:82}}\par
+\textbf{Hebelarm} (der) -- lever arm\dotfill\hyperref[e:83]{\pageref*{e:83}}\par
+\textbf{Hohlspiegel, der Wölbspiegel} (der) -- concave mirror, convex mirror\dotfill\hyperref[e:233]{\pageref*{e:233}}\par
+\textbf{hookesche Gesetz} (das) -- Hooke's law\dotfill\hyperref[e:73]{\pageref*{e:73}}\par
+
+\medskip{\large\textbf{\color{cornflower}I}}\par\nopagebreak
+\textbf{ideale Gas} (das) -- ideal gas\dotfill\hyperref[e:140]{\pageref*{e:140}}\par
+\textbf{Impuls} (der) -- momentum\dotfill\hyperref[e:79]{\pageref*{e:79}}\par
+\textbf{Induktivität} (die) -- inductance\dotfill\hyperref[e:183]{\pageref*{e:183}}\par
+\textbf{innere Energie} (die) -- internal energy\dotfill\hyperref[e:118]{\pageref*{e:118}}\par
+\textbf{Interferenz} (die) -- interference\dotfill\hyperref[e:209]{\pageref*{e:209}}\par
+\textbf{Ion} (das) -- ion\dotfill\hyperref[e:272]{\pageref*{e:272}}\par
+\textbf{ionisierende Strahlung} (die) -- ionising radiation\dotfill\hyperref[e:278]{\pageref*{e:278}}\par
+\textbf{Isolator, der Nichtleiter} (der) -- insulator\dotfill\hyperref[e:151]{\pageref*{e:151}}\par
+\textbf{Isotop} (das) -- isotope\dotfill\hyperref[e:271]{\pageref*{e:271}}\par
+
+\medskip{\large\textbf{\color{cornflower}K}}\par\nopagebreak
+\textbf{Kapazität} (die) -- capacitance\dotfill\hyperref[e:170]{\pageref*{e:170}}\par
+\textbf{Kernfusion} (die) -- nuclear fusion\dotfill\hyperref[e:286]{\pageref*{e:286}}\par
+\textbf{Kernladungszahl, die Ordnungszahl} (die) -- atomic number, proton number\dotfill\hyperref[e:267]{\pageref*{e:267}}\par
+\textbf{Kernreaktor} (der) -- nuclear reactor\dotfill\hyperref[e:288]{\pageref*{e:288}}\par
+\textbf{Kernschatten, der Halbschatten} (der) -- umbra, penumbra\dotfill\hyperref[e:226]{\pageref*{e:226}}\par
+\textbf{Kernspaltung} (die) -- nuclear fission\dotfill\hyperref[e:285]{\pageref*{e:285}}\par
+\textbf{Kettenreaktion} (die) -- chain reaction\dotfill\hyperref[e:287]{\pageref*{e:287}}\par
+\textbf{Kilowattstunde} (die) -- kilowatt-hour\dotfill\hyperref[e:112]{\pageref*{e:112}}\par
+\textbf{kinetische Energie} (die) -- kinetic energy\dotfill\hyperref[e:98]{\pageref*{e:98}}\par
+\textbf{Kondensator} (der) -- capacitor\dotfill\hyperref[e:169]{\pageref*{e:169}}\par
+\textbf{kondensieren} -- condense\dotfill\hyperref[e:133]{\pageref*{e:133}}\par
+\textbf{Konstante} (die) -- constant\dotfill\hyperref[e:27]{\pageref*{e:27}}\par
+\textbf{Körper} (der) -- body, object\dotfill\hyperref[e:28]{\pageref*{e:28}}\par
+\textbf{Kraft} (die) -- force\dotfill\hyperref[e:59]{\pageref*{e:59}}\par
+\textbf{Kräftegleichgewicht} (das) -- equilibrium\dotfill\hyperref[e:75]{\pageref*{e:75}}\par
+\textbf{Kraftstoß} (der) -- impulse\dotfill\hyperref[e:80]{\pageref*{e:80}}\par
+\textbf{Kraftwerk} (das) -- power station\dotfill\hyperref[e:111]{\pageref*{e:111}}\par
+\textbf{Kreisbewegung} (die) -- circular motion\dotfill\hyperref[e:50]{\pageref*{e:50}}\par
+\textbf{Kurzschluss} (der) -- short circuit\dotfill\hyperref[e:164]{\pageref*{e:164}}\par
+
+\medskip{\large\textbf{\color{cornflower}L}}\par\nopagebreak
+\textbf{Längenausdehnung} (die) -- linear expansion\dotfill\hyperref[e:139]{\pageref*{e:139}}\par
+\textbf{Längswelle (Longitudinalwelle)} (die) -- longitudinal wave\dotfill\hyperref[e:206]{\pageref*{e:206}}\par
+\textbf{Lautstärke} (die) -- loudness, volume\dotfill\hyperref[e:215]{\pageref*{e:215}}\par
+\textbf{Leistung} (die) -- power\dotfill\hyperref[e:105]{\pageref*{e:105}}\par
+\textbf{Leiter} (der) -- conductor\dotfill\hyperref[e:150]{\pageref*{e:150}}\par
+\textbf{Leitwert} (der) -- conductance\dotfill\hyperref[e:149]{\pageref*{e:149}}\par
+\textbf{Licht} (das) -- light\dotfill\hyperref[e:220]{\pageref*{e:220}}\par
+\textbf{Lichtbündel} (das) -- beam of light\dotfill\hyperref[e:223]{\pageref*{e:223}}\par
+\textbf{Lichtgeschwindigkeit} (die) -- speed of light\dotfill\hyperref[e:224]{\pageref*{e:224}}\par
+\textbf{Lichtquelle} (die) -- light source\dotfill\hyperref[e:221]{\pageref*{e:221}}\par
+\textbf{Lichtstärke} (die) -- luminous intensity\dotfill\hyperref[e:257]{\pageref*{e:257}}\par
+\textbf{Lichtstrahl} (der) -- ray of light, light ray\dotfill\hyperref[e:222]{\pageref*{e:222}}\par
+\textbf{Linse} (die) -- lens\dotfill\hyperref[e:240]{\pageref*{e:240}}\par
+\textbf{Linsengleichung} (die) -- lens equation\dotfill\hyperref[e:248]{\pageref*{e:248}}\par
+\textbf{Lorentzkraft} (die) -- Lorentz force\dotfill\hyperref[e:185]{\pageref*{e:185}}\par
+\textbf{Luftdruck} (der) -- atmospheric pressure\dotfill\hyperref[e:91]{\pageref*{e:91}}\par
+\textbf{Luftwiderstand} (der) -- air resistance, drag\dotfill\hyperref[e:69]{\pageref*{e:69}}\par
+\textbf{Lupe} (die) -- magnifying glass\dotfill\hyperref[e:253]{\pageref*{e:253}}\par
+
+\medskip{\large\textbf{\color{cornflower}M}}\par\nopagebreak
+\textbf{Magnet} (der) -- magnet\dotfill\hyperref[e:174]{\pageref*{e:174}}\par
+\textbf{Magnetfeld} (das) -- magnetic field\dotfill\hyperref[e:178]{\pageref*{e:178}}\par
+\textbf{magnetische Fluss} (der) -- magnetic flux\dotfill\hyperref[e:180]{\pageref*{e:180}}\par
+\textbf{magnetische Flussdichte} (die) -- magnetic flux density\dotfill\hyperref[e:179]{\pageref*{e:179}}\par
+\textbf{Masse} (die) -- mass\dotfill\hyperref[e:56]{\pageref*{e:56}}\par
+\textbf{Massendefekt} (der) -- mass defect\dotfill\hyperref[e:289]{\pageref*{e:289}}\par
+\textbf{Massenzahl} (die) -- mass number, nucleon number\dotfill\hyperref[e:268]{\pageref*{e:268}}\par
+\textbf{messen} -- measure\dotfill\hyperref[e:8]{\pageref*{e:8}}\par
+\textbf{Messgenauigkeit} (die) -- accuracy\dotfill\hyperref[e:13]{\pageref*{e:13}}\par
+\textbf{Messgerät} (das) -- measuring instrument\dotfill\hyperref[e:11]{\pageref*{e:11}}\par
+\textbf{Messung} (die) -- measurement\dotfill\hyperref[e:9]{\pageref*{e:9}}\par
+\textbf{Messunsicherheit} (die) -- uncertainty (of measurement)\dotfill\hyperref[e:14]{\pageref*{e:14}}\par
+\textbf{Messwert} (der) -- reading, measured value\dotfill\hyperref[e:10]{\pageref*{e:10}}\par
+\textbf{Mittelwert} (der) -- mean (value)\dotfill\hyperref[e:15]{\pageref*{e:15}}\par
+\textbf{Modell} (das) -- model\dotfill\hyperref[e:22]{\pageref*{e:22}}\par
+\textbf{Momentangeschwindigkeit} (die) -- instantaneous velocity\dotfill\hyperref[e:39]{\pageref*{e:39}}\par
+
+\medskip{\large\textbf{\color{cornflower}N}}\par\nopagebreak
+\textbf{Neutron} (das) -- neutron\dotfill\hyperref[e:264]{\pageref*{e:264}}\par
+\textbf{Neutronenzahl} (die) -- neutron number\dotfill\hyperref[e:269]{\pageref*{e:269}}\par
+\textbf{newtonsche Grundgesetz} (das) -- Newton's second law\dotfill\hyperref[e:77]{\pageref*{e:77}}\par
+\textbf{Nordpol, der Südpol} (der) -- north pole, south pole\dotfill\hyperref[e:177]{\pageref*{e:177}}\par
+\textbf{Normalkraft} (die) -- normal force\dotfill\hyperref[e:64]{\pageref*{e:64}}\par
+\textbf{Nukleon} (das) -- nucleon\dotfill\hyperref[e:265]{\pageref*{e:265}}\par
+\textbf{Nuklid} (das) -- nuclide\dotfill\hyperref[e:270]{\pageref*{e:270}}\par
+\textbf{Nutzenergie} (die) -- useful energy\dotfill\hyperref[e:107]{\pageref*{e:107}}\par
+
+\medskip{\large\textbf{\color{cornflower}O}}\par\nopagebreak
+\textbf{ohmsche Gesetz} (das) -- Ohm's law\dotfill\hyperref[e:147]{\pageref*{e:147}}\par
+\textbf{optische Achse} (die) -- principal axis\dotfill\hyperref[e:243]{\pageref*{e:243}}\par
+\textbf{Ort} (der) -- position\dotfill\hyperref[e:34]{\pageref*{e:34}}\par
+
+\medskip{\large\textbf{\color{cornflower}P}}\par\nopagebreak
+\textbf{Parallelschaltung} (die) -- parallel connection\dotfill\hyperref[e:163]{\pageref*{e:163}}\par
+\textbf{Periodendauer} (die) -- period\dotfill\hyperref[e:196]{\pageref*{e:196}}\par
+\textbf{Photon} (das) -- photon\dotfill\hyperref[e:291]{\pageref*{e:291}}\par
+\textbf{physikalische Größe} (die) -- physical quantity\dotfill\hyperref[e:1]{\pageref*{e:1}}\par
+\textbf{plancksche Wirkungsquantum} (das) -- Planck constant\dotfill\hyperref[e:292]{\pageref*{e:292}}\par
+\textbf{potentielle Energie} (die) -- (gravitational) potential energy\dotfill\hyperref[e:97]{\pageref*{e:97}}\par
+\textbf{Prisma} (das) -- prism\dotfill\hyperref[e:254]{\pageref*{e:254}}\par
+\textbf{proportional} -- directly proportional\dotfill\hyperref[e:25]{\pageref*{e:25}}\par
+\textbf{Proton} (das) -- proton\dotfill\hyperref[e:263]{\pageref*{e:263}}\par
+
+\medskip{\large\textbf{\color{cornflower}Q}}\par\nopagebreak
+\textbf{Querwelle (Transversalwelle)} (die) -- transverse wave\dotfill\hyperref[e:205]{\pageref*{e:205}}\par
+
+\medskip{\large\textbf{\color{cornflower}R}}\par\nopagebreak
+\textbf{Radialkraft} (die) -- centripetal force\dotfill\hyperref[e:94]{\pageref*{e:94}}\par
+\textbf{radioaktive Zerfall} (der) -- radioactive decay\dotfill\hyperref[e:274]{\pageref*{e:274}}\par
+\textbf{Radioaktivität} (die) -- radioactivity\dotfill\hyperref[e:273]{\pageref*{e:273}}\par
+\textbf{reelle Bild} (das) -- real image\dotfill\hyperref[e:250]{\pageref*{e:250}}\par
+\textbf{Reflexion} (die) -- reflection\dotfill\hyperref[e:207]{\pageref*{e:207}}\par
+\textbf{Reflexion} (die) -- reflection\dotfill\hyperref[e:227]{\pageref*{e:227}}\par
+\textbf{Reflexionsgesetz} (das) -- law of reflection\dotfill\hyperref[e:228]{\pageref*{e:228}}\par
+\textbf{Reflexionswinkel} (der) -- angle of reflection\dotfill\hyperref[e:231]{\pageref*{e:231}}\par
+\textbf{Reibungskraft} (die) -- friction, frictional force\dotfill\hyperref[e:65]{\pageref*{e:65}}\par
+\textbf{Reibungszahl} (die) -- coefficient of friction\dotfill\hyperref[e:66]{\pageref*{e:66}}\par
+\textbf{Reihenschaltung} (die) -- series connection\dotfill\hyperref[e:162]{\pageref*{e:162}}\par
+\textbf{Resonanz} (die) -- resonance\dotfill\hyperref[e:200]{\pageref*{e:200}}\par
+\textbf{resultierende Kraft} (die) -- resultant force, net force\dotfill\hyperref[e:74]{\pageref*{e:74}}\par
+\textbf{Richtung} (die) -- direction\dotfill\hyperref[e:62]{\pageref*{e:62}}\par
+\textbf{Rolle} (die) -- pulley\dotfill\hyperref[e:86]{\pageref*{e:86}}\par
+\textbf{Ruhe} (die) -- rest\dotfill\hyperref[e:31]{\pageref*{e:31}}\par
+\textbf{Ruhelage} (die) -- equilibrium position\dotfill\hyperref[e:193]{\pageref*{e:193}}\par
+
+\medskip{\large\textbf{\color{cornflower}S}}\par\nopagebreak
+\textbf{Sammellinse} (die) -- converging lens, convex lens\dotfill\hyperref[e:241]{\pageref*{e:241}}\par
+\textbf{Schall} (der) -- sound\dotfill\hyperref[e:212]{\pageref*{e:212}}\par
+\textbf{Schallgeschwindigkeit} (die) -- speed of sound\dotfill\hyperref[e:213]{\pageref*{e:213}}\par
+\textbf{Schallpegel} (der) -- sound level\dotfill\hyperref[e:216]{\pageref*{e:216}}\par
+\textbf{Schalter} (der) -- switch\dotfill\hyperref[e:157]{\pageref*{e:157}}\par
+\textbf{Schaltplan} (der) -- circuit diagram\dotfill\hyperref[e:154]{\pageref*{e:154}}\par
+\textbf{Schatten} (der) -- shadow\dotfill\hyperref[e:225]{\pageref*{e:225}}\par
+\textbf{schmelzen} -- melt\dotfill\hyperref[e:129]{\pageref*{e:129}}\par
+\textbf{Schmelztemperatur} (die) -- melting point\dotfill\hyperref[e:135]{\pageref*{e:135}}\par
+\textbf{Schmelzwärme} (die) -- latent heat of fusion\dotfill\hyperref[e:137]{\pageref*{e:137}}\par
+\textbf{Schweredruck} (der) -- hydrostatic pressure\dotfill\hyperref[e:90]{\pageref*{e:90}}\par
+\textbf{Schwerpunkt} (der) -- centre of gravity\dotfill\hyperref[e:88]{\pageref*{e:88}}\par
+\textbf{Schwingung} (die) -- oscillation, vibration\dotfill\hyperref[e:190]{\pageref*{e:190}}\par
+\textbf{Sicherung} (die) -- fuse\dotfill\hyperref[e:165]{\pageref*{e:165}}\par
+\textbf{sieden} -- boil\dotfill\hyperref[e:132]{\pageref*{e:132}}\par
+\textbf{Siedetemperatur} (die) -- boiling point\dotfill\hyperref[e:136]{\pageref*{e:136}}\par
+\textbf{Skala} (die) -- scale\dotfill\hyperref[e:12]{\pageref*{e:12}}\par
+\textbf{Spannenergie} (die) -- elastic potential energy\dotfill\hyperref[e:99]{\pageref*{e:99}}\par
+\textbf{Spannungsmesser} (der) -- voltmeter\dotfill\hyperref[e:161]{\pageref*{e:161}}\par
+\textbf{Spannungsquelle} (die) -- voltage source, power supply\dotfill\hyperref[e:155]{\pageref*{e:155}}\par
+\textbf{Spektrum} (das) -- spectrum\dotfill\hyperref[e:255]{\pageref*{e:255}}\par
+\textbf{spezifische Wärmekapazität} (die) -- specific heat capacity\dotfill\hyperref[e:119]{\pageref*{e:119}}\par
+\textbf{spezifische Widerstand} (der) -- resistivity\dotfill\hyperref[e:148]{\pageref*{e:148}}\par
+\textbf{Spiegel} (der) -- mirror\dotfill\hyperref[e:232]{\pageref*{e:232}}\par
+\textbf{Spule} (die) -- coil\dotfill\hyperref[e:181]{\pageref*{e:181}}\par
+\textbf{stehende Welle} (die) -- standing wave, stationary wave\dotfill\hyperref[e:211]{\pageref*{e:211}}\par
+\textbf{Stoff} (der) -- substance, material\dotfill\hyperref[e:29]{\pageref*{e:29}}\par
+\textbf{Stromkreis} (der) -- electric circuit\dotfill\hyperref[e:153]{\pageref*{e:153}}\par
+\textbf{Strommesser} (der) -- ammeter\dotfill\hyperref[e:160]{\pageref*{e:160}}\par
+\textbf{sublimieren} -- sublime\dotfill\hyperref[e:134]{\pageref*{e:134}}\par
+
+\medskip{\large\textbf{\color{cornflower}T}}\par\nopagebreak
+\textbf{Teilchenmodell} (das) -- particle model\dotfill\hyperref[e:124]{\pageref*{e:124}}\par
+\textbf{Temperatur} (die) -- temperature\dotfill\hyperref[e:113]{\pageref*{e:113}}\par
+\textbf{thermische Energie} (die) -- thermal energy\dotfill\hyperref[e:100]{\pageref*{e:100}}\par
+\textbf{Thermometer} (das) -- thermometer\dotfill\hyperref[e:116]{\pageref*{e:116}}\par
+\textbf{Tonhöhe} (die) -- pitch\dotfill\hyperref[e:214]{\pageref*{e:214}}\par
+\textbf{Totalreflexion} (die) -- total internal reflection\dotfill\hyperref[e:238]{\pageref*{e:238}}\par
+\textbf{Trägheit} (die) -- inertia\dotfill\hyperref[e:76]{\pageref*{e:76}}\par
+\textbf{Transformator} (der) -- transformer\dotfill\hyperref[e:188]{\pageref*{e:188}}\par
+
+\medskip{\large\textbf{\color{cornflower}U}}\par\nopagebreak
+\textbf{Überlagerung} (die) -- superposition\dotfill\hyperref[e:210]{\pageref*{e:210}}\par
+\textbf{Ultraschall} (der) -- ultrasound\dotfill\hyperref[e:218]{\pageref*{e:218}}\par
+\textbf{umgekehrt proportional} -- inversely proportional\dotfill\hyperref[e:26]{\pageref*{e:26}}\par
+\textbf{Umlaufzeit} (die) -- period\dotfill\hyperref[e:51]{\pageref*{e:51}}\par
+
+\medskip{\large\textbf{\color{cornflower}V}}\par\nopagebreak
+\textbf{verdampfen} -- evaporate, vaporise\dotfill\hyperref[e:131]{\pageref*{e:131}}\par
+\textbf{Verdampfungswärme} (die) -- latent heat of vaporisation\dotfill\hyperref[e:138]{\pageref*{e:138}}\par
+\textbf{Vermutung, die Hypothese} (die) -- hypothesis\dotfill\hyperref[e:20]{\pageref*{e:20}}\par
+\textbf{Versuch, das Experiment} (der) -- experiment\dotfill\hyperref[e:16]{\pageref*{e:16}}\par
+\textbf{Versuchsaufbau} (der) -- experimental set-up\dotfill\hyperref[e:17]{\pageref*{e:17}}\par
+\textbf{Verzögerung} (die) -- deceleration\dotfill\hyperref[e:41]{\pageref*{e:41}}\par
+\textbf{virtuelle Bild} (das) -- virtual image\dotfill\hyperref[e:251]{\pageref*{e:251}}\par
+\textbf{Volumen} (das) -- volume\dotfill\hyperref[e:57]{\pageref*{e:57}}\par
+\textbf{Vorsatz} (der) -- prefix\dotfill\hyperref[e:7]{\pageref*{e:7}}\par
+
+\medskip{\large\textbf{\color{cornflower}W}}\par\nopagebreak
+\textbf{waagerechte Wurf} (der) -- horizontal projection\dotfill\hyperref[e:48]{\pageref*{e:48}}\par
+\textbf{Wärme} (die) -- heat\dotfill\hyperref[e:117]{\pageref*{e:117}}\par
+\textbf{Wärmedämmung} (die) -- thermal insulation\dotfill\hyperref[e:123]{\pageref*{e:123}}\par
+\textbf{Wärmekraftmaschine} (die) -- heat engine\dotfill\hyperref[e:141]{\pageref*{e:141}}\par
+\textbf{Wärmeleitung} (die) -- conduction\dotfill\hyperref[e:120]{\pageref*{e:120}}\par
+\textbf{Wärmestrahlung} (die) -- thermal radiation\dotfill\hyperref[e:122]{\pageref*{e:122}}\par
+\textbf{Wärmeströmung, die Konvektion} (die) -- convection\dotfill\hyperref[e:121]{\pageref*{e:121}}\par
+\textbf{Wechselstrom} (der) -- alternating current (AC)\dotfill\hyperref[e:167]{\pageref*{e:167}}\par
+\textbf{Wechselwirkungsgesetz} (das) -- Newton's third law (action and reaction)\dotfill\hyperref[e:78]{\pageref*{e:78}}\par
+\textbf{Weg} (der) -- distance\dotfill\hyperref[e:35]{\pageref*{e:35}}\par
+\textbf{Weg-Zeit-Diagramm} (das) -- distance–time graph\dotfill\hyperref[e:44]{\pageref*{e:44}}\par
+\textbf{Welle} (die) -- wave\dotfill\hyperref[e:201]{\pageref*{e:201}}\par
+\textbf{Wellenberg, das Wellental} (der) -- crest, trough\dotfill\hyperref[e:204]{\pageref*{e:204}}\par
+\textbf{Wellenlänge} (die) -- wavelength\dotfill\hyperref[e:202]{\pageref*{e:202}}\par
+\textbf{Widerstand (Bauteil)} (der) -- resistor\dotfill\hyperref[e:159]{\pageref*{e:159}}\par
+\textbf{Windungszahl} (die) -- number of turns\dotfill\hyperref[e:182]{\pageref*{e:182}}\par
+\textbf{Winkelgeschwindigkeit} (die) -- angular velocity\dotfill\hyperref[e:54]{\pageref*{e:54}}\par
+\textbf{Wirkungsgrad} (der) -- efficiency\dotfill\hyperref[e:106]{\pageref*{e:106}}\par
+\textbf{Wurfweite} (die) -- range\dotfill\hyperref[e:49]{\pageref*{e:49}}\par
+
+\medskip{\large\textbf{\color{cornflower}Z}}\par\nopagebreak
+\textbf{Zahlenwert} (der) -- numerical value\dotfill\hyperref[e:2]{\pageref*{e:2}}\par
+\textbf{Zählrohr} (das) -- Geiger counter\dotfill\hyperref[e:279]{\pageref*{e:279}}\par
+\textbf{Zeit} (die) -- time\dotfill\hyperref[e:36]{\pageref*{e:36}}\par
+\textbf{Zerfallsgesetz} (das) -- decay law\dotfill\hyperref[e:281]{\pageref*{e:281}}\par
+\textbf{Zerfallskonstante} (die) -- decay constant\dotfill\hyperref[e:282]{\pageref*{e:282}}\par
+\textbf{Zerstreuungslinse} (die) -- diverging lens, concave lens\dotfill\hyperref[e:242]{\pageref*{e:242}}\par
+\end{multicols}
+
+\newpage
+\section{Index English -- German}
+\begin{multicols}{2}\small\raggedright
+
+\medskip{\large\textbf{\color{cornflower}(}}\par\nopagebreak
+\textbf{(gravitational) potential energy} -- die potentielle Energie\dotfill\hyperref[e:97]{\pageref*{e:97}}\par
+
+\medskip{\large\textbf{\color{cornflower}A}}\par\nopagebreak
+\textbf{absolute temperature, thermodynamic temperature} -- die absolute Temperatur\dotfill\hyperref[e:114]{\pageref*{e:114}}\par
+\textbf{absolute zero} -- der absolute Nullpunkt\dotfill\hyperref[e:115]{\pageref*{e:115}}\par
+\textbf{acceleration} -- die Beschleunigung\dotfill\hyperref[e:40]{\pageref*{e:40}}\par
+\textbf{acceleration due to gravity} -- die Fallbeschleunigung\dotfill\hyperref[e:47]{\pageref*{e:47}}\par
+\textbf{accuracy} -- die Messgenauigkeit\dotfill\hyperref[e:13]{\pageref*{e:13}}\par
+\textbf{activity} -- die Aktivität\dotfill\hyperref[e:283]{\pageref*{e:283}}\par
+\textbf{air resistance, drag} -- der Luftwiderstand\dotfill\hyperref[e:69]{\pageref*{e:69}}\par
+\textbf{alpha radiation} -- die Alphastrahlung\dotfill\hyperref[e:275]{\pageref*{e:275}}\par
+\textbf{alternating current (AC)} -- der Wechselstrom\dotfill\hyperref[e:167]{\pageref*{e:167}}\par
+\textbf{ammeter} -- der Strommesser\dotfill\hyperref[e:160]{\pageref*{e:160}}\par
+\textbf{amplitude} -- die Amplitude\dotfill\hyperref[e:195]{\pageref*{e:195}}\par
+\textbf{analysis, evaluation} -- die Auswertung\dotfill\hyperref[e:19]{\pageref*{e:19}}\par
+\textbf{angle of incidence} -- der Einfallswinkel\dotfill\hyperref[e:230]{\pageref*{e:230}}\par
+\textbf{angle of reflection} -- der Reflexionswinkel\dotfill\hyperref[e:231]{\pageref*{e:231}}\par
+\textbf{angle of refraction} -- der Brechungswinkel\dotfill\hyperref[e:235]{\pageref*{e:235}}\par
+\textbf{angular velocity} -- die Winkelgeschwindigkeit\dotfill\hyperref[e:54]{\pageref*{e:54}}\par
+\textbf{atmospheric pressure} -- der Luftdruck\dotfill\hyperref[e:91]{\pageref*{e:91}}\par
+\textbf{atom} -- das Atom\dotfill\hyperref[e:259]{\pageref*{e:259}}\par
+\textbf{atomic number, proton number} -- die Kernladungszahl, die Ordnungszahl\dotfill\hyperref[e:267]{\pageref*{e:267}}\par
+\textbf{average speed} -- die Durchschnittsgeschwindigkeit\dotfill\hyperref[e:38]{\pageref*{e:38}}\par
+
+\medskip{\large\textbf{\color{cornflower}B}}\par\nopagebreak
+\textbf{base unit} -- die Basiseinheit\dotfill\hyperref[e:4]{\pageref*{e:4}}\par
+\textbf{battery, cell} -- die Batterie\dotfill\hyperref[e:156]{\pageref*{e:156}}\par
+\textbf{beam of light} -- das Lichtbündel\dotfill\hyperref[e:223]{\pageref*{e:223}}\par
+\textbf{beta radiation} -- die Betastrahlung\dotfill\hyperref[e:276]{\pageref*{e:276}}\par
+\textbf{binding energy} -- die Bindungsenergie\dotfill\hyperref[e:290]{\pageref*{e:290}}\par
+\textbf{block and tackle} -- der Flaschenzug\dotfill\hyperref[e:87]{\pageref*{e:87}}\par
+\textbf{body, object} -- der Körper\dotfill\hyperref[e:28]{\pageref*{e:28}}\par
+\textbf{boil} -- sieden\dotfill\hyperref[e:132]{\pageref*{e:132}}\par
+\textbf{boiling point} -- die Siedetemperatur\dotfill\hyperref[e:136]{\pageref*{e:136}}\par
+\textbf{buoyancy, upthrust} -- der Auftrieb\dotfill\hyperref[e:92]{\pageref*{e:92}}\par
+
+\medskip{\large\textbf{\color{cornflower}C}}\par\nopagebreak
+\textbf{capacitance} -- die Kapazität\dotfill\hyperref[e:170]{\pageref*{e:170}}\par
+\textbf{capacitor} -- der Kondensator\dotfill\hyperref[e:169]{\pageref*{e:169}}\par
+\textbf{centre of gravity} -- der Schwerpunkt\dotfill\hyperref[e:88]{\pageref*{e:88}}\par
+\textbf{centripetal force} -- die Radialkraft\dotfill\hyperref[e:94]{\pageref*{e:94}}\par
+\textbf{chain reaction} -- die Kettenreaktion\dotfill\hyperref[e:287]{\pageref*{e:287}}\par
+\textbf{chemical energy} -- die chemische Energie\dotfill\hyperref[e:102]{\pageref*{e:102}}\par
+\textbf{circuit diagram} -- der Schaltplan\dotfill\hyperref[e:154]{\pageref*{e:154}}\par
+\textbf{circular motion} -- die Kreisbewegung\dotfill\hyperref[e:50]{\pageref*{e:50}}\par
+\textbf{coefficient of friction} -- die Reibungszahl\dotfill\hyperref[e:66]{\pageref*{e:66}}\par
+\textbf{coil} -- die Spule\dotfill\hyperref[e:181]{\pageref*{e:181}}\par
+\textbf{concave mirror, convex mirror} -- der Hohlspiegel, der Wölbspiegel\dotfill\hyperref[e:233]{\pageref*{e:233}}\par
+\textbf{condense} -- kondensieren\dotfill\hyperref[e:133]{\pageref*{e:133}}\par
+\textbf{conductance} -- der Leitwert\dotfill\hyperref[e:149]{\pageref*{e:149}}\par
+\textbf{conduction} -- die Wärmeleitung\dotfill\hyperref[e:120]{\pageref*{e:120}}\par
+\textbf{conductor} -- der Leiter\dotfill\hyperref[e:150]{\pageref*{e:150}}\par
+\textbf{constant} -- die Konstante\dotfill\hyperref[e:27]{\pageref*{e:27}}\par
+\textbf{convection} -- die Wärmeströmung, die Konvektion\dotfill\hyperref[e:121]{\pageref*{e:121}}\par
+\textbf{converging lens, convex lens} -- die Sammellinse\dotfill\hyperref[e:241]{\pageref*{e:241}}\par
+\textbf{crest, trough} -- der Wellenberg, das Wellental\dotfill\hyperref[e:204]{\pageref*{e:204}}\par
+\textbf{critical angle} -- der Grenzwinkel\dotfill\hyperref[e:239]{\pageref*{e:239}}\par
+
+\medskip{\large\textbf{\color{cornflower}D}}\par\nopagebreak
+\textbf{damped oscillation} -- die gedämpfte Schwingung\dotfill\hyperref[e:198]{\pageref*{e:198}}\par
+\textbf{decay constant} -- die Zerfallskonstante\dotfill\hyperref[e:282]{\pageref*{e:282}}\par
+\textbf{decay law} -- das Zerfallsgesetz\dotfill\hyperref[e:281]{\pageref*{e:281}}\par
+\textbf{deceleration} -- die Verzögerung\dotfill\hyperref[e:41]{\pageref*{e:41}}\par
+\textbf{density} -- die Dichte\dotfill\hyperref[e:58]{\pageref*{e:58}}\par
+\textbf{derived unit} -- die abgeleitete Einheit\dotfill\hyperref[e:5]{\pageref*{e:5}}\par
+\textbf{diffraction} -- die Beugung\dotfill\hyperref[e:208]{\pageref*{e:208}}\par
+\textbf{direct current (DC)} -- der Gleichstrom\dotfill\hyperref[e:166]{\pageref*{e:166}}\par
+\textbf{direction} -- die Richtung\dotfill\hyperref[e:62]{\pageref*{e:62}}\par
+\textbf{directly proportional} -- proportional\dotfill\hyperref[e:25]{\pageref*{e:25}}\par
+\textbf{dispersion} -- die Farbzerlegung, die Dispersion\dotfill\hyperref[e:256]{\pageref*{e:256}}\par
+\textbf{displacement} -- die Auslenkung\dotfill\hyperref[e:194]{\pageref*{e:194}}\par
+\textbf{distance} -- der Weg\dotfill\hyperref[e:35]{\pageref*{e:35}}\par
+\textbf{distance–time graph} -- das Weg-Zeit-Diagramm\dotfill\hyperref[e:44]{\pageref*{e:44}}\par
+\textbf{diverging lens, concave lens} -- die Zerstreuungslinse\dotfill\hyperref[e:242]{\pageref*{e:242}}\par
+\textbf{Doppler effect} -- der Doppler-Effekt\dotfill\hyperref[e:219]{\pageref*{e:219}}\par
+
+\medskip{\large\textbf{\color{cornflower}E}}\par\nopagebreak
+\textbf{earth (BE), ground (AE)} -- die Erdung\dotfill\hyperref[e:189]{\pageref*{e:189}}\par
+\textbf{echo} -- das Echo\dotfill\hyperref[e:217]{\pageref*{e:217}}\par
+\textbf{efficiency} -- der Wirkungsgrad\dotfill\hyperref[e:106]{\pageref*{e:106}}\par
+\textbf{elastic potential energy} -- die Spannenergie\dotfill\hyperref[e:99]{\pageref*{e:99}}\par
+\textbf{electric charge} -- die elektrische Ladung\dotfill\hyperref[e:143]{\pageref*{e:143}}\par
+\textbf{electric circuit} -- der Stromkreis\dotfill\hyperref[e:153]{\pageref*{e:153}}\par
+\textbf{electric current} -- die elektrische Stromstärke\dotfill\hyperref[e:144]{\pageref*{e:144}}\par
+\textbf{electric field} -- das elektrische Feld\dotfill\hyperref[e:171]{\pageref*{e:171}}\par
+\textbf{electric field strength} -- die elektrische Feldstärke\dotfill\hyperref[e:172]{\pageref*{e:172}}\par
+\textbf{electric motor} -- der Elektromotor\dotfill\hyperref[e:186]{\pageref*{e:186}}\par
+\textbf{electrical energy} -- die elektrische Energie\dotfill\hyperref[e:101]{\pageref*{e:101}}\par
+\textbf{electrical power} -- die elektrische Leistung\dotfill\hyperref[e:168]{\pageref*{e:168}}\par
+\textbf{electromagnet} -- der Elektromagnet\dotfill\hyperref[e:176]{\pageref*{e:176}}\par
+\textbf{electromagnetic induction} -- die elektromagnetische Induktion\dotfill\hyperref[e:184]{\pageref*{e:184}}\par
+\textbf{electron} -- das Elektron\dotfill\hyperref[e:262]{\pageref*{e:262}}\par
+\textbf{electron shell} -- die Atomhülle\dotfill\hyperref[e:261]{\pageref*{e:261}}\par
+\textbf{elementary charge} -- die Elementarladung\dotfill\hyperref[e:266]{\pageref*{e:266}}\par
+\textbf{energy} -- die Energie\dotfill\hyperref[e:95]{\pageref*{e:95}}\par
+\textbf{energy conversion, energy transfer} -- die Energieumwandlung\dotfill\hyperref[e:103]{\pageref*{e:103}}\par
+\textbf{energy level} -- das Energieniveau\dotfill\hyperref[e:294]{\pageref*{e:294}}\par
+\textbf{energy source} -- der Energieträger\dotfill\hyperref[e:109]{\pageref*{e:109}}\par
+\textbf{entropy} -- die Entropie\dotfill\hyperref[e:142]{\pageref*{e:142}}\par
+\textbf{equilibrium} -- das Kräftegleichgewicht\dotfill\hyperref[e:75]{\pageref*{e:75}}\par
+\textbf{equilibrium position} -- die Ruhelage\dotfill\hyperref[e:193]{\pageref*{e:193}}\par
+\textbf{equivalent dose} -- die Äquivalentdosis\dotfill\hyperref[e:284]{\pageref*{e:284}}\par
+\textbf{evaporate, vaporise} -- verdampfen\dotfill\hyperref[e:131]{\pageref*{e:131}}\par
+\textbf{experiment} -- der Versuch, das Experiment\dotfill\hyperref[e:16]{\pageref*{e:16}}\par
+\textbf{experimental set-up} -- der Versuchsaufbau\dotfill\hyperref[e:17]{\pageref*{e:17}}\par
+\textbf{extension} -- die Dehnung, die Verlängerung\dotfill\hyperref[e:71]{\pageref*{e:71}}\par
+
+\medskip{\large\textbf{\color{cornflower}F}}\par\nopagebreak
+\textbf{field line} -- die Feldlinie\dotfill\hyperref[e:173]{\pageref*{e:173}}\par
+\textbf{focal length} -- die Brennweite\dotfill\hyperref[e:245]{\pageref*{e:245}}\par
+\textbf{focal point, principal focus} -- der Brennpunkt\dotfill\hyperref[e:244]{\pageref*{e:244}}\par
+\textbf{force} -- die Kraft\dotfill\hyperref[e:59]{\pageref*{e:59}}\par
+\textbf{frame of reference} -- das Bezugssystem\dotfill\hyperref[e:32]{\pageref*{e:32}}\par
+\textbf{free fall} -- der freie Fall\dotfill\hyperref[e:46]{\pageref*{e:46}}\par
+\textbf{freeze, solidify} -- erstarren\dotfill\hyperref[e:130]{\pageref*{e:130}}\par
+\textbf{frequency} -- die Frequenz\dotfill\hyperref[e:52]{\pageref*{e:52}}\par
+\textbf{frequency} -- die Frequenz\dotfill\hyperref[e:197]{\pageref*{e:197}}\par
+\textbf{friction, frictional force} -- die Reibungskraft\dotfill\hyperref[e:65]{\pageref*{e:65}}\par
+\textbf{fuse} -- die Sicherung\dotfill\hyperref[e:165]{\pageref*{e:165}}\par
+
+\medskip{\large\textbf{\color{cornflower}G}}\par\nopagebreak
+\textbf{gamma radiation} -- die Gammastrahlung\dotfill\hyperref[e:277]{\pageref*{e:277}}\par
+\textbf{gaseous} -- gasförmig\dotfill\hyperref[e:128]{\pageref*{e:128}}\par
+\textbf{Geiger counter} -- das Zählrohr\dotfill\hyperref[e:279]{\pageref*{e:279}}\par
+\textbf{generator} -- der Generator\dotfill\hyperref[e:187]{\pageref*{e:187}}\par
+\textbf{graph} -- das Diagramm\dotfill\hyperref[e:23]{\pageref*{e:23}}\par
+\textbf{gravitation, gravity} -- die Gravitation\dotfill\hyperref[e:93]{\pageref*{e:93}}\par
+
+\medskip{\large\textbf{\color{cornflower}H}}\par\nopagebreak
+\textbf{half-life} -- die Halbwertszeit\dotfill\hyperref[e:280]{\pageref*{e:280}}\par
+\textbf{heat} -- die Wärme\dotfill\hyperref[e:117]{\pageref*{e:117}}\par
+\textbf{heat engine} -- die Wärmekraftmaschine\dotfill\hyperref[e:141]{\pageref*{e:141}}\par
+\textbf{Hooke's law} -- das hookesche Gesetz\dotfill\hyperref[e:73]{\pageref*{e:73}}\par
+\textbf{horizontal projection} -- der waagerechte Wurf\dotfill\hyperref[e:48]{\pageref*{e:48}}\par
+\textbf{hydrostatic pressure} -- der Schweredruck\dotfill\hyperref[e:90]{\pageref*{e:90}}\par
+\textbf{hypothesis} -- die Vermutung, die Hypothese\dotfill\hyperref[e:20]{\pageref*{e:20}}\par
+
+\medskip{\large\textbf{\color{cornflower}I}}\par\nopagebreak
+\textbf{ideal gas} -- das ideale Gas\dotfill\hyperref[e:140]{\pageref*{e:140}}\par
+\textbf{illuminance} -- die Beleuchtungsstärke\dotfill\hyperref[e:258]{\pageref*{e:258}}\par
+\textbf{image} -- das Bild\dotfill\hyperref[e:249]{\pageref*{e:249}}\par
+\textbf{image distance} -- die Bildweite\dotfill\hyperref[e:247]{\pageref*{e:247}}\par
+\textbf{impulse} -- der Kraftstoß\dotfill\hyperref[e:80]{\pageref*{e:80}}\par
+\textbf{inclined plane} -- die geneigte Ebene\dotfill\hyperref[e:85]{\pageref*{e:85}}\par
+\textbf{inductance} -- die Induktivität\dotfill\hyperref[e:183]{\pageref*{e:183}}\par
+\textbf{inertia} -- die Trägheit\dotfill\hyperref[e:76]{\pageref*{e:76}}\par
+\textbf{instantaneous velocity} -- die Momentangeschwindigkeit\dotfill\hyperref[e:39]{\pageref*{e:39}}\par
+\textbf{insulator} -- der Isolator, der Nichtleiter\dotfill\hyperref[e:151]{\pageref*{e:151}}\par
+\textbf{interference} -- die Interferenz\dotfill\hyperref[e:209]{\pageref*{e:209}}\par
+\textbf{internal energy} -- die innere Energie\dotfill\hyperref[e:118]{\pageref*{e:118}}\par
+\textbf{inversely proportional} -- umgekehrt proportional\dotfill\hyperref[e:26]{\pageref*{e:26}}\par
+\textbf{ion} -- das Ion\dotfill\hyperref[e:272]{\pageref*{e:272}}\par
+\textbf{ionising radiation} -- die ionisierende Strahlung\dotfill\hyperref[e:278]{\pageref*{e:278}}\par
+\textbf{isotope} -- das Isotop\dotfill\hyperref[e:271]{\pageref*{e:271}}\par
+
+\medskip{\large\textbf{\color{cornflower}K}}\par\nopagebreak
+\textbf{kilowatt-hour} -- die Kilowattstunde\dotfill\hyperref[e:112]{\pageref*{e:112}}\par
+\textbf{kinetic energy} -- die kinetische Energie\dotfill\hyperref[e:98]{\pageref*{e:98}}\par
+
+\medskip{\large\textbf{\color{cornflower}L}}\par\nopagebreak
+\textbf{lamp, bulb} -- die Glühlampe\dotfill\hyperref[e:158]{\pageref*{e:158}}\par
+\textbf{latent heat of fusion} -- die Schmelzwärme\dotfill\hyperref[e:137]{\pageref*{e:137}}\par
+\textbf{latent heat of vaporisation} -- die Verdampfungswärme\dotfill\hyperref[e:138]{\pageref*{e:138}}\par
+\textbf{law} -- das Gesetz\dotfill\hyperref[e:21]{\pageref*{e:21}}\par
+\textbf{law of conservation of energy} -- der Energieerhaltungssatz\dotfill\hyperref[e:104]{\pageref*{e:104}}\par
+\textbf{law of reflection} -- das Reflexionsgesetz\dotfill\hyperref[e:228]{\pageref*{e:228}}\par
+\textbf{lens} -- die Linse\dotfill\hyperref[e:240]{\pageref*{e:240}}\par
+\textbf{lens equation} -- die Linsengleichung\dotfill\hyperref[e:248]{\pageref*{e:248}}\par
+\textbf{lever} -- der Hebel\dotfill\hyperref[e:82]{\pageref*{e:82}}\par
+\textbf{lever arm} -- der Hebelarm\dotfill\hyperref[e:83]{\pageref*{e:83}}\par
+\textbf{light} -- das Licht\dotfill\hyperref[e:220]{\pageref*{e:220}}\par
+\textbf{light source} -- die Lichtquelle\dotfill\hyperref[e:221]{\pageref*{e:221}}\par
+\textbf{line of best fit} -- die Ausgleichsgerade\dotfill\hyperref[e:24]{\pageref*{e:24}}\par
+\textbf{linear expansion} -- die Längenausdehnung\dotfill\hyperref[e:139]{\pageref*{e:139}}\par
+\textbf{liquid} -- flüssig\dotfill\hyperref[e:127]{\pageref*{e:127}}\par
+\textbf{longitudinal wave} -- die Längswelle (Longitudinalwelle)\dotfill\hyperref[e:206]{\pageref*{e:206}}\par
+\textbf{Lorentz force} -- die Lorentzkraft\dotfill\hyperref[e:185]{\pageref*{e:185}}\par
+\textbf{loudness, volume} -- die Lautstärke\dotfill\hyperref[e:215]{\pageref*{e:215}}\par
+\textbf{luminous intensity} -- die Lichtstärke\dotfill\hyperref[e:257]{\pageref*{e:257}}\par
+
+\medskip{\large\textbf{\color{cornflower}M}}\par\nopagebreak
+\textbf{magnet} -- der Magnet\dotfill\hyperref[e:174]{\pageref*{e:174}}\par
+\textbf{magnetic field} -- das Magnetfeld\dotfill\hyperref[e:178]{\pageref*{e:178}}\par
+\textbf{magnetic flux} -- der magnetische Fluss\dotfill\hyperref[e:180]{\pageref*{e:180}}\par
+\textbf{magnetic flux density} -- die magnetische Flussdichte\dotfill\hyperref[e:179]{\pageref*{e:179}}\par
+\textbf{magnification} -- der Abbildungsmaßstab\dotfill\hyperref[e:252]{\pageref*{e:252}}\par
+\textbf{magnifying glass} -- die Lupe\dotfill\hyperref[e:253]{\pageref*{e:253}}\par
+\textbf{magnitude} -- der Betrag (einer Kraft)\dotfill\hyperref[e:61]{\pageref*{e:61}}\par
+\textbf{mass} -- die Masse\dotfill\hyperref[e:56]{\pageref*{e:56}}\par
+\textbf{mass defect} -- der Massendefekt\dotfill\hyperref[e:289]{\pageref*{e:289}}\par
+\textbf{mass number, nucleon number} -- die Massenzahl\dotfill\hyperref[e:268]{\pageref*{e:268}}\par
+\textbf{mass on a spring} -- der Federschwinger\dotfill\hyperref[e:192]{\pageref*{e:192}}\par
+\textbf{mean (value)} -- der Mittelwert\dotfill\hyperref[e:15]{\pageref*{e:15}}\par
+\textbf{measure} -- messen\dotfill\hyperref[e:8]{\pageref*{e:8}}\par
+\textbf{measurement} -- die Messung\dotfill\hyperref[e:9]{\pageref*{e:9}}\par
+\textbf{measuring instrument} -- das Messgerät\dotfill\hyperref[e:11]{\pageref*{e:11}}\par
+\textbf{melt} -- schmelzen\dotfill\hyperref[e:129]{\pageref*{e:129}}\par
+\textbf{melting point} -- die Schmelztemperatur\dotfill\hyperref[e:135]{\pageref*{e:135}}\par
+\textbf{mirror} -- der Spiegel\dotfill\hyperref[e:232]{\pageref*{e:232}}\par
+\textbf{model} -- das Modell\dotfill\hyperref[e:22]{\pageref*{e:22}}\par
+\textbf{momentum} -- der Impuls\dotfill\hyperref[e:79]{\pageref*{e:79}}\par
+\textbf{motion} -- die Bewegung\dotfill\hyperref[e:30]{\pageref*{e:30}}\par
+
+\medskip{\large\textbf{\color{cornflower}N}}\par\nopagebreak
+\textbf{natural frequency} -- die Eigenfrequenz\dotfill\hyperref[e:199]{\pageref*{e:199}}\par
+\textbf{neutron} -- das Neutron\dotfill\hyperref[e:264]{\pageref*{e:264}}\par
+\textbf{neutron number} -- die Neutronenzahl\dotfill\hyperref[e:269]{\pageref*{e:269}}\par
+\textbf{Newton's second law} -- das newtonsche Grundgesetz\dotfill\hyperref[e:77]{\pageref*{e:77}}\par
+\textbf{Newton's third law (action and reaction)} -- das Wechselwirkungsgesetz\dotfill\hyperref[e:78]{\pageref*{e:78}}\par
+\textbf{normal} -- das Einfallslot\dotfill\hyperref[e:229]{\pageref*{e:229}}\par
+\textbf{normal force} -- die Normalkraft\dotfill\hyperref[e:64]{\pageref*{e:64}}\par
+\textbf{north pole, south pole} -- der Nordpol, der Südpol\dotfill\hyperref[e:177]{\pageref*{e:177}}\par
+\textbf{nuclear fission} -- die Kernspaltung\dotfill\hyperref[e:285]{\pageref*{e:285}}\par
+\textbf{nuclear fusion} -- die Kernfusion\dotfill\hyperref[e:286]{\pageref*{e:286}}\par
+\textbf{nuclear reactor} -- der Kernreaktor\dotfill\hyperref[e:288]{\pageref*{e:288}}\par
+\textbf{nucleon} -- das Nukleon\dotfill\hyperref[e:265]{\pageref*{e:265}}\par
+\textbf{nucleus} -- der Atomkern\dotfill\hyperref[e:260]{\pageref*{e:260}}\par
+\textbf{nuclide} -- das Nuklid\dotfill\hyperref[e:270]{\pageref*{e:270}}\par
+\textbf{number of turns} -- die Windungszahl\dotfill\hyperref[e:182]{\pageref*{e:182}}\par
+\textbf{numerical value} -- der Zahlenwert\dotfill\hyperref[e:2]{\pageref*{e:2}}\par
+
+\medskip{\large\textbf{\color{cornflower}O}}\par\nopagebreak
+\textbf{object distance} -- die Gegenstandsweite\dotfill\hyperref[e:246]{\pageref*{e:246}}\par
+\textbf{observation} -- die Beobachtung\dotfill\hyperref[e:18]{\pageref*{e:18}}\par
+\textbf{Ohm's law} -- das ohmsche Gesetz\dotfill\hyperref[e:147]{\pageref*{e:147}}\par
+\textbf{oscillation, vibration} -- die Schwingung\dotfill\hyperref[e:190]{\pageref*{e:190}}\par
+
+\medskip{\large\textbf{\color{cornflower}P}}\par\nopagebreak
+\textbf{parallel connection} -- die Parallelschaltung\dotfill\hyperref[e:163]{\pageref*{e:163}}\par
+\textbf{particle model} -- das Teilchenmodell\dotfill\hyperref[e:124]{\pageref*{e:124}}\par
+\textbf{path, trajectory} -- die Bahn\dotfill\hyperref[e:33]{\pageref*{e:33}}\par
+\textbf{period} -- die Periodendauer\dotfill\hyperref[e:196]{\pageref*{e:196}}\par
+\textbf{period} -- die Umlaufzeit\dotfill\hyperref[e:51]{\pageref*{e:51}}\par
+\textbf{permanent magnet} -- der Dauermagnet\dotfill\hyperref[e:175]{\pageref*{e:175}}\par
+\textbf{photoelectric effect} -- der Fotoeffekt\dotfill\hyperref[e:293]{\pageref*{e:293}}\par
+\textbf{photon} -- das Photon\dotfill\hyperref[e:291]{\pageref*{e:291}}\par
+\textbf{physical quantity} -- die physikalische Größe\dotfill\hyperref[e:1]{\pageref*{e:1}}\par
+\textbf{pitch} -- die Tonhöhe\dotfill\hyperref[e:214]{\pageref*{e:214}}\par
+\textbf{pivot, fulcrum} -- der Drehpunkt\dotfill\hyperref[e:84]{\pageref*{e:84}}\par
+\textbf{Planck constant} -- das plancksche Wirkungsquantum\dotfill\hyperref[e:292]{\pageref*{e:292}}\par
+\textbf{point of application} -- der Angriffspunkt\dotfill\hyperref[e:60]{\pageref*{e:60}}\par
+\textbf{position} -- der Ort\dotfill\hyperref[e:34]{\pageref*{e:34}}\par
+\textbf{power} -- die Leistung\dotfill\hyperref[e:105]{\pageref*{e:105}}\par
+\textbf{power station} -- das Kraftwerk\dotfill\hyperref[e:111]{\pageref*{e:111}}\par
+\textbf{prefix} -- der Vorsatz\dotfill\hyperref[e:7]{\pageref*{e:7}}\par
+\textbf{pressure} -- der Druck\dotfill\hyperref[e:89]{\pageref*{e:89}}\par
+\textbf{principal axis} -- die optische Achse\dotfill\hyperref[e:243]{\pageref*{e:243}}\par
+\textbf{principal quantum number} -- die Hauptquantenzahl\dotfill\hyperref[e:295]{\pageref*{e:295}}\par
+\textbf{prism} -- das Prisma\dotfill\hyperref[e:254]{\pageref*{e:254}}\par
+\textbf{proton} -- das Proton\dotfill\hyperref[e:263]{\pageref*{e:263}}\par
+\textbf{pulley} -- die Rolle\dotfill\hyperref[e:86]{\pageref*{e:86}}\par
+
+\medskip{\large\textbf{\color{cornflower}R}}\par\nopagebreak
+\textbf{radioactive decay} -- der radioaktive Zerfall\dotfill\hyperref[e:274]{\pageref*{e:274}}\par
+\textbf{radioactivity} -- die Radioaktivität\dotfill\hyperref[e:273]{\pageref*{e:273}}\par
+\textbf{range} -- die Wurfweite\dotfill\hyperref[e:49]{\pageref*{e:49}}\par
+\textbf{ray of light, light ray} -- der Lichtstrahl\dotfill\hyperref[e:222]{\pageref*{e:222}}\par
+\textbf{reading, measured value} -- der Messwert\dotfill\hyperref[e:10]{\pageref*{e:10}}\par
+\textbf{real image} -- das reelle Bild\dotfill\hyperref[e:250]{\pageref*{e:250}}\par
+\textbf{reflection} -- die Reflexion\dotfill\hyperref[e:207]{\pageref*{e:207}}\par
+\textbf{reflection} -- die Reflexion\dotfill\hyperref[e:227]{\pageref*{e:227}}\par
+\textbf{refraction} -- die Brechung\dotfill\hyperref[e:234]{\pageref*{e:234}}\par
+\textbf{refractive index} -- die Brechzahl\dotfill\hyperref[e:236]{\pageref*{e:236}}\par
+\textbf{renewable energy} -- die erneuerbare Energie\dotfill\hyperref[e:110]{\pageref*{e:110}}\par
+\textbf{resistance} -- der elektrische Widerstand\dotfill\hyperref[e:146]{\pageref*{e:146}}\par
+\textbf{resistivity} -- der spezifische Widerstand\dotfill\hyperref[e:148]{\pageref*{e:148}}\par
+\textbf{resistor} -- der Widerstand (Bauteil)\dotfill\hyperref[e:159]{\pageref*{e:159}}\par
+\textbf{resonance} -- die Resonanz\dotfill\hyperref[e:200]{\pageref*{e:200}}\par
+\textbf{rest} -- die Ruhe\dotfill\hyperref[e:31]{\pageref*{e:31}}\par
+\textbf{resultant force, net force} -- die resultierende Kraft\dotfill\hyperref[e:74]{\pageref*{e:74}}\par
+\textbf{rotational speed} -- die Drehzahl\dotfill\hyperref[e:53]{\pageref*{e:53}}\par
+
+\medskip{\large\textbf{\color{cornflower}S}}\par\nopagebreak
+\textbf{scale} -- die Skala\dotfill\hyperref[e:12]{\pageref*{e:12}}\par
+\textbf{semiconductor} -- der Halbleiter\dotfill\hyperref[e:152]{\pageref*{e:152}}\par
+\textbf{series connection} -- die Reihenschaltung\dotfill\hyperref[e:162]{\pageref*{e:162}}\par
+\textbf{shadow} -- der Schatten\dotfill\hyperref[e:225]{\pageref*{e:225}}\par
+\textbf{short circuit} -- der Kurzschluss\dotfill\hyperref[e:164]{\pageref*{e:164}}\par
+\textbf{simple pendulum} -- das Fadenpendel\dotfill\hyperref[e:191]{\pageref*{e:191}}\par
+\textbf{sliding friction} -- die Gleitreibung\dotfill\hyperref[e:68]{\pageref*{e:68}}\par
+\textbf{Snell's law, law of refraction} -- das Brechungsgesetz\dotfill\hyperref[e:237]{\pageref*{e:237}}\par
+\textbf{solid} -- fest\dotfill\hyperref[e:126]{\pageref*{e:126}}\par
+\textbf{sound} -- der Schall\dotfill\hyperref[e:212]{\pageref*{e:212}}\par
+\textbf{sound level} -- der Schallpegel\dotfill\hyperref[e:216]{\pageref*{e:216}}\par
+\textbf{specific heat capacity} -- die spezifische Wärmekapazität\dotfill\hyperref[e:119]{\pageref*{e:119}}\par
+\textbf{spectrum} -- das Spektrum\dotfill\hyperref[e:255]{\pageref*{e:255}}\par
+\textbf{speed of light} -- die Lichtgeschwindigkeit\dotfill\hyperref[e:224]{\pageref*{e:224}}\par
+\textbf{speed of sound} -- die Schallgeschwindigkeit\dotfill\hyperref[e:213]{\pageref*{e:213}}\par
+\textbf{spring} -- die Feder\dotfill\hyperref[e:70]{\pageref*{e:70}}\par
+\textbf{spring constant} -- die Federkonstante\dotfill\hyperref[e:72]{\pageref*{e:72}}\par
+\textbf{standing wave, stationary wave} -- die stehende Welle\dotfill\hyperref[e:211]{\pageref*{e:211}}\par
+\textbf{state of matter} -- der Aggregatzustand\dotfill\hyperref[e:125]{\pageref*{e:125}}\par
+\textbf{static friction} -- die Haftreibung\dotfill\hyperref[e:67]{\pageref*{e:67}}\par
+\textbf{sublime} -- sublimieren\dotfill\hyperref[e:134]{\pageref*{e:134}}\par
+\textbf{substance, material} -- der Stoff\dotfill\hyperref[e:29]{\pageref*{e:29}}\par
+\textbf{superposition} -- die Überlagerung\dotfill\hyperref[e:210]{\pageref*{e:210}}\par
+\textbf{switch} -- der Schalter\dotfill\hyperref[e:157]{\pageref*{e:157}}\par
+\textbf{symbol} -- das Formelzeichen\dotfill\hyperref[e:6]{\pageref*{e:6}}\par
+
+\medskip{\large\textbf{\color{cornflower}T}}\par\nopagebreak
+\textbf{tangential speed} -- die Bahngeschwindigkeit\dotfill\hyperref[e:55]{\pageref*{e:55}}\par
+\textbf{temperature} -- die Temperatur\dotfill\hyperref[e:113]{\pageref*{e:113}}\par
+\textbf{thermal energy} -- die thermische Energie\dotfill\hyperref[e:100]{\pageref*{e:100}}\par
+\textbf{thermal insulation} -- die Wärmedämmung\dotfill\hyperref[e:123]{\pageref*{e:123}}\par
+\textbf{thermal radiation} -- die Wärmestrahlung\dotfill\hyperref[e:122]{\pageref*{e:122}}\par
+\textbf{thermometer} -- das Thermometer\dotfill\hyperref[e:116]{\pageref*{e:116}}\par
+\textbf{time} -- die Zeit\dotfill\hyperref[e:36]{\pageref*{e:36}}\par
+\textbf{torque, moment (of a force)} -- das Drehmoment\dotfill\hyperref[e:81]{\pageref*{e:81}}\par
+\textbf{total internal reflection} -- die Totalreflexion\dotfill\hyperref[e:238]{\pageref*{e:238}}\par
+\textbf{transformer} -- der Transformator\dotfill\hyperref[e:188]{\pageref*{e:188}}\par
+\textbf{transverse wave} -- die Querwelle (Transversalwelle)\dotfill\hyperref[e:205]{\pageref*{e:205}}\par
+
+\medskip{\large\textbf{\color{cornflower}U}}\par\nopagebreak
+\textbf{ultrasound} -- der Ultraschall\dotfill\hyperref[e:218]{\pageref*{e:218}}\par
+\textbf{umbra, penumbra} -- der Kernschatten, der Halbschatten\dotfill\hyperref[e:226]{\pageref*{e:226}}\par
+\textbf{uncertainty (of measurement)} -- die Messunsicherheit\dotfill\hyperref[e:14]{\pageref*{e:14}}\par
+\textbf{uniform motion} -- die gleichförmige Bewegung\dotfill\hyperref[e:42]{\pageref*{e:42}}\par
+\textbf{uniformly accelerated motion} -- die gleichmäßig beschleunigte Bewegung\dotfill\hyperref[e:43]{\pageref*{e:43}}\par
+\textbf{unit} -- die Einheit\dotfill\hyperref[e:3]{\pageref*{e:3}}\par
+\textbf{useful energy} -- die Nutzenergie\dotfill\hyperref[e:107]{\pageref*{e:107}}\par
+
+\medskip{\large\textbf{\color{cornflower}V}}\par\nopagebreak
+\textbf{velocity, speed} -- die Geschwindigkeit\dotfill\hyperref[e:37]{\pageref*{e:37}}\par
+\textbf{velocity–time graph} -- das Geschwindigkeit-Zeit-Diagramm\dotfill\hyperref[e:45]{\pageref*{e:45}}\par
+\textbf{virtual image} -- das virtuelle Bild\dotfill\hyperref[e:251]{\pageref*{e:251}}\par
+\textbf{voltage source, power supply} -- die Spannungsquelle\dotfill\hyperref[e:155]{\pageref*{e:155}}\par
+\textbf{voltage, potential difference} -- die elektrische Spannung\dotfill\hyperref[e:145]{\pageref*{e:145}}\par
+\textbf{voltmeter} -- der Spannungsmesser\dotfill\hyperref[e:161]{\pageref*{e:161}}\par
+\textbf{volume} -- das Volumen\dotfill\hyperref[e:57]{\pageref*{e:57}}\par
+
+\medskip{\large\textbf{\color{cornflower}W}}\par\nopagebreak
+\textbf{waste heat} -- die Abwärme\dotfill\hyperref[e:108]{\pageref*{e:108}}\par
+\textbf{wave} -- die Welle\dotfill\hyperref[e:201]{\pageref*{e:201}}\par
+\textbf{wave speed} -- die Ausbreitungsgeschwindigkeit\dotfill\hyperref[e:203]{\pageref*{e:203}}\par
+\textbf{wavelength} -- die Wellenlänge\dotfill\hyperref[e:202]{\pageref*{e:202}}\par
+\textbf{weight} -- die Gewichtskraft\dotfill\hyperref[e:63]{\pageref*{e:63}}\par
+\textbf{work} -- die Arbeit\dotfill\hyperref[e:96]{\pageref*{e:96}}\par
+\end{multicols}
+
+\end{document}

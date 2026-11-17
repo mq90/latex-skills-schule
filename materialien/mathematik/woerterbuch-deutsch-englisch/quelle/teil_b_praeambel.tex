@@ -1,0 +1,33 @@
+%----------------------------------------------------------------------------------------------------%
+% Teil B: Lesen und Sprechen (dokumentspezifisch)
+%----------------------------------------------------------------------------------------------------%
+
+% \lies{Ausdruck}{english reading}{deutsche Lesart}
+% Wie \eintrag: " ist vor dem Lesen der Argumente ausgeschaltet, damit \ipa{...} mit " funktioniert.
+\makeatletter
+\newcommand\lies{\begingroup\shorthandoff{"}\lies@aux}
+\newcommand\lies@aux[3]{\endgroup #1 & #2\newline{\color{black!60}#3} \\[4.5pt]}
+\makeatother
+
+% Liste ohne Linien und Rahmen: links der Ausdruck, rechts Englisch (schwarz) und Deutsch (grau)
+\newenvironment{lesen}{%
+	\begin{longtable}{@{}>{\raggedright\arraybackslash}p{4.6cm} >{\raggedright\arraybackslash}p{12.1cm}@{}}}{%
+	\end{longtable}\vspace{-1.2em}}
+
+% Kurzer Hinweis im Fließtext
+\newcommand{\anmerkung}[1]{\par\smallskip\noindent{\small\sloppy\textbf{Hinweis:} #1\par}\smallskip}
+
+% Zahlenstrahl für Intervalle: \intervall{g|o}{g|o} (g = Randpunkt gehört dazu, o = gehört nicht dazu)
+\newcommand{\randpunkt}[2]{\if#1g\fill[blue] (#2,0) circle (3.2pt);\else\filldraw[fill=white, draw=blue, very thick] (#2,0) circle (3.2pt);\fi}
+\newcommand{\intervall}[2]{\tikz[baseline=-0.6ex, scale=0.6]{\draw[achse] (-0.3,0) -- (5.6,0);
+	\draw[blue, line width=2pt] (1,0) -- (4,0); \randpunkt{#1}{1} \randpunkt{#2}{4};
+	\node[below=2pt, font=\scriptsize] at (1,0) {$a$}; \node[below=2pt, font=\scriptsize] at (4,0) {$b$};}}
+\newcommand{\intervallR}{\tikz[baseline=-0.6ex, scale=0.6]{\draw[achse] (-0.3,0) -- (5.6,0);
+	\draw[blue, line width=2pt, -{Stealth}] (1,0) -- (5.3,0); \randpunkt{g}{1};
+	\node[below=2pt, font=\scriptsize] at (1,0) {$a$};}}
+
+% Rechengröße mit Namen (englisch/deutsch) unter einer Klammer
+\newcommand{\ub}[3]{\underbrace{\text{\Large$#1$}}_{\text{\footnotesize\shortstack{#2\\\color{black!60}#3}}}}
+
+% Verhindert, dass eine Zwischenüberschrift allein am Seitenende steht
+\newcommand{\platz}{\par\ifdim\dimexpr\pagegoal-\pagetotal\relax<5.5cm \newpage\fi}

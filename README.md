@@ -26,6 +26,7 @@ skills/
 └── raetsel-spiele/            Sudoku, Schach
 handreichungen/                fertige PDFs aller Handreichungen
 druckvorlagen/                 druckfertige PDFs zum direkten Ausdrucken (z. B. Notenpapier)
+materialien/                   fertige Unterrichtsmaterialien, die mit den Skills entstanden sind
 werkzeuge/                     Prüf- und Hilfsskripte für das Repository
 ```
 
@@ -144,6 +145,17 @@ Quelltexte liegen in den `assets/`-Ordnern der Skills.
 |  | [Quintenzirkel mit Eselsbrücken](druckvorlagen/musik/Quintenzirkel.pdf) | A4 |
 |  | [Liedblatt „Hänschen klein“ mit Text und Akkorden](druckvorlagen/musik/Haenschen-klein.pdf) | A4 |
 |  | [Liedblatt „Alle meine Entchen“ mit 5 Strophen](druckvorlagen/musik/Alle-meine-Entchen.pdf) | A4 |
+
+## Materialien
+
+Fertige Materialien, die mit den Skills gebaut wurden – als PDF und mit Quelltext.
+
+| Fach | Material | Seiten |
+|---|---|---|
+| Mathematik | [Mathematisches Wörterbuch Deutsch – Englisch](materialien/mathematik/woerterbuch-deutsch-englisch) mit englischer Lautschrift, Zeichen, Skizzen und Lesarten ([PDF](materialien/mathematik/woerterbuch-deutsch-englisch/Mathematisches-Woerterbuch-Deutsch-Englisch.pdf)) | 85 |
+| Mathematik | [Mathematisches Wörterbuch Deutsch – Japanisch](materialien/mathematik/woerterbuch-deutsch-japanisch) mit Lesung, Hepburn-Umschrift, Zeichen, Skizzen und Lesarten ([PDF](materialien/mathematik/woerterbuch-deutsch-japanisch/Mathematisches-Woerterbuch-Deutsch-Japanisch.pdf)) | 93 |
+| Physik | [Physikalisches Wörterbuch Deutsch – Englisch](materialien/physik/woerterbuch-deutsch-englisch) mit englischer Lautschrift, Formelzeichen, Skizzen, Einheiten und Lesarten ([PDF](materialien/physik/woerterbuch-deutsch-englisch/Physikalisches-Woerterbuch-Deutsch-Englisch.pdf)) | 59 |
+| Chemie | [Chemisches Wörterbuch Deutsch – Englisch](materialien/chemie/woerterbuch-deutsch-englisch) mit englischer Lautschrift, Formeln, Skizzen, Nomenklatur und Lesarten ([PDF](materialien/chemie/woerterbuch-deutsch-englisch/Chemisches-Woerterbuch-Deutsch-Englisch.pdf)) | 50 |
 
 ## Installieren
 
