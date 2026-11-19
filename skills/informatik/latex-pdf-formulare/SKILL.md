@@ -8,8 +8,10 @@ description: Ausfüllbare PDFs (PDF-Formulare) mit LaTeX und hyperref – Textfe
 Setzt `latex-grundstil` voraus. `hyperref` steht in der universalen
 `header.tex`, die Kurzbefehle `\feld`, `\zeichen`, `\kreuz`, `\antwort` und
 das einheitliche Aussehen aller Felder in der `newcommands.tex` (Abschnitt
-„Formularfelder“). Kein JavaScript, keine automatische Bewertung: Die
-Lehrkraft liest jede Abgabe selbst.
+„Formularfelder“), ebenso die roten Lehrerfelder `\lehrerfeld` und `\lehrerpunkte`.
+Kein JavaScript und keine Lösungen im PDF: Ankreuz- und Zuordnungsaufgaben prüft
+`scripts/lk_auswerten.py` mit einer getrennten Lösungsdatei, alles andere bewertet die
+Lehrkraft selbst.
 
 ## Grundgerüst
 
@@ -40,6 +42,8 @@ Handreichung mit allen Feldtypen: `references/handreichung_pdf_formulare.tex`.
 | Kästchen für einen Buchstaben (E/V/A, Reihenfolge) | 1 Zeichen, zentriert | `\zeichen{name}` |
 | `$\square$` / `\kasten` / `\casket` | Ankreuzkästchen | `\kreuz{name}` |
 | Schreiblinien | mehrzeiliges Feld, volle Breite | `\antwort[Höhe]{name}` (Standard 3,2 cm ≈ 4 Linien) |
+| `\hfill (2\,P)` | rotes Punktefeld der Lehrkraft am Zeilenende | `\lehrerpunkte{L-a1}{2}` |
+| Notenzeile | rotes Feld für Summe, Note, Bemerkung | `\lehrerfeld[Breite]{L-summe}` (Standard 1 cm) |
 
 Weitere Feldtypen direkt aus hyperref:
 
@@ -71,6 +75,23 @@ Weitere Feldtypen direkt aus hyperref:
    gibt es keine Felder.
 5. Hinweiszeile unter den Titel: in die blauen Felder klicken, speichern, erneut öffnen, hochladen.
 6. Prüfen: Felderzahl und Eindeutigkeit (PyMuPDF), Ausfüllen simulieren (unten), Rendern.
+
+## Lehrerfelder und automatische Auswertung
+
+- Jede Aufgabe bekommt `\lehrerpunkte{L-aN}{max}` statt `\hfill (max\,P)`, ans Ende eine
+  Bewertungszeile mit `\lehrerfeld` für `L-summe`, `L-note`, `L-bemerkung` (siehe
+  `assets/vorlage_lk_digital.tex`). **Namen der Lehrerfelder beginnen mit `L-`.**
+- Die Felder sind `readonly`: Im Schüler-PDF lässt sich nichts eintragen (getestet in PDFium).
+  Das ist ein Schutz gegen Versehen, kein Kopierschutz.
+- Lösungsdatei als TOML neben das Erwartungsbild legen, nie zur Klasse. Format und alle
+  Schlüssel (`text`, `kreuz`, `einzeln`, `je`, `lehrerfeld`): `assets/loesung_beispiel.toml`.
+  Freitextaufgaben weglassen.
+- `scripts/lk_auswerten.py Abgaben/ loesung.toml [--eintragen Korrektur/]` (Python ≥ 3.11,
+  `pypdf`): schreibt `auswertung.csv`; mit `--eintragen` je Abgabe eine Korrekturfassung, in
+  der die Punkte der geprüften Aufgaben rot eingetragen, die Lehrerfelder freigegeben und die
+  Schülerfelder gesperrt sind. Originale bleiben unverändert.
+- Bei einer neuen LK immer beides mitliefern: Lösungs-PDF und Lösungs-TOML, und die TOML gegen
+  zwei simulierte Abgaben (eine fehlerfreie, eine mit Fehlern) prüfen.
 
 ## Abgaben einsammeln
 
@@ -105,6 +126,13 @@ gehen Klicks verloren), `pdf.save()`, Werte mit `pypdf` `get_fields()` prüfen, 
 - **Poppler** (pdftoppm, Okular, Evince) zeigt Text richtig, ein Häkchen nur als schmalen
   Strich. Zum Ansehen PDFium (`pypdfium2`) verwenden.
 - Mehrzeilige Felder scrollen bei zu viel Text; gedruckt wird nur der sichtbare Teil.
+- **Lehrerfeld nach dem Eintragen ohne Rahmen:** Schreibt `pypdf` einen Wert in ein Feld,
+  zeichnet PDFium es danach ohne den roten Rahmen und Hintergrund, die Zahl bleibt rot.
+  Leere Lehrerfelder behalten den Rahmen.
+- **`\lehrerpunkte` am vollen Zeilenende** rutscht rechtsbündig in die nächste Zeile; das ist
+  gewollt (kein Überlauf in den Rand).
+- **Textvergleich im Skript ist wörtlich** (ohne Groß-/Kleinschreibung): Tippfehler zählen als
+  falsch. Solche Aufgaben in der Korrekturfassung nachsehen oder weglassen.
 
 Nicht getestet: Adobe Acrobat, Apple Vorschau, iPad-Dateien-App, GoodNotes. Vor dem ersten
 Einsatz eine Probeabgabe auf den Geräten der Klasse empfehlen.
@@ -114,4 +142,4 @@ Einsatz eine Probeabgabe auf den Geräten der Klasse empfehlen.
 - header.tex: `hyperref` (vorhanden).
 - newcommands.tex: Abschnitt „Formularfelder“ mit `\DefaultOptionsofText`, `…CheckBox`,
   `…Radio`, `…PopdownBox`, `\DefaultHeightofText` und `\feld`, `\zeichen`, `\kreuz`,
-  `\antwort` (seit 2026-11-09).
+  `\antwort` (seit 2026-11-09), `\lehrerfeld`, `\lehrerpunkte` (seit 2026-11-19).

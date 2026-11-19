@@ -2,6 +2,8 @@
 \input{newcommands.tex}
 
 % Ausfüllbare Leistungskontrolle: Felder über \feld, \zeichen, \kreuz, \antwort (newcommands.tex).
+% Rote Lehrerfelder über \lehrerpunkte und \lehrerfeld: für die Klasse gesperrt, das Skript
+% scripts/lk_auswerten.py gibt sie frei und trägt Punkte ein (Lösungsdatei: loesung_beispiel.toml).
 % Optionsfelder (radio) brauchen unicode=false.
 \hypersetup{unicode=false, pdftitle={Leistungskontrolle}}
 
@@ -13,16 +15,17 @@ Name: \feld[6cm]{name} \hfill Klasse: \feld[2cm]{klasse} \hfill Datum: \feld[3cm
 \begin{center}\textbf{\Large{Leistungskontrolle Thema}}\end{center}
 
 {\small\itshape Klicke in die blauen Felder und schreibe oder kreuze dort deine Antworten an.
+Die roten Felder füllt deine Lehrkraft aus.
 Speichere die Datei vor dem Hochladen und öffne sie zur Kontrolle noch einmal.}
 
 \bigskip
 \begin{enumerate}[(1)]
 
-	\item Kreuze an, welche Werte vom Datentyp \texttt{int} sind. \hfill (2\,P)\\
+	\item Kreuze an, welche Werte vom Datentyp \texttt{int} sind. \lehrerpunkte{L-a1}{2}\\
 	\kreuz{a1-1}\ \texttt{15} \qquad \kreuz{a1-2}\ \texttt{1.5} \qquad
 	\kreuz{a1-3}\ \texttt{"7"} \qquad \kreuz{a1-4}\ \texttt{-3}
 
-	\item Entscheide für jede Aussage, ob sie richtig oder falsch ist. \hfill (2\,P)
+	\item Entscheide für jede Aussage, ob sie richtig oder falsch ist. \lehrerpunkte{L-a2}{2}
 
 	\begin{tabular}{p{10cm}cc}
 		\toprule
@@ -33,18 +36,25 @@ Speichere die Datei vor dem Hochladen und öffne sie zur Kontrolle noch einmal.}
 		\bottomrule
 	\end{tabular}
 
-	\item Ordne zu: Eingabe (E), Verarbeitung (V) oder Ausgabe (A). \hfill (2\,P)\\
+	\item Ordne zu: Eingabe (E), Verarbeitung (V) oder Ausgabe (A). \lehrerpunkte{L-a3}{2}\\
 	Münzen einwerfen \zeichen{a3-1} \qquad Wechselgeld berechnen \zeichen{a3-2}
 
-	\item Gib an, was Python ausgibt. \hfill (2\,P)\\
+	\item Gib an, was Python ausgibt. \lehrerpunkte{L-a4}{2}\\
 	\texttt{17 // 5} = \feld[1.5cm]{a4-a} \qquad \texttt{17 \% 5} = \feld[1.5cm]{a4-b}
 
-	\item Erkläre den Unterschied zwischen \texttt{=} und \texttt{==}. \hfill (2\,P)
+	\item Erkläre den Unterschied zwischen \texttt{=} und \texttt{==}. \lehrerpunkte{L-a5}{2}
 	\antwort{a5}
 
 \end{enumerate}
 
-% Lösungen NICHT in diese Datei, sondern in eine eigene Datei für die Lehrkraft.
+% Bewertung: füllt die Lehrkraft in der Korrekturfassung aus
+\bigskip
+\noindent\textcolor{akzentrot}{\rule{\linewidth}{0.6pt}}\\[0.2cm]
+{\color{akzentrot}\textbf{Bewertung} \quad Punkte: \lehrerfeld[1.3cm]{L-summe}\,/\,10
+\qquad Note: \lehrerfeld[1.3cm]{L-note} \qquad Bemerkung: \lehrerfeld[4.5cm]{L-bemerkung}}
+
+% Lösungen NICHT in diese Datei, sondern in eine eigene Datei für die Lehrkraft
+% (Erwartungsbild als PDF, Lösungsdatei für das Skript als .toml).
 
 \end{Form}
 \end{document}

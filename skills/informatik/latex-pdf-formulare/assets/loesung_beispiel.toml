@@ -1,0 +1,54 @@
+# Lösungsdatei zu vorlage_lk_digital.tex für scripts/lk_auswerten.py
+# Diese Datei bleibt bei der Lehrkraft. Im PDF für die Klasse steht davon nichts.
+#
+#   python3 lk_auswerten.py Abgaben/ loesung_beispiel.toml --eintragen Korrektur/
+#
+# Jede [[aufgabe]] wird automatisch geprüft. Aufgaben, die hier fehlen (Freitext),
+# bewertet die Lehrkraft selbst in der Korrekturfassung.
+#
+#   nr          Nummer für die Tabelle
+#   punkte      erreichbare Punkte der Aufgabe
+#   lehrerfeld  Name des roten Punktefelds im PDF (optional)
+#   je          Punkte pro richtiger Zeile bzw. richtigem Feld
+#   text        Textfelder: [Feldname, erwartete Antwort]; Groß-/Kleinschreibung egal,
+#               mehrere richtige Antworten mit | trennen ("2.5|2,5")
+#   kreuz       Tabellenzeilen mit genau einem richtigen Kästchen: alle Kästchen der
+#               Zeile, das ERSTE ist das richtige. Zwei Kreuze in einer Zeile: 0 Punkte.
+#   einzeln     einzelne Kästchen: [Feldname, true/false]. Ohne ein einziges Kreuz in
+#               der Aufgabe gibt es 0 Punkte.
+
+gesamt = 10
+lehrer_praefix = "L-"
+
+[[aufgabe]]            # Welche Werte sind vom Datentyp int?
+nr = "1"
+punkte = 2
+lehrerfeld = "L-a1"
+je = 0.5
+einzeln = [["a1-1", true], ["a1-2", false], ["a1-3", false], ["a1-4", true]]
+
+[[aufgabe]]            # richtig oder falsch
+nr = "2"
+punkte = 2
+lehrerfeld = "L-a2"
+je = 1
+kreuz = [
+  ["a2-1-r", "a2-1-f"],
+  ["a2-2-f", "a2-2-r"],
+]
+
+[[aufgabe]]            # E, V oder A
+nr = "3"
+punkte = 2
+lehrerfeld = "L-a3"
+je = 1
+text = [["a3-1", "E"], ["a3-2", "V"]]
+
+[[aufgabe]]            # Rechnungen
+nr = "4"
+punkte = 2
+lehrerfeld = "L-a4"
+je = 1
+text = [["a4-a", "3"], ["a4-b", "2"]]
+
+# Aufgabe 5 (Freitext, 2 P) bewertet die Lehrkraft.
