@@ -23,6 +23,8 @@
 %             Naturwissenschaften, Schulorganisation); Box »hinweis« mit frei wählbarem Titel
 % 2026-11-11  Umgebung »passend«: verkleinert den Inhalt auf \linewidth, aber nur wenn er breiter ist
 % 2026-11-11  \oz{+II}{Cu}: Oxidationszahl über ein Elementsymbol (Chemie, auch innerhalb \ce{... $\oz{0}{Zn}$ ...})
+% 2026-11-19  Formularfelder für die Lehrkraft: \lehrerfeld (rot, für die Klasse gesperrt) und \lehrerpunkte
+%             (Punktefeld am Zeilenende); freigegeben und vorbefüllt durch scripts/lk_auswerten.py
 %
 
 
@@ -691,4 +693,10 @@
 
 %\antwort[Höhe]{Name} – mehrzeiliges Antwortfeld über die ganze Zeilenbreite (Standardhöhe 3,2 cm ≈ 4 Zeilen)
 \newcommand{\antwort}[2][3.2cm]{\par\vspace{0.15cm}\noindent\hbox{\TextField[name=#2, multiline=true, width=\linewidth, height=#1]{}}}
+
+%\lehrerfeld[Breite]{Name} – rotes Feld für die Lehrkraft (Punkte, Note, Bemerkung), für die Klasse gesperrt (readonly); Name mit L- beginnen (Standardbreite 1 cm)
+\newcommand{\lehrerfeld}[2][1cm]{\raisebox{-0.17cm}{\TextField[name=#2, width=#1, readonly=true, align=1, bordercolor={0.8 0 0}, backgroundcolor={1 0.95 0.95}, color={0.8 0 0}]{}}}
+
+%\lehrerpunkte{Name}{max} – Punktefeld der Lehrkraft rechtsbündig am Zeilenende: Feld / max P
+\newcommand{\lehrerpunkte}[2]{\unskip\nobreak\hfill\penalty50\hskip0.8em\hbox{}\nobreak\hfill\mbox{\lehrerfeld[0.9cm]{#1}\,{\small/\,#2\,P}}}
 %----------------------------------------------------------------------------------------------------%

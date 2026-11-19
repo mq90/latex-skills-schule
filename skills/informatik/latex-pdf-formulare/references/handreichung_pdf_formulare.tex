@@ -22,8 +22,9 @@ Paket \texttt{hyperref} echte PDF-Formularfelder erzeugen, also Textfelder,
 Ankreuzkästchen, Optionsfelder und Auswahllisten. Diese Handreichung zeigt
 Schritt für Schritt, wie das geht, und baut am Ende eine vorhandene
 Papier-Leistungskontrolle zu einer digitalen Fassung um. Ausgewertet wird
-dabei nichts automatisch: Die Lehrkraft liest jede Abgabe selbst, wie bei
-Papier auch. Die Felder in den blauen Ausgabe-Kästen dieser Handreichung sind
+dabei nichts im PDF selbst: Die Lehrkraft liest jede Abgabe, wie bei
+Papier auch. Für Ankreuz- und Zuordnungsaufgaben gibt es ein Skript, das
+vorarbeitet und die Punkte in rote Lehrerfelder einträgt (Kapitel 8). Die Felder in den blauen Ausgabe-Kästen dieser Handreichung sind
 echt. Sie können sie im PDF direkt ausprobieren.
 
 
@@ -547,9 +548,10 @@ Dieser Handreichung liegen bei:
 	verhindert leere Abgaben.
 	\item \textbf{Abgeben:} Die Datei mit dem eigenen Namen im Dateinamen
 	hochladen, zum Beispiel \texttt{LK\_Mueller\_Lena.pdf}.
-	\item \textbf{Bewerten:} Die Lehrkraft lädt die Abgaben herunter und
-	korrigiert jede einzeln, zum Beispiel mit der Kommentar- oder Stiftfunktion
-	des PDF-Programms, und gibt die korrigierte Datei zurück.
+	\item \textbf{Bewerten:} Die Lehrkraft lädt die Abgaben herunter,
+	korrigiert jede einzeln und gibt die korrigierte Datei zurück. Punkte, Summe
+	und Note stehen in roten Lehrerfeldern (Kapitel 8), Anmerkungen schreibt
+	man mit der Kommentar- oder Stiftfunktion des PDF-Programms.
 \end{enumerate}
 
 Für eine Leistungskontrolle gelten dieselben Regeln wie auf Papier:
@@ -620,6 +622,133 @@ Bewertet wird weiterhin von der Lehrkraft. Das Skript sortiert nur.
 
 
 %%%%  KAPITEL 8  %%%%
+\section{Am Bildschirm korrigieren: Lehrerfelder und automatische Auswertung}
+
+Wer die Abgaben am Bildschirm korrigiert, braucht zwei Dinge: einen Platz für
+Punkte, Summe und Note und möglichst wenig Handarbeit bei den Aufgaben, die
+nur richtig oder falsch sein können. Beides geht ohne JavaScript und ohne
+dass im Schülerdokument eine Lösung steht.
+
+%%%%  UNTERKAPITEL 8.1  %%%%
+\subsection{Rote Felder für die Lehrkraft}
+
+\verb|\lehrerfeld[Breite]{Name}| setzt ein rotes Textfeld, das
+\textbf{gesperrt} ist (\texttt{readonly=true}): Die Schülerinnen und Schüler
+sehen es, können aber nichts hineinschreiben. Der Befehl\newline
+\verb|\lehrerpunkte{Name}{max}| stellt ein solches Feld mit der erreichbaren Punktzahl rechtsbündig ans Ende
+der Aufgabenzeile. Die Namen beginnen immer mit \texttt{L-}, daran erkennt
+das Skript in 8.3 die Lehrerfelder.
+
+\begin{lstlisting}[style=latex]
+Erkläre den Unterschied zwischen \texttt{=} und \texttt{==}.
+\lehrerpunkte{L-bsp-a5}{2}
+
+\textcolor{akzentrot}{\textbf{Bewertung}} \quad
+Punkte: \lehrerfeld[1.3cm]{L-bsp-summe}\,/\,10 \qquad
+Note: \lehrerfeld[1.3cm]{L-bsp-note}
+\end{lstlisting}
+
+\begin{ausgabe}
+Erkläre den Unterschied zwischen \texttt{=} und \texttt{==}.
+\lehrerpunkte{L-bsp-a5}{2}
+
+\textcolor{akzentrot}{\textbf{Bewertung}} \quad
+Punkte: \lehrerfeld[1.3cm]{L-bsp-summe}\,/\,10 \qquad
+Note: \lehrerfeld[1.3cm]{L-bsp-note}
+\end{ausgabe}
+
+Die drei roten Felder in diesem Kasten sind gesperrt, ein Klick bewirkt
+nichts. Die Sperre ist ein Schutz gegen versehentliches Ausfüllen und kein
+Kopierschutz: Mit einem PDF-Werkzeug lässt sie sich aufheben. Das schadet
+nicht, denn die Punkte trägt ohnehin erst die Lehrkraft in ihre eigene
+Korrekturfassung ein.
+
+%%%%  UNTERKAPITEL 8.2  %%%%
+\subsection{Die Lösungsdatei}
+
+Welche Antworten richtig sind, steht in einer kleinen Textdatei im
+TOML-Format, die bei der Lehrkraft bleibt. Geprüft werden nur Aufgaben, die
+dort eingetragen sind. Freitextaufgaben lässt man einfach weg. Ein Ausschnitt
+aus \texttt{loesung\_beispiel.toml}, passend zur Vorlage
+\texttt{vorlage\_lk\_digital.tex}:
+
+\begin{lstlisting}[style=latex, language={}]
+gesamt = 10
+
+[[aufgabe]]            # richtig oder falsch
+nr = "2"
+punkte = 2
+lehrerfeld = "L-a2"
+je = 1
+kreuz = [
+  ["a2-1-r", "a2-1-f"],
+  ["a2-2-f", "a2-2-r"],
+]
+
+[[aufgabe]]            # E, V oder A
+nr = "3"
+punkte = 2
+lehrerfeld = "L-a3"
+je = 1
+text = [["a3-1", "E"], ["a3-2", "V"]]
+\end{lstlisting}
+
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{2.6cm} p{13cm}}
+	\toprule
+	\textbf{Eintrag} & \textbf{Bedeutung} \\
+	\midrule
+	\texttt{lehrerfeld} & Name des roten Punktefelds, in das die erreichten Punkte geschrieben werden \\
+	\texttt{je} & Punkte pro richtiger Zeile oder richtigem Feld \\
+	\texttt{kreuz} & Tabellenzeilen mit genau einem richtigen Kästchen: alle
+	Kästchen der Zeile, das \textbf{erste} ist das richtige. Zwei Kreuze in
+	einer Zeile ergeben 0 Punkte. \\
+	\texttt{einzeln} & einzelne Kästchen mit \texttt{true} (ankreuzen) oder
+	\texttt{false} (frei lassen). Ohne ein einziges Kreuz in der Aufgabe gibt
+	es 0 Punkte. \\
+	\texttt{text} & Textfelder mit der erwarteten Antwort. Groß- und
+	Kleinschreibung spielt keine Rolle, mehrere richtige Antworten trennt man
+	mit \texttt{|}, zum Beispiel \texttt{"2.5|2,5"}. \\
+	\bottomrule
+\end{tabular}
+
+%%%%  UNTERKAPITEL 8.3  %%%%
+\subsection{Auswerten und Korrekturfassungen erzeugen}
+
+\begin{lstlisting}[style=latex, language=bash]
+pip install pypdf
+python3 lk_auswerten.py Abgaben_10b/ loesung.toml
+python3 lk_auswerten.py Abgaben_10b/ loesung.toml --eintragen Korrektur_10b/
+\end{lstlisting}
+
+Der erste Aufruf schreibt eine Tabelle \texttt{auswertung.csv} mit den
+Punkten der geprüften Aufgaben. Mit \texttt{--eintragen} entsteht zusätzlich
+zu jeder Abgabe eine \textbf{Korrekturfassung} in einem zweiten Ordner:
+
+\begin{itemize}
+	\item Die Punkte der geprüften Aufgaben stehen in Rot in den Lehrerfeldern.
+	\item Alle Lehrerfelder sind freigegeben. Dort trägt man die Punkte der
+	Freitextaufgaben, die Summe, die Note und eine Bemerkung ein und kann
+	automatisch eingetragene Punkte überschreiben.
+	\item Die Antworten der Schülerin oder des Schülers sind gesperrt.
+	\item Die Originalabgabe bleibt unverändert im ersten Ordner.
+\end{itemize}
+
+Die Korrekturfassung öffnet man im Browser, ergänzt die roten Felder,
+speichert und gibt die Datei zurück. Bei Textfeldern lohnt ein Blick auf
+die eingetragenen Punkte: Das Skript vergleicht Zeichen für Zeichen, ein
+Tippfehler wie \texttt{Teilname} statt \texttt{Teilnahme} zählt als falsch.
+
+\begin{hinweis}[Warum nicht direkt im PDF auswerten?]
+Ein PDF kann mit JavaScript selbst prüfen und rechnen. Dann stünden die
+Lösungen aber in der Datei, die die Klasse bekommt, und jeder könnte sie
+auslesen. Außerdem führt nicht jedes PDF-Programm solches JavaScript aus.
+Mit der getrennten Lösungsdatei bleibt das Schülerdokument frei von Lösungen.
+\end{hinweis}
+
+
+
+%%%%  KAPITEL 9  %%%%
 \section{Tipps und Stolpersteine}
 
 Alles in diesem Kapitel wurde ausprobiert.
@@ -651,10 +780,10 @@ Alles in diesem Kapitel wurde ausprobiert.
 
 
 
-%%%%  KAPITEL 9  %%%%
+%%%%  KAPITEL 10  %%%%
 \section{Befehlsreferenz}
 
-%%%%  UNTERKAPITEL 9.1  %%%%
+%%%%  UNTERKAPITEL 10.1  %%%%
 \subsection{Kurzbefehle aus der newcommands.tex}
 
 \renewcommand{\arraystretch}{1.3}
@@ -666,10 +795,12 @@ Alles in diesem Kapitel wurde ausprobiert.
 	\verb|\zeichen{Name}| & Feld für genau ein Zeichen, zentriert, 0,8\,cm breit \\
 	\verb|\kreuz{Name}| & Ankreuzkästchen, 0,42\,cm \\
 	\verb|\antwort[H]{Name}| & mehrzeiliges Feld über die ganze Breite, Höhe H (Standard 3,2\,cm) \\
+	\verb|\lehrerfeld[B]{Name}| & rotes, für die Klasse gesperrtes Feld der Lehrkraft, Breite B (Standard 1\,cm), Name beginnt mit \texttt{L-} \\
+	\verb|\lehrerpunkte{Name}{max}| & Punktefeld der Lehrkraft rechtsbündig am Zeilenende, dahinter \enquote{/ max P} \\
 	\bottomrule
 \end{tabular}
 
-%%%%  UNTERKAPITEL 9.2  %%%%
+%%%%  UNTERKAPITEL 10.2  %%%%
 \subsection{Befehle und Optionen von hyperref}
 
 \begin{tabular}{p{5.6cm} p{10cm}}
@@ -691,6 +822,8 @@ Alles in diesem Kapitel wurde ausprobiert.
 	\texttt{multiline=true} & mehrzeiliges Textfeld \\
 	\texttt{maxlen=} & höchstens so viele Zeichen \\
 	\texttt{align=} & 0 links, 1 zentriert, 2 rechts \\
+	\texttt{readonly=true} & Feld ist gesperrt, es lässt sich nichts eintippen \\
+	\texttt{color=} & Schriftfarbe der Eingabe als \texttt{\{r g b\}}, Werte 0 bis 1 \\
 	\texttt{bordercolor=}, \texttt{backgroundcolor=} & Rand- und Hintergrundfarbe als \texttt{\{r g b\}}, Werte 0 bis 1 \\
 	\texttt{print} & Feld wird mitgedruckt \\
 	\bottomrule
@@ -701,7 +834,7 @@ Die vollständige Liste steht in der Dokumentation von \texttt{hyperref}
 
 
 
-%%%%  KAPITEL 10  %%%%
+%%%%  KAPITEL 11  %%%%
 \section{Zusammenfassung}
 
 \begin{itemize}
@@ -714,6 +847,10 @@ Die vollständige Liste steht in der Dokumentation von \texttt{hyperref}
 	besten nach Aufgabennummer.
 	\item Eine Papierfassung wird digital, indem man Kästchen, Lücken und
 	Linien durch Felder ersetzt und die Lösungen herausnimmt.
+	\item Punkte, Summe und Note stehen in roten, für die Klasse gesperrten
+	Lehrerfeldern (\verb|\lehrerpunkte|, \verb|\lehrerfeld|).
+	\texttt{lk\_auswerten.py} prüft Ankreuz- und Zuordnungsaufgaben mit einer
+	getrennten Lösungsdatei und erzeugt Korrekturfassungen.
 	\item Vor dem ersten Einsatz eine Probeabgabe auf den Geräten der Klasse
 	machen.
 \end{itemize}

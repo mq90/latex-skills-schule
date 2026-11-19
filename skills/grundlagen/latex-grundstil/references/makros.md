@@ -169,6 +169,8 @@ etwas Gleichwertiges gibt.
 | `\zeichen{…}` | \zeichen{Name} – Feld für genau ein Zeichen, zentriert (z. B. E/V/A, Buchstabe einer Reihenfolge) |
 | `\kreuz{…}` | \kreuz{Name} – Ankreuzkästchen |
 | `\antwort{…}{…}` | \antwort[Höhe]{Name} – mehrzeiliges Antwortfeld über die ganze Zeilenbreite (Standardhöhe 3,2 cm ≈ 4 Zeilen) |
+| `\lehrerfeld{…}{…}` | \lehrerfeld[Breite]{Name} – rotes Feld für die Lehrkraft (Punkte, Note, Bemerkung), für die Klasse gesperrt (readonly); Name mit L- beginnen (Standardbreite 1 cm) |
+| `\lehrerpunkte{…}{…}` | \lehrerpunkte{Name}{max} – Punktefeld der Lehrkraft rechtsbündig am Zeilenende: Feld / max P |
 
 ## Pakete in header.tex
 

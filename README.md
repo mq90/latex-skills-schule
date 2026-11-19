@@ -46,7 +46,7 @@ werkzeuge/                     Prüf- und Hilfsskripte für das Repository
 | | [`latex-programmablaufplaene`](skills/informatik/latex-programmablaufplaene) | PAP/Flussdiagramme | Stile `input`, `operation`, `condition`, `output` |
 | | [`latex-uml-klassendiagramme`](skills/informatik/latex-uml-klassendiagramme) | Klassen und Beziehungen | Stile `umlclass`, `inherit` … |
 | | [`latex-quellcode-listings`](skills/informatik/latex-quellcode-listings) | Programmcode mit listings | Handreichung |
-| | [`latex-pdf-formulare`](skills/informatik/latex-pdf-formulare) | interaktive, ausfüllbare PDFs, digitale Leistungskontrollen | Handreichung, Vorlage, Beispiel-LK, Skripte zum Einsammeln und Testen |
+| | [`latex-pdf-formulare`](skills/informatik/latex-pdf-formulare) | interaktive, ausfüllbare PDFs, digitale Leistungskontrollen | Handreichung, Vorlage, Beispiel-LK, Skripte zum Einsammeln, Auswerten und Testen |
 | Sprache & Musik | [`latex-lautschrift`](skills/sprache-musik/latex-lautschrift) | IPA mit tipa oder Unicode | Handreichung, Lauttabellen, Vokalviereck |
 | | [`latex-musixtex`](skills/sprache-musik/latex-musixtex) | Notensatz, Liedsätze mit Text und Akkorden, Quintenzirkel, Notenpapier | Handreichung, Musik-Kürzel, Vorlagen (Liedsatz, Quintenzirkel, Notenpapier A5) |
 | Naturwissenschaften | [`latex-physik`](skills/naturwissenschaften/latex-physik) | Einheiten, Messwerttabellen, Ausgleichsgerade, Schaltpläne (circuitikz), Strahlengänge | Handreichung; Vorlagen Federdehnung (Regression in TikZ), Schaltpläne, Sammellinse |
@@ -109,7 +109,7 @@ auch ohne LaTeX-Installation. Die Quelltexte stehen in den
 |  | [Funktionsgraphen mit TikZ zeichnen](handreichungen/mathematik/Funktionsgraphen-mit-TikZ-zeichnen.pdf) | 11 |
 |  | [Geometrische Figuren mit TikZ zeichnen](handreichungen/mathematik/Geometrische-Figuren-mit-TikZ-zeichnen.pdf) | 10 |
 |  | [Venn-Diagramme mit TikZ in LaTeX](handreichungen/mathematik/Venn-Diagramme-mit-TikZ-in-LaTeX.pdf) | 10 |
-| Informatik | [Ausfüllbare PDF-Formulare mit LaTeX erstellen](handreichungen/informatik/Ausf%C3%BCllbare-PDF-Formulare-mit-LaTeX-erstellen.pdf) | 15 |
+| Informatik | [Ausfüllbare PDF-Formulare mit LaTeX erstellen](handreichungen/informatik/Ausf%C3%BCllbare-PDF-Formulare-mit-LaTeX-erstellen.pdf) | 18 |
 |  | [Automaten mit TikZ erstellen](handreichungen/informatik/Automaten-mit-TikZ-erstellen.pdf) | 7 |
 |  | [Digitale Schaltkreise mit TikZ erstellen](handreichungen/informatik/Digitale-Schaltkreise-mit-TikZ-erstellen.pdf) | 5 |
 |  | [Programmablaufpläne mit TikZ erstellen](handreichungen/informatik/Programmablaufpl%C3%A4ne-mit-TikZ-erstellen.pdf) | 6 |
@@ -176,7 +176,7 @@ Skripte in den Skills:
 | `latex-anki-karten/scripts/anki_karten.py` | CSV/Fragenliste → Anki-Stapel, Papiertest, QTI-Paket |
 | `latex-sudoku/scripts/` | Sudoku-Generator mit Eindeutigkeitsprüfung |
 | `latex-schach/scripts/` | FEN-Prüfung |
-| `latex-pdf-formulare/scripts/` | ausgefüllte Formulare einsammeln und testen |
+| `latex-pdf-formulare/scripts/` | ausgefüllte Formulare einsammeln, Ankreuzaufgaben auswerten, Korrekturfassungen erzeugen, testen |
 
 Nach jeder Änderung an `header.tex` oder `newcommands.tex` alle drei Skripte
 ausführen, nach Änderungen an einer Handreichung `handreichungen_bauen.py`.
