@@ -22,7 +22,7 @@ skills/
 ├── naturwissenschaften/       Physik, Chemie, Biologie
 ├── illustration/              tikzpeople-Figuren, Sprechblasen
 ├── gesellschaftswissenschaft/ Landkarten aus Geodaten (Atlas mit 10 Karten)
-├── schulorganisation/         Stoffverteilungsplan, Sitzplan, Klassenarbeit, Anki-Karten
+├── schulorganisation/         Stoffverteilungsplan, Sitzplan, Klassenarbeit, Anki-Karten, Ablage
 └── raetsel-spiele/            Sudoku, Schach
 handreichungen/                fertige PDFs aller Handreichungen
 druckvorlagen/                 druckfertige PDFs zum direkten Ausdrucken (z. B. Notenpapier)
@@ -59,6 +59,7 @@ werkzeuge/                     Prüf- und Hilfsskripte für das Repository
 | | [`latex-sitzplan`](skills/schulorganisation/latex-sitzplan) | Sitzpläne (Reihen, U-Form, Gruppentische) aus TOML + Namensliste | Handreichung, `sitzplan.py`, 3 Beispiele mit Platzhalternamen |
 | | [`latex-klassenarbeit`](skills/schulorganisation/latex-klassenarbeit) | Klassenarbeiten, bei denen LaTeX die Bewertungseinheiten zählt: Kopf, Punktetabelle, Notenschlüssel, Lösungsteil | Handreichung, `ka_makros.tex`, Vorlage |
 | | [`latex-anki-karten`](skills/schulorganisation/latex-anki-karten) | Anki-Stapel (Vokabeln, Formeln, Bilder, Multiple Choice), dazu Papiertest und QTI-Paket aus derselben Liste | Handreichung, `anki_karten.py`, Beispiel-CSVs, Bundesländer-Bilder |
+| | [`unterrichtsmaterial-ablage`](skills/schulorganisation/unterrichtsmaterial-ablage) | Material immer dreifach ablegen: lokaler Ordner, privates Git-Repo, Cloud-Ordner (z. B. Google Drive) | Ordnerstruktur, Ablauf, Konfigurationstabelle |
 | Rätsel & Spiele | [`latex-sudoku`](skills/raetsel-spiele/latex-sudoku) | Sudoku-Arbeitsblätter | Handreichung, Generator mit eindeutiger Lösung |
 | | [`latex-schach`](skills/raetsel-spiele/latex-schach) | Bretter, Partien, Mattaufgaben | Handreichung, Prüfskript für FEN |
 
