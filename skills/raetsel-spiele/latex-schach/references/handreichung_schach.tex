@@ -200,10 +200,10 @@ Weitere Stile sind \texttt{curvemove} für gebogene Pfeile und \texttt{cross} f�
 %%%%  UNTERKAPITEL 4.3  %%%%
 \subsection{Brettfarben wählen}
 
-Mit den universalen Stildateien sind alle Bretter farbig. \texttt{\textbackslash schachbrettfarben} schaltet für alle folgenden Bretter auf ein anderes Schema um. Zur Wahl stehen \texttt{blau} (Standard), \texttt{braun}, \texttt{gruen}, \texttt{grau} für den Schwarz-Weiß-Druck und \texttt{klassisch} mit den schraffierten Feldern von \texttt{skak}:
+Mit den universalen Stildateien sind alle Bretter farbig. \texttt{\textbackslash schachbrettfarben} schaltet für alle folgenden Bretter auf ein anderes Schema um. Zur Wahl stehen \texttt{braun} (Standard), \texttt{blau}, \texttt{gruen}, \texttt{grau} für den Schwarz-Weiß-Druck und \texttt{klassisch} mit den schraffierten Feldern von \texttt{skak}:
 
 \begin{lstlisting}[style=latex]
-\schachbrettfarben{braun}
+\schachbrettfarben{blau}
 \chessboard[tinyboard, showmover=false]
 \schachbrettfarben{gruen}
 \chessboard[tinyboard, showmover=false]
@@ -211,13 +211,13 @@ Mit den universalen Stildateien sind alle Bretter farbig. \texttt{\textbackslash
 \chessboard[tinyboard, showmover=false]
 \schachbrettfarben{klassisch}
 \chessboard[tinyboard, showmover=false]
-\schachbrettfarben{blau}
+\schachbrettfarben{braun}
 \end{lstlisting}
 
 \begin{ausgabe}
 	\centering
 	\newchessgame
-	\schachbrettfarben{braun}
+	\schachbrettfarben{blau}
 	\chessboard[tinyboard, showmover=false]
 	\schachbrettfarben{gruen}
 	\chessboard[tinyboard, showmover=false]
@@ -225,7 +225,7 @@ Mit den universalen Stildateien sind alle Bretter farbig. \texttt{\textbackslash
 	\chessboard[tinyboard, showmover=false]
 	\schachbrettfarben{klassisch}
 	\chessboard[tinyboard, showmover=false]
-	\schachbrettfarben{blau}
+	\schachbrettfarben{braun}
 \end{ausgabe}
 
 Der Befehl setzt die Voreinstellungen von \texttt{\textbackslash setchessboard} zurück. Eigene Voreinstellungen schreibt man deshalb danach. Die Farbe \texttt{brettmarke} hebt Start- und Zielfeld eines Zuges hervor:
@@ -369,7 +369,7 @@ Die wichtigsten Techniken im Überblick:
 	\item \texttt{\textbackslash chessboard} zeichnet die aktuelle Stellung; \texttt{setfen} und \texttt{setpieces} bauen eine eigene Stellung auf.
 	\item \texttt{printarea}, \texttt{inverse}, \texttt{showmover} und \texttt{label} verändern die Darstellung.
 	\item Markierungen in drei Schritten: erst der Stil mit \texttt{pgfstyle}, dann die Farbe mit \texttt{color}, dann die Felder mit \texttt{markfields} oder \texttt{colorbackfields} bzw. die Züge mit \texttt{markmoves}.
-	\item \texttt{\textbackslash schachbrettfarben\{\dots\}} wählt das Farbschema der Bretter: \texttt{blau}, \texttt{braun}, \texttt{gruen}, \texttt{grau} oder \texttt{klassisch}.
+	\item \texttt{\textbackslash schachbrettfarben\{\dots\}} wählt das Farbschema der Bretter: \texttt{braun}, \texttt{blau}, \texttt{gruen}, \texttt{grau} oder \texttt{klassisch}.
 	\item Rätselstellungen vor dem Austeilen mit \texttt{pruefe\_stellung.py} prüfen.
 \end{itemize}
 

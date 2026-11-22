@@ -54,7 +54,7 @@ Benötigte TeX-Pakete (Debian/Ubuntu): `texlive-games`, `texlive-plain-generic`
 \chessboard[setfen=\xskakget{nextfen}]    % Stellung nach 2... (Schwarz)
 \xskakset{moveid=3w}\xskakget{san}  % Daten zu einem bestimmten Zug abrufen
 \symking \symqueen \symrook \symbishop \symknight \sympawn  % Figur im Fließtext
-\schachbrettfarben{braun}             % Brettfarben: blau (Standard), braun, gruen, grau, klassisch
+\schachbrettfarben{blau}              % Brettfarben: braun (Standard), blau, gruen, grau, klassisch
 ```
 
 Ausführliche Liste der Brett-Optionen und Kommentarzeichen:
@@ -88,7 +88,7 @@ Bewertungssymbole gebraucht werden.
   `\xskakset{id=A, moveid=3w}\chessboard[setfen=\xskakget{nextfen}]`
   (`pastfen` = Stellung vor dem Zug).
 - **Farbiges Brett:** Mit den universalen Stildateien sind die Bretter farbig
-  (Schema `blau`); umschalten mit `\schachbrettfarben{braun}`, `{gruen}`,
+  (Schema `braun`); umschalten mit `\schachbrettfarben{blau}`, `{gruen}`,
   `{grau}` oder `{klassisch}` (schraffiert). Der Befehl setzt
   `\setchessboard` zurück – eigene Voreinstellungen danach schreiben.
   Die Standardschrift von skak selbst lässt sich nicht sauber einfärben

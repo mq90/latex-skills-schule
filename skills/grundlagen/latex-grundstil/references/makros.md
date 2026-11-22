@@ -183,7 +183,7 @@ etwas Gleichwertiges gibt.
 | `Farbe brettgrauhell` | Schema grau (für Schwarz-Weiß-Druck), helle Felder |
 | `Farbe brettgraudunkel` | Schema grau, dunkle Felder |
 | `Farbe brettmarke` | Start- und Zielfeld eines Zuges hervorheben: pgfstyle=color, color=brettmarke, colorbackfields={e2,e4} |
-| `\schachbrettfarben{…}` | \schachbrettfarben{Schema} – Farben aller folgenden Schachbretter: blau, braun, gruen, grau oder klassisch (schraffiert wie in skak) |
+| `\schachbrettfarben{…}` | \schachbrettfarben{Schema} – Farben aller folgenden Schachbretter: braun (Standard), blau, gruen, grau oder klassisch (schraffiert wie in skak) |
 
 ## Pakete in header.tex
 

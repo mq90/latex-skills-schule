@@ -23,7 +23,7 @@
 %             Naturwissenschaften, Schulorganisation); Box »hinweis« mit frei wählbarem Titel
 % 2026-11-11  Umgebung »passend«: verkleinert den Inhalt auf \linewidth, aber nur wenn er breiter ist
 % 2026-11-11  \oz{+II}{Cu}: Oxidationszahl über ein Elementsymbol (Chemie, auch innerhalb \ce{... $\oz{0}{Zn}$ ...})
-% 2026-11-22  Farbige Schachbretter: \schachbrettfarben{blau|braun|gruen|grau|klassisch} (Standard: blau),
+% 2026-11-22  Farbige Schachbretter: \schachbrettfarben{braun|blau|gruen|grau|klassisch} (Standard: braun),
 %             Farben brett...hell/brett...dunkel und brettmarke (braucht LSBC5 aus der header.tex)
 %
 
@@ -718,7 +718,7 @@
 \definecolor{brettmarke}{HTML}{F6D55C} %Start- und Zielfeld eines Zuges hervorheben: pgfstyle=color, color=brettmarke, colorbackfields={e2,e4}
 
 % Setzt die Voreinstellungen von \setchessboard zurück – eigene \setchessboard{...} deshalb DANACH schreiben.
-%\schachbrettfarben{Schema} – Farben aller folgenden Schachbretter: blau, braun, gruen, grau oder klassisch (schraffiert wie in skak)
+%\schachbrettfarben{Schema} – Farben aller folgenden Schachbretter: braun (Standard), blau, gruen, grau oder klassisch (schraffiert wie in skak)
 \makeatletter
 \let\brett@grundeinstellung\board@val@savedkeylist
 \newcommand{\schachbrettfarben}[1]{%
@@ -729,5 +729,5 @@
 		pgfstyle=color, opacity=1, color=brett#1hell, colorbackboard, color=brett#1dunkel, colorblackbackfields,
 		color=black, labelfont=\sffamily\color{black!65}}}}
 \makeatother
-\schachbrettfarben{blau}
+\schachbrettfarben{braun}
 %----------------------------------------------------------------------------------------------------%

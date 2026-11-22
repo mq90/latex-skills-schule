@@ -80,14 +80,14 @@ Beispiel (Springerzüge zeigen):
 
 ## Farbiges Brett
 
-Mit den universalen Stildateien sind alle Bretter farbig (Schema `blau`).
+Mit den universalen Stildateien sind alle Bretter farbig (Schema `braun`).
 Umschalten in der Präambel oder mitten im Dokument – gilt für alle folgenden
 Bretter:
 
 | Befehl | Aussehen |
 |---|---|
-| `\schachbrettfarben{blau}` | hellblau / graublau (Standard) |
-| `\schachbrettfarben{braun}` | klassisches Holzbrett |
+| `\schachbrettfarben{braun}` | klassisches Holzbrett (Standard) |
+| `\schachbrettfarben{blau}` | hellblau / graublau |
 | `\schachbrettfarben{gruen}` | grünes Turnierbrett |
 | `\schachbrettfarben{grau}` | hellgrau / grau, für Schwarz-Weiß-Druck |
 | `\schachbrettfarben{klassisch}` | schraffierte Felder wie in skak ohne Farbe |
