@@ -1,0 +1,193 @@
+\input{header.tex}
+\input{newcommands.tex}
+% ===================================================================
+%  Vorlage: Mattaufgabe „Matt in N“ mit Schritt-für-Schritt-Lösung
+%  Seite 1: Anfangsstellung und Aufgabe, danach je Zug ein Brett mit
+%  Pfeilen und Erklärung. Beispiel: Matt in 11 (ersticktes Matt).
+%  Brett farbig über \schachbrettfarben (siehe references/befehle.md).
+%
+%  Für eine eigene Aufgabe anpassen: \StartFEN, die Zugfolge in
+%  \hidemoves und \mainline, die \Schritt-Zeilen und die Texte.
+%  Stellung vorher prüfen:  python3 pruefe_stellung.py --matt N "FEN"
+%  (Bei langen Matts wie hier zusätzlich mit einer Engine prüfen.)
+%
+%  Quelle der Beispielstellung: YouTube-Short „Insane Knight Checkmate“,
+%  https://www.youtube.com/shorts/F65ssb7mKkE
+%  Kompilieren: pdflatex vorlage_matt_in_n_loesung.tex
+%  (header.tex und newcommands.tex aus latex-grundstil daneben legen)
+% ===================================================================
+
+% --- Brettfarben: Standard ist blau (aus der newcommands.tex). Andere Schemata:
+%     \schachbrettfarben{braun}, {gruen}, {grau} oder {klassisch} (schraffiert).
+%\schachbrettfarben{braun}
+
+\pagestyle{plain}
+\setstretch{1.15}
+\setlength{\parskip}{0.6em}
+
+% --- Die Stellung (einmal zentral, alles andere greift darauf zu)
+\newcommand\StartFEN{3N1qk1/6pp/5p2/8/1R2R3/K1p5/6Q1/4r2r w - - 0 1}
+
+% \Schritt{Zug-ID}{Pfeilstil Weiß}{von}{nach}{Antwort Schwarz}{Überschrift}{Erklärung}
+% Das Brett zeigt die Stellung NACH dem weißen Zug (aus der gespeicherten Partie geholt).
+% Gelbe Felder + grüner Pfeil = weißer Zug (straightmove oder knightmove),
+% roter Pfeil = Antwort von Schwarz, die danach folgt.
+\newcommand\Schritt[7]{%
+	\par\noindent
+	\begin{minipage}[c]{0.33\linewidth}\centering
+		\xskakset{id=matt, moveid=#1}%
+		\chessboard[setfen=\xskakget{nextfen}, smallboard, showmover=false,
+			pgfstyle=color, color=brettmarke, colorbackfields={#3,#4},
+			linewidth=0.09em, shortenend=0.35em,
+			pgfstyle=#2, color=akzentgruen, markmoves={#3-#4},
+			pgfstyle=straightmove, color=akzentrot, markmoves={#5}]
+	\end{minipage}\hfill
+	\begin{minipage}[c]{0.63\linewidth}
+		{\large\bfseries #6}\par\smallskip
+		#7
+	\end{minipage}\par\bigskip}
+
+% Figurensymbole im Fließtext
+\newcommand\K{\symking}
+\newcommand\D{\symqueen}
+\newcommand\T{\symrook}
+\newcommand\Sp{\symknight}
+
+
+\begin{document}
+
+% Partie einmal unsichtbar durchspielen – skak prüft dabei jeden Zug
+\newchessgame[id=matt, setfen=\StartFEN]
+\hidemoves{1. Qa2+ Kh8 2. Nf7+ Kg8 3. Nd6+ Kh8 4. Rb8 Qxb8 5. Nf7+ Kg8
+	6. Nd8+ Kh8 7. Re8+ Rxe8 8. Nf7+ Kg8 9. Nh6+ Kh8 10. Qg8+ Rxg8 11. Nf7#}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  SEITE 1: AUFGABE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+	{\LARGE\bfseries\sffamily Das Springer-Karussell}\par\smallskip
+	{\large Eine Mattaufgabe mit zwei Turmopfern und einem Damenopfer}
+\end{center}
+
+\bigskip
+\begin{center}
+	\chessboard[setfen=\StartFEN, normalboard, showmover=true]
+\end{center}
+
+\begin{center}
+	\begin{tabular}{@{}ll@{}}
+		\textbf{Weiß:}    & \K a3, \D g2, \T b4, \T e4, \Sp d8 \\
+		\textbf{Schwarz:} & \K g8, \D f8, \T e1, \T h1, \sympawn c3, \sympawn f6, \sympawn g7, \sympawn h7 \\
+	\end{tabular}
+\end{center}
+
+\medskip
+\schwer \textbf{Aufgabe.} Weiß ist am Zug und setzt in \textbf{11 Zügen} matt.
+Finde die vollständige Zugfolge. Fast jeder weiße Zug ist ein Schach, Schwarz hat fast nie eine Wahl.
+
+Weiß muss sich beeilen: Wäre Schwarz am Zug, käme er mit 1\,\ldots\,\T a1+ selbst zu einem
+entscheidenden Angriff auf den weißen König. Ruhige Züge kann sich Weiß also (fast) nicht leisten.
+
+\begin{hinweis}[Tipps (erst lesen, wenn du nicht weiterkommst)]
+	\begin{enumerate}[1.]
+		\item Der erste Zug bringt die Dame mit Schach auf die Diagonale zum schwarzen König.
+		\item Am Ende steht ein \textit{ersticktes Matt}: Der König in der Ecke ist von eigenen Figuren
+		eingemauert, ein Springer setzt matt.
+		\item Solange die schwarze Dame auf f8 steht, klappt das nicht. Sie muss weggelockt werden, und
+		am Ende muss ein schwarzer \textit{Turm} auf g8 stehen.
+	\end{enumerate}
+\end{hinweis}
+
+\vfill
+{\footnotesize Stellung als FEN: \texttt{\StartFEN}\par
+Quelle der Stellung: YouTube-Short \enquote{Insane Knight Checkmate} (Kanal @sigma\_chess21),
+\url{https://www.youtube.com/shorts/F65ssb7mKkE}}
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  LÖSUNG
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Lösung: Matt in 11 Zügen}
+
+\newchessgame[id=druck, setfen=\StartFEN]
+\mainline{1. Qa2+ Kh8 2. Nf7+ Kg8 3. Nd6+ Kh8 4. Rb8!! Qxb8 5. Nf7+ Kg8
+	6. Nd8+ Kh8 7. Re8+! Rxe8 8. Nf7+ Kg8 9. Nh6+ Kh8 10. Qg8+!! Rxg8 11. Nf7#}
+
+\begin{hinweis}[Die Idee]
+	Das bekannte Muster des erstickten Matts lautet: Springerschach auf f7, Doppelschach auf h6,
+	Damenopfer auf g8, Springermatt auf f7. Hier scheitert der direkte Weg
+	1.\,\D a2+ \K h8 2.\,\Sp f7+ \K g8 3.\,\Sp h6+ \K h8 4.\,\D g8+ aber an 4\,\ldots\,\D xg8:
+	Die Dame deckt von g8 aus das Feld f7, und nach 5.\,\Sp f7+ \D xf7 ist der Angriff vorbei.
+	Auf g8 muss deshalb ein \textit{Turm} schlagen. Weiß opfert dafür erst einen Turm auf b8
+	(lenkt die Dame von f8 weg) und dann den zweiten auf e8 (lockt einen schwarzen Turm auf die 8.~Reihe).
+	Der Springer pendelt dabei immer wieder über f7 – sieben der elf weißen Züge macht er allein.
+\end{hinweis}
+
+\textbf{So liest du die Bretter:} Jedes Brett zeigt die Stellung \textit{nach} dem weißen Zug.
+Die gelben Felder und der \textcolor{akzentgruen}{\textbf{grüne}} Pfeil zeigen den weißen Zug, der
+\textcolor{akzentrot}{\textbf{rote}} Pfeil die Antwort von Schwarz, die danach folgt.
+
+\bigskip
+
+\Schritt{1w}{straightmove}{g2}{a2}{g8-h8}
+{1.\,\D a2+ \quad \K h8}
+{Die Dame gibt auf der Diagonale a2--g8 Schach. Schwarz kann nur in die Ecke ausweichen.
+	Dazwischenziehen verliert sofort: 1\,\ldots\,\D f7 2.\,\D xf7+ \K h8 3.\,\D e8\#.}
+
+\Schritt{2w}{knightmove}{d8}{f7}{h8-g8}
+{2.\,\Sp f7+ \quad \K g8}
+{Der Springer gibt Schach. Schlagen darf Schwarz ihn nicht: Nach 2\,\ldots\,\D xf7 hat die Dame
+	die 8.~Reihe verlassen, und es folgt 3.\,\T b8+ \D g8 4.\,\T xg8\#. Also muss der König zurück nach g8.}
+
+\Schritt{3w}{knightmove}{f7}{d6}{g8-h8}
+{3.\,\Sp d6+ \quad \K h8}
+{\textbf{Abzugsschach:} Der Springer zieht weg und öffnet die Diagonale der Dame.
+	Auf d6 steht er genau richtig: Er hat die 8.~Reihe für den Turm freigemacht und behält f7 im Blick.
+	Wieder geht nur \K h8, denn nach 3\,\ldots\,\D f7 wäre die Dame gefesselt und 4.\,\T b8 matt.}
+
+\Schritt{4w}{straightmove}{b4}{b8}{f8-b8}
+{4.\,\T b8!! \quad \D xb8}
+{Das erste Turmopfer und der einzige weiße Zug ohne Schach. Die Dame auf f8 ist angegriffen und zugleich
+	\textbf{gefesselt}: Sie darf die 8.~Reihe nicht verlassen, weil dahinter der König steht.
+	Es droht \T xf8\#. Schlägt die Dame den Turm, ist sie von f8 weggelenkt und deckt f7 nicht mehr.
+	(Andere Züge wie 4\,\ldots\,h6 verlieren nach 5.\,\T xf8+ noch schneller.)}
+
+\Schritt{5w}{knightmove}{d6}{f7}{h8-g8}
+{5.\,\Sp f7+ \quad \K g8}
+{Der Springer kehrt nach f7 zurück. Jetzt kann ihn niemand mehr schlagen, der König hat nur das Feld g8.}
+
+\Schritt{6w}{knightmove}{f7}{d8}{g8-h8}
+{6.\,\Sp d8+ \quad \K h8}
+{Wieder Abzugsschach, diesmal zurück nach d8. Dort versperrt der Springer der schwarzen Dame die
+	8.~Reihe: Sie kommt von b8 nicht mehr nach e8. Auf 6\,\ldots\,\K f8 folgt 7.\,\D f7\#, und
+	6\,\ldots\,\D b3+ 7.\,\D xb3+ verzögert das Matt nur.}
+
+\Schritt{7w}{straightmove}{e4}{e8}{e1-e8}
+{7.\,\T e8+! \quad \T xe8}
+{Das zweite Turmopfer. Die Dame ist abgeschnitten, also muss der Turm von e1 schlagen. Genau das
+	wollte Weiß: Jetzt steht ein schwarzer Turm auf der 8.~Reihe, der später auf g8 schlagen muss.
+	Außerdem versperrt er nun selbst der Dame den Weg nach g8.}
+
+\Schritt{8w}{knightmove}{d8}{f7}{h8-g8}
+{8.\,\Sp f7+ \quad \K g8}
+{Zum dritten Mal Springerschach auf f7, zum dritten Mal bleibt nur \K g8.}
+
+\Schritt{9w}{knightmove}{f7}{h6}{g8-h8}
+{9.\,\Sp h6+ \quad \K h8}
+{\textbf{Doppelschach:} Springer und Dame geben gleichzeitig Schach. Gegen ein Doppelschach hilft nur
+	ein Königszug, schlagen (g7xh6) oder dazwischenziehen geht nicht. Nach 9\,\ldots\,\K f8 wäre
+	10.\,\D f7 matt, also wieder \K h8.}
+
+\Schritt{10w}{straightmove}{a2}{g8}{e8-g8}
+{10.\,\D g8+!! \quad \T xg8}
+{Das Damenopfer. Der König darf die Dame nicht schlagen, weil der Springer von h6 aus g8 deckt.
+	Der Turm muss nehmen und mauert damit seinen eigenen König ein.}
+
+\Schritt{11w}{knightmove}{h6}{f7}{}
+{11.\,\Sp f7\#}
+{\textbf{Ersticktes Matt.} Der König steht im Schach und hat kein Feld: g8, g7 und h7 sind von
+	eigenen Figuren besetzt. Der Springer kann nicht geschlagen werden, denn der Turm auf g8 deckt f7
+	nicht und die Dame auf b8 kommt nicht heran. Weiß hat zwei Türme und die Dame geopfert und setzt
+	mit dem letzten Springer matt.}
+
+\end{document}

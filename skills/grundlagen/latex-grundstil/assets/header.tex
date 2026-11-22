@@ -17,6 +17,8 @@
 %             chemfig (Strukturformeln), pgf-PeriodicTable (\pgfPT), genealogytree [all] (Stammbäume).
 %             NICHT siunitx: kollidiert mit units (\unit[10]{cm}); siunitx nur in eigenständigen Dokumenten
 % 2026-11-11  TikZ-Bibliothek decorations.pathmorphing (Federn, Wellen: decoration=coil/snake)
+% 2026-11-22  fontenc lädt zusätzlich die Kodierung LSBC5 (farbige Schachbretter mit \schachbrettfarben
+%             aus der newcommands.tex); T1 steht weiter an letzter Stelle und bleibt die Standardkodierung
 %
 
 
@@ -37,7 +39,7 @@
 
 %Pakete für eine saubere Kodierung
 \usepackage[utf8]{inputenc} %UTF-8 als Zeichenkodierung  ... ABER nicht immer notwendig, je nach Compiler
-\usepackage[T1]{fontenc} %Verwendet westeuropäische Schriftkodierung
+\usepackage[LSBC5,T1]{fontenc} %Verwendet westeuropäische Schriftkodierung (T1 bleibt Standard); LSBC5 = Farbebenen der Schachschrift skaknew, nötig für \schachbrettfarben
 \usepackage[ngerman]{babel} %Ermöglicht deutsche Übersetzung und Silbentrennung
 \usepackage{lmodern} %Verwendet moderne Schriftarten
 

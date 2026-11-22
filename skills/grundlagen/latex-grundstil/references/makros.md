@@ -170,12 +170,27 @@ etwas Gleichwertiges gibt.
 | `\kreuz{…}` | \kreuz{Name} – Ankreuzkästchen |
 | `\antwort{…}{…}` | \antwort[Höhe]{Name} – mehrzeiliges Antwortfeld über die ganze Zeilenbreite (Standardhöhe 3,2 cm ≈ 4 Zeilen) |
 
+## Schach (farbige Bretter)
+
+| Befehl | Zweck |
+|---|---|
+| `Farbe brettblauhell` | Schema blau, helle Felder |
+| `Farbe brettblaudunkel` | Schema blau, dunkle Felder |
+| `Farbe brettbraunhell` | Schema braun (klassisches Holzbrett), helle Felder |
+| `Farbe brettbraundunkel` | Schema braun, dunkle Felder |
+| `Farbe brettgruenhell` | Schema gruen (Turnierbrett), helle Felder |
+| `Farbe brettgruendunkel` | Schema gruen, dunkle Felder |
+| `Farbe brettgrauhell` | Schema grau (für Schwarz-Weiß-Druck), helle Felder |
+| `Farbe brettgraudunkel` | Schema grau, dunkle Felder |
+| `Farbe brettmarke` | Start- und Zielfeld eines Zuges hervorheben: pgfstyle=color, color=brettmarke, colorbackfields={e2,e4} |
+| `\schachbrettfarben{…}` | \schachbrettfarben{Schema} – Farben aller folgenden Schachbretter: blau, braun, gruen, grau oder klassisch (schraffiert wie in skak) |
+
 ## Pakete in header.tex
 
 | Paket | Zweck |
 |---|---|
 | `inputenc` | UTF-8 als Zeichenkodierung  ... ABER nicht immer notwendig, je nach Compiler |
-| `fontenc` | Verwendet westeuropäische Schriftkodierung |
+| `fontenc` | Verwendet westeuropäische Schriftkodierung (T1 bleibt Standard); LSBC5 = Farbebenen der Schachschrift skaknew, nötig für |
 | `babel` | Ermöglicht deutsche Übersetzung und Silbentrennung |
 | `lmodern` | Verwendet moderne Schriftarten |
 | `geometry` | Ermöglicht die Ausrichtung des Blattes mit \geometry{...} |

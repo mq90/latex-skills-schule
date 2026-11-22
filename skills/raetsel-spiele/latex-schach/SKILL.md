@@ -33,6 +33,12 @@ Benötigte TeX-Pakete (Debian/Ubuntu): `texlive-games`, `texlive-plain-generic`
    Mattaufgaben haben erstaunlich oft eine zweite Lösung – nur „eindeutig“ nehmen.
 3. Vorlage `assets/vorlage_matt_in_eins.tex` anpassen (vier Bretter, Lösungen
    unten), mit `pdflatex` kompilieren, als Bild ansehen.
+4. Für **eine** längere Aufgabe mit ausführlicher Lösung:
+   `assets/vorlage_matt_in_n_loesung.tex` – Seite 1 Anfangsstellung und Frage
+   „Matt in N“, danach je Zug ein farbiges Brett mit Pfeilen (grün = Weiß,
+   rot = Antwort von Schwarz) und Erklärung. Die Partie wird einmal mit
+   `\hidemoves` gespeichert, jedes Brett holt sich seine Stellung mit
+   `\xskakset{id=…, moveid=…}` und `\xskakget{nextfen}`.
 
 ## Wichtigste Befehle
 
@@ -44,9 +50,11 @@ Benötigte TeX-Pakete (Debian/Ubuntu): `texlive-games`, `texlive-plain-generic`
 \chessboard                           % aktuelle Stellung zeichnen
 \chessboard[setfen={r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3}]
 \chessboard[setpieces={Kg1,Qd1,kg8,ph7}]   % groß = Weiß, klein = Schwarz
-\newchessgame[id=A] ... \chessboard[id=A, moveid=2b]  % Stellung nach 2... (Schwarz)
+\newchessgame[id=A] ... \xskakset{id=A, moveid=2b}
+\chessboard[setfen=\xskakget{nextfen}]    % Stellung nach 2... (Schwarz)
 \xskakset{moveid=3w}\xskakget{san}  % Daten zu einem bestimmten Zug abrufen
 \symking \symqueen \symrook \symbishop \symknight \sympawn  % Figur im Fließtext
+\schachbrettfarben{braun}             % Brettfarben: blau (Standard), braun, gruen, grau, klassisch
 ```
 
 Ausführliche Liste der Brett-Optionen und Kommentarzeichen:
@@ -75,6 +83,19 @@ Bewertungssymbole gebraucht werden.
   `showmover=false` blendet es aus.
 - Optionen `arrowheadstyle` und `emptyboard` gibt es nicht. Leeres Brett:
   `setpieces={}`.
+- **Stellung nach einem bestimmten Zug:** `\chessboard[id=A, moveid=3w]` wird
+  ohne Fehlermeldung übergangen und zeigt die letzte Stellung. Richtig:
+  `\xskakset{id=A, moveid=3w}\chessboard[setfen=\xskakget{nextfen}]`
+  (`pastfen` = Stellung vor dem Zug).
+- **Farbiges Brett:** Mit den universalen Stildateien sind die Bretter farbig
+  (Schema `blau`); umschalten mit `\schachbrettfarben{braun}`, `{gruen}`,
+  `{grau}` oder `{klassisch}` (schraffiert). Der Befehl setzt
+  `\setchessboard` zurück – eigene Voreinstellungen danach schreiben.
+  Die Standardschrift von skak selbst lässt sich nicht sauber einfärben
+  (Figur und Schraffur der dunklen Felder sind ein Zeichen); Hintergrund und
+  Fassung für eigenständige Dokumente in `references/befehle.md`.
+- Eine eigene Zugfolge mit `#` (Matt) nicht in ein `\newcommand` legen
+  („Illegal parameter number“) – direkt in `\hidemoves{...}` schreiben.
 
 ## Für eine Handreichung
 
