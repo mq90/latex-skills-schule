@@ -54,6 +54,7 @@ Benötigte TeX-Pakete (Debian/Ubuntu): `texlive-games`, `texlive-plain-generic`
 \chessboard[setfen=\xskakget{nextfen}]    % Stellung nach 2... (Schwarz)
 \xskakset{moveid=3w}\xskakget{san}  % Daten zu einem bestimmten Zug abrufen
 \symking \symqueen \symrook \symbishop \symknight \sympawn  % Figur im Fließtext
+\schachbrettfarben{braun}             % Brettfarben: blau (Standard), braun, gruen, grau, klassisch
 ```
 
 Ausführliche Liste der Brett-Optionen und Kommentarzeichen:
@@ -86,11 +87,13 @@ Bewertungssymbole gebraucht werden.
   ohne Fehlermeldung übergangen und zeigt die letzte Stellung. Richtig:
   `\xskakset{id=A, moveid=3w}\chessboard[setfen=\xskakget{nextfen}]`
   (`pastfen` = Stellung vor dem Zug).
-- **Farbiges Brett:** Die Standardschrift lässt sich nicht sauber einfärben
-  (Figur und Schraffur der dunklen Felder sind ein Zeichen). Mit
-  `\usepackage[LSBC4,T1]{fontenc}` und `boardfontfamily=skaknew,
-  boardfontencoding=LSBC4` klappt es; `setfontcolors` muss **hinter** den
-  Farbangaben stehen. Vollständiger Block in `references/befehle.md`.
+- **Farbiges Brett:** Mit den universalen Stildateien sind die Bretter farbig
+  (Schema `blau`); umschalten mit `\schachbrettfarben{braun}`, `{gruen}`,
+  `{grau}` oder `{klassisch}` (schraffiert). Der Befehl setzt
+  `\setchessboard` zurück – eigene Voreinstellungen danach schreiben.
+  Die Standardschrift von skak selbst lässt sich nicht sauber einfärben
+  (Figur und Schraffur der dunklen Felder sind ein Zeichen); Hintergrund und
+  Fassung für eigenständige Dokumente in `references/befehle.md`.
 - Eine eigene Zugfolge mit `#` (Matt) nicht in ein `\newcommand` legen
   („Illegal parameter number“) – direkt in `\hidemoves{...}` schreiben.
 

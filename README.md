@@ -61,7 +61,7 @@ werkzeuge/                     Prüf- und Hilfsskripte für das Repository
 | | [`latex-anki-karten`](skills/schulorganisation/latex-anki-karten) | Anki-Stapel (Vokabeln, Formeln, Bilder, Multiple Choice), dazu Papiertest und QTI-Paket aus derselben Liste | Handreichung, `anki_karten.py`, Beispiel-CSVs, Bundesländer-Bilder |
 | | [`unterrichtsmaterial-ablage`](skills/schulorganisation/unterrichtsmaterial-ablage) | Material immer dreifach ablegen: lokaler Ordner, privates Git-Repo, Cloud-Ordner (z. B. Google Drive) | Ordnerstruktur, Ablauf, Konfigurationstabelle |
 | Rätsel & Spiele | [`latex-sudoku`](skills/raetsel-spiele/latex-sudoku) | Sudoku-Arbeitsblätter | Handreichung, Generator mit eindeutiger Lösung |
-| | [`latex-schach`](skills/raetsel-spiele/latex-schach) | Bretter (auch farbig), Partien, Mattaufgaben | Handreichung, Prüfskript für FEN, Vorlagen „Matt in 1“ und „Matt in N mit Lösung“ |
+| | [`latex-schach`](skills/raetsel-spiele/latex-schach) | Bretter in fünf Farbschemata (`\schachbrettfarben`), Partien, Mattaufgaben | Handreichung, Prüfskript für FEN, Vorlagen „Matt in 1“ und „Matt in N mit Lösung“ |
 
 ## Die universalen Stildateien
 
@@ -128,7 +128,7 @@ auch ohne LaTeX-Installation. Die Quelltexte stehen in den
 |  | [Klassenarbeiten mit automatischer Punktzählung](handreichungen/schulorganisation/Klassenarbeiten-mit-automatischer-Punktz%C3%A4hlung.pdf) | 5 |
 |  | [Sitzpläne automatisch erstellen](handreichungen/schulorganisation/Sitzpl%C3%A4ne-automatisch-erstellen.pdf) | 6 |
 |  | [Stoffverteilungspläne automatisch erstellen](handreichungen/schulorganisation/Stoffverteilungspl%C3%A4ne-automatisch-erstellen.pdf) | 8 |
-| Rätsel & Spiele | [Schach mit skak, xskak und chessboard](handreichungen/raetsel-spiele/Schach-mit-skak-xskak-und-chessboard.pdf) | 9 |
+| Rätsel & Spiele | [Schach mit skak, xskak und chessboard](handreichungen/raetsel-spiele/Schach-mit-skak-xskak-und-chessboard.pdf) | 10 |
 |  | [Sudokus mit dem Paket sudoku setzen](handreichungen/raetsel-spiele/Sudokus-mit-dem-Paket-sudoku-setzen.pdf) | 7 |
 
 ## Druckvorlagen

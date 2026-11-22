@@ -4,7 +4,7 @@
 %  Vorlage: Mattaufgabe „Matt in N“ mit Schritt-für-Schritt-Lösung
 %  Seite 1: Anfangsstellung und Aufgabe, danach je Zug ein Brett mit
 %  Pfeilen und Erklärung. Beispiel: Matt in 11 (ersticktes Matt).
-%  Brett farbig mit skaknew/LSBC4 (siehe references/befehle.md).
+%  Brett farbig über \schachbrettfarben (siehe references/befehle.md).
 %
 %  Für eine eigene Aufgabe anpassen: \StartFEN, die Zugfolge in
 %  \hidemoves und \mainline, die \Schritt-Zeilen und die Texte.
@@ -17,20 +17,9 @@
 %  (header.tex und newcommands.tex aus latex-grundstil daneben legen)
 % ===================================================================
 
-% --- Farbiges Brett: Die Standardschrift von skak schraffiert die dunklen Felder und lässt sich
-%     nicht sauber einfärben. Die Schrift skaknew in der Kodierung LSBC4 hat dafür eigene Ebenen
-%     (Feldfläche, Figur, Figurenfüllung). Die Kodierung muss über fontenc geladen werden.
-\usepackage[LSBC4,T1]{fontenc}
-\colorlet{feldhell}{akzentblau!8}
-\colorlet{felddunkel}{akzentblau!32!gray!55}
-\colorlet{feldmarke}{yellow!85!orange}
-\setchessboard{
-	boardfontfamily=skaknew, boardfontencoding=LSBC4,
-	whitefieldmaskcolor=feldhell, blackfieldmaskcolor=felddunkel,   % Feldflächen
-	whitepiececolor=black, blackpiececolor=black,                   % Umrisse der Figuren
-	whitepiecemaskcolor=white, blackpiecemaskcolor=white,           % Füllung der weißen Figuren
-	setfontcolors,                                                  % muss NACH den Farben stehen
-	labelfont=\sffamily\color{black!65}}
+% --- Brettfarben: Standard ist blau (aus der newcommands.tex). Andere Schemata:
+%     \schachbrettfarben{braun}, {gruen}, {grau} oder {klassisch} (schraffiert).
+%\schachbrettfarben{braun}
 
 \pagestyle{plain}
 \setstretch{1.15}
@@ -48,8 +37,8 @@
 	\begin{minipage}[c]{0.33\linewidth}\centering
 		\xskakset{id=matt, moveid=#1}%
 		\chessboard[setfen=\xskakget{nextfen}, smallboard, showmover=false,
-			pgfstyle=color, opacity=0.45, color=feldmarke, markfields={#3,#4},
-			opacity=1, linewidth=0.09em, shortenend=0.35em,
+			pgfstyle=color, color=brettmarke, colorbackfields={#3,#4},
+			linewidth=0.09em, shortenend=0.35em,
 			pgfstyle=#2, color=akzentgruen, markmoves={#3-#4},
 			pgfstyle=straightmove, color=akzentrot, markmoves={#5}]
 	\end{minipage}\hfill

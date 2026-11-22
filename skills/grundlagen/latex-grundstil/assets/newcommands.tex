@@ -23,6 +23,8 @@
 %             Naturwissenschaften, Schulorganisation); Box »hinweis« mit frei wählbarem Titel
 % 2026-11-11  Umgebung »passend«: verkleinert den Inhalt auf \linewidth, aber nur wenn er breiter ist
 % 2026-11-11  \oz{+II}{Cu}: Oxidationszahl über ein Elementsymbol (Chemie, auch innerhalb \ce{... $\oz{0}{Zn}$ ...})
+% 2026-11-22  Farbige Schachbretter: \schachbrettfarben{blau|braun|gruen|grau|klassisch} (Standard: blau),
+%             Farben brett...hell/brett...dunkel und brettmarke (braucht LSBC5 aus der header.tex)
 %
 
 
@@ -691,4 +693,41 @@
 
 %\antwort[Höhe]{Name} – mehrzeiliges Antwortfeld über die ganze Zeilenbreite (Standardhöhe 3,2 cm ≈ 4 Zeilen)
 \newcommand{\antwort}[2][3.2cm]{\par\vspace{0.15cm}\noindent\hbox{\TextField[name=#2, multiline=true, width=\linewidth, height=#1]{}}}
+%----------------------------------------------------------------------------------------------------%
+
+
+
+
+%----------------------------------------------------------------------------------------------------%
+%%%%%%%%%%%                                   Schach (farbige Bretter)                                   %%%%%%%%%%
+%----------------------------------------------------------------------------------------------------%
+% Die Standardschrift von skak schraffiert die dunklen Felder; Figur und Schraffur sind dort ein
+% Zeichen und lassen sich nicht getrennt einfärben. Deshalb: Schrift skaknew in der Kodierung LSBC5
+% (zeichnet nur die Figuren, weiße Figuren weiß gefüllt), die Felder malt chessboard als Flächen
+% darunter. Eigene Markierungen mit colorbackfields liegen über den Feldern und unter den Figuren.
+
+%Feldfarben der Brettschemata (hell/dunkel) und Markierungsfarbe für den letzten Zug
+\definecolor{brettblauhell}{HTML}{EEF3FD} %Schema blau, helle Felder
+\definecolor{brettblaudunkel}{HTML}{A9B4CC} %Schema blau, dunkle Felder
+\definecolor{brettbraunhell}{HTML}{F0D9B5} %Schema braun (klassisches Holzbrett), helle Felder
+\definecolor{brettbraundunkel}{HTML}{B58863} %Schema braun, dunkle Felder
+\definecolor{brettgruenhell}{HTML}{EEEED2} %Schema gruen (Turnierbrett), helle Felder
+\definecolor{brettgruendunkel}{HTML}{769656} %Schema gruen, dunkle Felder
+\definecolor{brettgrauhell}{HTML}{F2F2F2} %Schema grau (für Schwarz-Weiß-Druck), helle Felder
+\definecolor{brettgraudunkel}{HTML}{B4B4B4} %Schema grau, dunkle Felder
+\definecolor{brettmarke}{HTML}{F6D55C} %Start- und Zielfeld eines Zuges hervorheben: pgfstyle=color, color=brettmarke, colorbackfields={e2,e4}
+
+% Setzt die Voreinstellungen von \setchessboard zurück – eigene \setchessboard{...} deshalb DANACH schreiben.
+%\schachbrettfarben{Schema} – Farben aller folgenden Schachbretter: blau, braun, gruen, grau oder klassisch (schraffiert wie in skak)
+\makeatletter
+\let\brett@grundeinstellung\board@val@savedkeylist
+\newcommand{\schachbrettfarben}[1]{%
+	\let\board@val@savedkeylist\brett@grundeinstellung
+	\ifthenelse{\equal{#1}{klassisch}}{}%
+	{\setchessboard{boardfontfamily=skaknew, boardfontencoding=LSBC5,
+		piececolor=black, piecemaskcolor=white, setfontcolors,
+		pgfstyle=color, opacity=1, color=brett#1hell, colorbackboard, color=brett#1dunkel, colorblackbackfields,
+		color=black, labelfont=\sffamily\color{black!65}}}}
+\makeatother
+\schachbrettfarben{blau}
 %----------------------------------------------------------------------------------------------------%

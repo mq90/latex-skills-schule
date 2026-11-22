@@ -51,7 +51,7 @@ sind erlaubt.
 | `pgfstyle=cross` | `markfields={a1}` | Kreuz auf einem Feld |
 | `pgfstyle=border` | `markfields={h8}` | farbiger Rahmen um ein Feld |
 | `pgfstyle=color` | `colorbackfields={e4,d5}` | Feld einfärben |
-| `pgfstyle=color, opacity=0.45` | `markfields={g2,a2}` | Feld halbtransparent **über** den Figuren einfärben (nötig beim farbigen Brett, siehe unten) |
+| `pgfstyle=color, opacity=0.45` | `markfields={g2,a2}` | Feld halbtransparent **über** den Figuren einfärben |
 | `pgfstyle=text, text=\bfseries X` | `markfield={h8}` | Text auf ein Feld |
 
 Feinschliff für Pfeile und Markierungen (gilt jeweils für alles, was danach
@@ -80,41 +80,60 @@ Beispiel (Springerzüge zeigen):
 
 ## Farbiges Brett
 
-Die Standardschrift von skak schraffiert die dunklen Felder; Figur und
-Schraffur sind dort **ein** Zeichen und lassen sich nicht getrennt einfärben
-(`blackfieldcolor` färbt dann auch die Figuren auf dunklen Feldern,
-`whitepiececolor=black` macht die Schraffur wieder schwarz). Sauber geht es
-mit der Schrift `skaknew` in der Kodierung `LSBC4`, die Feldfläche, Figur und
-Figurenfüllung als eigene Ebenen setzt.
+Mit den universalen Stildateien sind alle Bretter farbig (Schema `blau`).
+Umschalten in der Präambel oder mitten im Dokument – gilt für alle folgenden
+Bretter:
 
-In die Präambel (nach `\input{header.tex}` bzw. nach den Schachpaketen):
+| Befehl | Aussehen |
+|---|---|
+| `\schachbrettfarben{blau}` | hellblau / graublau (Standard) |
+| `\schachbrettfarben{braun}` | klassisches Holzbrett |
+| `\schachbrettfarben{gruen}` | grünes Turnierbrett |
+| `\schachbrettfarben{grau}` | hellgrau / grau, für Schwarz-Weiß-Druck |
+| `\schachbrettfarben{klassisch}` | schraffierte Felder wie in skak ohne Farbe |
+
+`\schachbrettfarben` setzt die Voreinstellungen von `\setchessboard` zurück.
+Eigene Voreinstellungen (`\setchessboard{smallboard, showmover=false}`)
+deshalb **danach** schreiben.
+
+Start- und Zielfeld eines Zuges hervorheben (liegt über dem Feld, unter der Figur):
 ```latex
-\usepackage[LSBC4,T1]{fontenc}   % Kodierung laden, T1 bleibt Standard
-\colorlet{feldhell}{akzentblau!8}
-\colorlet{felddunkel}{akzentblau!32!gray!55}
-\setchessboard{
-  boardfontfamily=skaknew, boardfontencoding=LSBC4,
-  whitefieldmaskcolor=feldhell, blackfieldmaskcolor=felddunkel, % Feldflächen
-  whitepiececolor=black, blackpiececolor=black,                 % Umrisse der Figuren
-  whitepiecemaskcolor=white, blackpiecemaskcolor=white,         % Füllung der weißen Figuren
-  setfontcolors,                                                % NACH den Farben
-  labelfont=\sffamily\color{black!65}}
+\chessboard[smallboard, setfen={6k1/5ppp/8/8/8/8/5PPP/3R2K1 w - - 0 1},
+  pgfstyle=color, color=brettmarke, colorbackfields={d1,d8},
+  pgfstyle=straightmove, color=akzentgruen, markmoves={d1-d8}]
 ```
 
-| Option | Wirkung |
-|---|---|
-| `boardfontfamily=skaknew, boardfontencoding=LSBC4` | Schrift mit Farbebenen; ohne `\usepackage[LSBC4,T1]{fontenc}` kommt „Encoding scheme LSBC4 unknown“ |
-| `whitefieldmaskcolor`, `blackfieldmaskcolor` | Farbe der hellen / dunklen Felder |
-| `whitepiececolor`, `blackpiececolor` | Umrissfarbe der Figuren |
-| `whitepiecemaskcolor`, `blackpiecemaskcolor` | Füllfarbe (weiß lassen, sonst scheint das Feld durch die weißen Figuren) |
-| `setfontcolors` | übernimmt die Farben – muss **hinter** den Farbangaben stehen; steht es davor, bleiben die Felder im Standardgrau |
-| `labelfont=\sffamily\color{black!65}` | Schrift und Farbe der Koordinaten |
+Eigene Farben: `\definecolor{brettrothell}{HTML}{...}` und
+`\definecolor{brettrotdunkel}{HTML}{...}` anlegen, dann wirkt
+`\schachbrettfarben{rot}` (der Name wird zu `brett<Name>hell` / `brett<Name>dunkel`).
 
-Die anderen Kodierungen: `LSBC2` und `LSBC3` sehen fast gleich aus, `LSBC1`
-behält die Schraffur (nur farbig), `LSBC5` zeichnet gar keine Felder.
-Felder hervorheben beim farbigen Brett mit `markfields` und `opacity`
-(Tabelle oben), nicht mit `colorbackfields` – das liegt unter der Feldfläche.
-Im Fließtext (`\mainline`, `\symknight`) ändert sich nichts.
+**Hintergrund.** Die Standardschrift von skak schraffiert die dunklen Felder;
+Figur und Schraffur sind dort **ein** Zeichen und lassen sich nicht getrennt
+einfärben (`blackfieldcolor` färbt auch die Figuren auf dunklen Feldern).
+`\schachbrettfarben` nimmt deshalb die Schrift `skaknew` in der Kodierung
+`LSBC5`, die nur die Figuren zeichnet (weiße Figuren weiß gefüllt), und lässt
+chessboard die Felder als Flächen darunter malen.
+
+**Ohne die universalen Stildateien** (eigenständiges Dokument) dasselbe von Hand:
+```latex
+\usepackage[LSBC5,T1]{fontenc}   % Kodierung laden, T1 bleibt Standard
+\usepackage{xcolor}
+\usepackage{xskak}
+\usepackage{chessboard}
+\definecolor{bretthell}{HTML}{F0D9B5}
+\definecolor{brettdunkel}{HTML}{B58863}
+\setchessboard{boardfontfamily=skaknew, boardfontencoding=LSBC5,
+  piececolor=black, piecemaskcolor=white, setfontcolors,   % setfontcolors NACH den Farben
+  pgfstyle=color, color=bretthell, colorbackboard,         % alle Felder hell
+  color=brettdunkel, colorblackbackfields,                 % dunkle Felder darüber
+  color=black, labelfont=\sffamily\color{black!65}}
+```
+Fehlt die `fontenc`-Zeile, bricht LaTeX mit „Encoding scheme LSBC5 unknown“ ab.
+Steht `setfontcolors` vor den Farbangaben, werden sie nicht übernommen.
+Die Kodierungen `LSBC2` bis `LSBC4` zeichnen die Felder selbst (Farben dann
+über `whitefieldmaskcolor` / `blackfieldmaskcolor`); dort verschwinden
+`colorbackfields`-Markierungen unter der Feldfläche. `LSBC1` behält die Schraffur.
+Im Fließtext (`\mainline`, `\symknight`) ändert sich durch all das nichts.
 
 Fertiges Beispiel: `assets/vorlage_matt_in_n_loesung.tex`.
 
