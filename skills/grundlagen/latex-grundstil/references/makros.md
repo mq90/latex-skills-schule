@@ -105,6 +105,11 @@ etwas Gleichwertiges gibt.
 | Befehl | Zweck |
 |---|---|
 | `\koordinatensystem{…}{…}{…}{…}{…}` | Striche und Zahlen bei allen Vielfachen von Schritt (Standard 2). Innerhalb von tikzpicture[scale=0.42] verwenden. |
+| `\emojifigur{…}{…}{…}{…}` | Emoji steht maßstäblich auf einem Punkt: \emojifigur[Optionen]{(x,y)}{Emoji-Name}{Höhe}, z.B. \emojifigur{(8.5,0)}{man standing}{0.9cm} |
+| `\masslinie{…}{…}{…}` | dezente Maßlinie: \masslinie{(x1,y1)}{(x2,y2)}{Text} |
+| `\skizzenraster{…}{…}{…}{…}{…}{…}{…}` | Koordinatensystem hinter einer Skizze: \skizzenraster{xmin}{xmax}{ymin}{ymax}{Gitterschritt}{x-Beschriftungen}{y-Beschriftungen} |
+| `\skizzenpunkt{…}{…}{…}` | markanter Punkt im Lösungsbild: \skizzenpunkt{(x,y)}{Lage, z.B. above right}{Beschriftung} |
+| `\emojisprecher{…}{…}{…}{…}{…}` | Emoji-Kopf mit Sprechblase darüber: \emojisprecher[Blasenbreite]{x}{Emoji-Name}{Name darunter}{Aussage} |
 
 ## Handreichungen
 
@@ -218,6 +223,7 @@ etwas Gleichwertiges gibt.
 | `chessboard` | Schachbretter mit \chessboard[setfen=...] |
 | `sudoku` | Sudoku-Gitter mit \begin{sudoku} \|5\|3\| \| ... \|. \end{sudoku} |
 | `tikzpeople` | Personen-Figuren als TikZ-Knoten, z.B. \node[alice, minimum size=2cm]{}; |
+| `twemojis` | farbige Emojis (Twemoji, CC BY 4.0) als Vektorgrafik: \twemoji[height=1cm]{man standing}, im Text \texttwemoji{light bul |
 | `tipa` | Lautschrift mit \textipa{...}; [safe], weil tipa sonst \; \: \! \* \s umdefiniert (bricht z.B. \(\;\)) – Langformen sieh |
 | `circuitikz` | Schaltpläne mit deutschen Symbolen: \begin{circuitikz} \draw (0,0) to[lamp] (2,0); \end{circuitikz} |
 | `mhchem` | Reaktionsgleichungen mit \ce{2 H2 + O2 -> 2 H2O} |

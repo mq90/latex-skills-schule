@@ -1,0 +1,68 @@
+\input{header.tex}
+\input{newcommands.tex}
+\singlespacing
+
+%Skizze zu Aufgabe (1): Kugelstoßen, 1 m entspricht 0,5 cm.
+%Aufgabenbild: \skizzeKugelstoss     Lösungsbild mit Koordinatensystem: {\mitKStrue \skizzeKugelstoss}
+\newcommand{\skizzeKugelstoss}{%
+\begin{tikzpicture}[x=0.5cm, y=0.5cm]
+	\ifmitKS \skizzenraster{-1}{11}{0}{4}{1}{2,4,6,8,10}{1,2,3,4}
+	\else \fill[orange!25] (-2,-0.45) rectangle (11.2,0); \fi
+	\draw[thick, orange!50!black] (-2,0) -- (11.2,0);
+	\emojifigur[xscale=-1]{(-0.85,0)}{person playing handball}{1.25cm}
+	\ifmitKS
+		\draw[akzentblau, thick, domain=0:10, samples=100] plot (\x,{-0.1*(\x-4)^2+3.6});
+		\skizzenpunkt{(0,2)}{above left}{$(0\,|\,2)$}
+		\skizzenpunkt{(4,3.6)}{above}{$S(4\,|\,3{,}6)$}
+		\skizzenpunkt{(10,0)}{above right}{$N(10\,|\,0)$}
+	\else
+		\draw[dashed, thick, gray!60!black, domain=0:10, samples=100] plot (\x,{-0.1*(\x-4)^2+3.6});
+		\shade[ball color=gray] (6.5,2.975) circle (0.24);
+		\draw[densely dotted, thick] (6.5,0) -- (6.5,2.72) node[midway, right, font=\scriptsize, inner sep=2pt] {$h(x)$};
+		\masslinie{(0,-1.1)}{(6.5,-1.1)}{\scriptsize $x$}
+	\fi
+\end{tikzpicture}}
+
+\begin{document}
+
+	\begin{center}\textbf{\Large{Sachaufgabe mit Skizze}}\end{center}
+	\bigskip
+
+	\begin{enumerate}[(1)]
+		\item
+			\begin{minipage}[t]{0.56\linewidth}
+				Die Flugbahn einer Kugel beim Kugelstoßen lässt sich durch die Funktion $h$ mit $h(x)=-0{,}1(x-4)^2+3{,}6$ beschreiben. Dabei ist $x$ die waagerechte Entfernung vom Abstoßpunkt in Metern und $h(x)$ die Höhe der Kugel in Metern.
+				\begin{enumerate}[(a)]
+					\item Berechne die Höhe, in der die Kugel die Hand verlässt.
+					\item Gib die maximale Höhe der Kugel und die Entfernung an, in der sie erreicht wird.
+					\item Berechne die Stoßweite.
+				\end{enumerate}
+			\end{minipage}\hfill
+			\begin{minipage}[t]{0.42\linewidth}
+				\vspace{0pt}\centering
+				\skizzeKugelstoss
+			\end{minipage}
+	\end{enumerate}
+
+	\newpage
+
+	\begin{center}\textbf{\Large{Lösungen}}\end{center}
+	\medskip
+	\begin{scriptsize}\begin{enumerate}[(1)]
+		\item
+			\begin{minipage}[t]{0.60\linewidth}
+				\vspace{0pt}\raggedright
+				\begin{enumerate}[(a)]
+					\item $h(0)=-0{,}1\cdot(-4)^2+3{,}6=2$:\\ $\boxed{\text{Die Kugel verlässt die Hand in } \unit[2]{m} \text{ Höhe.}}$
+					\item Scheitelpunkt $S(4\,|\,3{,}6)$:\\ $\boxed{\text{maximale Höhe } \unit[3{,}6]{m} \text{ in } \unit[4]{m} \text{ Entfernung}}$
+					\item $-0{,}1(x-4)^2+3{,}6=0 \;\Rightarrow\; (x-4)^2=36 \;\Rightarrow\; x_1=-2,\; x_2=10$; \;$x_1$ entfällt.\\
+						$\boxed{\text{Die Stoßweite beträgt } \unit[10]{m}.}$
+				\end{enumerate}
+			\end{minipage}\hfill
+			\begin{minipage}[t]{0.38\linewidth}
+				\vspace{0pt}\centering
+				\resizebox{\linewidth}{!}{{\mitKStrue \skizzeKugelstoss}}
+			\end{minipage}
+	\end{enumerate}\end{scriptsize}
+
+\end{document}

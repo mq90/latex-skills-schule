@@ -20,7 +20,7 @@ skills/
 ├── informatik/                Automaten, Schaltungen, Programmablaufpläne, UML, Quellcode, PDF-Formulare
 ├── sprache-musik/             Lautschrift (IPA), Notensatz (MusiXTeX)
 ├── naturwissenschaften/       Physik, Chemie, Biologie
-├── illustration/              tikzpeople-Figuren, Sprechblasen
+├── illustration/              tikzpeople-Figuren, Sprechblasen, Skizzen zu Sachaufgaben
 ├── gesellschaftswissenschaft/ Landkarten aus Geodaten (Atlas mit 10 Karten)
 ├── schulorganisation/         Stoffverteilungsplan, Sitzplan, Klassenarbeit, Anki-Karten, Ablage
 └── raetsel-spiele/            Sudoku, Schach
@@ -54,6 +54,7 @@ werkzeuge/                     Prüf- und Hilfsskripte für das Repository
 | | [`latex-biologie`](skills/naturwissenschaften/latex-biologie) | Kreuzungsschemata, Stammbäume (genealogytree), Codesonne, Nahrungsnetz, Wachstumskurven | Handreichung; 5 Vorlagen |
 | Illustration | [`latex-tikzpeople`](skills/illustration/latex-tikzpeople) | Personen-Figuren, Alice/Bob/Eve | Handreichung, Galerie |
 | | [`latex-sprechblasen`](skills/illustration/latex-sprechblasen) | Sprech- und Gedankenblasen | `\lehrerblase`, `\schuelerblase` |
+| | [`latex-sachskizzen`](skills/illustration/latex-sachskizzen) | lehrbuchartige Illustrationen zu Sachaufgaben: maßstäbliche Szenen, Emoji-Figuren, dezente Maße, Lösungsbild mit Koordinatensystem, Emoji-Köpfe mit Sprechblasen | Handreichung mit 9 fertigen Szenen, `\emojifigur`, `\masslinie`, `\skizzenraster`, `\skizzenpunkt`, `\emojisprecher`, Vorlage Aufgabe + Lösung |
 | Gesellschaftswissenschaft | [`latex-geodaten-karten`](skills/gesellschaftswissenschaft/latex-geodaten-karten) | echte Karten aus freien Geodaten: Lagekarte, Bundesländer, physische Karte mit Höhenschichten, Verkehr, USA, Europa, Weltprojektionen, Römisches Reich, Deutschland 1871–1990, Generalisierung | Handreichung (37 S.), Atlas mit 10 fertigen Karten, `geo2tikz.py`, `karten_beispiele.py` (lädt Rohdaten und erzeugt alle Kartendaten neu) |
 | Schulorganisation | [`latex-stoffverteilungsplan`](skills/schulorganisation/latex-stoffverteilungsplan) | Stoffverteilungsplan aus einer TOML-Datei: Termine, A/B-Wochen, Ferien, Sperrzeiten, Lernbereiche | Handreichung, `stoffverteilungsplan.py`, 2 Beispielpläne, Ferien Sachsen 2026/27 |
 | | [`latex-sitzplan`](skills/schulorganisation/latex-sitzplan) | Sitzpläne (Reihen, U-Form, Gruppentische) aus TOML + Namensliste | Handreichung, `sitzplan.py`, 3 Beispiele mit Platzhalternamen |
@@ -118,6 +119,7 @@ auch ohne LaTeX-Installation. Die Quelltexte stehen in den
 |  | [UML-Klassendiagramme mit TikZ erstellen](handreichungen/informatik/UML-Klassendiagramme-mit-TikZ-erstellen.pdf) | 9 |
 | Illustration | [Sprechblasen mit TikZ in LaTeX](handreichungen/illustration/Sprechblasen-mit-TikZ-in-LaTeX.pdf) | 5 |
 |  | [Figuren mit tikzpeople zeichnen](handreichungen/illustration/Figuren-mit-tikzpeople-zeichnen.pdf) | 7 |
+|  | [Illustrationen zu Sachaufgaben mit TikZ zeichnen](handreichungen/illustration/Illustrationen-zu-Sachaufgaben-mit-TikZ-zeichnen.pdf) | 26 |
 | Sprache & Musik | [Notensätze mit MusiXTeX erstellen](handreichungen/sprache-musik/Notens%C3%A4tze-mit-MusiXTeX-erstellen.pdf) | 15 |
 |  | [Lautschrift mit LaTeX setzen](handreichungen/sprache-musik/Lautschrift-mit-LaTeX-setzen.pdf) | 12 |
 | Gesellschaftswissenschaft | [Landkarten aus Geodaten mit TikZ zeichnen](handreichungen/gesellschaftswissenschaft/Landkarten-aus-Geodaten-mit-TikZ-zeichnen.pdf) | 37 |

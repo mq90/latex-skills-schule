@@ -23,6 +23,8 @@
 %             Naturwissenschaften, Schulorganisation); Box »hinweis« mit frei wählbarem Titel
 % 2026-11-11  Umgebung »passend«: verkleinert den Inhalt auf \linewidth, aber nur wenn er breiter ist
 % 2026-11-11  \oz{+II}{Cu}: Oxidationszahl über ein Elementsymbol (Chemie, auch innerhalb \ce{... $\oz{0}{Zn}$ ...})
+% 2026-11-23  Sachskizzen (Skill latex-sachskizzen): \emojifigur, \emojisprecher, \masslinie, \skizzenraster,
+%             \skizzenpunkt und der Schalter \ifmitKS (Aufgabenbild / Lösungsbild mit Koordinatensystem)
 %
 
 
@@ -440,6 +442,30 @@
 			\draw (0.1,\kosyy) -- (-0.1,\kosyy) node[left, font=\tiny] {$\kosyy$};
 		\fi\fi}
 }
+
+
+%----------------------------------------------------------------------------------------------------%
+%Sachskizzen: kleine Illustrationen zu Sachaufgaben (Skill latex-sachskizzen). Alle Befehle innerhalb einer tikzpicture verwenden.
+%Schalter für zwei Fassungen desselben Bildes: Aufgabenbild (Standard) und Lösungsbild mit Koordinatensystem, {\mitKStrue \meineSkizze}
+\newif\ifmitKS
+\newcommand{\emojifigur}[4][]{% Emoji steht maßstäblich auf einem Punkt: \emojifigur[Optionen]{(x,y)}{Emoji-Name}{Höhe}, z.B. \emojifigur{(8.5,0)}{man standing}{0.9cm}
+	\node[inner sep=0pt, anchor=south, #1] at #2 {\twemoji[height=#4]{#3}};}
+\newcommand{\masslinie}[3]{% dezente Maßlinie: \masslinie{(x1,y1)}{(x2,y2)}{Text}
+	\draw[|<->|, thin, black!65] #1 -- #2 node[midway, fill=white, text=black!80, inner sep=1pt, font=\tiny] {#3};}
+\newcommand{\skizzenraster}[7]{% Koordinatensystem hinter einer Skizze: \skizzenraster{xmin}{xmax}{ymin}{ymax}{Gitterschritt}{x-Beschriftungen}{y-Beschriftungen}
+	\draw[gray!40, very thin, step=#5] (#1,#3) grid (#2,#4);
+	\draw[-latex, semithick] (#1,0) -- ($(#2,0)+(3.5mm,0)$) node[right, font=\tiny, inner sep=1pt] {$x$};
+	\draw[-latex, semithick] (0,#3) -- ($(0,#4)+(0,3.5mm)$) node[above, font=\tiny, inner sep=1pt] {$y$};
+	\foreach \skizzenk in {#6} \draw (\skizzenk,0) ++(0,1.5pt) -- ++(0,-3pt) node[below, font=\tiny, inner sep=1.5pt] {$\skizzenk$};
+	\foreach \skizzenk in {#7} \draw (0,\skizzenk) ++(1.5pt,0) -- ++(-3pt,0) node[left, font=\tiny, inner sep=1.5pt] {$\skizzenk$};}
+\newcommand{\skizzenpunkt}[3]{% markanter Punkt im Lösungsbild: \skizzenpunkt{(x,y)}{Lage, z.B. above right}{Beschriftung}
+	\fill[akzentrot] #1 circle (1.7pt);
+	\node[#2, font=\tiny, text=akzentrot!70!black, fill=white, fill opacity=0.85, text opacity=1, inner sep=1pt] at #1 {#3};}
+\newcommand{\emojisprecher}[5][2.3cm]{% Emoji-Kopf mit Sprechblase darüber: \emojisprecher[Blasenbreite]{x}{Emoji-Name}{Name darunter}{Aussage}
+	\node[inner sep=0pt, anchor=south] (emojikopf) at (#2,0) {\twemoji[height=1.05cm]{#3}};
+	\node[font=\scriptsize, below=1pt] at (emojikopf.south) {#4};
+	\node[rectangle callout, rounded corners=2pt, draw, fill=white, callout absolute pointer={($(emojikopf.north)+(0,0.05)$)},
+		text width=#1, align=center, font=\scriptsize, anchor=south, inner sep=3pt] at (#2,1.65) {#5};}
 
 
 %optionale Eigenschaft für ein  Tikzpicture, damit dieses bündig am oberen Rand einer enumerate-Auflistung steht (benötigt tikzlibrary calc!!!)
